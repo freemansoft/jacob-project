@@ -12,40 +12,40 @@ CC = cl $(OPT) $(JDK_INC) $(MS_INC)
 OBJFILES = stdafx.obj util.obj EventProxy.obj Variant.obj Dispatch.obj SafeArray.obj DispatchEvents.obj ComThread.obj EnumVariant.obj STA.obj DispatchProxy.obj
 
 all: jacob.dll
-  copy jacob.dll $(DEST_DIR)
+	copy jacob.dll $(DEST_DIR)
 
 jacob.dll: $(OBJFILES)
 	link /dll /out:jacob.dll $(OBJFILES) $(JDK_LIB) $(SYS_LIB)
 
 stdafx.obj: stdafx.cpp *.h
-  $(CC) -c stdafx.cpp
+	$(CC) -c stdafx.cpp
   
 util.obj: util.cpp *.h
-  $(CC) -c util.cpp
+	$(CC) -c util.cpp
 
 EventProxy.obj: EventProxy.cpp *.h
-  $(CC) -c EventProxy.cpp
+	$(CC) -c EventProxy.cpp
 
 Variant.obj: Variant.cpp *.h
-  $(CC) -c Variant.cpp
+	$(CC) -c Variant.cpp
 
 Dispatch.obj: Dispatch.cpp *.h
-  $(CC) -c Dispatch.cpp
+	$(CC) -c Dispatch.cpp
 
 SafeArray.obj: SafeArray.cpp *.h
-  $(CC) -c SafeArray.cpp
+	$(CC) -c SafeArray.cpp
 
 DispatchEvents.obj: DispatchEvents.cpp *.h
-  $(CC) -c DispatchEvents.cpp
+	$(CC) -c DispatchEvents.cpp
 
 ComThread.obj: ComThread.cpp *.h
-  $(CC) -c ComThread.cpp
+	$(CC) -c ComThread.cpp
 
 EnumVariant.obj: EnumVariant.cpp *.h
-  $(CC) -c EnumVariant.cpp
+	$(CC) -c EnumVariant.cpp
 
 STA.obj: STA.cpp *.h
-  $(CC) -c STA.cpp
+	$(CC) -c STA.cpp
 
 DispatchProxy.obj: DispatchProxy.cpp *.h
-  $(CC) -c DispatchProxy.cpp
+	$(CC) -c DispatchProxy.cpp

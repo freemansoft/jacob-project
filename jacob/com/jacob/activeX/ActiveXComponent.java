@@ -44,6 +44,17 @@ public class ActiveXComponent extends Dispatch {
     }
 
     /**
+     * Creates an active X component that is built on top of the
+     * COM pointers held in the passed in dispatch.
+     * This widends the Dispatch object to pick up the ActiveXComponent API
+     * 
+     * @param dispatchToBeWrapped
+     */
+    public ActiveXComponent(Dispatch dispatchToBeWrapped) {
+        super(dispatchToBeWrapped);
+    }
+
+    /**
      * @return actually returns this bject
      */
     public Dispatch getObject() {
@@ -262,7 +273,16 @@ public class ActiveXComponent extends Dispatch {
      * @return Dispatch representing the results of the call
      */
     public Dispatch invokeGetDispatch(String callAction){
-        return new Dispatch(invoke(callAction).toDispatch());
+        return invoke(callAction).toDispatch();
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and no parameter
+     * @param callAction
+     * @return ActiveXComponent representing the results of the call
+     */
+    public ActiveXComponent invokeGetComponent(String callAction){
+        return new ActiveXComponent(invoke(callAction).toDispatch());
     }
     
     /**
@@ -273,7 +293,18 @@ public class ActiveXComponent extends Dispatch {
      */
     public Dispatch invokeGetDispatch(String callAction, 
             Variant parameter){
-        return new Dispatch(invoke(callAction, parameter).toDispatch());
+        return invoke(callAction, parameter).toDispatch();
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter
+     * @return ActiveXComponent representing the results of the call
+     */
+    public ActiveXComponent invokeGetComponent(String callAction, 
+            Variant parameter){
+        return new ActiveXComponent(invoke(callAction, parameter).toDispatch());
     }
     
     /**
@@ -285,7 +316,19 @@ public class ActiveXComponent extends Dispatch {
      */
     public Dispatch invokeGetDispatch(String callAction, 
             Variant parameter1, Variant parameter2){
-        return new Dispatch(invoke(callAction, 
+        return invoke(callAction, parameter1, parameter2).toDispatch();
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter1
+     * @param parameter2
+     * @return ActiveXComponent representing the results of the call
+     */
+    public ActiveXComponent invokeGetComponent(String callAction, 
+            Variant parameter1, Variant parameter2){
+        return new ActiveXComponent(invoke(callAction, 
                 parameter1, parameter2).toDispatch());
     }
     
@@ -301,7 +344,23 @@ public class ActiveXComponent extends Dispatch {
             Variant parameter1, 
             Variant parameter2, 
             Variant parameter3){
-        return new Dispatch(invoke(callAction, 
+        return invoke(callAction, 
+                parameter1, parameter2, parameter3).toDispatch();
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter1
+     * @param parameter2
+     * @param parameter3
+     * @return ActiveXComponent representing the results of the call
+     */
+    public ActiveXComponent invokeGetComponent(String callAction, 
+            Variant parameter1, 
+            Variant parameter2, 
+            Variant parameter3){
+        return new ActiveXComponent(invoke(callAction, 
                 parameter1, parameter2, parameter3).toDispatch());
     }
     
@@ -319,7 +378,26 @@ public class ActiveXComponent extends Dispatch {
             Variant parameter2, 
             Variant parameter3,
             Variant parameter4){
-        return new Dispatch(invoke(callAction, 
+        return invoke(callAction, 
+                parameter1, parameter2, parameter3, parameter4)
+                .toDispatch();
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter1
+     * @param parameter2
+     * @param parameter3
+     * @param parameter4
+     * @return ActiveXComponent representing the results of the call
+     */
+    public ActiveXComponent invokeGetComponent(String callAction, 
+            Variant parameter1, 
+            Variant parameter2, 
+            Variant parameter3,
+            Variant parameter4){
+        return new ActiveXComponent(invoke(callAction, 
                 parameter1, parameter2, parameter3, parameter4)
                 .toDispatch());
     }

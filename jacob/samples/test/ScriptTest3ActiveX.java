@@ -10,11 +10,10 @@ import com.jacob.activeX.*;
  * then you will not be able to make calls into a component running
  * in another thread.
  */
-class ScriptTest3 extends Thread
+class ScriptTest3ActiveX extends Thread
 {
   public static ActiveXComponent sC;
   public static DispatchEvents de = null;
-  public static Dispatch sControl = null;
   public static boolean quit = false;
 
   public void run()
@@ -25,11 +24,10 @@ class ScriptTest3 extends Thread
        System.out.println("OnInit");
        String lang = "VBScript";
        sC = new ActiveXComponent("ScriptControl");
-       sControl = (Dispatch)sC.getObject();
-       Dispatch.put(sControl, "Language", lang);
+       sC.setProperty("Language", lang);
        ScriptTestErrEvents te = new ScriptTestErrEvents();
-       de = new DispatchEvents(sControl, te);
-       System.out.println("sControl="+sControl);
+       de = new DispatchEvents(sC, te);
+       System.out.println("sControl="+sC);
        while (!quit) sleep(100);
        ComThread.Release();
      }
@@ -47,14 +45,14 @@ class ScriptTest3 extends Thread
   {
     try {
       ComThread.InitMTA();
-      ScriptTest3 script = new ScriptTest3();
+      ScriptTest3ActiveX script = new ScriptTest3ActiveX();
       script.start();
       Thread.sleep(1000);
 
-      Variant result = Dispatch.call(sControl, "Eval", args[0]);
+      Variant result = sC.invoke("Eval", args[0]);
       System.out.println("eval("+args[0]+") = "+ result);
       System.out.println("setting quit");
-      ScriptTest3.quit = true;
+      ScriptTest3ActiveX.quit = true;
     } catch (ComException e) {
       e.printStackTrace();
     }

@@ -25,11 +25,10 @@ import com.jacob.activeX.*;
  * If you need multiple threads to access a Dispatch pointer, then
  * create that many DispatchProxy objects.
  */
-class ScriptTest2 extends STA
+class ScriptTest2ActiveX extends STA
 {
   public static ActiveXComponent sC;
   public static DispatchEvents de = null;
-  public static Dispatch sControl = null;
   public static DispatchProxy sCon = null;
 
   public boolean OnInit()
@@ -40,14 +39,13 @@ class ScriptTest2 extends STA
        System.out.println(Thread.currentThread());
        String lang = "VBScript";
        sC = new ActiveXComponent("ScriptControl");
-       sControl = (Dispatch)sC.getObject();
 
        // sCon can be called from another thread
-       sCon = new DispatchProxy(sControl);
+       sCon = new DispatchProxy(sC);
 
-       Dispatch.put(sControl, "Language", lang);
+       sC.setProperty("Language", lang);
        ScriptTestErrEvents te = new ScriptTestErrEvents();
-       de = new DispatchEvents(sControl, te);
+       de = new DispatchEvents(sC, te);
        return true;
      }
      catch (Exception e)
@@ -66,17 +64,17 @@ class ScriptTest2 extends STA
   {
     try {
       ComThread.InitSTA();
-      ScriptTest2 script = new ScriptTest2();
+      ScriptTest2ActiveX script = new ScriptTest2ActiveX();
       Thread.sleep(1000);
 
       // get a thread-local Dispatch from sCon
-      Dispatch sc = sCon.toDispatch();
+      ActiveXComponent sc = new ActiveXComponent(sCon.toDispatch());
 
       // call a method on the thread-local Dispatch obtained
       // from the DispatchProxy. If you try to make the same
       // method call on the sControl object - you will get a
       // ComException.
-      Variant result = Dispatch.call(sc, "Eval", args[0]);
+      Variant result = sc.invoke("Eval", args[0]);
       System.out.println("eval("+args[0]+") = "+ result);
       script.quit();
       System.out.println("called quit");
