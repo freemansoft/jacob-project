@@ -50,11 +50,14 @@
 	<!-- ================================= 
           target: default              
          ================================= -->
-	<target name="default" depends="createDirectoryStructure,jacob_java_bin_jar,build_jacob_dll">
+	<target name="default" depends="createDirectoryStructure,jacob_java_jar_bin,jacob_java_compile_samples,jacob_c_dll">
 
 		<echo message="Jacob ${version} build ${build.iteration} : finished on ${build.date}" />
 	</target>
 
+	<!-- ======================================================================
+		      Writes out a version file to be included in the jar        
+		 ================================================================== -->
 	<target name="IncrementBuildNumber">
 		<propertyfile file="version.properties">
 			<entry key="version" type="string" value="${version}" />
@@ -78,7 +81,7 @@
 		      Compare the date/time of the jacob JAR against that 
 		      of the jacob java source          
 		 ================================================================== -->
-	<target name="checkJarUpToDate">
+	<target name="jacob_java_jar_check">
 		<uptodate property="jarUpToDate" targetfile="${jacob.jar}">
 			<srcfiles dir="${jacob_java.src}">
 				<include name="com/**/*.java" />
@@ -86,21 +89,29 @@
 			<!-- Check the build file itself as well -->
 			<srcfiles file="${basedir}/build.xml" />
 		</uptodate>
-		<echo message="checkJarUpToDate result: ${jarUpToDate}" />
+		<echo message="jacob_java_jar_check result: ${jarUpToDate}" />
 	</target>
 	<!-- ======================================================================
-		      Compile the java files and package the classes into a JAR.             
+		      Compile the java files
+		      Relies on ant recognizing when a file needs to be compiled
 		 ================================================================== -->
-	<target name="jacob_java_bin_jar" depends="createDirectoryStructure,checkJarUpToDate,IncrementBuildNumber" unless="jarUpToDate">
-		<echo>Clean up the target folders and file, for safety</echo>
-		<delete file="${jacob.jar}" />
-		<delete dir="${jacob_java.bin}/com" />
+	<target name="jacob_java_compile" depends="createDirectoryStructure,IncrementBuildNumber">
 		<echo>Building java classes...</echo>
-		<javac srcdir="${jacob_java.src}" destdir="${jacob_java.bin}" includes="com/**/*.java" listfiles="true" debug="on" fork="yes" />
+		<javac srcdir="${jacob_java.src}" 
+			destdir="${jacob_java.bin}" 
+			includes="com/**/*.java" 
+			listfiles="true" debug="on" fork="yes" />
+	</target>
+	<!-- ======================================================================
+		      Package the classes into a JAR.             
+		 ================================================================== -->
+	<target name="jacob_java_jar_bin" depends="createDirectoryStructure,jacob_java_compile,jacob_java_jar_check,IncrementBuildNumber" unless="jarUpToDate">
+		<echo>Removing old jars</echo>
+		<delete file="${jacob.jar}" />
 		<echo>Packaging java classes...</echo>		
 		<jar destfile="${jacob.jar}" basedir="${jacob_java.bin}" update="false">
 			<exclude name="**/CVS" />
-			<include name="**/*.class" />
+			<include name="com/**/*.class" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 				<section name="com.jacob">
@@ -113,10 +124,23 @@
 		</jar>
 	</target>
 	<!-- ======================================================================
+		      Compile the java files
+		      Relies on Ant's ability to recognize files that need to be compiled
+		      Does not build servlet tests because Servlet Jar not in classpath
+		 ================================================================== -->
+	<target name="jacob_java_compile_samples" depends="createDirectoryStructure,IncrementBuildNumber">
+		<echo>Building java sample classes...</echo>
+		<javac srcdir="${jacob_java.src}" 
+			destdir="${jacob_java.bin}" 
+			includes="samples/**/*.java" 
+			excludes="samples/servlet/**/*.java"
+			listfiles="true" debug="on" fork="yes" />
+	</target>
+	<!-- ======================================================================
 		      Compare the date/time of the jacob DLL against that 
 		      of the jacob cpp source              
 		 ================================================================== -->
-	<target name="checkDllUpToDate">
+	<target name="jacob_c_check">
 		<uptodate property="dllUpToDate" targetfile="${jacob.dll}">
 			<srcfiles dir="${jacob_cpp.src}">
 				<include name="*.cpp" />
@@ -125,12 +149,12 @@
 			<!-- Check the build file itself as well -->
 			<srcfiles file="${basedir}/build.xml" />
 		</uptodate>
-		<echo message="checkDllUpToDate result: ${dllUpToDate}" />
+		<echo message="jacob_c_check result: ${dllUpToDate}" />
 	</target>
 	<!-- ======================================================================
 		      Compile the c source files.             
 		 ================================================================== -->
-	<target name="build_jacob_objects" depends="createDirectoryStructure,checkDllUpToDate,IncrementBuildNumber" unless="dllUpToDate">
+	<target name="jacob_c_compile" depends="createDirectoryStructure,jacob_c_check,IncrementBuildNumber" unless="dllUpToDate">
 		<echo>Clean up the target folders and file, for safety</echo>
 		<delete file="${jacob_cpp.bin}/**/*.*" />
 		<echo>Compiling C++ classes</echo>
@@ -155,7 +179,7 @@
 	<!-- ======================================================================
 		       Link the obj files into a DLL.
 		 ================================================================== -->
-	<target name="build_jacob_dll" depends="createDirectoryStructure,checkDllUpToDate,build_jacob_objects" unless="dllUpToDate">
+	<target name="jacob_c_dll" depends="createDirectoryStructure,jacob_c_check,jacob_c_compile" unless="dllUpToDate">
 		<echo>Clean up the target folders and file, for safety</echo>
 		<delete file="${jacob.dll}" />
 		<echo>Creating jacob.dll</echo>
@@ -182,7 +206,7 @@
 	<!-- ======================================================================
 		       Use this target to package all the files for a release
 		 ================================================================== -->
-	<target name="PackageRelease" depends="createDirectoryStructure,build_jacob_dll,jacob_java_bin_jar">
+	<target name="PackageRelease" depends="createDirectoryStructure,jacob_c_dll,jacob_java_jar_bin">
 
 		<echo>Packaging release...</echo>
 		<zip basedir="${basedir}" 
