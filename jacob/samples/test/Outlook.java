@@ -25,13 +25,13 @@ public class Outlook {
     private static void recurseFolders(int iIndent, Dispatch o) {
 
 				if (o == null) return;
-        Dispatch oFolders = o.getPropertyAsDispatch("Folders");
+        Dispatch oFolders = Dispatch.get(o, "Folders").toDispatch();
         // System.out.println("oFolders=" + oFolders);
 				if (oFolders == null) return;
 
-        Dispatch oFolder = oFolders.getPropertyAsDispatch("GetFirst");
+        Dispatch oFolder = Dispatch.get(oFolders, "GetFirst").toDispatch();
         do {
-            String oFolderName = oFolder.getPropertyAsString("Name");
+            Object oFolderName = Dispatch.get(oFolder, "Name");
             if (null == oFolderName) {
                 break;
             }
@@ -39,7 +39,7 @@ public class Outlook {
             System.out.println(pad(iIndent) + oFolderName);
             recurseFolders(iIndent + 3, oFolder);
 
-            oFolder = oFolders.getPropertyAsDispatch("GetNext");
+            oFolder = Dispatch.get(oFolders, "GetNext").toDispatch();
         } while(true);
 
     }
@@ -53,7 +53,7 @@ public class Outlook {
             System.out.println("version="+axOutlook.getProperty("Version"));
 
             Dispatch oOutlook = axOutlook.getObject();
-            System.out.println("version="+oOutlook.getPropertyAsString("Version"));
+            System.out.println("version="+Dispatch.get(oOutlook, "Version"));
 
             Dispatch oNameSpace = axOutlook.getProperty("Session").toDispatch();
             System.out.println("oNameSpace=" + oNameSpace);
@@ -61,7 +61,7 @@ public class Outlook {
             recurseFolders(0, oNameSpace);
 
         } finally {
-            axOutlook.call("Quit", new Variant[] {});
+            axOutlook.invoke("Quit", new Variant[] {});
         }
     }
 

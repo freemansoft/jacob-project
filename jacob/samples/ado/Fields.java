@@ -11,38 +11,41 @@ public class Fields extends Dispatch
 	 */
 	public Fields(Dispatch d)
 	{
-		super(d);
+		// take over the IDispatch pointer
+	  m_pDispatch = d.m_pDispatch;
+		// null out the input's pointer
+		d.m_pDispatch = 0;
 	}
 
   public int getCount()
 	{
-	  return getPropertyAsInt("Count");
+	  return Dispatch.get(this, "Count").toInt();
 	}
 
   public Variant _NewEnum()
 	{
-	  return call("_NewEnum");
+	  return Dispatch.call(this, "_NewEnum");
 	}
 
   public void Refresh()
 	{
-	  call("Refresh");
+	  Dispatch.call(this, "Refresh");
 	}
 
   public Field getItem(int Index)
 	{
-	  return new Field(call("Item", new Variant(Index)).toDispatch());
+	  return new Field(Dispatch.call(this, "Item", new Variant(Index)).toDispatch());
 	}
 
   public void Append(String Name, int Type, int DefinedSize, int Attrib)
 	{
-	  Dispatch.call(this,"Append", Name, new Variant(Type),
+	  Dispatch.call(this, "Append", Name, new Variant(Type),
 		    new Variant(DefinedSize), new Variant(Attrib));
 	}
 
   public void Delete(Variant Index)
 	{
-	  call("Delete", Index);
+	  Dispatch.call(this, "Delete", Index);
 	}
 
 }

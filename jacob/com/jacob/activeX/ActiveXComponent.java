@@ -60,4 +60,357 @@ public class ActiveXComponent extends Dispatch {
     static {
         System.loadLibrary("jacob");
     }
+    
+    /**
+     * This is really a cover for call(String,Variant[]) that should be eliminated
+     * @deprecated Callers should call call(String,Variant[]) since that is what this calls
+     * @param name
+     * @param args
+     * @return
+     */
+    public Variant invoke(String name, Variant[] args)
+    {
+      return call(name,args);
+      //return Dispatch.callN(this, name, args);
+    }
+
+    
+    
+    /*============================================================
+     * 
+     * start of instance based calls to the COM layer
+     * ===========================================================
+     */
+
+    /**
+     * returns the property as a Variant
+     * @param name
+     * @return variant value of property
+     */
+    public Variant getProperty(String name)
+    {
+      return Dispatch.get(this, name);
+    }
+
+    /**
+     * returns the selected proeprty as a dispatch
+     * @param propertyName
+     * @return Dispatch representing the object under the property name
+     */
+    public Dispatch getPropertyAsDispatch(String propertyName){
+        return new Dispatch(Dispatch.get(this,propertyName).toDispatch());
+        
+    }
+    
+    /**
+     * 
+     * @param propertyName property we are looking up
+     * @return boolean value of property
+     */
+    public boolean getPropertyAsBoolean(String propertyName){
+        return Dispatch.get(this, propertyName).toBoolean();
+    }
+
+    /**
+     * 
+     * @param propertyName property we are looking up
+     * @return byte value of property
+     */
+    public byte getPropertyAsByte(String propertyName){
+        return Dispatch.get(this, propertyName).toByte();
+    }
+
+    /**
+     * returns the property as a stirng
+     * @param propertyName
+     * @return String value of property
+     */
+    public String getPropertyAsString(String propertyName){
+        return Dispatch.get(this, propertyName).toString();
+
+    }
+    
+    /**
+     * 
+     * @param propertyName
+     * @return the property value as an int
+     */
+    public int getPropertyAsInt(String propertyName){
+        return Dispatch.get(this,propertyName).toInt();
+    }
+
+    /**
+     * sets a property on this object
+     * @param name property name
+     * @param arg variant value to be set
+     */
+    public void setProperty(String name, Variant arg)
+    {
+      Dispatch.put(this, name, arg);
+    }
+
+    /**
+     * sets a property on this object
+     * @param name property name
+     * @param arg variant value to be set
+     */
+    public void setProperty(String name, Dispatch arg)
+    {
+      Dispatch.put(this, name, arg);
+    }
+
+    
+    /**
+     * sets a property to be the value of the string
+     * @param propertyName
+     * @param propertyValue
+     */
+    public void setProperty(String propertyName, String propertyValue){
+        this.setProperty(propertyName, new Variant(propertyValue));
+    }
+
+    /**
+     * sets a property as a boolean value
+     * @param propName
+     * @param propValue the boolean value we want the prop set to
+     */
+    public void setProperty(String propName, boolean propValue){
+        this.setProperty(propName, new Variant(propValue));        
+    }
+
+    /**
+     * sets a property as a boolean value
+     * @param propName
+     * @param propValue the boolean value we want the prop set to
+     */
+    public void setProperty(String propName, byte propValue){
+        this.setProperty(propName, new Variant(propValue));        
+    }
+
+    /**
+     * sets teh property as an int value
+     * @param propName
+     * @param propValue the int value we want the prop to be set to.
+     */
+    public void setProperty(String propName, int propValue){
+        this.setProperty(propName, new Variant(propValue));        
+    }
+
+    /*-------------------------------------------------------
+     * Listener logging helpers
+     *-------------------------------------------------------
+     */
+    
+    /**
+     * This boolean determines if callback events should be logged
+     */
+    public static boolean shouldLogEvents = false;
+    
+    /**
+     * used by the doc and application listeners to get intelligent logging
+     * @param description event description
+     * @param args args passed in (variants)
+     * 
+     */
+    public void logCallbackEvent(String description, Variant[] args ) {
+        String argString = "";
+        if (args!=null && ActiveXComponent.shouldLogEvents){
+            if (args.length > 0){
+                argString+=" args: ";
+            }
+            for ( int i = 0; i < args.length; i++){
+                short argType = args[i].getvt();
+                argString+=",["+i+"]";
+                // break out the byref bits if they are on this
+                if ((argType & Variant.VariantByref) == Variant.VariantByref){
+                    // show the type and the fact that its byref
+                    argString += "("+(args[i].getvt() & ~Variant.VariantByref)+
+                        "/"+Variant.VariantByref+")";
+                } else {
+                    // show the type
+                    argString += "("+argType+")";
+                }
+                argString += "=";
+                if (argType == Variant.VariantDispatch){
+                    Dispatch foo = (Dispatch)args[i].getDispatch();
+                    argString+=foo;
+                } else if ((argType & Variant.VariantBoolean) == 
+                            Variant.VariantBoolean){
+                    // do the boolean thing
+                    if ((argType & Variant.VariantByref) ==
+                            Variant.VariantByref){
+                            // boolean by ref
+                            argString += args[i].getBooleanRef();
+                        } else {
+                            // boolean by value
+                            argString += args[i].getBoolean();
+                        }
+                } else if ((argType & Variant.VariantString) == 
+                    Variant.VariantString){
+                    // do the string thing
+                    if ((argType & Variant.VariantByref) ==
+                            Variant.VariantByref){
+                            // string by ref
+                            argString += args[i].getStringRef();
+                        } else {
+                            // string by value
+                            argString += args[i].getString();
+                        }
+                } else {
+                    argString+=args[i].toString();
+                }
+            }
+            System.out.println(description +argString);
+        }
+    }
+    
+    /*==============================================================
+     * 
+     * covers for dispatch call methods
+     *=============================================================*/
+
+    /**
+     * makes a dispatch call for the passed in action and no parameter
+     * @param callAction
+     * @return Dispatch representing the results of the call
+     */
+    public Dispatch callGetDispatch(String callAction){
+        return new Dispatch(Dispatch.call(this,callAction).toDispatch());
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter
+     * @return Dispatch representing the results of the call
+     */
+    public Dispatch callGetDispatch(String callAction, Variant parameter){
+        return new Dispatch(Dispatch.call(this,callAction, parameter).toDispatch());
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter1
+     * @param parameter2
+     * @return Dispatch representing the results of the call
+     */
+    public Dispatch callGetDispatch(String callAction, Variant parameter1, Variant parameter2){
+        return new Dispatch(Dispatch.call(this,callAction, parameter1, parameter2).toDispatch());
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter1
+     * @param parameter2
+     * @param parameter3
+     * @return Dispatch representing the results of the call
+     */
+    public Dispatch callGetDispatch(String callAction, Variant parameter1, Variant parameter2, Variant parameter3){
+        return new Dispatch(Dispatch.call(this,callAction, parameter1, parameter2, parameter3).toDispatch());
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter1
+     * @param parameter2
+     * @param parameter3
+     * @param parameter4
+     * @return Dispatch representing the results of the call
+     */
+    public Dispatch callGetDispatch(String callAction, 
+            Variant parameter1, 
+            Variant parameter2, 
+            Variant parameter3,
+            Variant parameter4){
+        return new Dispatch(Dispatch.call(this,callAction, 
+                parameter1, parameter2, parameter3, parameter4).toDispatch());
+    }
+    
+    /**
+     * invokes a single parameter call on this dispatch
+     * that returns no value
+     * @param actionCommand
+     * @param parameter
+     * @return a Variant but that may be null for some calls
+     */
+    public Variant call(String actionCommand, String parameter){
+        return Dispatch.call(this, actionCommand, parameter);
+    }
+    
+    /**
+     * makes a dispatch call to the passed in action with a single boolean parameter
+     * @param actionCommand
+     * @param parameter
+     * @return Variant result
+     */
+    public Variant call(String actionCommand, boolean parameter){
+        return Dispatch.call(this, actionCommand, new Variant(parameter));
+    }
+
+    /**
+     * makes a dispatch call to teh passed in action with a string and integer parameter
+     * @param actionCommand
+     * @param parameter1
+     * @param parameter2
+     * @return Variant result
+     */
+    public Variant call(String actionCommand, String parameter1, int parameter2){
+        return Dispatch.call(this, actionCommand, parameter1, new Variant(parameter2));
+    }
+    /**
+     * makes a dispatch call to the passed in action with two 
+     * integer parameters
+     * @param actionCommand
+     * @param parameter1
+     * @param parameter2
+     * @return a Variant but that may be null for some calls
+     */
+    public Variant call(String actionCommand, int parameter1, int parameter2){
+        return Dispatch.call(this, actionCommand, 
+                new Variant(parameter1),new Variant(parameter2));
+    }
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter
+     * @return a Variant but that may be null for some calls
+     */
+    public Variant call(String callAction, Variant parameter){
+        return Dispatch.call(this,callAction, parameter);
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and single parameter
+     * @param callAction
+     * @param parameter1
+     * @param parameter2
+     * @return a Variant but that may be null for some calls
+     */
+    public Variant call(String callAction, Variant parameter1, Variant parameter2){
+        return Dispatch.call(this,callAction, parameter1,parameter2);
+    }
+    
+    /**
+     * makes a dispatch call for the passed in action and no parameter
+     * @param callAction
+     * @return a Variant but that may be null for some calls
+     */
+    public Variant call(String callAction){
+        return Dispatch.call(this,callAction);
+    }
+    
+    /**
+     * call with a variable number of args mainly used for quit.
+     * @param name
+     * @param args
+     * @return Variant result of the invoke
+     */
+    public Variant call(String name, Variant[] args) {
+        return Dispatch.callN(this, name, args);
+    }
+
+    
 }

@@ -41,9 +41,9 @@ public class AppTest extends Applet implements ActionListener
 		  String lang = "VBScript";
       sC = new ActiveXComponent("ScriptControl");
       sControl = sC.getObject();
-      sControl.setProperty("Language", lang);
+      Dispatch.put(sControl, "Language", lang);
 		}
-    Variant v = sControl.call("Eval", in.getText());
+    Variant v = Dispatch.call(sControl, "Eval", in.getText());
     out.setText(v.toString());
   }
 }

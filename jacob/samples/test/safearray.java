@@ -15,14 +15,14 @@ public class safearray
 		Dispatch cellstart;
 		Dispatch cellstop;
 		SafeArray sAProdText;
-		Dispatch workbooks = xl.getPropertyAsDispatch("Workbooks");
+		Dispatch workbooks = xl.getProperty("Workbooks").toDispatch();
 		System.out.println("have workbooks");
-		Dispatch workbook = workbooks.call("Open", "d:\\jacob_15\\samples\\test\\jacobtest.xls").toDispatch();
+		Dispatch workbook = Dispatch.call(workbooks, "Open", "d:\\jacob_15\\samples\\test\\jacobtest.xls").toDispatch();
 		System.out.println("Opened File - jacobtest.xls\n");
-		Dispatch sheet = workbook.getPropertyAsDispatch("ActiveSheet");
-		cell = Dispatch.invoke(sheet,"Range",DispatchConstants.Get,new Object[] {"A1:D1000"},new int[1]).toDispatch();
+		Dispatch sheet = Dispatch.get(workbook,"ActiveSheet").toDispatch();
+		cell = Dispatch.invoke(sheet,"Range",Dispatch.Get,new Object[] {"A1:D1000"},new int[1]).toDispatch();
 		System.out.println("have cell:"+cell);
-		sAProdText = cell.getProperty("Value").toSafeArray();
+		sAProdText = Dispatch.get(cell,"Value").toSafeArray();
 		System.out.println("sa: dim="+sAProdText.getNumDim());
 		System.out.println("sa: start row="+sAProdText.getLBound(1));
 		System.out.println("sa: start col="+sAProdText.getLBound(2));
@@ -50,12 +50,12 @@ public class safearray
 			}
 		}
 		
-		workbook.call("Close");
+		Dispatch.call(workbook, "Close");
 		System.out.println("Closed File\n");
 	} catch (Exception e) {
 	  e.printStackTrace();
 	} finally {
-	  xl.call("Quit", new Variant[] {});
+	  xl.invoke("Quit", new Variant[] {});
 	}
  }
 }

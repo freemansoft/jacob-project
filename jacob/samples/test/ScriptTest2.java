@@ -45,7 +45,7 @@ class ScriptTest2 extends STA
        // sCon can be called from another thread
        sCon = new DispatchProxy(sControl);
 
-       sControl.setProperty("Language", lang);
+       Dispatch.put(sControl, "Language", lang);
        errEvents te = new errEvents();
        de = new DispatchEvents(sControl, te);
        return true;
@@ -76,7 +76,7 @@ class ScriptTest2 extends STA
       // from the DispatchProxy. If you try to make the same
       // method call on the sControl object - you will get a
       // ComException.
-      Variant result = sc.call("Eval", args[0]);
+      Variant result = Dispatch.call(sc, "Eval", args[0]);
       System.out.println("eval("+args[0]+") = "+ result);
       script.quit();
       System.out.println("called quit");

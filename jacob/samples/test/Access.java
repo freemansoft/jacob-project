@@ -18,9 +18,9 @@ class Access
     Dispatch db = open(ax, ".\\sample2.mdb");
     String sql = "select * from MainTable";
     // make a temporary querydef
-    Dispatch qd = db.call("CreateQueryDef","").toDispatch();
+    Dispatch qd = Dispatch.call(db, "CreateQueryDef","").toDispatch();
     // set the SQL string on it
-    qd.setProperty("SQL", sql);
+    Dispatch.put(qd, "SQL", sql);
     Variant result = getByQueryDef(qd);
 		// the 2-d safearray is transposed from what you might expect
     System.out.println(result.toSafeArray());
@@ -39,7 +39,7 @@ class Access
     Variant f = new Variant(false);
     // open the file in read-only mode
     Variant[] args = new Variant[] {new Variant(fileName), f, f};
-    Dispatch openDB = ax.call("OpenDatabase", args).toDispatch();
+    Dispatch openDB = ax.invoke("OpenDatabase", args).toDispatch();
     return openDB;
   }
 
@@ -49,7 +49,7 @@ class Access
    */
   public static void close(Dispatch openDB)
   {
-    openDB.call("Close");
+    Dispatch.call(openDB, "Close");
   }
 
   /**
@@ -61,7 +61,7 @@ class Access
   {
     Dispatch.callSub(recset,"moveFirst");
     Variant vi = new Variant(4096);
-    Variant v = recset.call("GetRows", vi);
+    Variant v = Dispatch.call(recset,"GetRows", vi);
     return v;
   }
 
@@ -73,7 +73,7 @@ class Access
   public static Variant getByQueryDef(Dispatch qd)
   {
     // get a reference to the recordset
-    Dispatch recset = qd.callGetDispatch("OpenRecordset");
+    Dispatch recset = Dispatch.call(qd, "OpenRecordset").toDispatch();
     // get the values as a safe array
     String[] cols = getColumns(recset);
     for(int i=0;i<cols.length;i++)
@@ -92,8 +92,8 @@ class Access
    */
   public static String[] getColumns(Dispatch recset)
   {
-    Dispatch flds = recset.getPropertyAsDispatch("Fields");
-    int n_flds = flds.getPropertyAsInt("Count");
+    Dispatch flds = Dispatch.get(recset, "Fields").toDispatch();
+    int n_flds = Dispatch.get(flds, "Count").toInt();
     String[] s = new String[n_flds];
     Variant vi = new Variant();
     for (int i=0;i<n_flds;i++) {
@@ -101,8 +101,9 @@ class Access
       // must use the invoke method because this is a method call
       // that wants to have a Dispatch.Get flag...
       Dispatch fld = Dispatch.invoke(recset, "Fields",
-                       DispatchConstants.Get, new Object[] {vi}, new int[1]).toDispatch();
-      s[i] = fld.getPropertyAsString("Name");
+                       Dispatch.Get, new Object[] {vi}, new int[1]).toDispatch();
+      Variant name = Dispatch.get(fld, "Name");
+      s[i] = name.toString();
     }
     return s;
   }

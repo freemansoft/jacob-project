@@ -18,63 +18,66 @@ public class Command extends Dispatch
 	 */
 	public Command(Dispatch dispatchTarget)
 	{
-		super(dispatchTarget);
+		// take over the IDispatch pointer
+	  m_pDispatch = dispatchTarget.m_pDispatch;
+		// null out the input's pointer
+		dispatchTarget.m_pDispatch = 0;
 	}
 
   public Variant getProperties()
   {
-    return this.getProperty("Properties");
+    return Dispatch.get(this, "Properties");
   }
 
   public Connection getActiveConnection()
   {
-    return new Connection(this.getPropertyAsDispatch("ActiveConnection"));
+    return new Connection(Dispatch.get(this, "ActiveConnection").toDispatch());
   }
 
   public void setActiveConnection(Connection ppvObject)
   {
-    this.setProperty("ActiveConnection", ppvObject);
+    Dispatch.put(this, "ActiveConnection", ppvObject);
   }
 
   public String getCommandText()
   {
-    return this.getPropertyAsString("CommandText");
+    return Dispatch.get(this, "CommandText").toString();
   }
 
   public void setCommandText(String pbstr)
   {
-    this.setProperty("CommandText", pbstr);
+    Dispatch.put(this, "CommandText", pbstr);
   }
 
   public int getCommandTimeout()
   {
-    return this.getPropertyAsInt("CommandTimeout");
+    return Dispatch.get(this, "CommandTimeout").toInt();
   }
 
   public void setCommandTimeout(int plTimeout)
   {
-    this.setProperty("CommandTimeout", plTimeout);
+    Dispatch.put(this, "CommandTimeout", new Variant(plTimeout));
   }
 
   public boolean getPrepared()
   {
-     return this.getPropertyAsBoolean("Prepared");
+     return Dispatch.get(this, "Prepared").toBoolean();
   }
 
   public void setPrepared(boolean pfPrepared)
   {
-    this.setProperty("Prepared", pfPrepared);
+    Dispatch.put(this, "Prepared", new Variant(pfPrepared));
   }
 
   public Recordset Execute(Variant RecordsAffected, Variant Parameters, int Options)
   {
-    return (Recordset)this.callGetDispatch("Execute", RecordsAffected, Parameters, new Variant(Options));
+    return (Recordset)Dispatch.call(this, "Execute", RecordsAffected, Parameters, new Variant(Options)).toDispatch();
   }
 
   public Recordset Execute()
   {
-	Variant dummy = new Variant();
-	return new Recordset(this.callGetDispatch("Execute",dummy));
+	  Variant dummy = new Variant();
+    return new Recordset(Dispatch.call(this, "Execute", dummy).toDispatch());
   }
 
   public Variant CreateParameter(String Name, int Type, int Direction, int Size, Variant Value)
@@ -85,36 +88,36 @@ public class Command extends Dispatch
   // need to wrap Parameters
   public Variant getParameters()
   {
-    return this.getProperty("Parameters");
+    return Dispatch.get(this, "Parameters");
   }
 
   public void setCommandType(int plCmdType)
   {
-    this.setProperty("CommandType", plCmdType);
+    Dispatch.put(this, "CommandType", new Variant(plCmdType));
   }
 
   public int getCommandType()
   {
-    return this.getPropertyAsInt("CommandType");
+    return Dispatch.get(this, "CommandType").toInt();
   }
 
   public String getName()
   {
-    return this.getPropertyAsString("Name");
+    return Dispatch.get(this, "Name").toString();
   }
 
   public void setName(String pbstrName)
   {
-    this.setProperty("Name", pbstrName);
+    Dispatch.put(this, "Name", pbstrName);
   }
 
   public int getState()
   {
-    return this.getPropertyAsInt("State");
+    return Dispatch.get(this, "State").toInt();
   }
 
   public void Cancel()
   {
-    this.call("Cancel");
+    Dispatch.call(this, "Cancel");
   }
 }

@@ -51,14 +51,14 @@ public class JacobScript extends javax.servlet.http.HttpServlet
         String lang = "VBScript";
         ActiveXComponent sC = new ActiveXComponent("ScriptControl");
         sControl = sC.getObject();
-        sControl.setProperty("Language", lang);
+        Dispatch.put(sControl, "Language", lang);
         session.putValue("control", sControl);
       }
       else
       {
         sControl = (Dispatch)session.getValue("control");
       }
-      Variant result = sControl.call("Eval", expr);
+      Variant result = Dispatch.call(sControl, "Eval", expr);
       // display a form
       out.println("<h1>Enter a VBScript Expression</h1>");
       out.println("<form method=\"POST\" action=\"/JacobScript\">");

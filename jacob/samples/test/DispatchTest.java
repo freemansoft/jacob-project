@@ -5,10 +5,6 @@ import com.jacob.activeX.*;
 
 class DispatchTest 
 {
-    /**
-     * main to test Dispatch
-     * @param args
-     */
   public static void main(String[] args)
   {
     ComThread.InitSTA();
@@ -16,27 +12,28 @@ class DispatchTest
     ActiveXComponent xl = new ActiveXComponent("Excel.Application");
     Dispatch xlo = xl.getObject();
     try {
-      System.out.println("version="+ xl.getPropertyAsString("Version"));
-      System.out.println("version="+xlo.getPropertyAsString("Version"));
-      xlo.setProperty("Visible", true);
-      Dispatch workbooks = xl.getPropertyAsDispatch("Workbooks");
-      Dispatch workbook = workbooks.getPropertyAsDispatch("Add");
-      Dispatch sheet = workbook.getPropertyAsDispatch("ActiveSheet");
-      Dispatch a1 = Dispatch.invoke(sheet, "Range", DispatchConstants.Get,
+      System.out.println("version="+xl.getProperty("Version"));
+      System.out.println("version="+Dispatch.get(xlo, "Version"));
+      Dispatch.put(xlo, "Visible", new Variant(true));
+      Dispatch workbooks = xl.getProperty("Workbooks").toDispatch();
+      Dispatch workbook = Dispatch.get(workbooks,"Add").toDispatch();
+      Dispatch sheet = Dispatch.get(workbook,"ActiveSheet").toDispatch();
+      Dispatch a1 = Dispatch.invoke(sheet, "Range", Dispatch.Get,
                                   new Object[] {"A1"},
                                   new int[1]).toDispatch();
-      Dispatch a2 = Dispatch.invoke(sheet, "Range", DispatchConstants.Get,
+      Dispatch a2 = Dispatch.invoke(sheet, "Range", Dispatch.Get,
                                   new Object[] {"A2"},
                                   new int[1]).toDispatch();
-      a1.setProperty("Value", "123.456");
-      a2.setProperty("Formula", "=A1*2");
-      System.out.println("a1 from excel:"+a1.getPropertyAsString("Value"));
-      System.out.println("a2 from excel:"+a2.getPropertyAsString("Value"));
-      workbook.call("Close", false);
+      Dispatch.put(a1, "Value", "123.456");
+      Dispatch.put(a2, "Formula", "=A1*2");
+      System.out.println("a1 from excel:"+Dispatch.get(a1, "Value"));
+      System.out.println("a2 from excel:"+Dispatch.get(a2, "Value"));
+      Variant f = new Variant(false);
+      Dispatch.call(workbook, "Close", f);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      xl.call("Quit", new Variant[] {});
+      xl.invoke("Quit", new Variant[] {});
       ComThread.Release();
     }
   }

@@ -14,12 +14,12 @@ class math
     Dispatch test = new Dispatch("MathTest.Math");
     testEvents te = new testEvents();
     DispatchEvents de = new DispatchEvents(test, te);
-    System.out.println(test.call("Add", 1, 2));
-    System.out.println(test.call("Mult",1,2));
-    Variant v = test.call("Mult", 2,2);
+    System.out.println(Dispatch.call(test, "Add", new Variant(1), new Variant(2)));
+    System.out.println(Dispatch.call(test, "Mult", new Variant(2), new Variant(2)));
+    Variant v = Dispatch.call(test, "Mult", new Variant(2), new Variant(2));
 		// this should return false
 		System.out.println("v.isNull="+v.isNull());
-    v = test.call("getNothing");
+    v = Dispatch.call(test, "getNothing");
 		// these should return nothing
 		System.out.println("v.isNull="+v.isNull());
 		System.out.println("v.toDispatch="+v.toDispatch());
