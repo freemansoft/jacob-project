@@ -11,7 +11,8 @@ ACX_DIR = com\jacob\activeX
 
 help:
 	@echo run "nmake build" to build the code 
-	@echo run "nmake createZips" to remove obj and class files and create the zip files
+        @echo run "nmake createZips" to remove obj and class files and create the zip files
+        @echo run "nmake clean" to remove compiled code, zips and jars
 
 build: java jni
 

@@ -5,4 +5,5 @@ jacobdll.jar
 RELEASE.txt
 .project
 .classpath
-
+compilation_tools.properties
+version.properties
