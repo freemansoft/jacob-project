@@ -71,7 +71,7 @@ public class ActiveXComponent extends Dispatch {
 
     /**
      * Probably was a cover for something else in the past.
-     * Should be depricated.
+     * Should be deprecated.
      * @return Now it actually returns this exact same object.
      */
     public Dispatch getObject() {
@@ -98,17 +98,17 @@ public class ActiveXComponent extends Dispatch {
      */
 
     /**
-     * returns the property as a Variant
-     * @param name
+     * retrieves a property and returns it as a Variant
+     * @param propertyName
      * @return variant value of property
      */
-    public Variant getProperty(String name)
+    public Variant getProperty(String propertyName)
     {
-      return Dispatch.get(this, name);
+      return Dispatch.get(this, propertyName);
     }
 
     /**
-     * returns the selected proeprty as a ActiveXComponent
+     * retrieves a property and returns it as an ActiveX component
      * @param propertyName
      * @return Dispatch representing the object under the property name
      */
@@ -118,7 +118,7 @@ public class ActiveXComponent extends Dispatch {
     }
     
     /**
-     * 
+     * retrieves a property and returns it as a Boolean
      * @param propertyName property we are looking up
      * @return boolean value of property
      */
@@ -127,7 +127,7 @@ public class ActiveXComponent extends Dispatch {
     }
 
     /**
-     * 
+     * retrieves a property and returns it as a byte
      * @param propertyName property we are looking up
      * @return byte value of property
      */
@@ -136,7 +136,7 @@ public class ActiveXComponent extends Dispatch {
     }
 
     /**
-     * returns the property as a stirng
+     * retrieves a property and returns it as a String
      * @param propertyName
      * @return String value of property
      */
@@ -146,7 +146,7 @@ public class ActiveXComponent extends Dispatch {
     }
     
     /**
-     * 
+     * retrieves a property and returns it as a int
      * @param propertyName
      * @return the property value as an int
      */
@@ -156,22 +156,22 @@ public class ActiveXComponent extends Dispatch {
 
     /**
      * sets a property on this object
-     * @param name property name
+     * @param propertyName property name
      * @param arg variant value to be set
      */
-    public void setProperty(String name, Variant arg)
+    public void setProperty(String propertyName, Variant arg)
     {
-      Dispatch.put(this, name, arg);
+      Dispatch.put(this, propertyName, arg);
     }
 
     /**
      * sets a property on this object
-     * @param name property name
+     * @param propertyName property name
      * @param arg variant value to be set
      */
-    public void setProperty(String name, Dispatch arg)
+    public void setProperty(String propertyName, Dispatch arg)
     {
-      Dispatch.put(this, name, arg);
+      Dispatch.put(this, propertyName, arg);
     }
 
     
@@ -186,29 +186,29 @@ public class ActiveXComponent extends Dispatch {
 
     /**
      * sets a property as a boolean value
-     * @param propName
+     * @param propertyName
      * @param propValue the boolean value we want the prop set to
      */
-    public void setProperty(String propName, boolean propValue){
-        this.setProperty(propName, new Variant(propValue));        
+    public void setProperty(String propertyName, boolean propValue){
+        this.setProperty(propertyName, new Variant(propValue));        
     }
 
     /**
      * sets a property as a boolean value
-     * @param propName
+     * @param propertyName
      * @param propValue the boolean value we want the prop set to
      */
-    public void setProperty(String propName, byte propValue){
-        this.setProperty(propName, new Variant(propValue));        
+    public void setProperty(String propertyName, byte propValue){
+        this.setProperty(propertyName, new Variant(propValue));        
     }
 
     /**
      * sets the property as an int value
-     * @param propName
+     * @param propertyName
      * @param propValue the int value we want the prop to be set to.
      */
-    public void setProperty(String propName, int propValue){
-        this.setProperty(propName, new Variant(propValue));        
+    public void setProperty(String propertyName, int propValue){
+        this.setProperty(propertyName, new Variant(propValue));        
     }
 
     /*-------------------------------------------------------
