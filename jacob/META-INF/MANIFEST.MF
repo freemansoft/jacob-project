@@ -1,0 +1,897 @@
+Manifest-Version: 1.0
+
+Name: ./com/jacob/activeX/ActiveXComponent.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: qqewKW8c2W7aSvB4Ob/bMbCPeFI=
+MD5-Digest: EZs0WpbDBV5Id5XRw2tbtg==
+
+Name: ./com/jacob/activeX/ActiveXComponent.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: IeJoOZ9U4LtHuqyqJGKG24nDTYw=
+MD5-Digest: Qqf2RAOc0xBTG8dGIyA2+w==
+
+Name: ./com/jacob/com/ComException.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: fuWzbhsBKLBjPtk5pvgVzskMFz4=
+MD5-Digest: vwLlwRM/J9NYONB/UVw1AA==
+
+Name: ./com/jacob/com/ComException.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 9HsO+/DGzYdZtFDK+Yi6SyEo29I=
+MD5-Digest: tHiTxIfngQHjEXPzVC31pA==
+
+Name: ./com/jacob/com/ComFailException.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: dghV0kFmeXaebK73wRAyBNZsfeM=
+MD5-Digest: EmfTcOZd7lFdNX+ZZIGufA==
+
+Name: ./com/jacob/com/ComFailException.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: yIS8kOUyyl2ymTHxb/8Za4ktjsw=
+MD5-Digest: sdqsHsk9p4XXX5kfvQOQNg==
+
+Name: ./com/jacob/com/ComThread.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: J+KEmDJYSMA2VXg8smZpLFQYAuc=
+MD5-Digest: wnPiLbEgp7GC4sMVsQ1eWg==
+
+Name: ./com/jacob/com/ComThread.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: q0K2wuQ+be8Qrrai/Ui1BTMeFeo=
+MD5-Digest: eH6GkFkD3A3PrX1cZJWr6w==
+
+Name: ./com/jacob/com/Dispatch.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: tYSc84+VUMMWYt7hrLDtcnINNUI=
+MD5-Digest: etVQxCE1JEN1rYCc5ZA79A==
+
+Name: ./com/jacob/com/Dispatch.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: Q95eP1KW/Z/ICzzeaNDCFUIG408=
+MD5-Digest: IovIOD5G/XY7qFAHViNeng==
+
+Name: ./com/jacob/com/DispatchEvents.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 7cgrmVJc18T/hRvT3931tQzVa5s=
+MD5-Digest: CtihQf0ka9OChKX+OnKucQ==
+
+Name: ./com/jacob/com/DispatchEvents.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 5MwAZmktJFp7rq23Lz/VG1/ULk4=
+MD5-Digest: 2haKHCBa7UXfl8HCSPEyQQ==
+
+Name: ./com/jacob/com/DispatchProxy.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: xDGCGyw+8G/kxFFOQtQo3rbhDN8=
+MD5-Digest: +5n2WPrM0Jj0FauyuctPMQ==
+
+Name: ./com/jacob/com/DispatchProxy.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 4NGdFabt0CZL8y56A1x/AEat6/o=
+MD5-Digest: Wd9zhjmACcUxZ3gqdWtB2w==
+
+Name: ./com/jacob/com/EnumVariant.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: ft/EfZ1xwI/J07yz6oxla2jKZFM=
+MD5-Digest: zRYy+0tuDsAQ7SCOJxgx5A==
+
+Name: ./com/jacob/com/EnumVariant.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 3biekksAd50gb6GRfpefO2PpS6c=
+MD5-Digest: zlu6oH2HFI//sGTexAv9GQ==
+
+Name: ./com/jacob/com/JacobObject.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 9uw+e0Wxha1A6tp6PFQE1JMJkvQ=
+MD5-Digest: D37EFI7kTv9NEnsyQcsXsA==
+
+Name: ./com/jacob/com/JacobObject.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: TqJDUM7Ujxt5/zAGSG9uCoKcJ4U=
+MD5-Digest: oD0tL8WPPCN3jF59jfd/yA==
+
+Name: ./com/jacob/com/MainSTA.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 3WKAHdSq2yTa/lqHgyOTo6vqvnk=
+MD5-Digest: h0kY/3xCUs0uCyhWUL+DWQ==
+
+Name: ./com/jacob/com/MainSTA.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: pDIgNuK9H9KhKQEZIMIgM44nDo8=
+MD5-Digest: p/CDI6V3KgdOViQQ6/oR0g==
+
+Name: ./com/jacob/com/ROT.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: bEQuGPBbOn8HlXMmcLQCRh0BlYs=
+MD5-Digest: rCXiBlficXaJbCoFMCeoJg==
+
+Name: ./com/jacob/com/ROT.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: K6WVkJuFZNjgow/o4/1pTyKu2Tk=
+MD5-Digest: eOCwqvCPVk+haZ7WFzEJOg==
+
+Name: ./com/jacob/com/SafeArray.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: AIqtFq0miAVrMUY0HZUnXuhl284=
+MD5-Digest: TiPLaOJAMTzTVP2a2AsX0A==
+
+Name: ./com/jacob/com/SafeArray.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: CGBlCL952tC//MTG+XxqSOQh/hI=
+MD5-Digest: pf25bH4uo0LZOzz7utDa8Q==
+
+Name: ./com/jacob/com/STA.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 6cqSEZm+8kVkAO4Vnc5G04qCrCE=
+MD5-Digest: 7O16Je2NaryCebJZ28U20A==
+
+Name: ./com/jacob/com/STA.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: S0EbhtSPEAv9fGOaTNBymxmZthM=
+MD5-Digest: 9fcj8YmMFCCfB8M5eF7lPA==
+
+Name: ./com/jacob/com/Variant.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: ea5nat308Pg7cxcJdywpqL++HiM=
+MD5-Digest: 6/TukZAwtC9UOUArjcpTXg==
+
+Name: ./com/jacob/com/Variant.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: psnbnw0M+2egeuqpbf2u1C7I/EY=
+MD5-Digest: iuuq5W1sFXeT269RJC7U6w==
+
+Name: ./com/jacob/com/WrongThreadException.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 55DxaZjMfzYE9MTCKZ8VPgpjVLc=
+MD5-Digest: 9uygPT4WdJg8N6Yo/t0tkA==
+
+Name: ./com/jacob/com/WrongThreadException.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: PPQzELKIkTeQJfGTBUfUonPdSnc=
+MD5-Digest: bNwuGE+cW1Z9+pWnI3r/Bg==
+
+Name: ./jacob.dll
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 3LlRg0frUqmTW8HjSXm2tGZi9og=
+MD5-Digest: MgUWKEmjKUX4hFTLoSyeCA==
+
+Name: ./jacob.jar
+Digest-Algorithms: SHA MD5 
+SHA-Digest: xLY8bhITrVUd+Ft+++piDVNh+lc=
+MD5-Digest: 5MOSXL4nEeEAdO40bNd3oA==
+
+Name: ./JacobComLifetime.html
+Digest-Algorithms: SHA MD5 
+SHA-Digest: uGRYLP2xhOaPGbunFQ7cxZcUvaw=
+MD5-Digest: 3RU8RW+2/liuGpkyYbTPHg==
+
+Name: ./jacobSrc_18.zip
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 2jmj7l5rSw0yVb/vlWAYkK/YBwk=
+MD5-Digest: 1B2M2Y8AsgTpgAmY7PhCfg==
+
+Name: ./JacobThreading.html
+Digest-Algorithms: SHA MD5 
+SHA-Digest: IQs2MYpplp8guNE7nFWcnsEJLt8=
+MD5-Digest: MuRQ3uXcEMeB5msQ/oYyTQ==
+
+Name: ./jni/ComThread.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: pfEIKsR11Doq3+Dmwpyf6tscRCY=
+MD5-Digest: RDG15eEa+FxZtSmn1sadSg==
+
+Name: ./jni/ComThread.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: JtBBBpPcOqjBm4o10ui48TOgkps=
+MD5-Digest: z3ocf5BOusRSSdB8madNlA==
+
+Name: ./jni/ComThread.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: Z05DKyL+S6GI3w0GhhkoeWRS+Ss=
+MD5-Digest: wUSJQhroulYl2cZ+eLnu7Q==
+
+Name: ./jni/Dispatch.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: FH0YWD3RyD9CR1fHkGiIzJLh0tk=
+MD5-Digest: VAjOj5ZPrBCbqvd15um09w==
+
+Name: ./jni/Dispatch.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: N74Cx8buqtuTUkLbg604pgcRGmE=
+MD5-Digest: bX1snnEyrNBwexgVNtasCg==
+
+Name: ./jni/Dispatch.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: saxklkHmLIdMVLdKj4vmYRtBHVo=
+MD5-Digest: 0Y6c1VfYLJuQWlm6MI9UuA==
+
+Name: ./jni/DispatchEvents.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: UHLjKXAwbPlVN8hQoexl38jv1lM=
+MD5-Digest: lL07d5A5AIxqphOxetIiLg==
+
+Name: ./jni/DispatchEvents.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: VKWhIhXOim7LLhyLGJclVlkilfI=
+MD5-Digest: s4huR7K3gZu5qfQQTTRcGg==
+
+Name: ./jni/DispatchEvents.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 0I3opm1/14UCERfLZqUkoAnqObI=
+MD5-Digest: Kd6mTsrifhRCmOT2rUkLHw==
+
+Name: ./jni/DispatchProxy.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: sEo5fo91hMQ0k+XVaZk5TCkC0NM=
+MD5-Digest: tsX0rWU+eL5pKaBRhANZIw==
+
+Name: ./jni/DispatchProxy.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: FCqZSwrPy5rOPWeiioNcxz9ooj8=
+MD5-Digest: IfhrIzu/elu0CFTU/+FH0A==
+
+Name: ./jni/DispatchProxy.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: yN/dtGG4um+SuuQrTo5+1uLSiiY=
+MD5-Digest: FTdU29Tt31Zr+v/uF+Exlg==
+
+Name: ./jni/EnumVariant.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: UqE3XEqyuSOqCey9y6NtgO56vlk=
+MD5-Digest: MjoER1irRaeyqAouQJLnaw==
+
+Name: ./jni/EnumVariant.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: rHJQr1J+8v4371BuFvhLifmyXRg=
+MD5-Digest: 0ShO6APjAlzrxpL1VHtp4Q==
+
+Name: ./jni/EnumVariant.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: SBD1O7LN4s4xoYdYX8HMutBkIno=
+MD5-Digest: q05v4Kbf3xXr6TTKFSJh+g==
+
+Name: ./jni/EventProxy.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: tQM4T5PxwKGiWIe7WAr7OUCZn88=
+MD5-Digest: xH3pvJqZW5utS9K2jPDkog==
+
+Name: ./jni/EventProxy.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 25r17CcIBLdEIoHXKp65NyTmVQk=
+MD5-Digest: 2CpIIkRfJSfZQpkvpbBenQ==
+
+Name: ./jni/EventProxy.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: gShJkleKBewW8MrzUC0/XvRQWNw=
+MD5-Digest: zpim8NXVV7RfD/xk2mJW6w==
+
+Name: ./jni/jacob.dll
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 3LlRg0frUqmTW8HjSXm2tGZi9og=
+MD5-Digest: MgUWKEmjKUX4hFTLoSyeCA==
+
+Name: ./jni/jacob.exp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 72e/gQTKiE1r9Uslz4vYRQ0PHmQ=
+MD5-Digest: 5mklGz6sCKSgVrjey6YL5g==
+
+Name: ./jni/jacob.lib
+Digest-Algorithms: SHA MD5 
+SHA-Digest: m8ZbuTExo3Un0O7MWBc5o9WJ6g8=
+MD5-Digest: ybxMyVrwSNUnuhbGLQnYkw==
+
+Name: ./jni/makefile
+Digest-Algorithms: SHA MD5 
+SHA-Digest: n/Ol9YQ2klBEFhF8C7gM37Q85go=
+MD5-Digest: 5gkJFwMCbAAZAEyb/OWKPw==
+
+Name: ./jni/README.txt
+Digest-Algorithms: SHA MD5 
+SHA-Digest: lHYa7laejzkdRZkjyk5hh01Nh70=
+MD5-Digest: 6YannUlp3XpNr7bZP6i5Bg==
+
+Name: ./jni/SafeArray.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: +u64HvTcLPDEuGHsH7ydYMNmROI=
+MD5-Digest: 1C3cuqY05UZF4Kh28Vc3Bw==
+
+Name: ./jni/SafeArray.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: g5KEynNNTCV/0+TtLSrgtBGIVB8=
+MD5-Digest: W6TK/CsQYfRRrCsn1vlf8A==
+
+Name: ./jni/SafeArray.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: HcWyMrmnhyYxKsIO8GfrtEFgHC0=
+MD5-Digest: saSZ5dtWYxMPDzN6svD+lg==
+
+Name: ./jni/STA.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: nEJ3iujtVaHY41S00J/KQSp6MTc=
+MD5-Digest: N3O7B829ib75rCZgY1lifw==
+
+Name: ./jni/STA.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: +VwuhNMGYzZ9aGjZX/YPppDdO1A=
+MD5-Digest: G+RltDyKn4lfuOR9XSQxUA==
+
+Name: ./jni/STA.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: KUDmvPyX3TI/FlQlk/7NLmZVHZs=
+MD5-Digest: kBJEBoZm/30B9aHP7jAxhg==
+
+Name: ./jni/StdAfx.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: QXk1fqHJAYChd8X7CH73V6EJqgU=
+MD5-Digest: rkapC0u6Da9N3BzEShh5uA==
+
+Name: ./jni/StdAfx.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: i9b1viSLE73TdBRHyEYqCQnHdok=
+MD5-Digest: O9mOBXwgjNSj0cF5bibF3g==
+
+Name: ./jni/stdafx.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: WY6n8VAjHD+D+8yfca65Lv2Yanc=
+MD5-Digest: 1ZNNwyP06I7kkDqF1oWmYA==
+
+Name: ./jni/util.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: svps5GbrBIhBersEfXdVDaRxwdM=
+MD5-Digest: V3cYxfy/UdMYgPE4LU2jQw==
+
+Name: ./jni/util.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: If9oIOxyhA0rL44GJlLkrc1IDPg=
+MD5-Digest: A7UlJkDnsxJEKCtn6G1UOw==
+
+Name: ./jni/util.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: Eycr3pdkbM6wpCusv6ppEtXavQQ=
+MD5-Digest: HiuPDNWBFDdn7X4DutL/mw==
+
+Name: ./jni/Variant.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: ZVW7VPsmlHWKjuTpZKs08XlS320=
+MD5-Digest: faCR0N6dP5W+bxzgvblpsA==
+
+Name: ./jni/Variant.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: xEKVgKNM1RnfDIKpP01mHj+3SqU=
+MD5-Digest: jeRydyEBbi2E+WLhuKANIg==
+
+Name: ./jni/Variant.obj
+Digest-Algorithms: SHA MD5 
+SHA-Digest: VkpRSFzVd3DOh5l14/Ohhf3+FBM=
+MD5-Digest: 0A4By2V6SdUdFYoNaELkSA==
+
+Name: ./LICENSE.TXT
+Digest-Algorithms: SHA MD5 
+SHA-Digest: f6pMV3+4WoA2adisGIy1Rax2W8o=
+MD5-Digest: fCYjCTNV8MYNNuW3i2aTFw==
+
+Name: ./makefile
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 8fbp+qFE+YwIwHcapQbHKyq6QE8=
+MD5-Digest: /37LTLMPhiaLolS1X1k1HQ==
+
+Name: ./README.TXT
+Digest-Algorithms: SHA MD5 
+SHA-Digest: NCWTHs86RAcfK917rbotr81sExc=
+MD5-Digest: +KTt8W0TCJsei2AxVFpQFQ==
+
+Name: ./samples/ado/ADO_README.txt
+Digest-Algorithms: SHA MD5 
+SHA-Digest: vyqm9URm65OyGqdOiWCuk67W94I=
+MD5-Digest: gP7U0PwFXCXojgEkzzXYIg==
+
+Name: ./samples/ado/Command.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: VYX5u7DXdbMzqsFPgv5yox5adKs=
+MD5-Digest: ZISCJalFcRGqxRX+172meg==
+
+Name: ./samples/ado/Command.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: u/GPTs8U4XUh8qsXCYrkGpmAq58=
+MD5-Digest: hru+Ns3kuh7ukNMEo7UYlw==
+
+Name: ./samples/ado/CommandTypeEnum.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: hegtG5C8KdUCTpjqfsU30otxd3Y=
+MD5-Digest: aBVcQnMQtpARZsSJcrxoPg==
+
+Name: ./samples/ado/CommandTypeEnum.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 7fa7uxQ9WMUFB6ms7rEi3nKyM/s=
+MD5-Digest: Ey7VKrr+74MTFlyJRdK1WQ==
+
+Name: ./samples/ado/Connection.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: jmve106WOcmbLHhPKwQolgOEl0c=
+MD5-Digest: TGjR6vuVVJkepeC8Bkx0Mw==
+
+Name: ./samples/ado/Connection.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: aIz0OGEkKM5qhfqGPDaizgSQH6o=
+MD5-Digest: uKdIqNEb0fQW6/F54+ULyg==
+
+Name: ./samples/ado/Field.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: jxR9z2XYejS/LMekS66Slmc7/Wc=
+MD5-Digest: sGuUfiZ0YbwCsSmI6mrHCQ==
+
+Name: ./samples/ado/Field.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: yXzIXtij0oGqhOpZViy+2GzMqgA=
+MD5-Digest: gjaIquVdHvBcVczuTZjqMQ==
+
+Name: ./samples/ado/Fields.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 1qWM9CqE5xj2nH7qFOJ6MGY8CjI=
+MD5-Digest: 9rkQ0Cdn32mX+NkIr6JiQg==
+
+Name: ./samples/ado/Fields.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: blVsEdbjJxuW4X4jO9CWgQirOm4=
+MD5-Digest: As+B/G3vm+k5pzQWXTAsdw==
+
+Name: ./samples/ado/ms/README
+Digest-Algorithms: SHA MD5 
+SHA-Digest: WYL+bmWW1nkqEGoOHgf4E5+80Lw=
+MD5-Digest: VPd6NUQNQ5kJOgMbpyCd4A==
+
+Name: ./samples/ado/ms/testms.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: RoKESkqQJiR1k9PRG0VbhdjRChE=
+MD5-Digest: GHy6MwcQVWfuBMTWFX3tdg==
+
+Name: ./samples/ado/ms/testms.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: GW9uXFNDW4pTPSjZHo2D5lFc/zU=
+MD5-Digest: +6iJfY4I6HB/eA8LcgKB6A==
+
+Name: ./samples/ado/Recordset.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 7DOBgOnKy6VMFm7V59fULgPEfio=
+MD5-Digest: M5HhfmAKFb/b/C6csy69wA==
+
+Name: ./samples/ado/Recordset.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: WSFzf787gED6BkN3vSVGhXxb/XU=
+MD5-Digest: aOk5BtJdTTJuJpGyWUpRIg==
+
+Name: ./samples/ado/test.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: AEXzmSw0nhniEgEgcHEqSAIY6cs=
+MD5-Digest: nQp4MdGvsHDnkVG1CzDRrA==
+
+Name: ./samples/ado/test.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: u59LMxRc+XIhuM/vHtznkCLC0IE=
+MD5-Digest: b4q8u/F+GYhyWIr1cM8EdA==
+
+Name: ./samples/applet/AppTest.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: n56Is99dBgC8tQ6K9IqwYnALkmI=
+MD5-Digest: FdQ7a7vx1CXpNinMKQEveQ==
+
+Name: ./samples/applet/AppTest.html
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 2pGYv1dUavvaMY+1b0hBhS9mv3Y=
+MD5-Digest: rZWQxtKOziVCquj5M6GFFw==
+
+Name: ./samples/applet/AppTest.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: pC2PW5TpOHZuAYJGm9B1Od/BRw4=
+MD5-Digest: qMKmotn7i7fzaPgoBD6gdQ==
+
+Name: ./samples/README.txt
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 9kyVx/ey8MxEfF1HATrDZlg9Rxk=
+MD5-Digest: gRXrNz3NEKFy7fasoujArg==
+
+Name: ./samples/servlet/JacobScript.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: NY4hemo3uGEIBCWTyyyzm7a0CzQ=
+MD5-Digest: MUuHIxHh6F98jE0YH7P+bg==
+
+Name: ./samples/servlet/JacobScript.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: dvp/KSXGqV6gC2s9NPzTvAbm0uc=
+MD5-Digest: JUP2vLcS7M4pe9uWJsIOWw==
+
+Name: ./samples/servlet/readme.txt
+Digest-Algorithms: SHA MD5 
+SHA-Digest: GE4VxwDk3uAEQDBvvWBoOe4KKXw=
+MD5-Digest: 1MSy/NVW2EyTybpjuagEIQ==
+
+Name: ./samples/test/Access.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: YJ8ho+ID8ugfEDWCPxYbNoiNpsE=
+MD5-Digest: QInWVJKkR9hjDynEpHjVOQ==
+
+Name: ./samples/test/Access.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: uqv9slXCqv98mTceAxd95Y7Vrh0=
+MD5-Digest: fpK035MccuE2h/Z01omyOA==
+
+Name: ./samples/test/atl/MultiFace/dlldata.c
+Digest-Algorithms: SHA MD5 
+SHA-Digest: HWTbDhfSULe5RQibEUEI830BLuE=
+MD5-Digest: 0+48R+h0ivE4WGRJFfPJDA==
+
+Name: ./samples/test/atl/MultiFace/Face.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: OhddW2y86e39z4U0TPDtqmB+MmA=
+MD5-Digest: 4dTrCiRHhORZk4BnDf7z3w==
+
+Name: ./samples/test/atl/MultiFace/Face.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: y0gekndtQPP58IyEFliYdG37qns=
+MD5-Digest: GTxFB6uT1X5vEGI0WcrL/Q==
+
+Name: ./samples/test/atl/MultiFace/Face.rgs
+Digest-Algorithms: SHA MD5 
+SHA-Digest: F8u+qbVSCFIKnUMKvvy5UYQ+HLs=
+MD5-Digest: S4ANAdXVLXbCPN2x7uD5pQ==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.aps
+Digest-Algorithms: SHA MD5 
+SHA-Digest: lQbTvrX5Vvm9994+oYa+l9zCrMI=
+MD5-Digest: u2p9rqJFCAD8E0y/GBYa9w==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: k3Fh0X2Zf2P5HFYX0XBC3cr8F8U=
+MD5-Digest: dgadf5J+z2FmRkZrARoVhw==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.def
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 2LcCcz80Nw99Cplvy56LVfKj4AQ=
+MD5-Digest: u/wev8ycCsOtBXjq4koWsA==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.dsp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: EP934454nHfECg4uMbMpi2qSiBg=
+MD5-Digest: BpITlBALRWf1UnbtvqJ1tw==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.dsw
+Digest-Algorithms: SHA MD5 
+SHA-Digest: HPkFe3R5aG/7zdtwSpPIvCoJrX8=
+MD5-Digest: JwOWHmGnfAJWodLnqiA4ig==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: NzYDi990PqhD0pyW/XswKUHiQGI=
+MD5-Digest: I4SDltcfIyyBFfg71dSKoA==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.idl
+Digest-Algorithms: SHA MD5 
+SHA-Digest: rE8NyFJgJFgoxHYEFJRFTwIGTjA=
+MD5-Digest: Yf3mnqG5Jx/iSE5S/1N3QA==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.ncb
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 7GDt/Nx4jef09B5ACmv+1xqcQt4=
+MD5-Digest: zyxbqfMC8PmDrMRA4VvVcA==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.opt
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 9KOiwG4QxIFaNgVtYosl9rn4F5Q=
+MD5-Digest: Ai1X3ztSmyZneaivsOIhgA==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.plg
+Digest-Algorithms: SHA MD5 
+SHA-Digest: GgHEYrPCgoTvQJbLVkGSucuJI84=
+MD5-Digest: fzXVPatmqIW5BKWNn20x1w==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.rc
+Digest-Algorithms: SHA MD5 
+SHA-Digest: cKcPvkLwFvr2SpNabMVU4LRCHQQ=
+MD5-Digest: B81k6bAmMI8mY9pywHyQ9Q==
+
+Name: ./samples/test/atl/MultiFace/MultiFace.tlb
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 45izBsDG1ouPhqTvH8IDPK9oNlY=
+MD5-Digest: 5smfNJ6a5a/r3EBBmZN/Yw==
+
+Name: ./samples/test/atl/MultiFace/MultiFaceps.def
+Digest-Algorithms: SHA MD5 
+SHA-Digest: BZnsV6gPHLCjBY1gkyjg/SCOw+4=
+MD5-Digest: nAyFg5jxyfxmfe2MD3C1vA==
+
+Name: ./samples/test/atl/MultiFace/MultiFaceps.mk
+Digest-Algorithms: SHA MD5 
+SHA-Digest: bJNeboLTRvXTAOuiiEboGEW6s/8=
+MD5-Digest: L+Fei2KII1dnTm5Goszing==
+
+Name: ./samples/test/atl/MultiFace/MultiFace_i.c
+Digest-Algorithms: SHA MD5 
+SHA-Digest: L+orpCaMGOQ+onrBja2eUcqCkZg=
+MD5-Digest: EMEes+f0GfZuWG1TY8iItg==
+
+Name: ./samples/test/atl/MultiFace/MultiFace_p.c
+Digest-Algorithms: SHA MD5 
+SHA-Digest: qhXfLrVwc3+a2zQh3nqfuMMXJj4=
+MD5-Digest: PddZdwiG4GABL2pFOgRWjg==
+
+Name: ./samples/test/atl/MultiFace/resource.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: ltVpL0yIoPqNP533PfXz0Mz3or0=
+MD5-Digest: 67snAuAXM2aTH3ZXCjkOsg==
+
+Name: ./samples/test/atl/MultiFace/StdAfx.cpp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: rRcr4BUiUcSuC9HT6rQc5MToiHk=
+MD5-Digest: I/3OLbvTOW7wzD1mshUuuQ==
+
+Name: ./samples/test/atl/MultiFace/StdAfx.h
+Digest-Algorithms: SHA MD5 
+SHA-Digest: q4qcVRmFU7LYISdjJeW4CgEE9Xg=
+MD5-Digest: jPsHuOvPDPZYxq1xxcvLsg==
+
+Name: ./samples/test/atl/MultiFace.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 68ZRr3nlrxp7xvgB8QtPLvBXkB0=
+MD5-Digest: +E/sNJRVhdK9DvCHDKyeKA==
+
+Name: ./samples/test/atl/MultiFace.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: RD5SVQAbELsukdxLSrAlVraY5Rw=
+MD5-Digest: O0/kAOqvz9Y1Gow65MmdJQ==
+
+Name: ./samples/test/atl/readme.txt
+Digest-Algorithms: SHA MD5 
+SHA-Digest: EHBHwONmkXMZLgpTRc6m8pORye0=
+MD5-Digest: D+oj7h9BOskXCcBQuBSFdw==
+
+Name: ./samples/test/DispatchTest.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: b+R4oUyy/tugq7jgd+ZKEzqd5pI=
+MD5-Digest: Uf5nmYcYZrCNk/YSYyUpcA==
+
+Name: ./samples/test/DispatchTest.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: W0BY50++uyVxEmDh8soynVg6lwI=
+MD5-Digest: A6oIyzfJUCR1M6k3fQQz8Q==
+
+Name: ./samples/test/errEvents.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: EzYY0sXl18eP1HDctmCpgEWXxxI=
+MD5-Digest: 2ZH6Pcx49W7FYL9aF1qiPQ==
+
+Name: ./samples/test/foo.foo
+Digest-Algorithms: SHA MD5 
+SHA-Digest: hKLRQFDind7Bt/el/UA0bOILVEc=
+MD5-Digest: LfWLkubtUd37afJ4Ctu48A==
+
+Name: ./samples/test/foo.ser
+Digest-Algorithms: SHA MD5 
+SHA-Digest: lmeuI3I317iY2RKqZL40s3zMkZA=
+MD5-Digest: D73llNfjRNWi6/yEfqjcZg==
+
+Name: ./samples/test/IEEvents.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: MzKjQ9LnBvcLGqb4eIoYX3pbWro=
+MD5-Digest: rLvMvumb3zT+lmpnH12/0g==
+
+Name: ./samples/test/IETest.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 7wOaFqd2TvqatunZ8cgjkuwvAmc=
+MD5-Digest: +Jlit06yZxTmsaTAGLjR8A==
+
+Name: ./samples/test/IETest.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: t3BKHw/pqw5198/fE3ttMMBijbE=
+MD5-Digest: oBRVGqLdSZSxD6Acpne9mA==
+
+Name: ./samples/test/jacobtest.xls
+Digest-Algorithms: SHA MD5 
+SHA-Digest: iPakwQbwO78iKOXAnKi7J1vzvEs=
+MD5-Digest: n07pNBLHIG662l3KfsZWdg==
+
+Name: ./samples/test/math.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: Z4QCBzw8I8743G2bsANsMvYvQjU=
+MD5-Digest: oAuf3ElYdBR3Lmrq0+d9Og==
+
+Name: ./samples/test/math.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: n8YiT1GFbeaWXLMy+INu2Wfl7/k=
+MD5-Digest: h1G6CVTiAFjm7Re1f64NEA==
+
+Name: ./samples/test/MathProj/Math.cls
+Digest-Algorithms: SHA MD5 
+SHA-Digest: CZJcmhZCs1+1p4NO71dggowWNc8=
+MD5-Digest: +gkN44UHyxn83JeQVf+E6Q==
+
+Name: ./samples/test/MathProj/MathTest.dll
+Digest-Algorithms: SHA MD5 
+SHA-Digest: hoUwAKBHCK55cn7JdsA3wBf/Bn0=
+MD5-Digest: 3BcNgFO5perWuHx79V0mXg==
+
+Name: ./samples/test/MathProj/MathTest.exp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: ff9RS0k+cu2JO360qYqMoA1oJuA=
+MD5-Digest: FNmayjvq8mTjLcIUbX5Zkw==
+
+Name: ./samples/test/MathProj/MathTest.lib
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 62KdZxK15c8CLHZXYnJxbrjuBIc=
+MD5-Digest: Is8yCaURP4hrKCZbNWmW7Q==
+
+Name: ./samples/test/MathProj/MathTest.vbp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: I/k59CxSo5KBb/Mj0zLXnB/gpDU=
+MD5-Digest: Iil+Tidd/5EWFe5TnPwhiA==
+
+Name: ./samples/test/MathProj/MathTest.vbw
+Digest-Algorithms: SHA MD5 
+SHA-Digest: h3dc5rr6p7aV45U26F4DyFTJM7I=
+MD5-Digest: LudpvbnfPRzD0GwfkSjRdg==
+
+Name: ./samples/test/MathProj/README
+Digest-Algorithms: SHA MD5 
+SHA-Digest: nPVI0dpp+w5yLvy/p9le2e4BwiY=
+MD5-Digest: S8VlUENr3X79v9OFAUljyQ==
+
+Name: ./samples/test/Outlook.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: DbN+VE/zRE6P+R2qIph048KmCl8=
+MD5-Digest: Sxs8kOpskGsoOpwnSJxX2g==
+
+Name: ./samples/test/Outlook.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: OBV8N5rPxKJliq2DSDxLlJe8+2c=
+MD5-Digest: 1ZgPwE5lkgetta1TElh2Iw==
+
+Name: ./samples/test/safearray.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: C9m0td07CI3WCNqMvDgCReVBk4U=
+MD5-Digest: 3sWM1BZ/M6XrqeIJCSnIfw==
+
+Name: ./samples/test/safearray.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: /F4AvsA0zZN/I7cJAr1sHRsw+Fc=
+MD5-Digest: oKA2jfEuphjZf30RyxJsvQ==
+
+Name: ./samples/test/sample2.mdb
+Digest-Algorithms: SHA MD5 
+SHA-Digest: Wp2D73waAFiEmDPw8ji7q+jZgFQ=
+MD5-Digest: ZKs2YBS5XVEK9iDtHnGUpw==
+
+Name: ./samples/test/sa_dispatch.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: nCuBxiPc21pt7CnmxD+TIV4x1FI=
+MD5-Digest: IhuUwtw0m6RfONvXtqvSAw==
+
+Name: ./samples/test/sa_dispatch.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: tIIx4FMZGe7k6+GH4ajRoWPJvyY=
+MD5-Digest: DWknkLquVVJKRyKYSfXSOA==
+
+Name: ./samples/test/sa_test.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: NhQ8ICD0BX3upJ3yhPox7D4OrYw=
+MD5-Digest: 2J2GkyWd+qfgf7Fjs8JnwA==
+
+Name: ./samples/test/sa_test.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: R682jIXe76aB9kJyNM0wtbZqtxU=
+MD5-Digest: qLpQzDlRNgHUMSNvW9F9Vw==
+
+Name: ./samples/test/ScriptTest.bat
+Digest-Algorithms: SHA MD5 
+SHA-Digest: bxoaT2EWQv5FYtCWB0e9T89wJ2c=
+MD5-Digest: iQQJtrBB1MZ6ljtIXoqIxQ==
+
+Name: ./samples/test/ScriptTest.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 9McitGPdEWuF+klNFu9Op2dcOuk=
+MD5-Digest: SzDmf+iH5s/E1EmYPh208w==
+
+Name: ./samples/test/ScriptTest.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: yo2azi6j2xgIDKymZGO5l4FEdjE=
+MD5-Digest: P/DSKEt74WRFIgJqRVHVtw==
+
+Name: ./samples/test/ScriptTest2.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: LktPbcouI60ec7wmvfmurGSFaT4=
+MD5-Digest: OygfOlXJlkqn1x4TM8eI7g==
+
+Name: ./samples/test/ScriptTest2.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: HTrcf7IR3Og5i0xIw1mB7F4i0AY=
+MD5-Digest: cyeOvZyeb0ZMjYFwAuCvRw==
+
+Name: ./samples/test/ScriptTest3.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: ZdD9Uar1kiYkiiOrOG5/Zs/gKHQ=
+MD5-Digest: JP8N1C1bKhlZUzjNWjtfMw==
+
+Name: ./samples/test/ScriptTest3.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: Q0QxUzUMaIEUiuSiCYFDh8tPWzk=
+MD5-Digest: 2JjocMlhddWcUXsKb3Arlw==
+
+Name: ./samples/test/speed.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: DdOhaT+V3Gz8lUFpTjkNHU8yUHI=
+MD5-Digest: 10C0cOv36ugsmjtRdWiYeQ==
+
+Name: ./samples/test/speed.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: VRRtx5ebOKZ9w9i7zr5tjiGHtSA=
+MD5-Digest: fW3+AiO4odk/dPP8QRwP7g==
+
+Name: ./samples/test/test.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 0F3HoVHLRbxeIftBk5xSiayuruw=
+MD5-Digest: xmgAS3ZMreVcVetw+Emz6w==
+
+Name: ./samples/test/test.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: fDgQ7roF5yECQWDgqE/H7hMS9lY=
+MD5-Digest: C+R1qFuy0KYA6+NpE6lcMw==
+
+Name: ./samples/test/testEvents.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: VgQZMlTDKdXwHwnO+pg34FVxe+s=
+MD5-Digest: pxOGqcHhcNCgpLrq961CYA==
+
+Name: ./samples/test/variant_test.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: rhCKxgFsnz4DCR3V6ZCnGZMKHNc=
+MD5-Digest: U6IqRLGkVKIi6GYMVfQaJQ==
+
+Name: ./samples/test/variant_test.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 7NFXoGskiCa/ZL7U8Acx/uZkdTE=
+MD5-Digest: xPiJ1/PwMsYlUPlAiR+wkg==
+
+Name: ./samples/test/varSerTest.class
+Digest-Algorithms: SHA MD5 
+SHA-Digest: EyK1bvd0fQXevbJJfukQqFSTq+0=
+MD5-Digest: ceVxF+Oz7CJF5whitqs7IA==
+
+Name: ./samples/test/varSerTest.java
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 1kR1a6FqMGKYgazH8ZllBmTxWN4=
+MD5-Digest: E+9UQHIkQN/XII2libkWXw==
+
+Name: ./todo.txt
+Digest-Algorithms: SHA MD5 
+SHA-Digest: GuE6XLByuSmPs4Q3TX8Qs2JRSro=
+MD5-Digest: KtiB8O69ft5CCxNs+T9zZQ==
+
+Name: ./vstudio/jacob/jacob.dsp
+Digest-Algorithms: SHA MD5 
+SHA-Digest: nreCezgQ/DKa7TQ4Cj28cRzKQzM=
+MD5-Digest: GOjDddOu1ZU5r0iGcEZzaw==
+
+Name: ./vstudio/jacob/jacob.dsw
+Digest-Algorithms: SHA MD5 
+SHA-Digest: yB8Hhn1M6jX7cOBloxUL2pAFf7Y=
+MD5-Digest: hGWX78QoGIXxJed6eeTbAQ==
+
+Name: ./vstudio/jacob/jacob.ncb
+Digest-Algorithms: SHA MD5 
+SHA-Digest: xSDLS4QUbjm8RHNL/Qzq70zkYlk=
+MD5-Digest: PK8cmkqwvTT9ECgqFhpdVQ==
+
+Name: ./vstudio/jacob/jacob.opt
+Digest-Algorithms: SHA MD5 
+SHA-Digest: ZI/dl8LS/Sp5vpLdODDNox8LfMc=
+MD5-Digest: 90HtjVn8YtapmRMC9MAp0g==
+
+Name: ./vstudio/jacob/jacob.plg
+Digest-Algorithms: SHA MD5 
+SHA-Digest: 6D62etCgUdwooRVezsQCR5GG79M=
+MD5-Digest: FEkATqvQLJeVQzpfboND4A==
+
+Name: ./WhatsNew.html
+Digest-Algorithms: SHA MD5 
+SHA-Digest: WZmYYAE5PedacDkqwqNPFlp4vSE=
+MD5-Digest: WVceOUyV6DUWlncvAuqzpw==
+

@@ -1,0 +1,70 @@
+// MultiFace.idl : IDL source for MultiFace.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (MultiFace.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+	
+	[
+		object,
+		uuid(9BF2440F-B2E0-11D4-A695-00104BFF3241),
+		dual,
+		helpstring("IFace1 Interface"),
+		pointer_default(unique)
+	]
+	interface IFace1 : IDispatch
+	{
+		[propget, id(1), helpstring("property Face1Name")] HRESULT Face1Name([out, retval] BSTR *pVal);
+		[propput, id(1), helpstring("property Face1Name")] HRESULT Face1Name([in] BSTR newVal);
+	};
+
+	[
+		object,
+		uuid(9BF24410-B2E0-11D4-A695-00104BFF3241),
+		dual,
+		helpstring("IFace2 Interface"),
+		pointer_default(unique)
+	]
+	interface IFace2 : IDispatch
+	{
+		[propget, id(1), helpstring("property Face2Nam")] HRESULT Face2Nam([out, retval] BSTR *pVal);
+		[propput, id(1), helpstring("property Face2Nam")] HRESULT Face2Nam([in] BSTR newVal);
+	};
+
+	[
+		object,
+		uuid(9BF24411-B2E0-11D4-A695-00104BFF3241),
+		dual,
+		helpstring("IFace3 Interface"),
+		pointer_default(unique)
+	]
+	interface IFace3 : IDispatch
+	{
+		[propget, id(1), helpstring("property Face3Name")] HRESULT Face3Name([out, retval] BSTR *pVal);
+		[propput, id(1), helpstring("property Face3Name")] HRESULT Face3Name([in] BSTR newVal);
+	};
+
+[
+	uuid(9BF24403-B2E0-11D4-A695-00104BFF3241),
+	version(1.0),
+	helpstring("MultiFace 1.0 Type Library")
+]
+library MULTIFACELib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	
+	[
+		uuid(9BF24412-B2E0-11D4-A695-00104BFF3241),
+		helpstring("Face Class")
+	]
+	coclass Face
+	{
+		[default] interface IFace1;
+		interface IFace2;
+		interface IFace3;
+	};
+};
