@@ -14,30 +14,67 @@ class IETest
 {
     public static void main(String[] args)
     {
-      int delay = 5000; // msec
-      ActiveXComponent ie = new ActiveXComponent("clsid:0002DF01-0000-0000-C000-000000000046");
-      Dispatch ieo = ie.getObject();
-      try {
-        Dispatch.put(ieo, "Visible", new Variant(true));
-        Dispatch.put(ieo, "AddressBar", new Variant(true));
-        System.out.println(Dispatch.get(ieo, "Path"));
-        Dispatch.put(ieo, "StatusText", new Variant("My Status Text"));
-  
-        IEEvents ieE = new IEEvents();
-        DispatchEvents de = new DispatchEvents((Dispatch) ieo, ieE,"InternetExplorer.Application.1");
-        Variant optional = new Variant();
-        optional.noParam();
-  
-        Dispatch.call(ieo, "Navigate", new Variant("http://www.danadler.com/jacob"));
-        try { Thread.sleep(delay); } catch (Exception e) {}
-        Dispatch.call(ieo, "Navigate", new Variant("http://groups.yahoo.com/group/jacob-project"));
-        try { Thread.sleep(delay); } catch (Exception e) {}
-      } catch (Exception e) {
-        e.printStackTrace();
-      } finally {
-        ie.invoke("Quit", new Variant[] {});
+      // this line starts the pump but it runs fine without it
+      //ComThread.startMainSTA();
+      // remove this line and it dies
+      ComThread.InitMTA(true);
+      IETestThread aThread = new IETestThread();
+      aThread.run();
+      while (aThread.isAlive()){
+          try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            // doen with the sleep
+            //e.printStackTrace();
+        }
       }
+      System.out.println("Thread quit, about to quit main sta");
+      // this line only does someting if startMainSTA() was called
+      ComThread.quitMainSTA();
+      System.out.println("did quit main sta");
     }
+}
+
+class IETestThread extends Thread
+{
+    public IETestThread(){
+        super();
+    }
+    
+    public void run()
+    {
+        int delay = 5000; // msec
+        // paired with statement below that blows up
+        ComThread.InitMTA();
+        ActiveXComponent ie = new ActiveXComponent("InternetExplorer.Application");
+        try {
+          Dispatch.put(ie, "Visible", new Variant(true));
+          Dispatch.put(ie, "AddressBar", new Variant(true));
+          System.out.println(Dispatch.get(ie, "Path"));
+          Dispatch.put(ie, "StatusText", new Variant("My Status Text"));
+    
+          IEEvents ieE = new IEEvents();
+          DispatchEvents de = new DispatchEvents((Dispatch) ie, ieE,"InternetExplorer.Application.1");
+          Variant optional = new Variant();
+          optional.noParam();
+    
+          Dispatch.call(ie, "Navigate", new Variant("http://www.danadler.com/jacob"));
+          try { Thread.sleep(delay); } catch (Exception e) {}
+          Dispatch.call(ie, "Navigate", new Variant("http://groups.yahoo.com/group/jacob-project"));
+          try { Thread.sleep(delay); } catch (Exception e) {}
+        } catch (Exception e) {
+          e.printStackTrace();
+        } finally {
+          ie.invoke("Quit", new Variant[] {});
+        }
+        // this blows up when it tries to release a DispatchEvents object
+        // I think this is because there is still one event we should get back
+        // "OnQuit" that will came after we have released the thread pool
+        // this is probably messed up because DispatchEvent object will have been
+        // freed before the callback
+        System.out.println("about to call release in thread");
+        ComThread.Release();
+    }    
 }
 
 class IEEvents 
