@@ -40,8 +40,6 @@
 	<property name="jacob_java.bin" value="${install.dir}" />
 	<property name="jacob_cpp.src" value="${basedir}/jni" />
 	<property name="jacob_cpp.bin" value="${install.dir}/jni" />
-	<property name="jacob_zip.src" value="${install.dir}/JacobSrc_${version}.zip" />
-	<property name="jacob_zip.bin" value="${install.dir}/JacobBin_${version}.zip" />
 	
 	<property name="jacob.jar" value="${install.dir}/jacob.jar" />
 	<property name="jacob.dll" value="${install.dir}/jacob.dll" />
