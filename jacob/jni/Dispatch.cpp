@@ -83,7 +83,8 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
   env->GetMethodID(autoClass, "<init>", "(I)V");
   // construct a Dispatch object to return
   // I am copying the pointer to java
-  if (disp) disp->AddRef();
+  // jacob-msg 1817 - SF 1053871 :  QueryInterface already called AddRef!!
+  //if (disp) disp->AddRef();
   jobject newAuto = env->NewObject(autoClass, autoCons, disp);
   return newAuto;
 }
@@ -286,7 +287,9 @@ static char* CreateErrorMsgFromInfo(HRESULT inResult, EXCEPINFO* ioInfo,
     ::strncat(msg, methName, MSG_LEN);
     ::strncat(msg, "\nDescription: ", MSG_LEN);
     ::strncat(msg, msg2, MSG_LEN);
-    delete msg2;
+    // jacob-msg 1075 - SF 1053872 : Documentation says "use LocalFree"!! 
+    //delete msg2;
+	LocalFree(msg2); 
   }
   return msg;
 }
@@ -365,6 +368,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
         break;
       }
     case DISPATCH_PROPERTYPUT:
+    case DISPATCH_PROPERTYPUTREF: // jacob-msg 1075 - SF 1053872
       {
         SETDISPPARAMS(dispparams, num_args, varr, 1, &dispidPropertyPut);
         break;
@@ -409,6 +413,20 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
     const char *nm = env->GetStringUTFChars(name, NULL);
     char *buf = CreateErrorMsgFromInfo(hr, &excepInfo, nm);
     env->ReleaseStringUTFChars(name, nm);
+    
+    // jacob-msg 3696 - SF 1053866
+	if(hr == DISP_E_EXCEPTION)
+	{
+		if(excepInfo.scode != 0)
+		{
+			hr = excepInfo.scode;
+		}
+		else
+		{
+			hr = _com_error::WCodeToHRESULT(excepInfo.wCode);
+		}
+	}
+	
     ThrowComFail(env, buf, hr);
     if (buf) delete buf;
     return NULL;
