@@ -61,19 +61,6 @@ public class ActiveXComponent extends Dispatch {
         System.loadLibrary("jacob");
     }
     
-    /**
-     * This is really a cover for call(String,Variant[]) that should be eliminated
-     * @deprecated Callers should call call(String,Variant[]) since that is what this calls
-     * @param name
-     * @param args
-     * @return
-     */
-    public Variant invoke(String name, Variant[] args)
-    {
-      return call(name,args);
-      //return Dispatch.callN(this, name, args);
-    }
-
     
     
     /*============================================================
@@ -274,8 +261,8 @@ public class ActiveXComponent extends Dispatch {
      * @param callAction
      * @return Dispatch representing the results of the call
      */
-    public Dispatch callGetDispatch(String callAction){
-        return new Dispatch(Dispatch.call(this,callAction).toDispatch());
+    public Dispatch invokeGetDispatch(String callAction){
+        return new Dispatch(invoke(callAction).toDispatch());
     }
     
     /**
@@ -284,8 +271,9 @@ public class ActiveXComponent extends Dispatch {
      * @param parameter
      * @return Dispatch representing the results of the call
      */
-    public Dispatch callGetDispatch(String callAction, Variant parameter){
-        return new Dispatch(Dispatch.call(this,callAction, parameter).toDispatch());
+    public Dispatch invokeGetDispatch(String callAction, 
+            Variant parameter){
+        return new Dispatch(invoke(callAction, parameter).toDispatch());
     }
     
     /**
@@ -295,8 +283,10 @@ public class ActiveXComponent extends Dispatch {
      * @param parameter2
      * @return Dispatch representing the results of the call
      */
-    public Dispatch callGetDispatch(String callAction, Variant parameter1, Variant parameter2){
-        return new Dispatch(Dispatch.call(this,callAction, parameter1, parameter2).toDispatch());
+    public Dispatch invokeGetDispatch(String callAction, 
+            Variant parameter1, Variant parameter2){
+        return new Dispatch(invoke(callAction, 
+                parameter1, parameter2).toDispatch());
     }
     
     /**
@@ -307,8 +297,12 @@ public class ActiveXComponent extends Dispatch {
      * @param parameter3
      * @return Dispatch representing the results of the call
      */
-    public Dispatch callGetDispatch(String callAction, Variant parameter1, Variant parameter2, Variant parameter3){
-        return new Dispatch(Dispatch.call(this,callAction, parameter1, parameter2, parameter3).toDispatch());
+    public Dispatch invokeGetDispatch(String callAction, 
+            Variant parameter1, 
+            Variant parameter2, 
+            Variant parameter3){
+        return new Dispatch(invoke(callAction, 
+                parameter1, parameter2, parameter3).toDispatch());
     }
     
     /**
@@ -320,13 +314,14 @@ public class ActiveXComponent extends Dispatch {
      * @param parameter4
      * @return Dispatch representing the results of the call
      */
-    public Dispatch callGetDispatch(String callAction, 
+    public Dispatch invokeGetDispatch(String callAction, 
             Variant parameter1, 
             Variant parameter2, 
             Variant parameter3,
             Variant parameter4){
-        return new Dispatch(Dispatch.call(this,callAction, 
-                parameter1, parameter2, parameter3, parameter4).toDispatch());
+        return new Dispatch(invoke(callAction, 
+                parameter1, parameter2, parameter3, parameter4)
+                .toDispatch());
     }
     
     /**
@@ -336,7 +331,7 @@ public class ActiveXComponent extends Dispatch {
      * @param parameter
      * @return a Variant but that may be null for some calls
      */
-    public Variant call(String actionCommand, String parameter){
+    public Variant invoke(String actionCommand, String parameter){
         return Dispatch.call(this, actionCommand, parameter);
     }
     
@@ -346,29 +341,43 @@ public class ActiveXComponent extends Dispatch {
      * @param parameter
      * @return Variant result
      */
-    public Variant call(String actionCommand, boolean parameter){
+    public Variant invoke(String actionCommand, boolean parameter){
         return Dispatch.call(this, actionCommand, new Variant(parameter));
     }
 
     /**
-     * makes a dispatch call to teh passed in action with a string and integer parameter
+     * makes a dispatch call to the passed in action with a single int parameter
+     * @param actionCommand
+     * @param parameter
+     * @return
+     */
+    public Variant invoke(String actionCommand, int parameter){
+        return Dispatch.call(this, actionCommand, new Variant(parameter));
+    }
+    
+    /**
+     * makes a dispatch call to the passed in action with a string and integer parameter
+     * (this was put in for some application)
      * @param actionCommand
      * @param parameter1
      * @param parameter2
      * @return Variant result
      */
-    public Variant call(String actionCommand, String parameter1, int parameter2){
+    public Variant invoke(String actionCommand, String parameter1, int parameter2){
         return Dispatch.call(this, actionCommand, parameter1, new Variant(parameter2));
     }
+
     /**
      * makes a dispatch call to the passed in action with two 
      * integer parameters
+     * (this was put in for some application)
      * @param actionCommand
      * @param parameter1
      * @param parameter2
      * @return a Variant but that may be null for some calls
      */
-    public Variant call(String actionCommand, int parameter1, int parameter2){
+    public Variant invoke(String actionCommand, 
+            int parameter1, int parameter2){
         return Dispatch.call(this, actionCommand, 
                 new Variant(parameter1),new Variant(parameter2));
     }
@@ -378,38 +387,78 @@ public class ActiveXComponent extends Dispatch {
      * @param parameter
      * @return a Variant but that may be null for some calls
      */
-    public Variant call(String callAction, Variant parameter){
+    public Variant invoke(String callAction, Variant parameter){
         return Dispatch.call(this,callAction, parameter);
     }
     
     /**
-     * makes a dispatch call for the passed in action and single parameter
+     * makes a dispatch call for the passed in action and two parameter
      * @param callAction
      * @param parameter1
      * @param parameter2
      * @return a Variant but that may be null for some calls
      */
-    public Variant call(String callAction, Variant parameter1, Variant parameter2){
+    public Variant invoke(String callAction, 
+            Variant parameter1, 
+            Variant parameter2){
         return Dispatch.call(this,callAction, parameter1,parameter2);
     }
+    
+    /**
+     * makes a dispatch call for the passed in action and two parameter
+     * @param callAction
+     * @param parameter1
+     * @param parameter2
+     * @param parameter3
+     * @return Variant result data
+     */
+    public Variant invoke(String callAction, 
+            Variant parameter1, 
+            Variant parameter2, 
+            Variant parameter3){
+        return Dispatch.call(this,callAction, 
+                parameter1, parameter2, parameter3);
+    }
+
+
+    /**
+     * calls call() with 4 variant parameters
+     * @param callAction
+     * @param parameter1
+     * @param parameter2
+     * @param parameter3
+     * @param parameter4
+     * @return Variant result data
+     */
+    public Variant invoke(String callAction, 
+            Variant parameter1, 
+            Variant parameter2, 
+            Variant parameter3,
+            Variant parameter4){
+        return Dispatch.call(this,callAction, 
+                parameter1, parameter2, parameter3, parameter4);
+    }
+    
     
     /**
      * makes a dispatch call for the passed in action and no parameter
      * @param callAction
      * @return a Variant but that may be null for some calls
      */
-    public Variant call(String callAction){
+    public Variant invoke(String callAction){
         return Dispatch.call(this,callAction);
     }
     
     /**
+     * This is really a cover for call(String,Variant[]) that should be eliminated
      * call with a variable number of args mainly used for quit.
      * @param name
      * @param args
-     * @return Variant result of the invoke
+     * @return
      */
-    public Variant call(String name, Variant[] args) {
-        return Dispatch.callN(this, name, args);
+    public Variant invoke(String name, Variant[] args)
+    {
+      return Dispatch.callN(this, name, args);
     }
 
     
