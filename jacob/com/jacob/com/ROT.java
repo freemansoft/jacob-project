@@ -86,9 +86,13 @@ public abstract class ROT
         {
           // Obtain the first object in the vector
           JacobObject o = (JacobObject)((java.lang.ref.WeakReference)v.elementAt(0)).get();
-          debug(t_name + ":release("+((o!=null)? o.toString() : o.getClass().getName())+")");
+          
           // If this object is not null, release it
-          if (o != null) o.release();
+          if (o != null) 
+          {
+              o.release();
+              debug(t_name + "release:"+o+"->"+o.getClass().getName());
+          }
           // remove that object from our vector
           v.removeElementAt(0);
         }
@@ -156,7 +160,8 @@ public abstract class ROT
             {
                 java.lang.ref.WeakReference weak = (java.lang.ref.WeakReference)it.next();
                 JacobObject o = (JacobObject)weak.get(); 
-                if (o != null && o.toString() != null)
+                //if (o != null && o.toString() != null)
+                if (o != null)
                 {
                     debug(t_name + "release:"+o+"->"+o.getClass().getName());
                     o.release();
