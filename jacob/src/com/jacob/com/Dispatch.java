@@ -127,6 +127,22 @@ public class Dispatch extends JacobObject
     private String programId = null;
   
 
+    /**
+     * Dummy empty array used one doesn't have to be created on every 
+     * invocation
+     */
+    private final static Object[] NO_OBJECT_ARGS = new Object[0];
+    /**
+     * Dummy empty array used one doesn't have to be created on every 
+     * invocation
+     */
+    private final static Variant[] NO_VARIANT_ARGS = new Variant[0];
+    /**
+     * Dummy empty array used one doesn't have to be created on every 
+     * invocation
+     */
+    private final static int[] NO_INT_ARGS = new int[0];
+
 
     /**
      * zero argument constructor that sets the dispatch pointer to 0
@@ -507,7 +523,7 @@ public class Dispatch extends JacobObject
      * @return Variant retuned by underlying callN
      */
     public static Variant call(Dispatch dispatchTarget, String name) {
-        return callN(dispatchTarget, name, new Variant[0]);
+        return callN(dispatchTarget, name, NO_VARIANT_ARGS);
     }
 
     /**
@@ -631,7 +647,7 @@ public class Dispatch extends JacobObject
      * @return Variant retuned by underlying callN
      */
     public static Variant call(Dispatch dispatchTarget, int dispid) {
-        return callN(dispatchTarget, dispid, new Variant[0]);
+        return callN(dispatchTarget, dispid, NO_VARIANT_ARGS);
     }
 
     /**
@@ -899,7 +915,7 @@ public class Dispatch extends JacobObject
      * @param name
      */
     public static void callSub(Dispatch dispatchTarget, String name) {
-        callSubN(dispatchTarget, name, new Object[0]);
+        callSubN(dispatchTarget, name, NO_OBJECT_ARGS);
     }
 
     /**
@@ -1022,7 +1038,7 @@ public class Dispatch extends JacobObject
      * @param dispid
      */
     public static void callSub(Dispatch dispatchTarget, int dispid) {
-        callSubN(dispatchTarget, dispid, new Object[0]);
+        callSubN(dispatchTarget, dispid, NO_OBJECT_ARGS);
     }
 
     /**
@@ -1150,7 +1166,7 @@ public class Dispatch extends JacobObject
      * @return Variant returned by the request for retrieval of parameter
      */
     public static Variant get(Dispatch dispatchTarget, String name) {
-        return invokev(dispatchTarget, name, Dispatch.Get, new Variant[0], new int[0]);
+        return invokev(dispatchTarget, name, Dispatch.Get, NO_VARIANT_ARGS, NO_INT_ARGS);
     }
 
     /**
@@ -1160,7 +1176,7 @@ public class Dispatch extends JacobObject
      * @return Variant returned by the request for retrieval of parameter
      */
     public static Variant get(Dispatch dispatchTarget, int dispid) {
-        return invokev(dispatchTarget, dispid, Dispatch.Get, new Variant[0], new int[0]);
+        return invokev(dispatchTarget, dispid, Dispatch.Get, NO_VARIANT_ARGS, NO_INT_ARGS);
     }
 
     /*============================================================
