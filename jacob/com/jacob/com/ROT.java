@@ -29,6 +29,7 @@
  */
 
 package com.jacob.com;
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Vector;
 
@@ -90,6 +91,7 @@ public abstract class ROT
     protected static List getThreadObjects()
     {
         String t_name = Thread.currentThread().getName();
+        //System.out.println("Get thread objects for: "+t_name);
         return (List)rot.get(t_name);
     }
     
@@ -104,11 +106,17 @@ public abstract class ROT
       List v = getThreadObjects();
       if (v != null)
       {
+		// Remove the vector from the ROT
+        // so that no one can modify it behind our backs
+        // even though that shouldn't be possible
+        // now we have a vector that only we own
+		rot.remove(t_name);
         // For each object created by this thread
-        while (!v.isEmpty())
+		for ( int i = 0 ; i < v.size(); i++)
         {
           // Obtain the first object in the vector
-          JacobObject o = (JacobObject)((java.lang.ref.WeakReference)v.get(0)).get();
+		  WeakReference weakRef = (WeakReference)v.get(i);
+          JacobObject o = (JacobObject)weakRef.get();
           
           // If this object is not null, release it
           if (o != null) 
@@ -116,11 +124,11 @@ public abstract class ROT
               o.safeRelease();
               debug(t_name + ":addObject("+o.getClass().getName()+"#"+(o!=null? (""+o.hashCode()):"null")+")");
           }
-          // remove that object from our vector
-          v.remove(0);
         }
-        // Remove the vector from the ROT
-        rot.remove(t_name);
+        // remove them all from the vector in one swoop
+        // old code removed each iterated object from the vector but this
+        // shuffles the data down one position which can be expensive
+        v.clear();
       }
     }
 
@@ -189,6 +197,9 @@ public abstract class ROT
                     o.safeRelease();
                 }
                 it.remove();
+                // added this because the object can only be in there once
+                // so no need to continue looping
+                break;
             }
         }
     }
@@ -205,6 +216,7 @@ public abstract class ROT
      */
     protected static void purgeGCObjects(String istrThreadName, List ivThreadObjects) 
     {
+        // the number we've removed
         int count = 0;
         java.lang.ref.WeakReference weak = (java.lang.ref.WeakReference)rq.poll();
         

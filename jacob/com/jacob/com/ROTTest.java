@@ -8,6 +8,7 @@ public class ROTTest {
     public static void main(String args[]) throws Exception
     {
         int sizeAfterBuild = 0;
+        int sizeBeforeGC = 0;
         int sizeAfterGC = 0;
 
         System.out.println("creating 10,000 object sets");
@@ -19,7 +20,7 @@ public class ROTTest {
         sizeAfterBuild = ROT.getThreadObjects().size();
         if (sizeAfterBuild < 10000){
             System.out.println("Something got GC'd: "+sizeAfterBuild);
-        } else if (sizeAfterBuild < 10000){
+        } else if (sizeAfterBuild > 10000){
             System.out.println("More than expected: "+sizeAfterBuild);
         } else {
             System.out.println("They're all there");
@@ -29,16 +30,19 @@ public class ROTTest {
         for ( int i = 0 ; i <= 10000; i++){
             new String("this is just some text to see if we can force gc "+i);
         }
-        // storage will hold weak references until the next JacobObject is created 
+        // storage will hold weak references until the next JacobObject is created
+        System.gc();
+        sizeBeforeGC = ROT.getThreadObjects().size();
+        System.out.println("Objects left after flood and gc but before adding a new object that clean's up weak references: "+sizeBeforeGC);
         System.out.println("Creating single object.  This adds one and causes ROT to clean up GC'd");
         new JacobObject();
         sizeAfterGC = ROT.getThreadObjects().size();
-        System.out.println("Objects left: "+sizeAfterGC);
+        System.out.println("Objects left after adding one (caused weak ref objects to be removed): "+sizeAfterGC);
         new JacobObject();
         if (ROT.getThreadObjects().size() != sizeAfterGC+1){
-            System.out.println("Unexpected number of objects "+ROT.getThreadObjects().size());
+            System.out.println("Unexpected number of objects after adding only one more "+ROT.getThreadObjects().size());
         } else {
-            System.out.println("Found number expected " +(sizeAfterGC+1) );
+            System.out.println("Found number expected after adding one more " +(sizeAfterGC+1) );
         }
         ROT.clearObjects();
         if (ROT.getThreadObjects() == null){
@@ -52,11 +56,9 @@ public class ROTTest {
         for ( int i = 0 ; i <= 10000; i++){
             new JacobObject();
         }
+        // force safeRelease call on all objects
         ROT.clearObjects();
-        for ( int i = 0 ; i <= 100000; i++){
-            new String("this is just some text to see if we can force gc "+i);
-        }
+        // now force the gc to go collect them, runnign safeRelease again
         System.gc();
-
     }
 }
