@@ -66,6 +66,9 @@ public class DispatchEvents extends JacobObject {
      * event methods on the sink object will be called
      * by name with a signature of <name>(Variant[] args)
      * protoVariant is a sacrificial variant object so we don't have to do findClass in callbacks
+     * @param src
+     * @param sink
+     * @param protoVariant
      */
     protected native void init(Dispatch src, Object sink, Object protoVariant);
 
@@ -74,6 +77,10 @@ public class DispatchEvents extends JacobObject {
      * event methods on the sink object will be called
      * by name with a signature of <name>(Variant[] args)
      * protoVariant is a sacrificial variant object so we don't have to do findClass in callbacks
+     * @param src
+     * @param sink
+     * @param protoVariant
+     * @param progId
      */
     protected native void init2(Dispatch src, Object sink, Object protoVariant, String progId);
 

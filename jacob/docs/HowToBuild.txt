@@ -1,18 +1,46 @@
-To build, run:
-Unpack this archive into d:\jacob
+(2/2005) 
+To build and run:
 
-The following assumptions are coded into the makefile in the 
-root directory and may have to be changed for your environment
+Unpack the source archive or check the files out of CVS into d:\jacob 
+
+Install the following tools
+	Microsfot Visual Studio, a stripped down version is available from the MS web site.
+	Eclipse from www.eclipse.org.
+	Java jdk 1.4 (this was built using 1.4.2.06)
+	
+The following configuration was used by most of the development team:
 	JDK = d:\j2sdk1.4.2_06
 	DEST_DIR = d:\jacob
 	MSDEVDIR = d:\apps\\"Microsoft Visual Studio"\VC98
 
-The makefiles will:
+This project has been converted completely over to ANT.  You can
+run ANT from inside of eclipse or from the command line.
+The ant process is driven off of a configuration file
+compilation_tools.properties.  Instructions on the information required
+in that file are contained in build.xml in the root directory.
+
+Ant, via build.xml will do the following with teh default target.
 	Build the Java code
 	Build the jni code
 	create the dll
 	create jar file
-	<optionally> create the zip files
+
+The package target creates the 
+	javadoc and 
+	zip files
+
+Eclipse users will have to do some minor tweaks to their project if they 
+want to use the integrated build process.  This is because the unit
+tests are com.jacob.com files located in the unittest directory while
+the jacob files themselves are in com.jacob.com off the root directory.
+(Eventually the the jacob files will be moved to src)
+	Eclipse automatically adds the whole project as a source directory
+	The unittest directory should be excluded from the source directory build path
+	The unittest directory should be explicitly added to the build path
+	
+	
+	
+--- old instructions for makefiles that no longer exist --
 	
 To build:
 	Run VCVARS32 to set up your MS Visual C++ environment
@@ -31,7 +59,3 @@ in the future.
 The java code is in com\jacob\*.
 The C++ code is in .\jni.
 
-
-Release Notes:
-1/2005 code should compile now without out any additional tools. 
-References to cp and rm were removed from makefiles

@@ -87,7 +87,7 @@ public class Variant extends JacobObject implements java.io.Serializable
   public static final short VariantError = 10;
   /** variant's type is boolean */
   public static final short VariantBoolean = 11;
-  /** variant's type is variant : i.e. it encapsulate another variant */
+  /** variant's type is variant it encapsulate another variant */
   public static final short VariantVariant = 12;
   /** variant's type is object */
   public static final short VariantObject = 13;
@@ -193,7 +193,7 @@ public class Variant extends JacobObject implements java.io.Serializable
   public native byte toByte();
   /** same as {@link #toDispatch()} */
   public Object getDispatch() { return toDispatch(); }
-  /** same as {@link #putObject()} */
+  /** same as {@link #putObject(Object)} */
   public void putDispatch(Object in) { putObject(in); }
 
   public native boolean getBoolean();
@@ -219,6 +219,7 @@ public class Variant extends JacobObject implements java.io.Serializable
 
   public native void putCurrency(long in);
 
+  /** puts an object into the */
   public native void putObject(Object in);
 
   public native void putDouble(double in);

@@ -360,7 +360,7 @@ public class ActiveXComponent extends Dispatch {
      * makes a dispatch call to the passed in action with a single int parameter
      * @param actionCommand
      * @param parameter
-     * @return
+     * @return Variant result of the invoke (Dispatch.call)
      */
     public Variant invoke(String actionCommand, int parameter){
         return Dispatch.call(this, actionCommand, new Variant(parameter));
@@ -465,7 +465,7 @@ public class ActiveXComponent extends Dispatch {
      * call with a variable number of args mainly used for quit.
      * @param name
      * @param args
-     * @return
+     * @return Variant returned by the invoke (Dispatch.callN)
      */
     public Variant invoke(String name, Variant[] args)
     {

@@ -66,7 +66,7 @@ public class EnumVariant extends JacobObject implements java.util.Enumeration {
 
     /**
      * Implements java.util.Enumeration
-     * @return
+     * @return boolean true if there are more elements in ths enumeration
      */
     public boolean hasMoreElements() {
         {
@@ -80,7 +80,7 @@ public class EnumVariant extends JacobObject implements java.util.Enumeration {
 
     /**
      * Implements java.util.Enumeration
-     * @return
+     * @return next element in the enumeration
      */
     public Object nextElement() {
         Object last = m_recBuf[0];
@@ -95,7 +95,7 @@ public class EnumVariant extends JacobObject implements java.util.Enumeration {
 
     /**
      * Get next element in collection or null if at end
-     * @return
+     * @return Variant that is next in the collection
      */
     public Variant Next() {
         if (hasMoreElements())
@@ -105,7 +105,7 @@ public class EnumVariant extends JacobObject implements java.util.Enumeration {
 
     /**
      * @param receiverArray
-     * @return
+     * @return don't know what the int is that is returned, help!
      */
     public native int Next(Variant[] receiverArray);
 

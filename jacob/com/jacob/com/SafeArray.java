@@ -27,7 +27,8 @@
 package com.jacob.com;
 
 /**
- * TODO: Need javadoc here
+ * This creates an array wrapper around Variant objects(?).
+ * Lookslike it supports 1 and two dimensional arrays 
  */
 public class SafeArray extends JacobObject {
     int m_pV = 0;
@@ -160,46 +161,118 @@ public class SafeArray extends JacobObject {
 
     public native int getElemSize();
 
+    /**
+     * populate the safe array from the passed in array of data
+     * @param ja
+     */
     public native void fromCharArray(char ja[]);
 
+    /**
+     * populate the safe array from the passed in array of data
+     * @param ja
+     */
     public native void fromIntArray(int ja[]);
 
+    /**
+     * populate the safe array from the passed in array of data
+     * @param ja
+     */
     public native void fromShortArray(short ja[]);
 
+    /**
+     * populate the safe array from the passed in array of data
+     * @param ja
+     */
     public native void fromDoubleArray(double ja[]);
 
+    /**
+     * populate the safe array from the passed in array of data
+     * @param ja
+     */
     public native void fromStringArray(String ja[]);
 
+    /**
+     * populate the safe array from the passed in array of data
+     * @param ja
+     */
     public native void fromByteArray(byte ja[]);
 
+    /**
+     * populate the safe array from the passed in array of data
+     * @param ja
+     */
     public native void fromFloatArray(float ja[]);
 
+    /**
+     * populate the safe array from the passed in array of data
+     * @param ja
+     */
     public native void fromBooleanArray(boolean ja[]);
 
+    /**
+     * populate the safe array from the passed in array of data
+     * @param ja
+     */
     public native void fromVariantArray(Variant ja[]);
 
+    /**
+     * Retrieves the data from the array cast to a Java data type
+     * @return char[] character array contained in this collection
+     */
     public native char[] toCharArray();
 
+    /**
+     * Retrieves the data from the array cast to a Java data type
+     * @return int[] int array contained in this collection
+     */
     public native int[] toIntArray();
 
+    /**
+     * Retrieves the data from the array cast to a Java data type
+     * @return short[] short array contained in this collection
+     */
     public native short[] toShortArray();
 
+    /**
+     * Retrieves the data from the array cast to a Java data type
+     * @return double[] double array contained in this colleciton
+     */
     public native double[] toDoubleArray();
 
+    /**
+     * Retrieves the data from the array cast to a Java data type
+     * @return String[] String array contained in this collecition
+     */
     public native String[] toStringArray();
 
+    /**
+     * Retrieves the data from the array cast to a Java data type
+     * @return byte[] byte array contained in this collecition
+     */
     public native byte[] toByteArray();
 
+    /**
+     * Retrieves the data from the array cast to a Java data type
+     * @return float[] array of float contained in this collection
+     */
     public native float[] toFloatArray();
 
+    /**
+     * Retrieves the data from the array cast to a Java data type
+     * @return boolean[] array of booleans contained in this collection
+     */
     public native boolean[] toBooleanArray();
 
+    /**
+     * Retrieves the data from the array cast to a Java data type
+     * @return Variant[] array of variants contained in this collection
+     */
     public native Variant[] toVariantArray();
 
     /**
      * char access
      * @param sa_idx
-     * @return
+     * @return single character rpeesentation
      */
     public native char getChar(int sa_idx);
 
@@ -207,7 +280,7 @@ public class SafeArray extends JacobObject {
      * char access
      * @param sa_idx1
      * @param sa_idx2
-     * @return
+     * @return single character repesentation
      */
     public native char getChar(int sa_idx1, int sa_idx2);
 
@@ -247,7 +320,7 @@ public class SafeArray extends JacobObject {
     /**
      * int access
      * @param sa_idx
-     * @return
+     * @return int stored in array
      */
     public native int getInt(int sa_idx);
 
@@ -255,7 +328,7 @@ public class SafeArray extends JacobObject {
      * int access
      * @param sa_idx1
      * @param sa_idx2
-     * @return
+     * @return int stored in array
      */
     public native int getInt(int sa_idx1, int sa_idx2);
 
@@ -295,7 +368,7 @@ public class SafeArray extends JacobObject {
     /**
      * short access
      * @param sa_idx
-     * @return
+     * @return short stored in array
      */
     public native short getShort(int sa_idx);
 
@@ -303,7 +376,7 @@ public class SafeArray extends JacobObject {
      * short access
      * @param sa_idx1
      * @param sa_idx2
-     * @return
+     * @return short stored in array
      */
     public native short getShort(int sa_idx1, int sa_idx2);
 
@@ -345,7 +418,7 @@ public class SafeArray extends JacobObject {
     /**
      * double access
      * @param sa_idx
-     * @return
+     * @return double stored in array
      */
     public native double getDouble(int sa_idx);
 
@@ -353,7 +426,7 @@ public class SafeArray extends JacobObject {
      * double access
      * @param sa_idx1
      * @param sa_idx2
-     * @return
+     * @return double storedin array
      */
     public native double getDouble(int sa_idx1, int sa_idx2);
 
@@ -395,7 +468,8 @@ public class SafeArray extends JacobObject {
     /**
      * string access
      * @param sa_idx
-     * @return
+     * @return String stored in array
+     * 
      */
     public native String getString(int sa_idx);
 
@@ -403,7 +477,7 @@ public class SafeArray extends JacobObject {
      * string access
      * @param sa_idx1
      * @param sa_idx2
-     * @return
+     * @return String stored in array
      */
     public native String getString(int sa_idx1, int sa_idx2);
 
@@ -445,7 +519,7 @@ public class SafeArray extends JacobObject {
     /**
      * byte access
      * @param sa_idx
-     * @return
+     * @return byte representaton
      */
     public native byte getByte(int sa_idx);
 
@@ -453,7 +527,7 @@ public class SafeArray extends JacobObject {
      * byte access
      * @param sa_idx1
      * @param sa_idx2
-     * @return
+     * @return byte representation
      */
     public native byte getByte(int sa_idx1, int sa_idx2);
 
@@ -472,14 +546,28 @@ public class SafeArray extends JacobObject {
      */
     public native void setByte(int sa_idx1, int sa_idx2, byte c);
 
+    /**
+     * Fills byte array(?) from contents of this array
+     * @param sa_idx
+     * @param nelems
+     * @param ja
+     * @param ja_start
+     */
     public native void getBytes(int sa_idx, int nelems, byte ja[], int ja_start);
 
+    /**
+     * fills array with passed in bytes
+     * @param sa_idx
+     * @param nelems
+     * @param ja
+     * @param ja_start
+     */
     public native void setBytes(int sa_idx, int nelems, byte ja[], int ja_start);
 
     /**
      * float access
      * @param sa_idx
-     * @return
+     * @return float held in array at location
      */
     public native float getFloat(int sa_idx);
 
@@ -487,7 +575,7 @@ public class SafeArray extends JacobObject {
      * float access
      * @param sa_idx1
      * @param sa_idx2
-     * @return
+     * @return float held in array at location
      */
     public native float getFloat(int sa_idx1, int sa_idx2);
 
@@ -529,7 +617,7 @@ public class SafeArray extends JacobObject {
     /**
      * boolean access
      * @param sa_idx
-     * @return
+     * @return boolean representation 
      */
     public native boolean getBoolean(int sa_idx);
 
@@ -537,7 +625,7 @@ public class SafeArray extends JacobObject {
      * boolean access
      * @param sa_idx1
      * @param sa_idx2
-     * @return
+     * @return boolean representation 
      */
     public native boolean getBoolean(int sa_idx1, int sa_idx2);
 
@@ -579,7 +667,7 @@ public class SafeArray extends JacobObject {
     /**
      * variant access
      * @param sa_idx
-     * @return
+     * @return Variant held in locatioon in the array?
      */
     public native Variant getVariant(int sa_idx);
 
@@ -587,7 +675,7 @@ public class SafeArray extends JacobObject {
      * variant access
      * @param sa_idx1
      * @param sa_idx2
-     * @return
+     * @return Variant held in a location in the array?
      */
     public native Variant getVariant(int sa_idx1, int sa_idx2);
 
@@ -627,9 +715,9 @@ public class SafeArray extends JacobObject {
             int ja_start);
 
     /**
-     * standard toString
-     * warning!  this creates new Variant objects!
-     * @return
+     * Standard toString()
+     * Warning, this creates new Variant objects!
+     * @return String contents of varaint
      */
     public String toString() {
         String s = "";

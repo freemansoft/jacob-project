@@ -299,8 +299,7 @@ public class Dispatch extends JacobObject
 
     /**
      * not implemented yet
-     * 
-     * @param disp
+     * @param dispatchTarget
      * @param name
      * @param val
      * @throws ClassCastException
@@ -315,32 +314,73 @@ public class Dispatch extends JacobObject
      * ===========================================================
      */
     // eliminate _Guid arg
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param dispID
+     * @param lcid
+     * @param wFlags
+     * @param vArg
+     * @param uArgErr
+     */
     public static void invokeSubv(Dispatch dispatchTarget, String name, int dispID,
             int lcid, int wFlags, Variant[] vArg, int[] uArgErr) {
         invokev(dispatchTarget, name, dispID, lcid, wFlags, vArg, uArgErr);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param wFlags
+     * @param vArg
+     * @param uArgErr
+     */
     public static void invokeSubv(Dispatch dispatchTarget, String name, int wFlags,
             Variant[] vArg, int[] uArgErr) {
         invokev(dispatchTarget, name, 0, Dispatch.LOCALE_SYSTEM_DEFAULT, wFlags, vArg, uArgErr);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispID
+     * @param wFlags
+     * @param vArg
+     * @param uArgErr
+     */
     public static void invokeSubv(Dispatch dispatchTarget, int dispID, int wFlags,
             Variant[] vArg, int[] uArgErr) {
         invokev(dispatchTarget, null, dispID, Dispatch.LOCALE_SYSTEM_DEFAULT, wFlags, vArg,
                 uArgErr);
     }
 
+    /**
+     * not implemented yet
+     * @param dispatchTarget
+     * @param name
+     * @param values
+     * @return never returns anything because throws ClassCastException
+     * because not implemented yet
+     */
     public static Variant callN_CaseSensitive(Dispatch dispatchTarget, String name,
             Object[] values) {
         throw new ClassCastException("not implemented yet");
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param args
+     */
     public static void callSubN(Dispatch dispatchTarget, String name, Object[] args) {
         invokeSubv(dispatchTarget, name, Dispatch.Method | Dispatch.Get, obj2variant(args),
                 new int[args.length]);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispID
+     * @param args
+     */
     public static void callSubN(Dispatch dispatchTarget, int dispID, Object[] args) {
         invokeSubv(dispatchTarget, dispID, Dispatch.Method | Dispatch.Get, obj2variant(args),
                 new int[args.length]);
@@ -350,16 +390,32 @@ public class Dispatch extends JacobObject
      * start of the getIdsOfNames section
      * ===========================================================
      */
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @return int id for the passed in name
+     */
     public static int getIDOfName(Dispatch dispatchTarget, String name) {
         int ids[] = getIDsOfNames(dispatchTarget, Dispatch.LOCALE_SYSTEM_DEFAULT,
                 new String[] { name });
         return ids[0];
     }
 
+    /**
+     * @param dispatchTarget
+     * @param lcid
+     * @param names
+     * @return int[] in id array for passed in names
+     */
     // eliminated _Guid argument
     public static native int[] getIDsOfNames(Dispatch dispatchTarget, int lcid,
             String[] names);
 
+    /**
+     * @param dispatchTarget
+     * @param names
+     * @return int[] int id array for passed in names
+     */
     // eliminated _Guid argument
     public static int[] getIDsOfNames(Dispatch dispatchTarget, String[] names) {
         return getIDsOfNames(dispatchTarget, 
@@ -370,29 +426,67 @@ public class Dispatch extends JacobObject
      * start of the invokev section
      * ===========================================================
      */
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param args
+     * @return Variant returned by call
+     */
     public static Variant callN(Dispatch dispatchTarget, String name, Object[] args) {
         return invokev(dispatchTarget, name, 
                 Dispatch.Method | Dispatch.Get, obj2variant(args),
                 new int[args.length]);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispID
+     * @param args
+     * @return Variant returned by call
+     */
     public static Variant callN(Dispatch dispatchTarget, int dispID, Object[] args) {
         return invokev(dispatchTarget, dispID, 
                 Dispatch.Method | Dispatch.Get, obj2variant(args),
                 new int[args.length]);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param dispID
+     * @param lcid
+     * @param wFlags
+     * @param oArg
+     * @param uArgErr
+     * @return Variuant returned by invoke
+     */
     public static Variant invoke(Dispatch dispatchTarget, String name, int dispID,
             int lcid, int wFlags, Object[] oArg, int[] uArgErr) {
         return invokev(dispatchTarget, name, dispID, lcid, wFlags, obj2variant(oArg),
                 uArgErr);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param wFlags
+     * @param oArg
+     * @param uArgErr
+     * @return Variuant returned by invoke
+     */
     public static Variant invoke(Dispatch dispatchTarget, String name, int wFlags,
             Object[] oArg, int[] uArgErr) {
         return invokev(dispatchTarget, name, wFlags, obj2variant(oArg), uArgErr);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispID
+     * @param wFlags
+     * @param oArg
+     * @param uArgErr
+     * @return Variuant returned by invoke
+     */
     public static Variant invoke(Dispatch dispatchTarget, int dispID, int wFlags,
             Object[] oArg, int[] uArgErr) {
         return invokev(dispatchTarget, dispID, wFlags, obj2variant(oArg), uArgErr);
@@ -403,86 +497,248 @@ public class Dispatch extends JacobObject
      * ===========================================================
      */
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, String name) {
         return callN(dispatchTarget, name, new Variant[0]);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, String name, Object a1) {
         return callN(dispatchTarget, name, new Object[] { a1 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, String name, Object a1, Object a2) {
         return callN(dispatchTarget, name, new Object[] { a1, a2 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3) {
         return callN(dispatchTarget, name, new Object[] { a1, a2, a3 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4) {
         return callN(dispatchTarget, name, new Object[] { a1, a2, a3, a4 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4, Object a5) {
         return callN(dispatchTarget, name, new Object[] { a1, a2, a3, a4, a5 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6) {
         return callN(dispatchTarget, name, new Object[] { a1, a2, a3, a4, a5, a6 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @param a7
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6, Object a7) {
         return callN(dispatchTarget, name, new Object[] { a1, a2, a3, a4, a5, a6, a7 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @param a7
+     * @param a8
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6, Object a7, Object a8) {
         return callN(dispatchTarget, name,
                 new Object[] { a1, a2, a3, a4, a5, a6, a7, a8 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, int dispid) {
         return callN(dispatchTarget, dispid, new Variant[0]);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, int dispid, Object a1) {
         return callN(dispatchTarget, dispid, new Object[] { a1 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, int dispid, Object a1, Object a2) {
         return callN(dispatchTarget, dispid, new Object[] { a1, a2 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3) {
         return callN(dispatchTarget, dispid, new Object[] { a1, a2, a3 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4) {
         return callN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4, Object a5) {
         return callN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4, a5 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6) {
         return callN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4, a5, a6 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @param a7
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6, Object a7) {
         return callN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4, a5, a6, a7 });
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @param a7
+     * @param a8
+     * @return Variant retuned by underlying callN
+     */
     public static Variant call(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6, Object a7, Object a8) {
         return callN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4, a5, a6, a7,
@@ -493,10 +749,20 @@ public class Dispatch extends JacobObject
      * start of the invoke section
      * ===========================================================
      */
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param val
+     */
     public static void put(Dispatch dispatchTarget, String name, Object val) {
         invoke(dispatchTarget, name, Dispatch.Put, new Object[] { val }, new int[1]);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param val
+     */
     public static void put(Dispatch dispatchTarget, int dispid, Object val) {
         invoke(dispatchTarget, dispid, Dispatch.Put, new Object[] { val }, new int[1]);
     }
@@ -506,9 +772,27 @@ public class Dispatch extends JacobObject
      * ===========================================================
      */
     // removed _Guid argument
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param dispID
+     * @param lcid
+     * @param wFlags
+     * @param vArg
+     * @param uArgErr
+     * @return Variant returned by underlying invokev
+     */
     public static native Variant invokev(Dispatch dispatchTarget, String name, int dispID,
             int lcid, int wFlags, Variant[] vArg, int[] uArgErr);
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param wFlags
+     * @param vArg
+     * @param uArgErr
+     * @return Variant returned by underlying invokev
+     */
     public static Variant invokev(Dispatch dispatchTarget, String name, int wFlags,
             Variant[] vArg, int[] uArgErr) {
         if (!(dispatchTarget instanceof Dispatch))
@@ -517,6 +801,15 @@ public class Dispatch extends JacobObject
                 uArgErr);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param wFlags
+     * @param vArg
+     * @param uArgErr
+     * @param wFlagsEx
+     * @return Variant returned by underlying invokev
+     */
     public static Variant invokev(Dispatch dispatchTarget, String name, int wFlags,
             Variant[] vArg, int[] uArgErr, int wFlagsEx) {
         if (!(dispatchTarget instanceof Dispatch))
@@ -526,6 +819,14 @@ public class Dispatch extends JacobObject
                 uArgErr);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispID
+     * @param wFlags
+     * @param vArg
+     * @param uArgErr
+     * @return Variant returned by underlying invokev
+     */
     public static Variant invokev(Dispatch dispatchTarget, int dispID, int wFlags,
             Variant[] vArg, int[] uArgErr) {
         if (!(dispatchTarget instanceof Dispatch))
@@ -541,6 +842,15 @@ public class Dispatch extends JacobObject
      */
     
     // removed _Guid argument
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param dispid
+     * @param lcid
+     * @param wFlags
+     * @param oArg
+     * @param uArgErr
+     */
     public static void invokeSub(Dispatch dispatchTarget, String name, int dispid,
             int lcid, int wFlags, Object[] oArg, int[] uArgErr) {
         invokeSubv(dispatchTarget, name, dispid, lcid, wFlags, obj2variant(oArg), uArgErr);
@@ -550,11 +860,25 @@ public class Dispatch extends JacobObject
      * start of the invokeSub section
      * ===========================================================
      */
+    /**
+     * @param dispatchTarget
+     * @param name
+     * @param wFlags
+     * @param oArg
+     * @param uArgErr
+     */
     public static void invokeSub(Dispatch dispatchTarget, String name, int wFlags,
             Object[] oArg, int[] uArgErr) {
         invokeSub(dispatchTarget, name, 0, Dispatch.LOCALE_SYSTEM_DEFAULT, wFlags, oArg, uArgErr);
     }
 
+    /**
+     * @param dispatchTarget
+     * @param dispid
+     * @param wFlags
+     * @param oArg
+     * @param uArgErr
+     */
     public static void invokeSub(Dispatch dispatchTarget, int dispid, int wFlags,
             Object[] oArg, int[] uArgErr) {
         invokeSub(dispatchTarget, null, dispid, Dispatch.LOCALE_SYSTEM_DEFAULT, wFlags, oArg,
@@ -565,85 +889,247 @@ public class Dispatch extends JacobObject
      * start of the callSubN section
      * ===========================================================
      */
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param name
+     */
     public static void callSub(Dispatch dispatchTarget, String name) {
         callSubN(dispatchTarget, name, new Object[0]);
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     */
     public static void callSub(Dispatch dispatchTarget, String name, Object a1) {
         callSubN(dispatchTarget, name, new Object[] { a1 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     */
     public static void callSub(Dispatch dispatchTarget, String name, Object a1, Object a2) {
         callSubN(dispatchTarget, name, new Object[] { a1, a2 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     */
     public static void callSub(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3) {
         callSubN(dispatchTarget, name, new Object[] { a1, a2, a3 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     */
     public static void callSub(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4) {
         callSubN(dispatchTarget, name, new Object[] { a1, a2, a3, a4 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     */
     public static void callSub(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4, Object a5) {
         callSubN(dispatchTarget, name, new Object[] { a1, a2, a3, a4, a5 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     */
     public static void callSub(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6) {
         callSubN(dispatchTarget, name, new Object[] { a1, a2, a3, a4, a5, a6 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @param a7
+     */
     public static void callSub(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6, Object a7) {
         callSubN(dispatchTarget, name, new Object[] { a1, a2, a3, a4, a5, a6, a7 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param name
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @param a7
+     * @param a8
+     */
     public static void callSub(Dispatch dispatchTarget, String name, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6, Object a7, Object a8) {
         callSubN(dispatchTarget, name, new Object[] { a1, a2, a3, a4, a5, a6, a7, a8 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param dispid
+     */
     public static void callSub(Dispatch dispatchTarget, int dispid) {
         callSubN(dispatchTarget, dispid, new Object[0]);
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     */
     public static void callSub(Dispatch dispatchTarget, int dispid, Object a1) {
         callSubN(dispatchTarget, dispid, new Object[] { a1 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     */
     public static void callSub(Dispatch dispatchTarget, int dispid, Object a1, Object a2) {
         callSubN(dispatchTarget, dispid, new Object[] { a1, a2 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     */
     public static void callSub(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3) {
         callSubN(dispatchTarget, dispid, new Object[] { a1, a2, a3 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     */
     public static void callSub(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4) {
         callSubN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     */
     public static void callSub(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4, Object a5) {
         callSubN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4, a5 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     */
     public static void callSub(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6) {
         callSubN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4, a5, a6 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @param a7
+     */
     public static void callSub(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6, Object a7) {
         callSubN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4, a5, a6, a7 });
     }
 
+    /**
+     * makes call to native callSubN
+     * @param dispatchTarget
+     * @param dispid
+     * @param a1
+     * @param a2
+     * @param a3
+     * @param a4
+     * @param a5
+     * @param a6
+     * @param a7
+     * @param a8
+     */
     public static void callSub(Dispatch dispatchTarget, int dispid, Object a1, Object a2,
             Object a3, Object a4, Object a5, Object a6, Object a7, Object a8) {
         callSubN(dispatchTarget, dispid, new Object[] { a1, a2, a3, a4, a5, a6, a7, a8 });
@@ -653,10 +1139,22 @@ public class Dispatch extends JacobObject
      * start of the invokev section
      * ===========================================================
      */
+    /**
+     * Cover for call to underlying invokev()
+     * @param dispatchTarget
+     * @param name
+     * @return Variant returned by the request for retrieval of parameter
+     */
     public static Variant get(Dispatch dispatchTarget, String name) {
         return invokev(dispatchTarget, name, Dispatch.Get, new Variant[0], new int[0]);
     }
 
+    /**
+     * Cover for call to underlying invokev()
+     * @param dispatchTarget
+     * @param dispid
+     * @return Variant returned by the request for retrieval of parameter
+     */
     public static Variant get(Dispatch dispatchTarget, int dispid) {
         return invokev(dispatchTarget, dispid, Dispatch.Get, new Variant[0], new int[0]);
     }
@@ -665,14 +1163,32 @@ public class Dispatch extends JacobObject
      * start of the invoke section
      * ===========================================================
      */
+    /**
+     * cover for underlying call to invoke
+     * @param dispatchTarget
+     * @param name
+     * @param val
+     */
     public static void putRef(Dispatch dispatchTarget, String name, Object val) {
         invoke(dispatchTarget, name, Dispatch.PutRef, new Object[] { val }, new int[1]);
     }
 
+    /**
+     * cover for underlying call to invoke
+     * @param dispatchTarget
+     * @param dispid
+     * @param val
+     */
     public static void putRef(Dispatch dispatchTarget, int dispid, Object val) {
         invoke(dispatchTarget, dispid, Dispatch.PutRef, new Object[] { val }, new int[1]);
     }
 
+    /**
+     * not implemented , will throw class cast exception
+     * @param dispatchTarget
+     * @param name
+     * @return Variant never returned
+     */
     public static Variant get_CaseSensitive(Dispatch dispatchTarget, String name) {
         throw new ClassCastException("not implemented yet");
     }

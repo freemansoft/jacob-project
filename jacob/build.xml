@@ -50,7 +50,7 @@
 	<!-- ================================= 
           target: default              
          ================================= -->
-	<target name="default" depends="createDirectoryStructure,jacob_java_jar_bin,jacob_java_compile_samples,jacob_c_dll">
+	<target name="default" depends="createDirectoryStructure,jacob_java_jar_bin,jacob_c_dll">
 
 		<echo message="Jacob ${version} build ${build.iteration} : finished on ${build.date}" />
 	</target>
@@ -101,6 +101,16 @@
 			destdir="${jacob_java.bin}" 
 			includes="com/**/*.java" 
 			listfiles="true" debug="on" fork="yes" />
+		<echo>Building java sample classes...</echo>
+		<javac srcdir="${jacob_java.src}" 
+			destdir="${jacob_java.bin}" 
+			includes="samples/**/*.java" 
+			excludes="samples/servlet/**/*.java"
+			listfiles="true" debug="on" fork="yes" />
+		<echo>Building java sample classes...</echo>
+		<javac srcdir="${jacob_java.src}/unittest" 
+			destdir="${jacob_java.bin}" 
+			listfiles="true" debug="on" fork="yes" />
 	</target>
 	<!-- ======================================================================
 		      Package the classes into a JAR.    
@@ -125,19 +135,6 @@
 				</section>
 			</manifest>
 		</jar>
-	</target>
-	<!-- ======================================================================
-		      Compile the java files
-		      Relies on Ant's ability to recognize files that need to be compiled
-		      Does not build servlet tests because Servlet Jar not in classpath
-		 ================================================================== -->
-	<target name="jacob_java_compile_samples" depends="createDirectoryStructure,IncrementBuildNumber">
-		<echo>Building java sample classes...</echo>
-		<javac srcdir="${jacob_java.src}" 
-			destdir="${jacob_java.bin}" 
-			includes="samples/**/*.java" 
-			excludes="samples/servlet/**/*.java"
-			listfiles="true" debug="on" fork="yes" />
 	</target>
 	<!-- ======================================================================
 		      Compare the date/time of the jacob DLL against that 
@@ -207,23 +204,47 @@
 	</target>
 
 	<!-- ======================================================================
+		       Use this target to create javadoc from com.jacob.*
+		 ================================================================== -->
+	<target name="javadoc">
+		<defaultexcludes add="**/*Test*"/>
+		<javadoc
+				packagenames="com.jacob/**"
+				sourcepath="${jacob_java.src}"
+				destdir="${jacob_java.bin}/docs/api"
+				author="true"
+				version="true"
+				use="true"
+				windowtitle="Jacob API Docs">
+		
+			<doctitle><![CDATA[<h1>Java Com Bridge (Jacob)</h1>]]></doctitle>
+			<bottom><![CDATA[<i>See Jacob-project on Sourceforge for more info</i>]]></bottom>
+			<tag name="todo" scope="all" description="To do:" />
+			<group title="Jacob COM" packages="com.jacob.com/**"/>
+			<group title="Higher Level Active X" packages="com.jacob.activeX/**"/>
+			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="C:\tmp"/>
+			<link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+		</javadoc>
+		<defaultexcludes default="true"/>
+	</target>
+	
+	<!-- ======================================================================
 		       Use this target to package all the files for a release
 		 ================================================================== -->
-	<target name="PackageRelease" depends="createDirectoryStructure,jacob_c_dll,jacob_java_jar_bin">
+	<target name="PackageRelease" depends="createDirectoryStructure,jacob_c_dll,jacob_java_jar_bin,javadoc">
 
 		<echo>Packaging release...</echo>
-		<zip basedir="${basedir}" 
+		<zip 
 			destfile="${install.dir}/jacob_${version}.zip">
 			<exclude name="**/CVS" />
 			<exclude name="**/*.obj" />
 			<exclude name="**/*.class" />
-			<include name="docs/**" />
-			<include name="samples/**" />
-			<include name="LICENSE.*" />
-			<include name="version.properties" />
-			<fileset dir="${install.dir}" includes="jacob.jar jacob.dll"/>
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="LICENSE.* version.properties" />
+			<zipfileset dir="${install.dir}" prefix="jacob_${version}" includes="jacob.jar jacob.dll"/>
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="docs/**" />
+			<zipfileset dir="${install.dir}" prefix="jacob_${version}" includes="docs/**"/>
 		</zip>
-		<zip basedir="${basedir}" 
+		<zip
 			destfile="${install.dir}/jacob_${version}_src.zip">
 			<exclude name="**/CVS" />
 			<exclude name="**/*.obj" />
@@ -231,15 +252,14 @@
 			<exclude name="**/*.dll" />
 			<exclude name="**/*.exp" />
 			<exclude name="**/*.jar" />
-			<include name="com/**" />
-			<include name="docs/**" />
-			<include name="jni/**" />
-			<include name="samples/**" />
-			<include name="vstudio/**" />
-			<include name="build.xml" />
-			<include name="makefile" />
-			<include name="LICENSE.*" />
-			<include name="version.properties" />
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="com/**" />
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="docs/**" />
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="jni/**" />
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="samples/**" />
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="unittest/**" />
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="vstudio/**" />
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="build.xml, RELEASE.txt" />
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="LICENSE.* version.properties" />
 		</zip>
 	</target>
 </project>

@@ -45,6 +45,7 @@ public class DispatchProxy extends JacobObject {
     public int m_pStream;
 
     /**
+     * Marshals the passed in dispatch into the stream
      * @param localDispatch
      */
     public DispatchProxy(Dispatch localDispatch) {
@@ -52,7 +53,8 @@ public class DispatchProxy extends JacobObject {
     }
 
     /**
-     * @return
+     * 
+     * @return Dispatch the dispatch retrieved from the stream
      */
     public Dispatch toDispatch() {
         return MarshalFromStream();

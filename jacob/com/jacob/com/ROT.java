@@ -62,7 +62,7 @@ public abstract class ROT {
 
     /**
      * adds a new thread storage area to rot
-     *
+     * @return Map corresponding to the thread that this call was made in
      */
     protected static Map addThread() {
         String t_name = Thread.currentThread().getName();
@@ -86,7 +86,7 @@ public abstract class ROT {
      * returns the pool for this thread if it exists.  can create a new
      * one if you wish by passing in TRUE
      * @param createIfDoesNotExist
-     * @return
+     * @return Map the collection that holds the objects created in the current thread
      */
     protected static Map getThreadObjects(boolean createIfDoesNotExist) {
         String t_name = Thread.currentThread().getName();
