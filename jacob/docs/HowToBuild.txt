@@ -35,8 +35,9 @@ tests are com.jacob.com files located in the unittest directory while
 the jacob files themselves are in com.jacob.com off the root directory.
 (Eventually the the jacob files will be moved to src)
 	Eclipse automatically adds the whole project as a source directory
-	The unittest directory should be excluded from the source directory build path
-	The unittest directory should be explicitly added to the build path
+	Remove the root of the project from the build path
+	Add folders samples, src and unittest to the build path
+	Exclude *.txt from each of the newly added folders.  
 	
 	
 	

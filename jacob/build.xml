@@ -36,7 +36,9 @@
 	<property name="application.vendor" value="http://jacob-project.sourceforge.net, created by Dan Adler (http://danadler.com)" />
 	<property name="install.dir" value="${basedir}/release" />
 	
-	<property name="jacob_java.src" value="${basedir}" />
+	<property name="jacob_java.src" value="${basedir}/src" />
+	<property name="jacob_java.samples" value="${basedir}/samples" />
+	<property name="jacob_java.unittest" value="${basedir}/unittest" />
 	<property name="jacob_java.bin" value="${install.dir}" />
 	<property name="jacob_cpp.src" value="${basedir}/jni" />
 	<property name="jacob_cpp.bin" value="${install.dir}/jni" />
@@ -99,16 +101,14 @@
 		<echo>Building java classes...</echo>
 		<javac srcdir="${jacob_java.src}" 
 			destdir="${jacob_java.bin}" 
-			includes="com/**/*.java" 
 			listfiles="true" debug="on" fork="yes" />
 		<echo>Building java sample classes...</echo>
-		<javac srcdir="${jacob_java.src}" 
+		<javac srcdir="${jacob_java.samples}" 
 			destdir="${jacob_java.bin}" 
-			includes="samples/**/*.java" 
-			excludes="samples/servlet/**/*.java"
+			excludes="com/jacob/samples/servlet/**/*.java"
 			listfiles="true" debug="on" fork="yes" />
-		<echo>Building java sample classes...</echo>
-		<javac srcdir="${jacob_java.src}/unittest" 
+		<echo>Building java test classes...</echo>
+		<javac srcdir="${jacob_java.unittest}" 
 			destdir="${jacob_java.bin}" 
 			listfiles="true" debug="on" fork="yes" />
 	</target>
@@ -123,6 +123,7 @@
 		<jar destfile="${jacob.jar}" basedir="${jacob_java.bin}" update="false">
 			<exclude name="**/CVS" />
 			<exclude name="com/**/*Test.class"/>
+			<exclude name="com/jacob/samples/**"/>
 			<include name="com/**/*.class" />
 			<include name="version.properties" />
 			<manifest>
@@ -252,7 +253,7 @@
 			<exclude name="**/*.dll" />
 			<exclude name="**/*.exp" />
 			<exclude name="**/*.jar" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="com/**" />
+			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="src/**" />
 			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="docs/**" />
 			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="jni/**" />
 			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="samples/**" />
