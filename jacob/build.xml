@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     Feb 4, 2005 1:23:05 PM                                                        
+
+     Ant build file for JACOB. 
+     Tested on Eclipse 3.0.0 and Ant 1.6.1, with MS Visual C++ 6.0
+     
+     If you do not have a C++ environment check out the following sites
+     http://msdn.microsoft.com/visualc/vctoolkit2003/
+     http://www.eclipse.org/cdt/
+     http://eclipsewiki.editme.com/InstallingCDTWithMSVisualC
+                                                                                 
+     ====================================================================== -->
+<project name="jacob" default="default" basedir=".">
+	<property file="compilation_tools.properties" />
+	<!-- =v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=v=
+	  YOU MUST define a file named compilation_tools.properties
+	  and looking like this:
+	  
+	  JDK=D:/J2SDK-1_4_2
+      MSDEVDIR=C:/Program Files/Microsoft Visual Studio/VC98
+      compiler=C:/Program Files/Microsoft Visual Studio/VC98/bin/cl.exe
+      linker=C:/Program Files/Microsoft Visual Studio/VC98/bin/link.exe
+	  
+	  DO NOT check this file into source control as the values are specific
+	  to YOUR environment.
+	  
+	  You also need a file named version.properties looking like this:
+	  version=1.9
+      build.date=04-February-2005 20\:38\:52
+	  build.iteration=07
+	  
+	  =^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^ -->
+
+	<property name="application.title" value="JACOB : Java COM Bridge" />
+	<property name="application.vendor" value="http://jacob-project.sourceforge.net, created by Dan Adler (http://danadler.com)" />
+	<property name="jacob_java.src" value="${basedir}/src" />
+	<property name="jacob_java.bin" value="${basedir}/bin" />
+	<property name="jacob_cpp.src" value="${basedir}/jni" />
+	<property name="jacob_cpp.bin" value="${basedir}/jni/release" />
+	<property name="instal.dir" value="${basedir}/releases" />
+	<property name="jacob.jar" value="${instal.dir}/jacob.jar" />
+	<property name="jacob.dll" value="${instal.dir}/jacob.dll" />
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="build_jacob_jar,build_jacob_dll">
+		
+		<echo message="Jacob ${version} build ${build.iteration} : finished on ${build.date}" />
+	</target>
+
+	<target name="IncrementBuildNumber">
+		<propertyfile file="version.properties">
+			<entry key="build.iteration" type="int" operation="+" value="1" pattern="00" />
+			<entry key="build.date" type="date" value="now" operation="=" pattern="dd-MMMM-yyyy HH:mm:ss" />
+		</propertyfile>
+		<property file="version.properties" />
+	</target>
+
+	<!-- ======================================================================
+		      Compare the date/time of the jacob JAR against that 
+		      of the jacob java source          
+		 ================================================================== -->
+	<target name="checkJarUpToDate">
+		<uptodate property="jarUpToDate" targetfile="${jacob.jar}">
+			<srcfiles dir="${jacob_java.src}">
+				<include name="**/*.java" />
+			</srcfiles>
+			<!-- Check the build file itself as well -->
+			<srcfiles file="${basedir}/build.xml" />
+		</uptodate>
+		<echo message="checkJarUpToDate result: ${jarUpToDate}" />
+	</target>
+	<!-- ======================================================================
+		      Compile the java files and package the classes into a JAR.             
+		 ================================================================== -->
+	<target name="build_jacob_jar" depends="checkJarUpToDate,IncrementBuildNumber" unless="jarUpToDate">
+	
+		<echo>Building java classes...</echo>
+		<javac srcdir="${jacob_java.src}" destdir="${jacob_java.bin}" includes="*.java" listfiles="true" debug="off" fork="yes" />
+		<echo>Packaging java classes...</echo>
+		<!-- This is drastic, but the jar task doesn't seem to update the archive's timestamp properly -->
+		<delete file="${jacob.jar}" />
+		<jar destfile="${jacob.jar}" basedir="${jacob_java.bin}" update="false">
+			<exclude name="**/CVS" />
+			<include name="**/*.class" />
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<section name="com.jacob">
+					<attribute name="Specification-Title" value="${application.title}" />
+					<attribute name="Specification-Vendor" value="${application.vendor}" />
+					<attribute name="Implementation-Title" value="${application.title} Java libraries" />
+					<attribute name="Implementation-Version" value="${version} build ${build.iteration} on ${build.date}" />
+				</section>
+			</manifest>
+		</jar>
+	</target>
+	<!-- ======================================================================
+		      Compare the date/time of the jacob DLL against that 
+		      of the jacob cpp source              
+		 ================================================================== -->
+	<target name="checkDllUpToDate">
+		<uptodate property="dllUpToDate" targetfile="${jacob.dll}">
+			<srcfiles dir="${jacob_cpp.src}">
+				<include name="*.cpp" />
+				<include name="*.h" />
+			</srcfiles>
+			<!-- Check the build file itself as well -->
+			<srcfiles file="${basedir}/build.xml" />
+		</uptodate>
+		<echo message="checkDllUpToDate result: ${dllUpToDate}" />
+	</target>
+	<!-- ======================================================================
+		      Compile the c source files.             
+		 ================================================================== -->
+	<target name="build_jacob_objects" depends="checkDllUpToDate,IncrementBuildNumber" unless="dllUpToDate">
+		<echo>Compiling C++ classes</echo>
+		<apply executable="${compiler}" dir="${jacob_cpp.bin}" parallel="false" verbose="true" failonerror="true">
+			<arg value="-c" />
+			<arg value="/nologo" />
+			<!-- optimize build for speed. (is this VC specific? -->
+			<arg value="/O2" />
+			<arg value="-I" />
+			<arg value="${JDK}\include" />
+			<arg value="-I" />
+			<arg value="${JDK}\include\win32" />
+			<arg value="-I" />
+			<arg value="${MSDEVDIR}\Include" />
+			<arg value="-I" />
+			<arg value="${MSDEVDIR}\ATL\Include" />
+			<fileset dir="${jacob_cpp.src}">
+				<include name="*.cpp" />
+			</fileset>
+		</apply>
+	</target>
+	<!-- ======================================================================
+		       Link the obj files into a DLL.
+		 ================================================================== -->
+	<target name="build_jacob_dll" depends="checkDllUpToDate,build_jacob_objects" unless="dllUpToDate">
+		<echo>Creating jacob.dll</echo>
+		<apply executable="${linker}" dir="${jacob_cpp.bin}" parallel="true" verbose="true" failonerror="true">
+			<arg value="/nologo" />
+			<arg value="/dll" />
+			<arg value="/version:${version}" />
+			<arg value="/out:${jacob.dll}" />
+			<arg value="/libpath:${MSDEVDIR}/lib" />
+			<srcfile />
+			<arg value="${JDK}\lib\jvm.lib" />
+			<arg value="oleaut32.lib" />
+			<arg value="ole32.lib" />
+			<arg value="uuid.lib" />
+			<arg value="kernel32.lib" />
+			<arg value="shell32.lib" />
+			<arg value="user32.lib" />
+			<fileset dir="${jacob_cpp.bin}">
+				<include name="*.obj" />
+			</fileset>
+		</apply>
+	</target>
+
+	<!-- ======================================================================
+		       Use this target to package all the files for a release
+		 ================================================================== -->
+	<target name="PackageRelease" depends="build_jacob_dll,build_jacob_jar">
+		
+		<echo>Packaging release...</echo>
+		<zip basedir="${application.dir}" destfile="${releases.folder}/jacob_${version}.zip">
+			<exclude name="**/CVS" />
+			<include name="jacob.jar" />
+			<include name="jacob.dll" />
+		</zip>
+		<zip basedir="${application.dir}" destfile="${releases.folder}/jacob_${version}_src.zip">
+			<exclude name="**/CVS" />
+			<include name="jacob.jar" />
+			<include name="jacob.dll" />
+			<include name="src/**/*.*" />
+			<include name="jni/*.*" />
+		</zip>
+	</target>
+</project>
+
