@@ -4,6 +4,11 @@ package com.jacob.com;
  * This trys to exercise ROT's garbage collecion
  * This is named this way because the build.xml
  * ignores files ending in Test when building the binary zip file
+ * 
+ * This will eventually be changed to a unit test.
+ * 
+ * Run in Eclipse with command line arguments
+ * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
  */
 public class ROT3Test
 {

@@ -29,6 +29,12 @@
  */
 package com.jacob.com;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
+
 /**
  * All COM object created by JACOB extend this class so that we can
  * automatically release them when the thread is detached from COM - if we leave
@@ -36,6 +42,9 @@ package com.jacob.com;
  * result in a segmentation violation.
  */
 public class JacobObject {
+    private static String buildVersion = "";
+    private static String buildDate = "";
+
     /**
      *  Standard constructor
      */
@@ -43,6 +52,43 @@ public class JacobObject {
         ROT.addObject(this);
     }
 
+    private static void loadVersionProperties(){
+        Properties versionProps = new Properties();
+        // can't use system class loader cause won't work in jws
+        InputStream stream = 
+           JacobObject.class.getClassLoader().getResourceAsStream("version.properties");
+        try {
+        versionProps.load(stream);
+        stream.close();
+        buildVersion = (String)versionProps.get("version");
+        buildDate = (String)versionProps.get("build.date");
+        } catch (IOException ioe){
+            System.out.println("blah, couldn't load props");
+        }
+    }
+    
+    /**
+     * loads version.properties and returns the value of versin in it
+     * @return String value of version in version.properties or "" if none
+     */
+    public static String getBuildDate(){
+        if (buildDate.equals("")){
+            loadVersionProperties();
+        }
+        return buildDate;
+    }
+
+    /**
+     * loads version.properties and returns the value of versin in it
+     * @return String value of version in version.properties or "" if none
+     */
+    public static String getBuildVersion(){
+        if (buildVersion.equals("")){
+            loadVersionProperties();
+        }
+        return buildVersion;
+    }
+    
     /**
      *  Finalizers call this method.
      *  This method should release any COM data structures in a way

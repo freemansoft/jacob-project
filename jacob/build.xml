@@ -103,7 +103,8 @@
 			listfiles="true" debug="on" fork="yes" />
 	</target>
 	<!-- ======================================================================
-		      Package the classes into a JAR.             
+		      Package the classes into a JAR.    
+		      Put version.propertes into the jar file so getJacobVersion() can find it         
 		 ================================================================== -->
 	<target name="jacob_java_jar_bin" depends="createDirectoryStructure,jacob_java_compile,jacob_java_jar_check,IncrementBuildNumber" unless="jarUpToDate">
 		<echo>Removing old jars</echo>
@@ -113,6 +114,7 @@
 			<exclude name="**/CVS" />
 			<exclude name="com/**/*Test.class"/>
 			<include name="com/**/*.class" />
+			<include name="version.properties" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 				<section name="com.jacob">

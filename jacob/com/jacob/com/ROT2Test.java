@@ -4,6 +4,11 @@ package com.jacob.com;
  * This test class exists to test the WeakRefernce implementation .
  * 
  * It is not useful if there isn't one at this time
+ * 
+ * This will eventually be changed to a unit test.
+ * 
+ * Run in Eclipse with command line arguments
+ * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
  */
 public class ROT2Test
 {

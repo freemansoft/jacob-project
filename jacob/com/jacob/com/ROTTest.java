@@ -2,6 +2,11 @@ package com.jacob.com;
 import com.jacob.com.ROT;
 /**
  * This trys to exercise ROT's garbage collecion
+ * 
+ * This will eventually be changed to a unit test.
+ * 
+ * Run in Eclipse with command line arguments
+ * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
  */
 public class ROTTest {
 
