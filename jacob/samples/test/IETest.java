@@ -14,6 +14,7 @@ class IETest
 {
     public static void main(String[] args)
     {
+      int delay = 5000; // msec
       ActiveXComponent ie = new ActiveXComponent("clsid:0002DF01-0000-0000-C000-000000000046");
       Dispatch ieo = ie.getObject();
       try {
@@ -28,9 +29,9 @@ class IETest
         optional.noParam();
   
         Dispatch.call(ieo, "Navigate", new Variant("http://www.danadler.com/jacob"));
-        try { Thread.sleep(5000); } catch (Exception e) {}
+        try { Thread.sleep(delay); } catch (Exception e) {}
         Dispatch.call(ieo, "Navigate", new Variant("http://groups.yahoo.com/group/jacob-project"));
-        try { Thread.sleep(5000); } catch (Exception e) {}
+        try { Thread.sleep(delay); } catch (Exception e) {}
       } catch (Exception e) {
         e.printStackTrace();
       } finally {

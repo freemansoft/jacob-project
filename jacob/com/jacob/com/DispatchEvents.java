@@ -40,7 +40,7 @@ public class DispatchEvents extends JacobObject {
      * @param sink
      */
     public DispatchEvents(Dispatch src, Object sink) {
-        init(src, sink);
+        init(src, sink, new Variant());
     }
 
     /**
@@ -49,15 +49,24 @@ public class DispatchEvents extends JacobObject {
      * @param progId
      */
     public DispatchEvents(Dispatch src, Object sink, String progId) {
-        init2(src, sink, progId);
+        init2(src, sink, new Variant(), progId);
     }
 
-    // hook up a connection point proxy object
-    // event methods on the sink object will be called
-    // by name with a signature of <name>(Variant[] args)
-    protected native void init(Dispatch src, Object sink);
+    /**
+     * hooks up a connection point proxy by progId
+     * event methods on the sink object will be called
+     * by name with a signature of <name>(Variant[] args)
+     * protoVariant is a sacrificial variant object so we don't have to do findClass in callbacks
+     */
+    protected native void init(Dispatch src, Object sink, Object protoVariant);
 
-    protected native void init2(Dispatch src, Object sink, String progId);
+    /**
+     * hooks up a connection point proxy by progId
+     * event methods on the sink object will be called
+     * by name with a signature of <name>(Variant[] args)
+     * protoVariant is a sacrificial variant object so we don't have to do findClass in callbacks
+     */
+    protected native void init2(Dispatch src, Object sink, Object protoVariant, String progId);
 
     // call this to explicitly release the com object before gc
     public native void release();

@@ -2,7 +2,7 @@
 #
 #
 RELEASE_MAJOR = 1_9
-RELEASE_MINOR = -pre1
+RELEASE_MINOR = -pre2
 JDK = d:\j2sdk1.4.2_06
 JAVAC = $(JDK)\bin\javac -O
 JAR = $(JDK)\bin\jar
@@ -24,16 +24,19 @@ createZips:: build clean
     @echo about to jar source                    
     	@$(JAR) -cvf jacobSrc_$(RELEASE_MAJOR)$(RELEASE_MINOR).zip RELEASE.txt LICENSE.TXT com docs jni samples vstudio makefile
 	@echo about to jar bin
-	    @$(JAR) -cvf jacobBin_$(RELEASE_MAJOR)$(RELEASE_MINOR).zip RELEASE.txt jacob.dll jacob.jar LICENSE.TXT docs samples
+	    @$(JAR) -cvf jacobBin_$(RELEASE_MAJOR)$(RELEASE_MINOR).zip RELEASE.txt jacob.dll jacob.jar jacobdll.jar LICENSE.TXT docs samples
 
+# jacob.jar contains the java code
 java::
 	$(JAVAC) $(COM_DIR)\*.java $(ACX_DIR)\*.java
 	$(JAR) -cvf jacob.jar $(COM_DIR)\*.class $(ACX_DIR)\*.class
 
+# jacobdll.jar contains the dll and is only used for JWS users
 jni::
  	@cd jni
 	@nmake -f makefile all
-	@cd ..\
+	@cd ..
+	$(JAR) -cvf jacobdll.jar jacob.dll
 
 clean::	
 	@echo about to cleanup compiled files and zipfiles
