@@ -44,5 +44,17 @@ public class ROTTest {
         } else {
             System.out.println("ROT pool for thread still exists when it shouldn't");
         }
+        
+        //========= part two ================================
+        System.out.println("Verifying doesn't blow up with double release");
+        for ( int i = 0 ; i <= 10000; i++){
+            new JacobObject();
+        }
+        ROT.clearObjects();
+        for ( int i = 0 ; i <= 100000; i++){
+            new String("this is just some text to see if we can force gc "+i);
+        }
+        System.gc();
+
     }
 }
