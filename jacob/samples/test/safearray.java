@@ -11,18 +11,18 @@ public class safearray
 
 	ActiveXComponent xl = new ActiveXComponent("Excel.Application");
 	try {
-		Object cell;
-		Object cellstart;
-		Object cellstop;
+		Dispatch cell;
+		Dispatch cellstart;
+		Dispatch cellstop;
 		SafeArray sAProdText;
-		Object workbooks = xl.getProperty("Workbooks").toDispatch();
+		Dispatch workbooks = xl.getPropertyAsDispatch("Workbooks");
 		System.out.println("have workbooks");
-		Object workbook = Dispatch.call(workbooks, "Open", "d:\\jacob_15\\samples\\test\\jacobtest.xls").toDispatch();
+		Dispatch workbook = workbooks.call("Open", "d:\\jacob_15\\samples\\test\\jacobtest.xls").toDispatch();
 		System.out.println("Opened File - jacobtest.xls\n");
-		Object sheet = Dispatch.get(workbook,"ActiveSheet").toDispatch();
-		cell = Dispatch.invoke(sheet,"Range",Dispatch.Get,new Object[] {"A1:D1000"},new int[1]).toDispatch();
+		Dispatch sheet = workbook.getPropertyAsDispatch("ActiveSheet");
+		cell = DispatchNative.invoke(sheet,"Range",DispatchConstants.Get,new Object[] {"A1:D1000"},new int[1]).toDispatch();
 		System.out.println("have cell:"+cell);
-		sAProdText = Dispatch.get(cell,"Value").toSafeArray();
+		sAProdText = cell.getProperty("Value").toSafeArray();
 		System.out.println("sa: dim="+sAProdText.getNumDim());
 		System.out.println("sa: start row="+sAProdText.getLBound(1));
 		System.out.println("sa: start col="+sAProdText.getLBound(2));
@@ -50,7 +50,7 @@ public class safearray
 			}
 		}
 		
-		Dispatch.call(workbook, "Close");
+		workbook.call("Close");
 		System.out.println("Closed File\n");
 	} catch (Exception e) {
 	  e.printStackTrace();

@@ -13,9 +13,9 @@ class sa_dispatch
       String lang = "VBScript";
       ActiveXComponent sC = new ActiveXComponent("ScriptControl");
       Dispatch sControl = (Dispatch)sC.getObject();
-      Dispatch.put(sControl, "Language", lang);
+      sControl.setProperty("Language", lang);
 
-      Variant result = Dispatch.call(sControl, "Eval", args[0]);
+      Variant result = sControl.call("Eval", args[0]);
       System.out.println("eval("+args[0]+") = "+ result);
 
 			// wrap the script control in a variant
@@ -32,7 +32,7 @@ class sa_dispatch
 			Dispatch d = v2.toDispatch();
 
 			// make sure you can call eval on it
-      result = Dispatch.call(d, "Eval", args[0]);
+      result = d.call("Eval", args[0]);
       System.out.println("eval("+args[0]+") = "+ result);
     } catch (ComException e) {
       e.printStackTrace();

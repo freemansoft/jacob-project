@@ -46,33 +46,8 @@ public class ActiveXComponent extends Dispatch {
     /**
      * @return actually returns this bject
      */
-    public Object getObject() {
+    public Dispatch getObject() {
         return this;
-    }
-
-    /**
-     * @param name
-     * @param args
-     * @return Variant result of the invoke
-     */
-    public Variant invoke(String name, Variant[] args) {
-        return Dispatch.callN(this, name, args);
-    }
-
-    /**
-     * @param name property name
-     * @return Variant value of property
-     */
-    public Variant getProperty(String name) {
-        return Dispatch.get(this, name);
-    }
-
-    /**
-     * @param name
-     * @param arg
-     */
-    public void setProperty(String name, Variant arg) {
-        Dispatch.put(this, name, arg);
     }
 
     /**

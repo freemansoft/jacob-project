@@ -26,7 +26,7 @@ class ScriptTest3 extends Thread
        String lang = "VBScript";
        sC = new ActiveXComponent("ScriptControl");
        sControl = (Dispatch)sC.getObject();
-       Dispatch.put(sControl, "Language", lang);
+       sControl.setProperty("Language", lang);
        errEvents te = new errEvents();
        de = new DispatchEvents(sControl, te);
        System.out.println("sControl="+sControl);
@@ -51,7 +51,7 @@ class ScriptTest3 extends Thread
       script.start();
       Thread.sleep(1000);
 
-      Variant result = Dispatch.call(sControl, "Eval", args[0]);
+      Variant result = sControl.call("Eval", args[0]);
       System.out.println("eval("+args[0]+") = "+ result);
       System.out.println("setting quit");
       script.quit = true;

@@ -44,21 +44,21 @@ public class JacobScript extends javax.servlet.http.HttpServlet
       String expr = (String)req.getParameter("expr");
       // make sure we have a session
       HttpSession session = req.getSession(true);
-      Object sControl = null;
+      Dispatch sControl = null;
       if (session.isNew()) 
       {
         // initialize the control and store it on the session
         String lang = "VBScript";
         ActiveXComponent sC = new ActiveXComponent("ScriptControl");
         sControl = sC.getObject();
-        Dispatch.put(sControl, "Language", lang);
+        sControl.setProperty("Language", lang);
         session.putValue("control", sControl);
       }
       else
       {
-        sControl = session.getValue("control");
+        sControl = (Dispatch)session.getValue("control");
       }
-      Variant result = Dispatch.call(sControl, "Eval", expr);
+      Variant result = sControl.call("Eval", expr);
       // display a form
       out.println("<h1>Enter a VBScript Expression</h1>");
       out.println("<form method=\"POST\" action=\"/JacobScript\">");

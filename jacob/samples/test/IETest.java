@@ -15,21 +15,21 @@ class IETest
     public static void main(String[] args)
     {
       ActiveXComponent ie = new ActiveXComponent("clsid:0002DF01-0000-0000-C000-000000000046");
-      Object ieo = ie.getObject();
+      Dispatch ieo = ie.getObject();
       try {
-        Dispatch.put(ieo, "Visible", new Variant(true));
-        Dispatch.put(ieo, "AddressBar", new Variant(true));
-        System.out.println(Dispatch.get(ieo, "Path"));
-        Dispatch.put(ieo, "StatusText", new Variant("My Status Text"));
+        ieo.setProperty("Visible", true);
+        ieo.setProperty("AddressBar", true);
+        System.out.println(ieo.getPropertyAsString("Path"));
+        ieo.setProperty("StatusText", "My Status Text");
   
         IEEvents ieE = new IEEvents();
         DispatchEvents de = new DispatchEvents((Dispatch) ieo, ieE,"InternetExplorer.Application.1");
         Variant optional = new Variant();
         optional.noParam();
   
-        Dispatch.call(ieo, "Navigate", new Variant("http://www.danadler.com/jacob"));
+        ieo.setProperty("Navigate", "http://www.danadler.com/jacob");
         try { Thread.sleep(5000); } catch (Exception e) {}
-        Dispatch.call(ieo, "Navigate", new Variant("http://groups.yahoo.com/group/jacob-project"));
+        ieo.call("Navigate", "http://groups.yahoo.com/group/jacob-project");
         try { Thread.sleep(5000); } catch (Exception e) {}
       } catch (Exception e) {
         e.printStackTrace();

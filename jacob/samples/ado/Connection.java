@@ -17,166 +17,166 @@ public class Connection extends Dispatch
 	 */
 	public Connection(Dispatch d)
 	{
-		// take over the IDispatch pointer
-	  m_pDispatch = d.m_pDispatch;
-		// null out the input's pointer
-		d.m_pDispatch = 0;
+	    super(d);
 	}
 
   // need to wrap Properties
   public Variant getProperties()
   {
-    return Dispatch.get(this, "Properties");
+    return this.getProperty("Properties");
   }
 
   public String getConnectionString()
   {
-    return Dispatch.get(this, "ConnectionString").toString();
+    return this.getPropertyAsString("ConnectionString");
   }
 
   public void setConnectionString(String pbstr)
   {
-    Dispatch.put(this, "ConnectionString", pbstr);
+    this.setProperty("ConnectionString", pbstr);
   }
 
   public int getCommandTimeout()
   {
-    return Dispatch.get(this, "CommandTimeout").toInt();
+    return this.getPropertyAsInt("CommandTimeout");
   }
 
   public void setCommandTimeout(int plTimeout)
   {
-    Dispatch.put(this, "CommandTimeout", new Variant(plTimeout));
+    this.setProperty("CommandTimeout", new Variant(plTimeout));
   }
 
   public int getConnectionTimeout()
   {
-    return Dispatch.get(this, "ConnectionTimeout").toInt();
+    return this.getPropertyAsInt("ConnectionTimeout");
   }
 
   public void setConnectionTimeout(int plTimeout)
   {
-    Dispatch.put(this, "ConnectionTimeout", new Variant(plTimeout));
+    this.setProperty("ConnectionTimeout", new Variant(plTimeout));
   }
 
   public String getVersion()
   {
-    return Dispatch.get(this, "Version").toString();
+    return this.getPropertyAsString("Version");
   }
 
   public void Close()
   {
-    Dispatch.call(this, "Close");
+    this.call("Close");
   }
 
   // how to deal with RecordsAffected being output?
   public Variant Execute(String CommandText, Variant RecordsAffected, int Options)
   {
-    return Dispatch.call(this, CommandText, RecordsAffected, new Variant(Options));
+    return DispatchNative.call(this, CommandText, RecordsAffected, new Variant(Options));
   }
 
   public int BeginTrans()
   {
-    return Dispatch.call(this, "BeginTrans").toInt();
+    return this.call("BeginTrans").toInt();
   }
 
   public void CommitTrans()
   {
-    Dispatch.call(this, "CommitTrans");
+    this.call("CommitTrans");
   }
 
   public void RollbackTrans()
   {
-    Dispatch.call(this, "RollbackTrans");
+    this.call("RollbackTrans");
   }
 
   public void Open(String ConnectionString, String UserID, String Password, int Options)
   {
-    Dispatch.call(this, "Open", ConnectionString, UserID, Password, new Variant(Options));
+    DispatchNative.call(this, "Open", ConnectionString, UserID, Password, new Variant(Options));
   }
 
   public void Open()
   {
-    Dispatch.call(this, "Open");
+    this.call("Open");
   }
 
   public Variant getErrors()
   {
-    return Dispatch.get(this, "Errors");
+    return this.getProperty("Errors");
   }
 
   public String getDefaultDatabase()
   {
-    return Dispatch.get(this, "DefaultDatabase").toString();
+    return this.getPropertyAsString("DefaultDatabase");
   }
 
   public void setDefaultDatabase(String pbstr)
   {
-    Dispatch.put(this, "DefaultDatabase", pbstr);
+    this.setProperty("DefaultDatabase", pbstr);
   }
 
   public int getIsolationLevel()
   {
-    return Dispatch.get(this, "IsolationLevel").toInt();
+    return this.getPropertyAsInt("IsolationLevel");
   }
 
   public void setIsolationLevel(int Level)
   {
-    Dispatch.put(this, "IsolationLevel", new Variant(Level));
+    this.setProperty("IsolationLevel", new Variant(Level));
   }
 
   public int getAttributes()
   {
-    return Dispatch.get(this, "Attributes").toInt();
+    return this.getPropertyAsInt("Attributes");
   }
 
   public void setAttributes(int plAttr)
   {
-    Dispatch.put(this, "Attributes", new Variant(plAttr));
+    this.setProperty("Attributes", new Variant(plAttr));
   }
 
   public int getCursorLocation()
   {
-    return Dispatch.get(this, "CursorLocation").toInt();
+    return this.getPropertyAsInt("CursorLocation");
   }
 
   public void setCursorLocation(int plCursorLoc)
   {
-    Dispatch.put(this, "CursorLocation", new Variant(plCursorLoc));
+    this.setProperty("CursorLocation", new Variant(plCursorLoc));
   }
 
   public int getMode()
   {
-    return Dispatch.get(this, "Mode").toInt();
+    return this.getPropertyAsInt("Mode");
   }
 
   public void setMode(int plMode)
   {
-    Dispatch.put(this, "Mode", new Variant(plMode));
+    this.setProperty("Mode", new Variant(plMode));
   }
 
   public String getProvider()
   {
-    return Dispatch.get(this, "Provider").toString();
+    return this.getPropertyAsString("Provider");
   }
 
   public void setProvider(String pbstr)
   {
-    Dispatch.put(this, "Provider", pbstr);
+    this.setProperty("Provider", pbstr);
   }
 
   public int getState()
   {
-    return Dispatch.get(this, "State").toInt();
+    return this.getPropertyAsInt("State");
   }
 
   public Variant OpenSchema(int Schema, Variant Restrictions, Variant SchemaID)
   {
-    return Dispatch.call(this, "OpenSchema", new Variant(Schema), Restrictions, SchemaID);
+    return DispatchNative.call(this, "OpenSchema", 
+            new Variant(Schema), 
+            Restrictions, 
+            SchemaID);
   }
 
   public void Cancel()
   {
-    Dispatch.call(this, "Cancel");
+    this.call("Cancel");
   }
 }

@@ -16,7 +16,7 @@ public class AppTest extends Applet implements ActionListener
   TextField out;
   Button calc;
   ActiveXComponent sC = null;
-  Object sControl = null;
+  Dispatch sControl = null;
 
   /**
    * startup method
@@ -41,9 +41,9 @@ public class AppTest extends Applet implements ActionListener
 		  String lang = "VBScript";
       sC = new ActiveXComponent("ScriptControl");
       sControl = sC.getObject();
-      Dispatch.put(sControl, "Language", lang);
+      sControl.setProperty("Language", lang);
 		}
-    Variant v = Dispatch.call(sControl, "Eval", in.getText());
+    Variant v = sControl.call("Eval", in.getText());
     out.setText(v.toString());
   }
 }

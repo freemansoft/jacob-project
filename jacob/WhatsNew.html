@@ -1,3 +1,40 @@
+<h1>What's New in JACOB 1.9</H1>
+<ul>
+
+<li>
+<b>Event Callbacks</b>
+Variant parameters can now be modified by the receiver
+</li>
+
+
+<li>
+<b>Dispatch Constants have moved<b>
+All the Public Static Final constants in Dispatch have been moved to DispatchConstants.
+This will require source changes by consumers who use those constants
+</li>
+
+<li>
+<b>Dispatch API changes</B>
+All the static methods in Dispatch have been moved to a new DispatchNative class.
+Legacy code can replace Dispatch.xxx with DispatchNative.xxx.  New code
+should use the new instance methods on Dispatch to get and set properties on objects.
+This will give the Dispatch object a more OO feel.
+</li>
+
+<li>
+<b>Dispatch subclasses now supported with pointer modifying constructor</b>
+Dispatch now includes a constructor to be used by Dispatch subclasses
+that swaps the pointers around.  This eliminates the need for every Dispatch subclass
+to have a constructor that swapped and nulled the pointers to the COM layer.
+All samples have updated to use the new api
+</li>
+
+<li>
+<b></b>
+</li>
+
+</ul>
+
 <h1>What's New in JACOB 1.8</H1>
 <ul>
 

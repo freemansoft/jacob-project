@@ -47,10 +47,12 @@ public class EnumVariant extends JacobObject implements java.util.Enumeration {
     /**
      * @param disp
      */
-    public EnumVariant(Object disp) {
+    public EnumVariant(Dispatch disp) {
         int[] hres = new int[1];
-        Variant evv = Dispatch.invokev(disp, Dispatch.DISPID_NEWENUM,
-                Dispatch.Get, new Variant[0], hres);
+        Variant evv = DispatchNative.invokev(disp, 
+                DispatchConstants.DISPID_NEWENUM,
+                DispatchConstants.Get, 
+                new Variant[0], hres);
         if (evv.getvt() != Variant.VariantObject)
             //
             // The DISPID_NEWENUM did not result in a valid object

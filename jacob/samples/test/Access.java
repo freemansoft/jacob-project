@@ -18,9 +18,9 @@ class Access
     Dispatch db = open(ax, ".\\sample2.mdb");
     String sql = "select * from MainTable";
     // make a temporary querydef
-    Dispatch qd = Dispatch.call(db, "CreateQueryDef","").toDispatch();
+    Dispatch qd = db.call("CreateQueryDef","").toDispatch();
     // set the SQL string on it
-    Dispatch.put(qd, "SQL", sql);
+    qd.setProperty("SQL", sql);
     Variant result = getByQueryDef(qd);
 		// the 2-d safearray is transposed from what you might expect
     System.out.println(result.toSafeArray());
@@ -49,7 +49,7 @@ class Access
    */
   public static void close(Dispatch openDB)
   {
-    Dispatch.call(openDB, "Close");
+    openDB.call("Close");
   }
 
   /**
@@ -59,9 +59,9 @@ class Access
    */
   public static Variant getValues(Dispatch recset)
   {
-    Dispatch.callSub(recset,"moveFirst");
+    DispatchNative.callSub(recset,"moveFirst");
     Variant vi = new Variant(4096);
-    Variant v = Dispatch.call(recset,"GetRows", vi);
+    Variant v = recset.call("GetRows", vi);
     return v;
   }
 
@@ -73,7 +73,7 @@ class Access
   public static Variant getByQueryDef(Dispatch qd)
   {
     // get a reference to the recordset
-    Dispatch recset = Dispatch.call(qd, "OpenRecordset").toDispatch();
+    Dispatch recset = qd.callGetDispatch("OpenRecordset");
     // get the values as a safe array
     String[] cols = getColumns(recset);
     for(int i=0;i<cols.length;i++)
@@ -92,18 +92,17 @@ class Access
    */
   public static String[] getColumns(Dispatch recset)
   {
-    Dispatch flds = Dispatch.get(recset, "Fields").toDispatch();
-    int n_flds = Dispatch.get(flds, "Count").toInt();
+    Dispatch flds = recset.getPropertyAsDispatch("Fields");
+    int n_flds = flds.getPropertyAsInt("Count");
     String[] s = new String[n_flds];
     Variant vi = new Variant();
     for (int i=0;i<n_flds;i++) {
       vi.putInt(i);
       // must use the invoke method because this is a method call
       // that wants to have a Dispatch.Get flag...
-      Dispatch fld = Dispatch.invoke(recset, "Fields",
-                       Dispatch.Get, new Object[] {vi}, new int[1]).toDispatch();
-      Variant name = Dispatch.get(fld, "Name");
-      s[i] = name.toString();
+      Dispatch fld = DispatchNative.invoke(recset, "Fields",
+                       DispatchConstants.Get, new Object[] {vi}, new int[1]).toDispatch();
+      s[i] = fld.getPropertyAsString("Name");
     }
     return s;
   }

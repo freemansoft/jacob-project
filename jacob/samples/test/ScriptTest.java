@@ -18,15 +18,15 @@ class ScriptTest
     try {
       String lang = "VBScript";
       ActiveXComponent sC = new ActiveXComponent("ScriptControl");
-      sControl = (Dispatch)sC.getObject();
-      Dispatch.put(sControl, "Language", lang);
+      sControl = sC.getObject();
+      sControl.setProperty("Language", lang);
       errEvents te = new errEvents();
       de = new DispatchEvents(sControl, te);
-      Variant result = Dispatch.call(sControl, "Eval", args[0]);
+      sControl.setProperty("Eval", args[0]);
       // call it twice to see the objects reused
-      result = Dispatch.call(sControl, "Eval", args[0]);
+      Variant result = sControl.call("Eval", args[0]);
       // call it 3 times to see the objects reused
-      result = Dispatch.call(sControl, "Eval", args[0]);
+      result = sControl.call("Eval", args[0]);
       System.out.println("eval("+args[0]+") = "+ result);
     } catch (ComException e) {
       e.printStackTrace();

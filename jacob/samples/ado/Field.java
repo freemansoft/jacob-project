@@ -11,115 +11,112 @@ public class Field extends Dispatch
 	 */
 	public Field(Dispatch d)
 	{
-		// take over the IDispatch pointer
-	  m_pDispatch = d.m_pDispatch;
-		// null out the input's pointer
-		d.m_pDispatch = 0;
+		super(d);
 	}
 
   public Variant getProperties()
   {
-    return Dispatch.get(this, "Properties");
+    return this.getProperty("Properties");
   }
 
   public int getActualSize()
 	{
-	  return Dispatch.get(this, "ActualSize").toInt();
+	  return this.getPropertyAsInt("ActualSize");
 	}
 
   public int getAttributes()
 	{
-	  return Dispatch.get(this, "Attributes").toInt();
+	  return this.getPropertyAsInt("Attributes");
 	}
 
   public int getDefinedSize()
 	{
-	  return Dispatch.get(this, "DefinedSize").toInt();
+	  return this.getPropertyAsInt("DefinedSize");
 	}
 
   public String getName()
 	{
-	  return Dispatch.get(this, "Name").toString();
+	  return this.getPropertyAsString("Name");
 	}
 
   public int getType()
 	{
-	  return Dispatch.get(this, "Type").toInt();
+	  return this.getPropertyAsInt("Type");
 	}
 
   public Variant getValue()
 	{
-	  return Dispatch.get(this, "Value");
+	  return this.getProperty("Value");
 	}
 
   public void setValue(Variant pvar)
 	{
-	  Dispatch.put(this, "Value", pvar);
+	  this.setProperty("Value", pvar);
 	}
 
   public byte getPrecision()
 	{
-	  return Dispatch.get(this, "Precision").toByte();
+	  return this.getPropertyAsByte("Precision");
 	}
 
   public byte getNumericScale()
 	{
-	  return Dispatch.get(this, "NumericScale").toByte();
+	  return this.getPropertyAsByte("NumericScale");
 	}
 
   public void AppendChunk(Variant Data)
 	{
-	  Dispatch.call(this, "AppendChunk", Data);
+	  this.call("AppendChunk", Data);
 	}
 
   public Variant GetChunk(int Length)
 	{
-	  return Dispatch.call(this, "GetChunk", new Variant(Length));
+	  return this.call("GetChunk", new Variant(Length));
 	}
 
   public Variant getOriginalValue()
 	{
-	  return Dispatch.get(this, "OriginalValue");
+	  return this.getProperty("OriginalValue");
 	}
 
   public Variant getUnderlyingValue()
 	{
-	  return Dispatch.get(this, "UnderlyingValue");
+	  return this.getProperty("UnderlyingValue");
 	}
 
   public Variant getDataFormat()
 	{
-	  return Dispatch.get(this, "DataFormat");
+	  return this.getProperty("DataFormat");
 	}
 
   public void setDataFormat(Variant ppiDF)
 	{
-	  Dispatch.put(this, "DataFormat", ppiDF);
+	  this.setProperty("DataFormat", ppiDF);
 	}
 
   public void setPrecision(byte pb)
 	{
-	  Dispatch.put(this, "Precision", new Variant(pb));
+	  this.setProperty("Precision", pb);
 	}
 
   public void setNumericScale(byte pb)
 	{
-	  Dispatch.put(this, "NumericScale", new Variant(pb));
+	  this.setProperty("NumericScale", pb);
 	}
 
   public void setType(int pDataType)
 	{
-	  Dispatch.put(this, "Type", new Variant(pDataType));
+	  this.setProperty("Type", pDataType);
 	}
 
   public void setDefinedSize(int pl)
 	{
-	  Dispatch.put(this, "DefinedSize", new Variant(pl));
+	  this.setProperty("DefinedSize", pl);
 	}
 
   public void setAttributes(int pl)
 	{
-	  Dispatch.put(this, "Attributes", new Variant(pl));
+	  this.setProperty("Attributes", pl);
 	}
 
 }
