@@ -34,19 +34,21 @@
 
 	<property name="application.title" value="JACOB : Java COM Bridge" />
 	<property name="application.vendor" value="http://jacob-project.sourceforge.net, created by Dan Adler (http://danadler.com)" />
-	<property name="jacob_java.src" value="${basedir}/src" />
-	<property name="jacob_java.bin" value="${basedir}/bin" />
+	<property name="instal.dir" value="${basedir}/release" />
+	
+	<property name="jacob_java.src" value="${basedir}" />
+	<property name="jacob_java.bin" value="${instal.dir}" />
 	<property name="jacob_cpp.src" value="${basedir}/jni" />
-	<property name="jacob_cpp.bin" value="${basedir}/jni/release" />
-	<property name="instal.dir" value="${basedir}/releases" />
+	<property name="jacob_cpp.bin" value="${instal.dir}/jni" />
+	
 	<property name="jacob.jar" value="${instal.dir}/jacob.jar" />
 	<property name="jacob.dll" value="${instal.dir}/jacob.dll" />
 
 	<!-- ================================= 
           target: default              
          ================================= -->
-	<target name="default" depends="build_jacob_jar,build_jacob_dll">
-		
+	<target name="default" depends="createDirectoryStructure,build_jacob_jar,build_jacob_dll">
+
 		<echo message="Jacob ${version} build ${build.iteration} : finished on ${build.date}" />
 	</target>
 
@@ -59,13 +61,23 @@
 	</target>
 
 	<!-- ======================================================================
+		      Create the necessary directory structure (does nothing if it
+		      already there)        
+		 ================================================================== -->
+	<target name="createDirectoryStructure">
+		<mkdir dir="${jacob_java.bin}"/>
+		<mkdir dir="${jacob_cpp.bin}"/>
+		<mkdir dir="${instal.dir}"/>
+	</target>
+
+	<!-- ======================================================================
 		      Compare the date/time of the jacob JAR against that 
 		      of the jacob java source          
 		 ================================================================== -->
 	<target name="checkJarUpToDate">
 		<uptodate property="jarUpToDate" targetfile="${jacob.jar}">
 			<srcfiles dir="${jacob_java.src}">
-				<include name="**/*.java" />
+				<include name="com/**/*.java" />
 			</srcfiles>
 			<!-- Check the build file itself as well -->
 			<srcfiles file="${basedir}/build.xml" />
@@ -75,13 +87,13 @@
 	<!-- ======================================================================
 		      Compile the java files and package the classes into a JAR.             
 		 ================================================================== -->
-	<target name="build_jacob_jar" depends="checkJarUpToDate,IncrementBuildNumber" unless="jarUpToDate">
-	
-		<echo>Building java classes...</echo>
-		<javac srcdir="${jacob_java.src}" destdir="${jacob_java.bin}" includes="*.java" listfiles="true" debug="off" fork="yes" />
-		<echo>Packaging java classes...</echo>
-		<!-- This is drastic, but the jar task doesn't seem to update the archive's timestamp properly -->
+	<target name="build_jacob_jar" depends="createDirectoryStructure,checkJarUpToDate,IncrementBuildNumber" unless="jarUpToDate">
+		<echo>Clean up the target folders and file, for safety</echo>
 		<delete file="${jacob.jar}" />
+		<delete dir="${jacob_java.bin}/com" />
+		<echo>Building java classes...</echo>
+		<javac srcdir="${jacob_java.src}" destdir="${jacob_java.bin}" includes="com/**/*.java" listfiles="true" debug="on" fork="yes" />
+		<echo>Packaging java classes...</echo>		
 		<jar destfile="${jacob.jar}" basedir="${jacob_java.bin}" update="false">
 			<exclude name="**/CVS" />
 			<include name="**/*.class" />
@@ -114,7 +126,9 @@
 	<!-- ======================================================================
 		      Compile the c source files.             
 		 ================================================================== -->
-	<target name="build_jacob_objects" depends="checkDllUpToDate,IncrementBuildNumber" unless="dllUpToDate">
+	<target name="build_jacob_objects" depends="createDirectoryStructure,checkDllUpToDate,IncrementBuildNumber" unless="dllUpToDate">
+		<echo>Clean up the target folders and file, for safety</echo>
+		<delete file="${jacob_cpp.bin}/**/*.*" />
 		<echo>Compiling C++ classes</echo>
 		<apply executable="${compiler}" dir="${jacob_cpp.bin}" parallel="false" verbose="true" failonerror="true">
 			<arg value="-c" />
@@ -137,7 +151,9 @@
 	<!-- ======================================================================
 		       Link the obj files into a DLL.
 		 ================================================================== -->
-	<target name="build_jacob_dll" depends="checkDllUpToDate,build_jacob_objects" unless="dllUpToDate">
+	<target name="build_jacob_dll" depends="createDirectoryStructure,checkDllUpToDate,build_jacob_objects" unless="dllUpToDate">
+		<echo>Clean up the target folders and file, for safety</echo>
+		<delete file="${jacob.dll}" />
 		<echo>Creating jacob.dll</echo>
 		<apply executable="${linker}" dir="${jacob_cpp.bin}" parallel="true" verbose="true" failonerror="true">
 			<arg value="/nologo" />
@@ -162,8 +178,8 @@
 	<!-- ======================================================================
 		       Use this target to package all the files for a release
 		 ================================================================== -->
-	<target name="PackageRelease" depends="build_jacob_dll,build_jacob_jar">
-		
+	<target name="PackageRelease" depends="createDirectoryStructure,build_jacob_dll,build_jacob_jar">
+
 		<echo>Packaging release...</echo>
 		<zip basedir="${application.dir}" destfile="${releases.folder}/jacob_${version}.zip">
 			<exclude name="**/CVS" />
