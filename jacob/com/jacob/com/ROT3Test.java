@@ -1,19 +1,19 @@
 package com.jacob.com;
 
 /**
- * This test class exists to test the WeakRefernce implementation .
- * 
- * It is not useful if there isn't one at this time
+ * This trys to exercise ROT's garbage collecion
+ * This is named this way because the build.xml
+ * ignores files ending in Test when building the binary zip file
  */
-public class ROT2Test
+public class ROT3Test
 {
 
     public static void main(String args[]) throws Exception
     {
-        ROT2TestThread threads[] = new ROT2TestThread[4];
+        ROT3TestThread threads[] = new ROT3TestThread[4];
         for (int i = 0; i < threads.length; i++)
         {
-            threads[i] = new ROT2TestThread("thread-" + i, 3000);
+            threads[i] = new ROT3TestThread("thread-" + i, 3000+i*10);
         }
         for (int i = 0; i < threads.length; i++)
         {
@@ -26,7 +26,7 @@ public class ROT2Test
  * This wil try and exercise the thread support in the ROT 
  **/
 
-class ROT2TestThread extends Thread
+class ROT3TestThread extends Thread
 {
     private java.util.List ThreadObjects;
 
@@ -36,7 +36,7 @@ class ROT2TestThread extends Thread
     /**
      * @param arg0
      */
-    public ROT2TestThread(String arg0, int iStartCount)
+    public ROT3TestThread(String arg0, int iStartCount)
     {
         super(arg0);
         initialRunSize = iStartCount;
@@ -68,38 +68,47 @@ class ROT2TestThread extends Thread
         {
             String message = "";
             message = getName()+" Workingset=" +ThreadObjects.size()
-            	+" ROT: ";
-			message += "(before additions and gc "+ROT.getThreadObjects(false).size()+")";
+            	+" ROT: "+ROT.getThreadObjects(true).hashCode();
+			message += "before mods and gc "+ROT.getThreadObjects(true).size()+")";
             // if there is an odd number of objects greater than 2
-            if (ThreadObjects.size() > 2 && ThreadObjects.size() % 2 != 0)
+            if (ThreadObjects.size() > 10)
             {
-                // add a new object
-                Variant aNewVariant = new Variant(getName() + "_*" + ThreadObjects.size());
-                ThreadObjects.add(aNewVariant);
+                message+= " ++ ";
+                for ( int i = 0 ; i < ThreadObjects.size()/4 ; i++){
+	                // add a new object
+	                Variant aNewVariant = new Variant(getName() + "_*" + ThreadObjects.size());
+	                ThreadObjects.add(aNewVariant);
+                }
             }
             // now iterate across all the objects in our list
+            message += " --  ";
             for (int i = ThreadObjects.size(); i > 0; i--)
             {
                 // removing every other one?
                 if (i % 2 == 0)
                 {
                     // remove the reference so gc can get it
+                    if (!ROT.USE_AUTOMATIC_GARBAGE_COLLECTION){
+                        ROT.removeObject((JacobObject)ThreadObjects.get(i-1));
+                    }
                     ThreadObjects.remove(i-1);
                 }
 
             }
             
-            try {
-                // simulate the system under load and run the GC
-                // should end up with weak references with no objects attached
-                Thread.sleep(9);
-            } catch (InterruptedException e){
-                // the VM doesn't want us to sleep anymore,
-                // so get back to work
-            }
-			message += " (before gc, after additions "+ROT.getThreadObjects(false).size()+")";
+			message += " (after mods "+ROT.getThreadObjects(true).size()+")";
+			// comm
+			if (!ROT.USE_AUTOMATIC_GARBAGE_COLLECTION){
+			    ROT.clearObjects();
+			}
 			System.gc();
-			message += " (after System.gc "+ROT.getThreadObjects(false).size()+")";
+			try {
+			Thread.sleep(2000);
+			} catch (InterruptedException ie){
+			    
+			}
+			message += " (after gc "+ROT.getThreadObjects(true).size()+")";
+			message += " Should see GC if debug turned on...";
 			System.out.println(message);
         }
     }

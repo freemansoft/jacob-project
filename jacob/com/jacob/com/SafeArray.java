@@ -628,6 +628,7 @@ public class SafeArray extends JacobObject {
 
     /**
      * standard toString
+     * warning!  this creates new Variant objects!
      * @return
      */
     public String toString() {

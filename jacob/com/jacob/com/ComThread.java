@@ -134,7 +134,7 @@ public abstract class ComThread {
      * This will remove an object from the ROT
      * @param o
      */
-    public static synchronized void RemoveObject(Object o)
+    public static synchronized void RemoveObject(JacobObject o)
     {
         ROT.removeObject(o);    
     }

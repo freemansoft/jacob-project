@@ -27,12 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.jacob.com;
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Vector;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * The Running Object Table (ROT) maps each thread to a vector of all the
@@ -45,238 +45,165 @@ import java.util.Vector;
  * collector, then finalize might get called from a separate thread which is not
  * initialized for COM, and also the component itself may have been freed.
  */
-public abstract class ROT
-{        
+public abstract class ROT {
     /**
-     * A hash table where each key is a thread name and each element 
-     *  is a vector of WeakReferences to all the COM objects created in that thread.
-     * <p>
-     * This was a WeakHashMap but that caused problems because the Lists
-     * would get garbage collected because their string keys would get GC'd 
-     * because the getName() method on the thread creates a new name object
-     * each time. 
+     * Manual garbage collection was the only option pre 1.9
      */
-    private static java.util.Map rot = new java.util.HashMap();
-    
+    protected static final boolean USE_AUTOMATIC_GARBAGE_COLLECTION = 
+        "true".equalsIgnoreCase(System.getProperty("com.jacob.autogc"));
+
     /**
-     * A Reference queue allowing the Garbage Collector of informing us
-     * of dereferenced objects.
+     * A hash table where each element is another 
+     * HashMap that represents a thread.  
+     * Each thread HashMap contains the com objects created
+     * in that thread
      */
-    private static java.lang.ref.ReferenceQueue rq = new java.lang.ref.ReferenceQueue();
-        
+    private static HashMap rot = new HashMap();
+
     /**
-     * Adds a new thread storage area to the ROT, keyed against the thread name
+     * adds a new thread storage area to rot
      *
      */
-    protected static List addThread()
-    {
-        List objectsInThread = null;
+    protected static Map addThread() {
         String t_name = Thread.currentThread().getName();
-        if (rot.containsKey(t_name)) {
-            objectsInThread = (List)rot.get(t_name);
+        if (rot.containsKey(t_name)){
+            // nothing to do
         } else {
-            objectsInThread = new Vector();
-            rot.put(t_name, objectsInThread);
+            Map tab = null;
+            if (JacobObject.isDebugEnabled()){ JacobObject.debug("Automatic GC flag == "+USE_AUTOMATIC_GARBAGE_COLLECTION);}
+            if (!USE_AUTOMATIC_GARBAGE_COLLECTION){
+                tab = new HashMap();
+            } else {
+                tab = new WeakHashMap();
+            }
+            rot.put(t_name,tab);
         }
-        debug(t_name + ":addThread()");
-        return objectsInThread;
+        return getThreadObjects(false);
     }
 
+    
     /**
-     * returns the container that holds the objects created in this thread.
-     * This is protected to be visible for for testing routines.
-     * Does NOT create a thread pool if one does not already exit
-     * @return list of thread objects or NULL if none exists for this thread
+     * returns the pool for this thread if it exists.  can create a new
+     * one if you wish by passing in TRUE
+     * @param createIfDoesNotExist
+     * @return
      */
-    protected static List getThreadObjects()
-    {
+    protected static Map getThreadObjects(boolean createIfDoesNotExist) {
         String t_name = Thread.currentThread().getName();
-        //System.out.println("Get thread objects for: "+t_name);
-        return (List)rot.get(t_name);
+        if (!rot.containsKey(t_name) && createIfDoesNotExist){
+            addThread();
+        }
+        return (Map)rot.get(t_name);
     }
     
     /**
-     * Release all the COM objects created by the current thread.
-     * And dereference the thread from the ROT.
-     * This method is called by {@link com.jacob.com.ComThread#Release()}.
+     * Iterates across all of the entries in the Hashmap in the rot
+     * that corresponds to this thread.  
+     * This calls safeRelease() on  each entry and then 
+     * clears the map when done and removes it from the rot.
+     * All traces of this thread's objects will disapear.
+     * This is called by COMThread in the tear down and provides a 
+     * synchronous way of releasing memory
      */
-    protected static void clearObjects()
-    {
-      String t_name = Thread.currentThread().getName();
-      List v = getThreadObjects();
-      if (v != null)
-      {
-		// Remove the vector from the ROT
-        // so that no one can modify it behind our backs
-        // even though that shouldn't be possible
-        // now we have a vector that only we own
-		rot.remove(t_name);
-        // For each object created by this thread
-		for ( int i = 0 ; i < v.size(); i++)
-        {
-          // Obtain the first object in the vector
-		  WeakReference weakRef = (WeakReference)v.get(i);
-          JacobObject o = (JacobObject)weakRef.get();
-          
-          // If this object is not null, release it
-          if (o != null) 
-          {
-              o.safeRelease();
-              debug(t_name + ":addObject("+o.getClass().getName()+"#"+(o!=null? (""+o.hashCode()):"null")+")");
-          }
-        }
-        // remove them all from the vector in one swoop
-        // old code removed each iterated object from the vector but this
-        // shuffles the data down one position which can be expensive
-        v.clear();
-      }
-    }
-
-    /**
-     * Add a reference to a new object to the ROT, keyed against the current thread name.
-     * This is called by {@link com.jacob.com.JacobObject#JacobObject()}
-     * 
-     * @param o : the JacobObject to add to the ROT
-     */
-    protected static void addObject(JacobObject o)
-    {
-      String t_name = Thread.currentThread().getName();
-      debug(t_name + ":addObject("+o.getClass().getName()+"#"+(o!=null? (""+o.hashCode()):"null")+")");
-      List v = getThreadObjects();
-      if (v == null)
-      {
-        // this thread has not been initialized as a COM thread
-        // so make it part of MTA for backwards compatibility
-        ComThread.InitMTA(false);
-        v = addThread();
-      }
-      if (v != null)
-      {
-        // Before we add any new object, we remove all references to object that have already 
-        // been garbage collected. This will keep the ROT from growing infinitively for long 
-        // lived threads.
-        purgeGCObjects(t_name, v);
-        
-        // Add a WeakReference to the object to our vector. Using a WeakReference means that 
-        // we won't stop the object being garbage collected when it gets dereferenced.
-        v.add(new java.lang.ref.WeakReference(o,rq));
-        
-        debug(t_name+": after purge and add: "+v.size()+" objects referenced");
-      }
-    }
-
-    /**
-     * @deprecated the java model leave the responsibility of clearing up objects 
-     * to the Garbage Collector. Our programming model should not require that the
-     * user specifically remove object from the thread.
-     *  
-     * Lets someone remove an entry for a thread
-     * 
-     * @param iObjectToRemove
-     */
-    protected static void removeObject(Object iObjectToRemove) 
-    {
-        if(iObjectToRemove == null)
-        {
-            return;
-        }
-        
-        String t_name = Thread.currentThread().getName();
-        List v = getThreadObjects();
-        if (v != null)
-        {
-            java.util.Iterator it = v.iterator();
-            while (it.hasNext()) 
-            {
-                java.lang.ref.WeakReference weak = (java.lang.ref.WeakReference)it.next();
-                JacobObject o = (JacobObject)weak.get(); 
-                //if (o != null && o.toString() != null)
-                if (o != null)
-                {
-                    debug(t_name + "release:"+o+"->"+o.getClass().getName());
+    protected static void clearObjects() {
+        Map tab = getThreadObjects(false);
+        if (JacobObject.isDebugEnabled()){ JacobObject.debug("starting clear objects");}
+        if (tab != null){
+            // walk the values
+            Iterator it;
+            if (USE_AUTOMATIC_GARBAGE_COLLECTION){
+                it = tab.keySet().iterator();
+            } else {
+                it = tab.values().iterator();
+            }
+            while (it.hasNext()) {
+                JacobObject o = (JacobObject) it.next();
+                if (o != null  
+                    // can't use this cause creates a Variant if calling SafeAray 
+                    // and we get an exceptin modifying the collection while iterating
+                    // && o.toString() != null
+                ){
+                    if (JacobObject.isDebugEnabled()){ JacobObject.debug(" removing "+o.getClass().getName());}
                     o.safeRelease();
                 }
-                it.remove();
-                // added this because the object can only be in there once
-                // so no need to continue looping
-                break;
+                // used to be an iterator.remove() but why bother when we're nuking them all anyway?
             }
+            // empty the collection
+            tab.clear();
+            // remove the collection from rot
+            rot.remove(Thread.currentThread().getName());
+        } else {
+            if (JacobObject.isDebugEnabled()){ JacobObject.debug("nothing to clear!");}
         }
     }
-    
-    /**
-     * @see java.lang.ref.WeakReference
-     * @see java.lang.ref.ReferenceQueue#poll()
-     * 
-     * Given a vector of WeakReferences, poll our ReferenceQueue for garbageCollected
-     * object, and attempt to remove these objects from the vector.
-     * 
-     * @param istrThreadName : the name of the current thread, used only for debug purpose
-     * @param ivThreadObjects : a vector of weakReferences to JacobObject created by a given thread
-     */
-    protected static void purgeGCObjects(String istrThreadName, List ivThreadObjects) 
-    {
-        // the number we've removed
-        int count = 0;
-        java.lang.ref.WeakReference weak = (java.lang.ref.WeakReference)rq.poll();
-        
-        // For all weakReferences contained in our reference queue
-        while(weak != null)
-        {
-            // get the JacobObject encapsulated by the weakReference.
-            JacobObject o = (JacobObject)weak.get();
-            if (o != null) 
-            {
-                // This SHOULD NEVER HAPPEN because the JacobObject jo has already been garbage collected.
-                debug(istrThreadName + ":release("+((o!=null)? o.toString() : o.getClass().getName())+") !!!!! SHOULD NOT HAPPEN!");
-                o.safeRelease();
-            }
 
-            if(ivThreadObjects!=null)
-            {
-                // Attempt to remove the JacobObject from the vector. If the vector
-                // doesn't actually contain this object, nothing happens.
-                ivThreadObjects.remove(weak);
-                count++;
-            }
-            else
-            {
-                // This should not happen, but it is possible that while purgeGCObjects()
-                // is running, the thread gets removed from the ROT.
-                debug(istrThreadName+":purgeGCObjects() : thread removed from ROT!!!");
-            }
-            
-            // get the next weakReference from our reference queue
-            weak = (java.lang.ref.WeakReference)rq.poll();
-        }  
-        
-        // For debug purpose, list how many dead references got purged
-        if(count > 0)
-        {
-            debug(istrThreadName+":purgeGCObjects() : "+count+" dead references purged");
-        }  
-    }//purgeGCObjects()
-    
-    // If this class gets loaded first, make sure we load the underlying JNI layer.
-    static {
-      System.loadLibrary("jacob");
-    }
-    
     /**
-     * When things go wrong, it is usefull to be able to debug the ROT.
+     * generates the key used to insert object into the thread's list of objects.
+     * @param targetMap the map we need the key for.  Used to make sure we create a compatabile key
+     * @param o JacobObject we need key for
+     * @return some key compatabile with hashmaps
      */
-    private static final boolean DEBUG = 
-        "true".equalsIgnoreCase(System.getProperty("com.jacob.debug"));
-    
-    /**
-     * Very basic debugging fucntion.
-     * @param istrMessage
-     */
-    protected static void debug(String istrMessage)
-    {
-        if(DEBUG)
-        {
-            System.out.println(istrMessage);
+    protected static Object getMapKey(Map targetMap, JacobObject o){
+        if (targetMap instanceof WeakHashMap){
+            return o;
+        } else {
+            return new Integer(o.hashCode());
         }
     }
+    
+    /**
+     * generates the object used to insert object into the thread's list of objects.
+     * @param targetMap the map we need the key for.  Used to make sure we create a compatabile key
+     * @param o JacobObject we need key for
+     * @return some compatabile with hashmaps (null for weak has map)
+     */
+    protected static Object getMapValue(Map targetMap, JacobObject o){
+        if (targetMap instanceof WeakHashMap){
+            return null;
+        } else {
+            return o;
+        }
+    }
+    
+    /**
+    * @deprecated the java model leave the responsibility of clearing up objects 
+    * to the Garbage Collector. Our programming model should not require that the
+    * user specifically remove object from the thread.
+    * 
+    * This will remove an object from the ROT
+    * @param o
+    */
+    protected static void removeObject(JacobObject o) {
+        String t_name = Thread.currentThread().getName();
+        Map tab = (Map) rot.get(t_name);
+        if (tab != null) {
+            tab.remove(getMapKey(tab,o));
+        }
+        o.safeRelease();
+    }
+    
+    /**
+     * adds an object to the HashMap for the current thread
+     * @param o
+     */
+    protected static void addObject(JacobObject o) {
+        String t_name = Thread.currentThread().getName();
+        if (JacobObject.isDebugEnabled()){ JacobObject.debug(" add:"+o+"->"+o.getClass().getName());}
+        Map tab = getThreadObjects(false);
+        if (tab == null) {
+            // this thread has not been initialized as a COM thread
+            // so make it part of MTA for backwards compatibility
+            ComThread.InitMTA(false);
+            tab = getThreadObjects(true);
+        }
+        if (tab != null) {
+            tab.put(getMapKey(tab,o),getMapValue(tab,o));
+            if (JacobObject.isDebugEnabled()){ JacobObject.debug(" ROT thread table size after addition is :"+tab.size());}
+        }
+    }
+
+    static {
+        System.loadLibrary("jacob");
+    }
+    
 }

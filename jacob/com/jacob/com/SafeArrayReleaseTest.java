@@ -66,7 +66,6 @@ package com.jacob.com;
 	| parray---->SAFEARRAY|
 	+------------+ +---------+
  */
-import com.jacob.com.*;
 
 public class SafeArrayReleaseTest 
 {
