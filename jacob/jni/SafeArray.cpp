@@ -2030,8 +2030,8 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_SafeArray_getBoolean__II
     ThrowComFail(env, "safearray object corrupted", -1);
     return NULL; 
   } 
-  if (SafeArrayGetDim(sa) != 1) {
-    ThrowComFail(env, "safearray is not 1D", -1);
+  if (SafeArrayGetDim(sa) != 2) {
+    ThrowComFail(env, "safearray is not 2D", -1);
     return NULL;
   } 
   VARTYPE vt;
@@ -2105,10 +2105,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBoolean__IIZ
     ThrowComFail(env, "safearray object corrupted", -1);
     return;
   }
-  if (SafeArrayGetDim(sa) != 1) {
-    ThrowComFail(env, "safearray is not 1D", -1);
-    return;
-  }
+  if (SafeArrayGetDim(sa) != 2) {
+    ThrowComFail(env, "safearray is not 2D", -1);
+    return NULL;
+  } 
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
   long idx[2] = {i,j};
