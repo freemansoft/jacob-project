@@ -3,12 +3,13 @@
 
 <li>
 <b>Event Callbacks</b>
-Variant parameters can now be modified by the receiver
+Variant parameters can now be modified by the receiver to be passed
+back to the COM caller
 </li>
 
 
 <li>
-<b>Dispatch API changes</B>
+<b>Dispatch API Clarifications</B>
 All static method's first parameters have been more strongly typed
 to the Dispatch class, rather than Object.  This may call for code
 changes in the cases of code that just asigned Dispatch objects 
@@ -17,7 +18,7 @@ to variables of type Object rather than Dispatch or one of its subclasses
 
 <li>
 <b>Dispatch subclasses are now supported with pointer modifying constructor</b>
-Dispatch now includes a constructor to be used by Dispatch subclasses
+Dispatch and ActiveXComponent now includes a constructor to be used by Dispatch subclasses
 that swaps the pointers around.  This eliminates the need for every Dispatch subclass
 to have a constructor that swapped and nulled the pointers to the COM layer.
 All samples have updated to use the new api
@@ -33,11 +34,21 @@ format or ActiveXComponentFormat
 
 <li>
 <b>JNI Changes</b>
-Object removal has been accellerated through the use of hash maps.
+Object removal has been accellerated through the use of hash maps in the ROT class.
+<p>
 Array dimension checking fixed for certain boolean set and get functions
+<p>
+Alternative method for finding Variant class for callbacks in JWS
+or other application lanchers where the system classloader does not
+know about jacob classes.
 </li>
 
-
+<li>
+<b>Build Changes</b>
+The project can now be built using just MS command line commands
+and nmake.  Previous builds required some unix style command line
+tools like 'cp'
+</li>
 
 </ul>
 
