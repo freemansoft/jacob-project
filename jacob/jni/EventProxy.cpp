@@ -28,34 +28,44 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "EventProxy.h"
+#include "Variant.h"
 
 // hook myself up as a listener for delegate
-EventProxy::EventProxy(JNIEnv *env, jobject aSinkObj, 
+EventProxy::EventProxy(JNIEnv *env, 
+		jobject aSinkObj, 
+		jobject aVariantObj,
         CComPtr<IConnectionPoint> pConn,
-        IID eid, CComBSTR mName[], DISPID mID[], int mNum) :
+        IID eid, 
+        CComBSTR mName[], 
+        DISPID mID[], 
+        int mNum) :
+   // initialize some variables
    m_cRef(0), pCP(pConn), 
    eventIID(eid), MethNum(mNum), MethName(mName), 
-   MethID(mID), JMethID(NULL), javaSinkClass(NULL),
-   variantClassMethod(NULL)
+   MethID(mID), JMethID(NULL), 
+   javaSinkClass(NULL)
 {
+	// don't really need the variant object but we keep a reference 
+	// anyway
   javaSinkObj = env->NewGlobalRef(aSinkObj);
-	if (env->ExceptionOccurred()) { env->ExceptionDescribe();}
+	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+  javaVariantObj = env->NewGlobalRef(aVariantObj);
+	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+
 	// we need this to attach to the event invocation thread
   env->GetJavaVM(&jvm);
-	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
   AddRef();
   HRESULT hr = pCP->Advise(this, &dwEventCookie);
   if (SUCCEEDED(hr)) {
+
     // create a mapping from the DISPID's to jmethodID's by using
     // the method names I extracted from the classinfo
     JMethID = new jmethodID[MethNum];
 
     javaSinkClass = env->GetObjectClass(javaSinkObj);
 		if (javaSinkClass == NULL){ printf("can't figure out java sink class"); }
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
-	variantClassMethod = env->GetMethodID(javaSinkClass, "getVariantClass", "()Ljava/lang/Class;");
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
-		if (variantClassMethod == NULL) { printf("variantClassMethod == null\n"); }
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 
     const char *method;
     for(int i=0;i<MethNum;i++) 
@@ -69,6 +79,7 @@ EventProxy::EventProxy(JNIEnv *env, jobject aSinkObj,
       // if the user didn't implement all the methods
       env->ExceptionClear();
     }
+
   } else {
     ThrowComFail(env, "Advise failed", hr);
   }
@@ -85,10 +96,10 @@ EventProxy::~EventProxy()
   #else
      jvm->AttachCurrentThread((void**)&env, NULL);
   #endif
-  
+
 
   env->DeleteGlobalRef(javaSinkObj);
-	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
   if (MethNum) {
     delete [] MethName;
     delete [] MethID;
@@ -125,7 +136,8 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
     LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams,
     VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr)
 {
-  HRESULT     hr;
+  //Visual C++ 6.0 recognized this as an unused variable
+  //HRESULT     hr;
   jmethodID meth = 0;
   JNIEnv      *env = NULL;
 
@@ -146,29 +158,32 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
   {
     // attach to the current running thread
     #ifdef JNI_VERSION_1_2
-      jvm->AttachCurrentThread((void **)&env, jvm);
-    #else
-      jvm->AttachCurrentThread((void**)&env, NULL);
-	#endif
+     jvm->AttachCurrentThread((void **)&env, jvm);
+  	#else
+     jvm->AttachCurrentThread((void**)&env, NULL);
+  	#endif
 
 
     // get variant class
-	jclass vClass;
+	jclass vClass = NULL;
 	// do this in a JACOB 1.8 backwards compatable way
 	// this succeeds if the class was loaded from the bootstrap class loader
-    vClass = env->FindClass("com/jacob/com/Variant");
+    //vClass = env->FindClass("com/jacob/com/Variant");
+    // this is guarenteed to work so there really isn't any need for the line above
+    // but I don't want to bust anything so we leave it in
+    // the following code exists to support launchers like JWS where jacob isn't 
+    // in the system classloader so we wouldn't be able to create a variant class
 	if (vClass == NULL){
-		// see if our call back class implements our "special" method
-		if (variantClassMethod != NULL){
-			jobject variantFound = env->CallObjectMethod(javaSinkObj, variantClassMethod);
-				if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
-				if (variantFound == NULL) { printf("variantFound == null\n"); }
-			vClass = (jclass)variantFound;
-		} else {
-			// dang they didn't.  lets tell the user they are having a bad day
-			printf("We're going to fail now in a way that is probably pretty ugly");
+		// there will be a stored up exception if FindClass failed so lets clear it
+		if (env->ExceptionOccurred()) { env->ExceptionClear(); }
+		//printf("using variant class passed in via constructor\n");
+	    jclass javaVariantClass = env->GetObjectClass(javaVariantObj);
+			if (javaVariantClass == NULL){ printf("can't figure out java Variant class"); }
+			if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+		vClass = javaVariantClass;
+		if (vClass == NULL){
 			printf("This application is probably running from a launcher where system class loader knows not Jacob\n");
-			printf("The call back class does not implement 'Class getVariantClass()' that we can use to work around this\n");
+			printf("And for some reason we couldn't find the variant class from the passed in variant\n");
 		}
 	}
 
@@ -176,16 +191,16 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
     int num = pDispParams->cArgs;
     // and the constructor
     jmethodID vCons = env->GetMethodID(vClass, "<init>", "()V");
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     // make an array of them
     jobjectArray varr = env->NewObjectArray(num, vClass, 0);
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     int i,j;
     for(i=num-1,j=0;i>=0;i--,j++) 
     {
       // construct a java variant holder
       jobject arg = env->NewObject(vClass, vCons);
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
       // get the empty variant from it
       VARIANT *va = extractVariant(env, arg);
       // copy the value
@@ -193,11 +208,11 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
       // put it in the array
       env->SetObjectArrayElement(varr, j, arg);
 			env->DeleteLocalRef(arg);
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     }
     // call the method
     env->CallVoidMethod(javaSinkObj, meth, varr); 
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 
 
     // Begin code from Jiffie team that copies parameters back from java to COM
@@ -820,6 +835,7 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 
 
 	  }
+      zeroVariant(env, arg);
       env->DeleteLocalRef(arg);
     }
     // End code from Jiffie team that copies parameters back from java to COM

@@ -5,6 +5,5 @@ extern "C" {
   IDispatch *extractDispatch(JNIEnv *env, jobject arg);
   SAFEARRAY *extractSA(JNIEnv *env, jobject arg);
   void setSA(JNIEnv *env, jobject arg, SAFEARRAY *sa, int copy);
-  
-  SAFEARRAY *copySA(SAFEARRAY *psa)
+  SAFEARRAY *copySA(SAFEARRAY *psa);
 }

@@ -86,105 +86,97 @@ LINK32=link.exe
 
 # Name "jacob - Win32 Release"
 # Name "jacob - Win32 Debug"
-# Begin Group "Source Files"
-
-# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
-# Begin Source File
-
-SOURCE=.\ComThread.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Dispatch.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\DispatchEvents.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\DispatchProxy.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\EnumVariant.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\EventProxy.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\SafeArray.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\STA.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\StdAfx.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\util.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Variant.cpp
-# End Source File
-# End Group
-# Begin Group "Header Files"
-
-# PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
-
-SOURCE=.\ComThread.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Dispatch.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\DispatchEvents.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\DispatchProxy.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\EnumVariant.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\EventProxy.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\SafeArray.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\STA.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\StdAfx.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\util.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Variant.h
-# End Source File
-# End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
+# Begin Source File
+
+SOURCE=..\..\jni\ComThread.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\ComThread.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\Dispatch.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\Dispatch.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\DispatchEvents.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\DispatchEvents.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\DispatchProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\DispatchProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\EnumVariant.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\EnumVariant.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\EventProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\EventProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\SafeArray.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\SafeArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\STA.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\STA.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\StdAfx.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\StdAfx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\util.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\util.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\Variant.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\jni\Variant.h
+# End Source File
 # End Target
 # End Project

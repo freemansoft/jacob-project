@@ -99,13 +99,12 @@ SAFEARRAY *copySA(SAFEARRAY *psa)
     VARIANT v1, v2;
 
     VariantInit(&v1);
-    VariantInit(&v2);
+	VariantInit(&v2);
     V_VT(&v1) = VT_ARRAY | vt;
     V_ARRAY(&v1) = psa;
     VariantCopy(&v2, &v1);
     SAFEARRAY *sa = V_ARRAY(&v2);
     VariantInit(&v2); // make sure it's not owned by this variant
-    
     VariantClear(&v2);
     VariantInit(&v1);
     VariantClear(&v1);
@@ -1719,8 +1718,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString__IILjava_lang_Stri
     ThrowComFail(env, "safearray object corrupted", -1);
     return;
   } 
-  if (SafeArrayGetDim(sa) != 1) { 
-    ThrowComFail(env, "safearray is not 1D", -1); 
+  if (SafeArrayGetDim(sa) != 2) { 
+    ThrowComFail(env, "safearray is not 2D", -1); 
     return;
   }
   VARTYPE vt;
@@ -2035,8 +2034,8 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_SafeArray_getBoolean__II
     ThrowComFail(env, "safearray object corrupted", -1);
     return NULL; 
   } 
-  if (SafeArrayGetDim(sa) != 1) {
-    ThrowComFail(env, "safearray is not 1D", -1);
+  if (SafeArrayGetDim(sa) != 2) {
+    ThrowComFail(env, "safearray is not 2D", -1);
     return NULL;
   } 
   VARTYPE vt;
@@ -2110,10 +2109,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBoolean__IIZ
     ThrowComFail(env, "safearray object corrupted", -1);
     return;
   }
-  if (SafeArrayGetDim(sa) != 1) {
-    ThrowComFail(env, "safearray is not 1D", -1);
+  if (SafeArrayGetDim(sa) != 2) {
+    ThrowComFail(env, "safearray is not 2D", -1);
     return;
-  }
+  } 
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
   long idx[2] = {i,j};

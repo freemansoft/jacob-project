@@ -91,6 +91,25 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_init
   env->SetIntField(_this, jf, (unsigned int)v);
 }
 
+
+/*
+ * Class:     com_jacob_com_Variant
+ * Method:    zeroVariant
+ * Signature: ()V
+ *
+ * This should only be used on variant objects created by teh
+ * com layer as part of a call through EventProxy.
+ * This zeros out the variant pointer in the Variant object
+ * so that the calling COM program can free the memory.
+ * instead of both the COM program and the Java GC doing it.
+ */
+void zeroVariant(JNIEnv *env, jobject _this)
+{
+  jclass clazz = env->GetObjectClass(_this);
+  jfieldID jf = env->GetFieldID(clazz, VARIANT_FLD, "I");
+  env->SetIntField(_this, jf, (unsigned int)0);
+}
+
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_Save
   (JNIEnv *env, jobject _this, jobject outStream)
 {
@@ -351,6 +370,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDateRef
   }
 }
 
+// SF 1065533  added unicode support
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putStringRef
   (JNIEnv *env, jobject _this, jstring s)
 {
@@ -358,21 +378,15 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putStringRef
   if (v) {
     VariantClear(v); // whatever was there before
 
-    // need to convert to C-style char buffer
-    jclass strcls = env->FindClass("java/lang/String");
-    jmethodID getBytes = env->GetMethodID(strcls, "getBytes", "()[B");
-    jbyteArray ba = (jbyteArray)env->CallObjectMethod(s, getBytes);
-    int len = env->GetArrayLength(ba);
-    jbyte* buf = (jbyte*)alloca(len + 1);
-    env->GetByteArrayRegion(ba, 0, len, buf);
-    buf[len] = '\0';
-    CComBSTR bs((char*)buf);
+	const jchar *cStr = env->GetStringChars(s,NULL);
+    CComBSTR bs(cStr);
 
     BSTR *pbs = (BSTR *)CoTaskMemAlloc(sizeof(BSTR));
     bs.CopyTo(pbs);
     V_VT(v) = VT_BSTR|VT_BYREF;
     V_BSTRREF(v) = pbs;
-  }
+
+    env->ReleaseStringChars(s,cStr);  }
 }
 
 JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getShortRef
@@ -858,6 +872,7 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getString
   return NULL;
 }
 
+// SF 1065533  added unicode support
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putString
   (JNIEnv *env, jobject _this, jstring s)
 {
@@ -866,18 +881,13 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putString
     VariantClear(v); // whatever was there before
     V_VT(v) = VT_BSTR;
 
-    // get C-style byte array
-    jclass strcls = env->FindClass("java/lang/String");
-    jmethodID getBytes = env->GetMethodID(strcls, "getBytes", "()[B");
-    jbyteArray ba = (jbyteArray)env->CallObjectMethod(s, getBytes);
-    int len = env->GetArrayLength(ba);
-    jbyte* buf = (jbyte*)alloca(len + 1);
-    env->GetByteArrayRegion(ba, 0, len, buf);
-    buf[len] = '\0';
+    const jchar *cStr = env->GetStringChars(s,NULL);
+    CComBSTR bs(cStr);
 
-    CComBSTR bs((char*)buf);
     V_VT(v) = VT_BSTR;
     V_BSTR(v) = bs.Copy();
+    
+    env->ReleaseStringChars(s,cStr);
   }
 }
 

@@ -59,7 +59,7 @@ private:
   DWORD   dwEventCookie; // connection point cookie
   jobject javaSinkObj;   // the java object to delegate calls
   jclass  javaSinkClass; // the java class of the object
-  jmethodID variantClassMethod;  // the method on the javaSinkObj that will return the Variant class
+  jobject javaVariantObj;	// a variant object passed in so we can find Variant later
 
   IID     eventIID;      // the interface iid passed in
   int     MethNum;
@@ -70,9 +70,14 @@ private:
 public:
   // constuct with a global JNI ref to a sink object
   // to which we will delegate event callbacks
-  EventProxy(JNIEnv *jenv, jobject aSinkObj, 
+  EventProxy(JNIEnv *jenv, 
+  		jobject aSinkObj, 
+  		jobject aVariantObj,
         CComPtr<IConnectionPoint> pConn, 
-        IID eventIID, CComBSTR *mName, DISPID *mID, int mNum);
+        IID eventIID, 
+        CComBSTR *mName, 
+        DISPID *mID, 
+        int mNum);
   ~EventProxy();
 
   // IUnknown methods

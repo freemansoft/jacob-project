@@ -1,0 +1,410 @@
+<H1>COM Apartments in JACOB</H1>
+<p>
+<H2>introduction</H2>
+<p>
+The COM model for Threading differs from the Java model.
+In COM, each component can declare whether or not it support
+multi-threading.
+
+You can find some basic information about COM threading at:
+<p>
+<a href="http://www.execpc.com/~gopalan/com/com_threading.html">
+http://www.execpc.com/~gopalan/com/com_threading.html</a>
+<p>
+<a href="www.microsoft.com/msj/0297/apartment/apartment.htm">
+www.microsoft.com/msj/0297/apartment/apartment.htm</a>
+<p>
+<a href="http://www.cswl.com/whiteppr/white/multithreading.html">
+http://www.cswl.com/whiteppr/white/multithreading.html
+</a>
+<p>
+The term <b>Single Threaded Apartment (STA)</b> refers to a thread
+where all COM objects created in that thread are 
+single-threaded. This can manifest itself in two ways:
+<br>
+Either all calls into that component are made from the same thread
+that created the component
+<br>
+OR any call that is made from another thread gets serialized by COM.
+This serialization of calls is done by using a Windows message loop and
+posting messages to a hidden window (I'm not kidding). The way COM 
+achieves this is by requiring any other thread to make calls through
+a local Proxy object rather than the original object (more on this 
+when we discuss the JACOB DispatchProxy class).
+<p>
+What does this mean for a Java application? If you are using a component
+that declares itself as <b>ThreadingModel "Apartment"</b> (you can
+find this out by looking in the registry under its CLSID), and you plan
+to create, use and destroy this component in one thread - then you are
+following the rules of an STA and you can declare the thread as an
+STA thread.
+<p>
+On the other hand, if you need to make method calls from another thread
+(e.g. in a servlet) then you have a few choices. Either you 
+create the component in its own STA, by extending 
+<code>com.jacob.com.STA</code>, and use the 
+<code>com.jacob.com.DispatchProxy</code> class to pass the Dispatch
+pointer between threads, or you can declare your thread as an MTA
+thread. In that case, COM will make
+the cross-thread calls into the STA that is running your component.
+If you create an Apartment threaded component in the MTA,
+COM will automatically create an STA for you and put your
+component in there, and then marshall all the calls. 
+<p>
+This brings us to the notion of a <b>Main STA</b>. COM requires that
+if there is any Apartment threaded component in your application, then
+the first STA created is tagged as the <b>Main STA</b>. COM uses the
+Main STA to create all the Apartment threaded components that are
+created from an MTA thread. The problem is that if you have already
+created an STA, then COM will pick that as the Main STA, and if you
+ever exit that thread - the whole application will exit.
+
+<H2>COM Threads in JACOB Prior to Version 1.7</H2>
+<p>
+Up until version 1.7 of JACOB, there was only one model available
+in JACOB:
+<ul>
+<li>
+Before version 1.6: All threads were automatically initialized as STAs.
+</li>
+<li>
+In version 1.6: All threads were automatically initialized as MTAs.
+</li>
+</ul>
+<p>
+The reason for the change in default was that tagging a Java thread
+as an STA can cause problems. Any Java Swing application, as well as
+servlets and applets need to be able to make calls from multiple
+threads. If you try to make COM method calls across STA threads - it
+will fail!
+<p>
+In most cases, the default chosen by JACOB 1.6 (MTA) works fine, however
+there are some notable exceptions that have caused people grief. One
+such exception is in the case of MAPI. It turns out that if you try to
+create a MAPI object from an MTA thread - it simply fails and exits. 
+This has caused some people to recompile JACOB 1.6 back with the STA
+default.
+<p>
+There is another problem with MTA threads: when you are using Apartment
+threaded components, we already noted that COM will create the 
+components in the Main STA. If one doesn't exist, COM will create it.
+However, this means that <b>all</b> Apartment threaded components will
+be created in the <b>same STA</b>. This creates a bottleneck, and a
+dependency between unrelated components. Also, if that STA exits, then
+all components are destroyed and the application will likely crash.
+
+<H2>COM Threads in JACOB Version 1.7</H2>
+<p>
+In Version 1.7 we have added finer grained control to allow the
+Java programmer to control how COM creates its components.
+Unfortunately, this means that you need to have a pretty good 
+understanding of the dark and mystical subject of COM Apartments.
+There are a few different cases you need to consider:
+<H3>Default</H3>
+<p>
+If you simply run code that was created in Version 1.6 and ignore
+the COM threading issue, then you will get the same behavior as in 1.6:
+Each java thread will be an MTA thread, and all Apartment threaded
+components will be created by COM in its own Main STA. This typically
+works for most applications (exceptions noted above).
+<H3>Create Your Own Apartment</H3>
+<p>
+To declare an MTA thread use the following template:
+<br>
+<pre>
+<code>
+ComThread.InitMTA();
+...
+...
+ComThread.Release();
+</pre>
+</code>
+<br>
+If you want JACOB to create its own Main STA (rather than having COM
+choose an STA for you), then you should use:
+<br>
+<code>
+<pre>
+Thread 1:
+ComThread.InitMTA(true); // a true tells JACOB to create a Main STA
+...
+...
+ComThread.Release();
+...
+Thread 2:
+ComThread.InitMTA(); 
+...
+...
+ComThread.Release();
+...
+...
+ComThread.quitMainSTA();
+</pre>
+</code>
+<br>
+In this case, you can also create the Main STA explicitly:
+<br>
+<code>
+<pre>
+ComThread.startMainSTA();
+...
+...
+Thread 1:
+ComThread.InitMTA();
+...
+...
+ComThread.Release();
+...
+Thread 2:
+ComThread.InitMTA(); 
+...
+...
+ComThread.Release();
+...
+...
+ComThread.quitMainSTA();
+</pre>
+</code>
+<br>
+In the latter case, all Apartment threaded components will be created in
+JACOB's main STA. This still has all the problems of components
+sharing the same Main STA and creating a bottleneck. To avoid that,
+you can also create STA threads yourself:
+<br>
+<code>
+<pre>
+ComThread.startMainSTA();
+...
+...
+Thread 1:
+ComThread.InitSTA();
+...
+...
+ComThread.Release();
+...
+Thread 2:
+ComThread.InitMTA(); 
+...
+...
+ComThread.Release();
+...
+...
+ComThread.quitMainSTA();
+</pre>
+</code>
+<br>
+In this example, thread 1 is an STA and thread 2 is an MTA. You could
+omit the call to ComThread.startMainSTA(), but if you do, then COM will
+make the first STA your main one, and then if you exit that thread,
+the application will crash.
+<p>
+Actually, Thread 1 is <i>almost</i> an STA. It's lacking a windows
+message loop. So, this type of STA is fine as long as you are creating
+a component and using it in the same thread, and not makind event
+callbacks.
+<H3>JACOB's STA Class</H3>
+<p>
+If you want to create an true STA where you can create a component and
+then let other threads call methods on it, then you need a windows
+message loop. JACOB provides a class called:
+<code>com.jacob.com.STA</code> which does exactly this.
+<code>
+<pre>
+public class com.jacob.com.STA extends java.lang.Thread 
+{
+    public com.jacob.com.STA();
+    public boolean OnInit(); // you override this
+    public void OnQuit(); // you override this
+    public void quit();  // you can call this from ANY thread
+}
+</pre>
+</code>
+<p>
+The STA class extends 
+<code>java.lang.Thread</code> and it provides you with two methods
+that you can override: <code>OnInit</code> and <code>OnQuit</code>.
+These methods are called from the thread's <code>run</code> method
+so they will execute in the new thread. These methods allow you to
+create COM components (Dispatch objects) and release them.
+To create an STA, you subclass it and override the OnInit.
+<p>
+The <code>quit</code> method is the <b>only</b> other method that
+can be called from any thread. This method uses the Win32 function
+<code>PostThreadMessage</code> to force the STA's windows message loop
+to exit, thereby terminating the thread.
+<p>
+You will then need to make calls into the component that is running
+in the STA thread. If you simply try to make calls from another thread
+on a Dispatch object created in the STA thread, you will get a COM
+Exception. For more details see: 
+<a href="http://www.develop.com/effectivecom">
+Don Box 'Effective COM' Rule 29</a>: Don't Access raw
+interface pointers across apartment boundaries.
+<H3>The DispatchProxy Class</H3>
+Since you cannot call methods directly on a Dispatch object created
+in another STA JACOB provides a method for the class that created
+the Dispatch object to marshal it to your thread. This is done via
+the <code>com.jacob.com.DispatchProxy</code> class.
+<code>
+<pre>
+public class DispatchProxy extends JacobObject {
+    public DispatchProxy(Dispatch);
+    public Dispatch toDispatch();
+
+    public native void release();
+    public void finalize();
+}
+</code>
+</pre>
+<p>
+This class works as follows: the thread that created the Dispatch
+object constructs an instance of DispatchProxy(Dispatch) with the
+Dispatch as a parameter. This instance can then be accessed from
+another thread, which will invoke its <code>toDispatch</code> method
+proxy as if it were local to your thread. COM will do the inter-thread
+marshalling transparently.
+<p>
+The following example is part of samples/test/ScriptTest2.java in the
+JACOB distribution. It shows how you can create the ScriptControl
+in one STA thread and make method calls on it from another:
+<code>
+<pre>
+import com.jacob.com.*;
+import com.jacob.activeX.*;
+
+class ScriptTest2 extends STA
+{
+  public static ActiveXComponent sC;
+  public static Dispatch sControl = null;
+  public static DispatchProxy sCon = null;
+
+  public boolean OnInit()
+  {
+     try
+     {
+       System.out.println("OnInit");
+       System.out.println(Thread.currentThread());
+       String lang = "VBScript";
+
+       sC = new ActiveXComponent("ScriptControl");
+       sControl = (Dispatch)sC.getObject();
+
+       // sCon can be called from another thread
+       sCon = new DispatchProxy(sControl);
+
+       Dispatch.put(sControl, "Language", lang);
+       return true;
+     }
+     catch (Exception e)
+     {
+       e.printStackTrace();
+       return false;
+     }
+  }
+
+  public void OnQuit()
+  {
+     System.out.println("OnQuit");
+  }
+
+  public static void main(String args[]) throws Exception
+  {
+    try {
+      ComThread.InitSTA();
+      ScriptTest2 script = new ScriptTest2();
+      Thread.sleep(1000);
+
+      // get a thread-local Dispatch from sCon
+      Dispatch sc = sCon.toDispatch();
+
+      // call a method on the thread-local Dispatch obtained
+      // from the DispatchProxy. If you try to make the same
+      // method call on the sControl object - you will get a
+      // ComException.
+      Variant result = Dispatch.call(sc, "Eval", args[0]);
+      System.out.println("eval("+args[0]+") = "+ result);
+      script.quit();
+      System.out.println("called quit");
+    } catch (ComException e) {
+      e.printStackTrace();
+    }
+    finally
+    {
+      ComThread.Release();
+    }
+  }
+}
+</pre>
+</code>
+<p>
+You can try to modify the <code>Dispatch.call</code> invocation in
+the main thread to use <code>sControl</code> directly, and you will see
+that it fails. Notice that once we construct the ScriptTest2 object
+in the main thread, we sleep for a second to allow the other thread
+time to initialize itself.
+<p>
+The STA thread calls <code>sCon = new DispatchProxy(sControl);</code>
+to save a global reference to the DispatchProxy that represents the
+<code>sControl</code> object. The main thread then calls:
+<code>Dispatch sc = sCon.toDispatch();</code> to get a local Dispatch
+proxy out of the DispatchProxy object.
+<p>
+At most <b>one(!)</b>
+thread can call toDispatch(), and the call can be made only once.
+This is because a IStream object is used to pass the proxy, and
+it is only written once and closed when you read it.
+If you need multiple threads to access a Dispatch pointer, then
+create that many DispatchProxy objects. For more details please
+refer to the Don Box reference above.
+
+
+<H3>Recommended Procedure</H3>
+<ul>
+<li>
+It is recommended that you always allow JACOB to manage the main STA
+rather than letting COM create one on its own or tag one of yours.
+</li>
+<li>
+Declare an STA thread using ComThread.InitSTA() 
+if all your
+method calls for that component are going to come from the same thread.
+</li>
+<li>
+If you want an STA thread that allows other threads to call into it,
+use the <code>com.jacob.com.STA</code> class as outlined above.
+</li>
+<li>
+If you have a COM component that declares its ThreadingModel as
+"Free" or "Both", then use the MTA.
+</li>
+<li>
+In most cases, if you need to make method calls from multiple threads,
+you can simply
+use MTA threads, and allow COM to create the components in
+the Main STA. You should only create your own STA's and DispatchProxy
+if you understand COM well enough to know when the MTA solution
+will fail or have other shortcomings.
+<p>
+There are 3 examples in the samples/test directory that demonstrate
+these cases:
+<p>
+ScriptTest.java - creates an STA for the ScriptControl component and
+runs all its method calls from that STA.
+<p>
+ScriptTest2.java - creates a separate STA thread, and makes
+method calls into the component from another thread using DispatchProxy.
+<p>
+ScriptTest3.java - creates a separate MTA thread, and makes method
+calls into the component from another MTA thread. This is simpler
+than ScriptTest2 for most applications.
+<p>
+<h3>Default Threading Model</h3>
+If you create a new thread, and don't call 
+<code>ComThread.InitSTA()</code> or  <code>ComThread.InitMTA()</code>
+on it, then the first time your java code creates a JacobObject, it
+will try to register itself with the ROT, and when it sees that the
+current thread is not initialized, it will initialize it as MTA.
+This means that the code to do this is no longer inside the native
+jni code - it is now in the <code>com.jacob.com.ROT</code> class.
+For more details on the ROT, see the 
+<a href="JacobComLifetime.html">Object Lifetime</a> document.

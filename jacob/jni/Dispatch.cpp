@@ -410,9 +410,22 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
 
   // check for error and display a somewhat verbose error message
   if (!SUCCEEDED(hr)) {
-    const char *nm = env->GetStringUTFChars(name, NULL);
-    char *buf = CreateErrorMsgFromInfo(hr, &excepInfo, nm);
-    env->ReleaseStringUTFChars(name, nm);
+    // two buffers that may have to be freed later
+    char *buf = NULL;
+    char *dispIdAsName = NULL;
+    // this method can get called with a name or a dispatch id
+    // we need to handle both SF 1114159 
+    if (name != NULL){
+	    const char *nm = env->GetStringUTFChars(name, NULL);
+	    buf = CreateErrorMsgFromInfo(hr, &excepInfo, nm);
+	    env->ReleaseStringUTFChars(name, nm);
+    } else {
+		dispIdAsName = new char[256];
+		// get the id string
+		itoa (dispID,dispIdAsName,10);
+		//continue on mostly as before
+		buf = CreateErrorMsgFromInfo(hr,&excepInfo,dispIdAsName); 
+    }
     
     // jacob-msg 3696 - SF 1053866
 	if(hr == DISP_E_EXCEPTION)
@@ -429,6 +442,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
 	
     ThrowComFail(env, buf, hr);
     if (buf) delete buf;
+    if (dispIdAsName) delete dispIdAsName;
     return NULL;
   }
 

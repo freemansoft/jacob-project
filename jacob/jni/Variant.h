@@ -607,6 +607,19 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_Load
 JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_isNull
   (JNIEnv *, jobject);
 
+/*
+ * Class:     com_jacob_com_Variant
+ * Method:    zeroVariant
+ * Signature: ()V
+ *
+ * This should only be used on variant objects created by teh
+ * com layer as part of a call through EventProxy.
+ * This zeros out the variant pointer in the Variant object
+ * so that the calling COM program can free the memory.
+ * instead of both the COM program and the Java GC doing it.
+ */
+void zeroVariant (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif
