@@ -57,7 +57,11 @@ format or ActiveXComponentFormat </li>
 <b>JNI Changes</b>
 <ul>
 
-<li>Object removal has been accelerated through the use of weak reference hash maps in the ROT class.
+<li>Beta test option that lets an application use automatic object object 
+removal through the use of weak reference hash maps in the ROT class.&nbsp; The 
+default behavior of manual release via the COMThread class has been retained as 
+the default behavior.&nbsp; Developers can test automatic memory collection by 
+using the command line option <i>-Dcom.jacob.autogc=true</i>
 </li>
 <li>Array dimension checking fixed for certain boolean set and get functions
 </li>
@@ -76,16 +80,24 @@ This fix only applies to Variants created in callbacks. </li>
 </li>
 
 <li>
+<b>Logging Additions</b><ul>
+
+<li>Debugging logging to standard out for Jacob can be turned on by using the 
+command line option <i>-Dcom.jacob.debug=true</i></li>
+
+</ul>
+
+</li>
+
+<li>
 <b>Build Changes</b>
 <ul>
 
 <li>The project is now being built using ANT.&nbsp; Most of the developers are 
 running this from inside of Eclipse</li>
-<li>makefiles will be purged in a future release</li>
+<li>makefiles have been purged</li>
 
 </ul>
-
-<p>&nbsp;</p>
 
 <h2>Bugs Fixed</h2>
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
