@@ -232,6 +232,11 @@ public class Dispatch extends JacobObject
      */
     protected native void createInstance(String progid);
 
+    /**
+     * returns the program id if an activeX component created this
+     * otherwise it returns null. This was added to aid in debugging
+     * @return the program id an activeX component was created against
+     */
     public String getProgramId(){
         return programId;
     }
