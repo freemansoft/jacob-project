@@ -7,7 +7,8 @@
 
 <li>Variant parameters can now be modified by the receiver to be passed
 back to the COM caller </li>
-<li>Callbacks can now be received when running in JWS</li>
+<li>Callbacks can now be received when running in JWS other launchers where 
+JACOB.jar is not in the system classloader's path.</li>
 
 </ul>
 
@@ -33,7 +34,7 @@ to variables of type Object rather than Dispatch or one of its subclasses </li>
 
 <li>Dispatch and ActiveXComponent now includes a constructor to be used by Dispatch subclasses
 that swaps the pointers around.  This eliminates the need for every Dispatch subclass
-to have a constructor that swapped and nulled the pointers to the COM layer.
+to have a constructor that swapped and nulled out the pointers to the COM layer.
 All samples have updated to use the new api </li>
 
 </ul>
@@ -54,20 +55,28 @@ format or ActiveXComponentFormat </li>
 </li>
 
 <li>
-<b>JNI Changes</b>
+<b>Memory Management</b>
 <ul>
 
 <li>Beta test option that lets an application use automatic object object 
 removal through the use of weak reference hash maps in the ROT class.&nbsp; The 
 default behavior of manual release via the COMThread class has been retained as 
 the default behavior.&nbsp; Developers can test automatic memory collection by 
-using the command line option <i>-Dcom.jacob.autogc=true</i>
+using the command line option <i>-Dcom.JACOB.autogc=true</i> </li>
+
+</ul>
+
 </li>
-<li>Array dimension checking fixed for certain boolean set and get functions
+
+<li>
+<b>JNI Changes</b>
+<ul>
+
+<li>Erroneous Array dimension checking fixed for certain boolean set and get functions
 </li>
 <li>Alternative method for finding Variant class for callbacks in JWS
 or other application lanchers where the system classloader does not
-know about jacob classes. </li>
+know about JACOB classes. </li>
 <li>Unicode is supported for putString and putStringRef</li>
 <li>EventProxy zeros out the com object reference in the Variant objects
 that are created by EventProxy so that they are not double released, 
@@ -82,8 +91,30 @@ This fix only applies to Variants created in callbacks. </li>
 <li>
 <b>Logging Additions</b><ul>
 
-<li>Debugging logging to standard out for Jacob can be turned on by using the 
-command line option <i>-Dcom.jacob.debug=true</i></li>
+<li>Debugging logging to standard out for JACOB can be turned on by using the 
+command line option <i>-Dcom.JACOB.debug=true</i></li>
+
+</ul>
+
+</li>
+
+<li>
+<b>Visual Studio</b><ul>
+
+<li>The VisualStudio directory in the CVS repository will be removed in the next 
+release</li>
+
+</ul>
+
+</li>
+
+<li>
+<b>Documentation</b><ul>
+
+<li>API documentation via Javadoc&nbsp; is now being generated for all classes.</li>
+
+<li>The development team is looking for help in upgrading the quality of the 
+class documentation</li>
 
 </ul>
 
@@ -93,17 +124,26 @@ command line option <i>-Dcom.jacob.debug=true</i></li>
 <b>Build Changes</b>
 <ul>
 
+<li>A static method has been added to JacobObject that returns the build version</li>
+
 <li>The project is now being built using ANT.&nbsp; Most of the developers are 
 running this from inside of Eclipse</li>
-<li>makefiles have been purged</li>
+<li>All makefiles have been purged</li>
 
 </ul>
 
-<h2>Bugs Fixed</h2>
+<h2>Tracked Changes</h2>
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
   <tr>
+    <td width="100%" colspan="2"><b>Bugs</b></td>
+  </tr>
+  <tr>
+    <td width="13%">1116101</td>
+    <td width="87%">jacob-msg 0284 : Access Violation while garbage collecting</td>
+  </tr>
+  <tr>
     <td width="13%">1114159</td>
-    <td width="87%">Problem with COM Error Trapping in Jacob DLL</td>
+    <td width="87%">Problem with COM Error Trapping in JACOB DLL</td>
   </tr>
   <tr>
     <td width="13%">1113610</td>
@@ -123,7 +163,7 @@ running this from inside of Eclipse</li>
   </tr>
   <tr>
     <td width="13%">1053870</td>
-    <td width="87%">jacob0msg 2019 - Safe Array</td>
+    <td width="87%">JACOB0msg 2019 - Safe Array</td>
   </tr>
   <tr>
     <td width="13%">1053866</td>
@@ -136,6 +176,9 @@ running this from inside of Eclipse</li>
   <tr>
     <td width="13%">&nbsp;</td>
     <td width="87%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="2"><b>Patches</b></td>
   </tr>
   <tr>
     <td width="13%">1115187</td>
@@ -156,6 +199,29 @@ running this from inside of Eclipse</li>
   <tr>
     <td width="13%">981540</td>
     <td width="87%">jre 1.4.2 fix as patch</td>
+  </tr>
+  <tr>
+    <td width="13%">&nbsp;</td>
+    <td width="87%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="2"><b>Feature Requests</b></td>
+  </tr>
+  <tr>
+    <td width="13%">1049390</td>
+    <td width="87%">static Version information</td>
+  </tr>
+  <tr>
+    <td width="13%">1049224</td>
+    <td width="87%">Javadocs or at least script to generate it</td>
+  </tr>
+  <tr>
+    <td width="13%">1049158</td>
+    <td width="87%">API to get ProgId of ActiveXComponent</td>
+  </tr>
+  <tr>
+    <td width="13%">&nbsp;</td>
+    <td width="87%">&nbsp;</td>
   </tr>
 </table>
 
@@ -242,7 +308,7 @@ other memory leaks were fixed as well.
 
 <li>
 <b>Visual Studio Project:</b>
-For those who want to debug: vstudio/jacob. At the moment all the
+For those who want to debug: vstudio/JACOB. At the moment all the
 native code is replicated there from the jni directory...
 </li>
 
@@ -252,14 +318,14 @@ native code is replicated there from the jni directory...
 <li>
 The JACOB mailing list is hosted at yahoo groups:
 <a href="http://groups.yahoo.com/group/jacob-project">
-http://groups.yahoo.com/group/jacob-project</a>.
+http://groups.yahoo.com/group/JACOB-project</a>.
 <b>This is the preferred way to get support for JACOB</b>. It also
 includes an extensive archive. If you are doing any development with
 JACOB, please join the list.
 <li>
 Massimiliano Bigatti has developed
 <a href="http://www.bigatti.it/projects/jacobgen/">
-Jacobgen - a generator that automatically creates JACOB code from
+JACOBgen - a generator that automatically creates JACOB code from
 Type Libraries</a>
 </li>
 <li>
