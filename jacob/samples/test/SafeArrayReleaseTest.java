@@ -90,14 +90,17 @@ public class SafeArrayReleaseTest
                     SafeArray a2 = v.toSafeArray(true);
                 }
                 ComThread.Release();
+                System.gc();
+                //System.out.print(".");
             } 
             catch (Exception e) 
             {
-                System.out.println("Test fails with i = " + i + " (max = "+MAX+")");
+                System.out.println("\nTest fails with i = " + i + " (max = "+MAX+")");
                 e.printStackTrace();
                 break;
             }
         }
-        System.out.println("Test ends with count = " + count + " (max = "+MAX+")");
+        System.gc();
+        System.out.println("\nTest ends with count = " + count + " (max = "+MAX+")");
     }
 }

@@ -110,21 +110,35 @@ public class SafeArray extends JacobObject {
 
     
     /**
-     * call this to explicitly release the com object before gc
+     *  now private so only this object can asccess
+     *  was: call this to explicitly release the com object before gc
+     * 
      */
-    public void release() {
-        destroy();
-    }
-
-    public native void destroy();
+    private native void destroy();
 
     public native int getvt();
 
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#finalize()
+     */
     protected void finalize() {
-        //System.out.println("SafeArray finalize start");
-        if (m_pV != 0)
-            release();
-        //System.out.println("SafeArray finalize end");
+        safeRelease();
+    }
+    
+    /*
+     *  (non-Javadoc)
+     * @see com.jacob.com.JacobObject#safeRelease()
+     */
+    public void safeRelease()
+    {
+        if (m_pV != 0){
+            destroy();
+            m_pV = 0;
+        } else {
+            // looks like a double release
+            if (isDebugEnabled()){debug(this.getClass().getName()+":"+this.hashCode()+" double release");}
+        }
     }
 
     public native void reinit(SafeArray sa);

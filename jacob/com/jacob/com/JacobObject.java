@@ -44,9 +44,36 @@ public class JacobObject {
     }
 
     /**
-     *  
+     *  Finalizers call this method.
+     *  This method should release any COM data structures in a way
+     *  that it can be called multiple times.
+     *  This can happen if someone manually calls this and then
+     *  a finalizer calls it.
      */
-    public void release() {
+    public void safeRelease() {
         // currently does nothing - subclasses may do something
     }
+    
+    /**
+     * When things go wrong, it is usefull to be able to debug the ROT.
+     */
+    private static final boolean DEBUG = 
+        "true".equalsIgnoreCase(System.getProperty("com.jacob.debug"));
+    
+    protected static boolean isDebugEnabled(){
+        //return true;
+        return DEBUG;
+    }
+    /**
+     * Very basic debugging fucntion.
+     * @param istrMessage
+     */
+    protected static void debug(String istrMessage)
+    {
+        if(isDebugEnabled())
+        {
+            System.out.println(istrMessage);
+        }
+    }
+    
 }

@@ -192,14 +192,27 @@ public class Dispatch extends JacobObject
         return programId;
     }
     
-    /**
-     * overrides superclass's dispatch to do a release if needed
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#finalize()
      */
     protected void finalize() {
-        //System.out.println("Dispatch finalize start");
-        if (m_pDispatch != 0)
+        safeRelease();
+    }
+    
+    /*
+     *  (non-Javadoc)
+     * @see com.jacob.com.JacobObject#safeRelease()
+     */
+    public void safeRelease()
+    {
+        if (m_pDispatch != 0){
             release();
-        //System.out.println("Dispatch finalize end");
+            m_pDispatch = 0;
+        } else {
+            // looks like a double release
+            if (isDebugEnabled()){debug(this.getClass().getName()+":"+this.hashCode()+" double release");}
+        }
     }
     
     /**
@@ -277,9 +290,11 @@ public class Dispatch extends JacobObject
 
 
     /**
-     * call this to explicitly release the com object before gc
+     *  now private so only this object can asccess
+     *  was: call this to explicitly release the com object before gc
+     * 
      */
-    public native void release();
+    private native void release();
 
     /**
      * not implemented yet

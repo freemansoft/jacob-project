@@ -62,16 +62,32 @@ public class DispatchProxy extends JacobObject {
 
     private native Dispatch MarshalFromStream();
 
-    /* (non-Javadoc)
-     * @see com.jacob.com.JacobObject#release()
+    /**
+     *  now private so only this object can asccess
+     *  was: call this to explicitly release the com object before gc
+     * 
      */
-    public native void release();
+    private native void release();
 
     /* (non-Javadoc)
      * @see java.lang.Object#finalize()
      */
     public void finalize() {
-        if (m_pStream != 0)
+        safeRelease();
+    }
+    
+    /*
+     *  (non-Javadoc)
+     * @see com.jacob.com.JacobObject#safeRelease()
+     */
+    public void safeRelease()
+    {
+        if (m_pStream != 0){
             release();
+            m_pStream = 0;
+        } else {
+            // looks like a double release
+            if (isDebugEnabled()){debug(this.getClass().getName()+":"+this.hashCode()+" double release");}
+        }
     }
 }

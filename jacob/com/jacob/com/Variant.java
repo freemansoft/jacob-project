@@ -390,16 +390,43 @@ public class Variant extends JacobObject implements java.io.Serializable
   public native short getvt();
   public native short toShort();
 
-  // call this to explicitly release the com object before gc
-  public native void release();
+  /**
+   *  now private so only this object can asccess
+   *  was: call this to explicitly release the com object before gc
+   * 
+   */
+  private native void release();
 
   protected native void init();
 
+  /*
+   *  (non-Javadoc)
+   * @see java.lang.Object#finalize()
+   */
   protected void finalize()
   {
-    //System.out.println("Variant finalize start:"+m_pVariant);
-    if (m_pVariant != 0) release();
-    //System.out.println("Variant finalize end");
+      safeRelease();
+  }
+  
+  /*
+   *  (non-Javadoc)
+   * @see com.jacob.com.JacobObject#safeRelease()
+   */
+  public void safeRelease()
+  {
+    if (m_pVariant != 0) {
+        release();
+        m_pVariant = 0;
+    } else {
+        // looks like a double release 
+        // this should almost always happen due to gc
+        // after someone has called ComThread.Release
+        if (isDebugEnabled()){
+            debug(this.getClass().getName()+":"+this.hashCode()+" double release");
+            //Throwable x = new Throwable();
+            //x.printStackTrace();
+        }
+    }
   }
 
 

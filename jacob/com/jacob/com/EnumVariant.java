@@ -119,15 +119,34 @@ public class EnumVariant extends JacobObject implements java.util.Enumeration {
      */
     public native void Reset();
 
-    /* (non-Javadoc)
-     * @see com.jacob.com.JacobObject#release()
+    /**
+     *  now private so only this object can asccess
+     *  was: call this to explicitly release the com object before gc
+     * 
      */
-    public native void release();
+    private native void release();
 
-    protected void finalize() {
-        //System.out.println("EnumVariant finalize start");
-        if (m_pIEnumVARIANT != 0)
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#finalize()
+     */
+    protected void finalize() 
+    {
+        safeRelease();
+    }
+    
+    /*
+     *  (non-Javadoc)
+     * @see com.jacob.com.JacobObject#safeRelease()
+     */
+    public void safeRelease()
+    {
+        if (m_pIEnumVARIANT != 0){
             this.release();
-        //System.out.println("EnumVariant finalize end");
+            m_pIEnumVARIANT = 0;
+        } else {
+            // looks like a double release
+            if (isDebugEnabled()){debug(this.getClass().getName()+":"+this.hashCode()+" double release");}
+        }
     }
 }

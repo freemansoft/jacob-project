@@ -113,8 +113,8 @@ public abstract class ROT
           // If this object is not null, release it
           if (o != null) 
           {
-              o.release();
-              debug(t_name + "release:"+o+"->"+o.getClass().getName());
+              o.safeRelease();
+              debug(t_name + ":addObject("+o.getClass().getName()+"#"+(o!=null? (""+o.hashCode()):"null")+")");
           }
           // remove that object from our vector
           v.remove(0);
@@ -153,7 +153,7 @@ public abstract class ROT
         // we won't stop the object being garbage collected when it gets dereferenced.
         v.add(new java.lang.ref.WeakReference(o,rq));
         
-        debug(t_name+" has "+v.size()+" objects referenced");
+        debug(t_name+": after purge and add: "+v.size()+" objects referenced");
       }
     }
 
@@ -186,7 +186,7 @@ public abstract class ROT
                 if (o != null)
                 {
                     debug(t_name + "release:"+o+"->"+o.getClass().getName());
-                    o.release();
+                    o.safeRelease();
                 }
                 it.remove();
             }
@@ -217,7 +217,7 @@ public abstract class ROT
             {
                 // This SHOULD NEVER HAPPEN because the JacobObject jo has already been garbage collected.
                 debug(istrThreadName + ":release("+((o!=null)? o.toString() : o.getClass().getName())+") !!!!! SHOULD NOT HAPPEN!");
-                o.release();
+                o.safeRelease();
             }
 
             if(ivThreadObjects!=null)
@@ -260,7 +260,7 @@ public abstract class ROT
      * Very basic debugging fucntion.
      * @param istrMessage
      */
-    private static void debug(String istrMessage)
+    protected static void debug(String istrMessage)
     {
         if(DEBUG)
         {

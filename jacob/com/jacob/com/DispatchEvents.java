@@ -68,14 +68,33 @@ public class DispatchEvents extends JacobObject {
      */
     protected native void init2(Dispatch src, Object sink, Object protoVariant, String progId);
 
-    // call this to explicitly release the com object before gc
-    public native void release();
-
+    /**
+     *  now private so only this object can asccess
+     *  was: call this to explicitly release the com object before gc
+     * 
+     */
+    private native void release();
+    
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#finalize()
+     */
     protected void finalize() {
-        //System.out.println("DispatchEvents finalize start");
-        if (m_pConnPtProxy != 0)
+        safeRelease();
+    }
+    
+    /*
+     *  (non-Javadoc)
+     * @see com.jacob.com.JacobObject#safeRelease()
+     */
+    public void safeRelease(){
+        if (m_pConnPtProxy != 0){
             release();
-        //System.out.println("DispatchEvents finalize end");
+            m_pConnPtProxy = 0;
+        } else {
+            // looks like a double release
+            if (isDebugEnabled()){debug(this.getClass().getName()+":"+this.hashCode()+" double release");}
+        }
     }
 
     static {
