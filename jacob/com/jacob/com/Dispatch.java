@@ -37,7 +37,16 @@ import java.lang.reflect.Array;
  */
 public class Dispatch extends JacobObject
 {
-  public int m_pDispatch;
+    /**
+     * why is this public?
+     * it could be protected and the Dispatch subclasses could still
+     * get it.
+     * This makes it hard to rename this thing
+     */
+    public int m_pDispatch;
+	/** program Id passed in by ActiveX components in their constructor */
+    private String programId = null;
+  
   public static final int LOCALE_SYSTEM_DEFAULT = 2048;
   public static final int Method = 1;
   public static final int Get = 2;
@@ -111,440 +120,466 @@ public class Dispatch extends JacobObject
   public static final int DISPID_AMBIENT_CHARSET = -727;
   public static final int DISPID_AMBIENT_TRANSFERPRIORITY = -728;
 
+
   // map args based on msdn doc
-  protected static Variant obj2variant(Object o)
-  {
-    if (o == null) 
-      return new Variant();
-    if (o instanceof Variant)
-      return (Variant)o;
-    if (o instanceof Integer)
-      return new Variant(((Integer)o).intValue());
-    if (o instanceof String)
-      return new Variant((String)o);
-    if (o instanceof Boolean)
-      return new Variant(((Boolean)o).booleanValue());
-    if (o instanceof Double)
-      return new Variant(((Double)o).doubleValue());
-    if (o instanceof Float)
-      return new Variant(((Float)o).floatValue());
-    if (o instanceof SafeArray)
-      return new Variant((SafeArray)o);
-    if (o instanceof Dispatch) {
-      Variant v = new Variant();
-      v.putObject((Dispatch)o);
-      return v;
-    }
-    // automatically convert arrays using reflection
-    Class c1 = o.getClass();
-    SafeArray sa = null;
-    if (c1.isArray())
-    {
-      int len1 = Array.getLength(o);
-      Object first = Array.get(o, 0);
-      if (first.getClass().isArray())
-      {
-        int max = 0;
-        for (int i = 0; i < len1; i++)
-        {
-           Object e1 = Array.get(o, i);
-           int len2 = Array.getLength(e1);
-           if (max < len2)
-           {
-               max = len2;
-           }
+    protected static Variant obj2variant(Object o) {
+        if (o == null)
+            return new Variant();
+        if (o instanceof Variant)
+            return (Variant) o;
+        if (o instanceof Integer)
+            return new Variant(((Integer) o).intValue());
+        if (o instanceof String)
+            return new Variant((String) o);
+        if (o instanceof Boolean)
+            return new Variant(((Boolean) o).booleanValue());
+        if (o instanceof Double)
+            return new Variant(((Double) o).doubleValue());
+        if (o instanceof Float)
+            return new Variant(((Float) o).floatValue());
+        if (o instanceof SafeArray)
+            return new Variant((SafeArray) o);
+        if (o instanceof Dispatch) {
+            Variant v = new Variant();
+            v.putObject((Dispatch) o);
+            return v;
         }
-        sa = new SafeArray(Variant.VariantVariant, len1, max);
-        for (int i = 0; i < len1; i++)
-        {
-          Object e1 = Array.get(o, i);
-          for (int j = 0; j < Array.getLength(e1); j++)
-          {
-             sa.setVariant(i, j, obj2variant(Array.get(e1, j)));
-          }
+        // automatically convert arrays using reflection
+        Class c1 = o.getClass();
+        SafeArray sa = null;
+        if (c1.isArray()) {
+            int len1 = Array.getLength(o);
+            Object first = Array.get(o, 0);
+            if (first.getClass().isArray()) {
+                int max = 0;
+                for (int i = 0; i < len1; i++) {
+                    Object e1 = Array.get(o, i);
+                    int len2 = Array.getLength(e1);
+                    if (max < len2) {
+                        max = len2;
+                    }
+                }
+                sa = new SafeArray(Variant.VariantVariant, len1, max);
+                for (int i = 0; i < len1; i++) {
+                    Object e1 = Array.get(o, i);
+                    for (int j = 0; j < Array.getLength(e1); j++) {
+                        sa.setVariant(i, j, obj2variant(Array.get(e1, j)));
+                    }
+                }
+            } else {
+                sa = new SafeArray(Variant.VariantVariant, len1);
+                for (int i = 0; i < len1; i++) {
+                    sa.setVariant(i, obj2variant(Array.get(o, i)));
+                }
+            }
+            return new Variant(sa);
         }
-      } else {
-         sa = new SafeArray(Variant.VariantVariant, len1);
-         for (int i = 0; i < len1; i++)
-         {
-           sa.setVariant(i, obj2variant(Array.get(o, i)));
-         }
-      }
-      return new Variant(sa);
+        throw new ClassCastException("cannot convert to Variant");
     }
-    throw new ClassCastException("cannot convert to Variant");
-  }
 
-  // same as above, for an array
-  protected static Variant[] obj2variant(Object[] o)
-  {
-    Variant vArg[] = new Variant[o.length];
-    for(int i=0;i<o.length;i++) {
-      vArg[i] = obj2variant(o[i]);
+    /**
+     * same as above, for an array
+     * @param o
+     * @return Variant[] 
+     */
+    protected static Variant[] obj2variant(Object[] o) {
+        Variant vArg[] = new Variant[o.length];
+        for (int i = 0; i < o.length; i++) {
+            vArg[i] = obj2variant(o[i]);
+        }
+        return vArg;
     }
-    return vArg;
-  }
-
-  // constructors
-  public Dispatch() { m_pDispatch = 0; }
-  public Dispatch(String progid) { createInstance(progid); }
-
-  // return a different interface by IID string
-  public native Dispatch QueryInterface(String iid);
-
-  // this only gets called from JNI
-  protected Dispatch(int pDisp) { m_pDispatch = pDisp; }
-
-  protected native void createInstance(String progid);
-
-  // call this to explicitly release the com object before gc
-  public native void release();
-
-  public static void put_Casesensitive(Object disp, String name, Object val)
-  {
-    throw new ClassCastException("not implemented yet");
-  }
-
-  // eliminate _Guid arg
-  public static void invokeSubv(Object disp, String name, int dispID,
-    int lcid, int wFlags, Variant[] vArg, int[] uArgErr)
-  {
-    invokev(disp, name, dispID, lcid, wFlags, vArg, uArgErr);
-  }
-
-  public static void invokeSubv(Object disp, String name, int wFlags, Variant[] vArg, int[] uArgErr)
-  {
-    invokev(disp, name, 0, LOCALE_SYSTEM_DEFAULT, wFlags, vArg, uArgErr);
-  }
-
-  public static void invokeSubv(Object disp, int dispID, int wFlags, Variant[] vArg, int[] uArgErr)
-  {
-    invokev(disp, null, dispID, LOCALE_SYSTEM_DEFAULT, wFlags, vArg, uArgErr);
-  }
-
-  public static Variant callN_CaseSensitive(Object disp, String name, Object[] values)
-  {
-    throw new ClassCastException("not implemented yet");
-  }
-
-  public static void callSubN(Object disp, String name, Object[] args)
-  {
-    invokeSubv(disp, name, Method|Get, obj2variant(args), new int[args.length]);
-  }
-
-  public static void callSubN(Object disp, int dispID, Object[] args)
-  {
-    invokeSubv(disp, dispID, Method|Get, obj2variant(args), new int[args.length]);
-  }
-
-  public static int getIDOfName(Object disp, String name)
-  {
-    int ids[] = getIDsOfNames(disp, LOCALE_SYSTEM_DEFAULT, new String[] {name});
-    return ids[0];
-  }
-
-  // eliminated _Guid argument
-  public static native int[] getIDsOfNames(Object disp, int lcid, String[] names);
-  // eliminated _Guid argument
-  public static int[] getIDsOfNames(Object disp, String[] names)
-  {
-    return getIDsOfNames(disp, LOCALE_SYSTEM_DEFAULT, names);
-  }
-
-  public static Variant callN(Object disp, String name, Object[] args)
-  {
-    return invokev(disp, name, Method|Get, obj2variant(args), new int[args.length]);
-  }
-
-  public static Variant callN(Object disp, int dispID, Object[] args)
-  {
-    return invokev(disp, dispID, Method|Get, obj2variant(args), new int[args.length]);
-  }
-
-  public static Variant invoke(Object disp, String name, int dispID, int lcid, int wFlags, Object[] oArg, int[] uArgErr)
-  {
-    return invokev(disp, name, dispID, lcid, wFlags, obj2variant(oArg), uArgErr);
-  }
-
-  public static Variant invoke(Object disp, String name, int wFlags, Object[] oArg, int[] uArgErr)
-  {
-    return invokev(disp, name, wFlags, obj2variant(oArg), uArgErr);
-  }
-
-  public static Variant invoke(Object disp, int dispID, int wFlags, Object[] oArg, int[] uArgErr)
-  {
-    return invokev(disp, dispID, wFlags, obj2variant(oArg), uArgErr);
-  }
-
-  public static Variant call(Object disp, String name)
-  {
-    return callN(disp, name, new Variant[0]);
-  }
-
-  public static Variant call(Object disp, String name, Object a1)
-  {
-    return callN(disp, name, new Object[] {a1});
-  }
-
-  public static Variant call(Object disp, String name, Object a1, Object a2)
-  {
-    return callN(disp, name, new Object[] {a1, a2});
-  }
-
-  public static Variant call(Object disp, String name, Object a1, Object a2, Object a3)
-  {
-    return callN(disp, name, new Object[] {a1, a2, a3});
-  }
-
-  public static Variant call(Object disp, String name, Object a1, Object a2, Object a3, Object a4)
-  {
-    return callN(disp, name, new Object[] {a1, a2, a3, a4});
-  }
-
-  public static Variant call(Object disp, String name, Object a1, Object a2, Object a3, Object a4, Object a5)
-  {
-    return callN(disp, name, new Object[] {a1, a2, a3, a4, a5});
-  }
-
-  public static Variant call(Object disp, String name, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6)
-  {
-    return callN(disp, name, new Object[] {a1, a2, a3, a4, a5, a6});
-  }
-
-  public static Variant call(Object disp, String name, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7)
-  {
-    return callN(disp, name, new Object[] {a1, a2, a3, a4, a5, a6, a7});
-  }
-
-  public static Variant call(Object disp, String name, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7, Object a8)
-  {
-    return callN(disp, name, new Object[] {a1, a2, a3, a4, a5, a6, a7, a8});
-  }
-
-  public static Variant call(Object disp, int dispid)
-  {
-    return callN(disp, dispid, new Variant[0]);
-  }
-
-  public static Variant call(Object disp, int dispid, Object a1)
-  {
-    return callN(disp, dispid, new Object[] {a1});
-  }
-
-  public static Variant call(Object disp, int dispid, Object a1, Object a2)
-  {
-    return callN(disp, dispid, new Object[] {a1, a2});
-  }
-
-  public static Variant call(Object disp, int dispid, Object a1, Object a2, Object a3)
-  {
-    return callN(disp, dispid, new Object[] {a1, a2, a3});
-  }
-
-  public static Variant call(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4)
-  {
-    return callN(disp, dispid, new Object[] {a1, a2, a3, a4});
-  }
-
-  public static Variant call(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4, Object a5)
-  {
-    return callN(disp, dispid, new Object[] {a1, a2, a3, a4, a5});
-  }
-
-  public static Variant call(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6)
-  {
-    return callN(disp, dispid, new Object[] {a1, a2, a3, a4, a5, a6});
-  }
-
-  public static Variant call(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7)
-  {
-    return callN(disp, dispid, new Object[] {a1, a2, a3, a4, a5, a6, a7});
-  }
-
-  public static Variant call(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7, Object a8)
-  {
-    return callN(disp, dispid, new Object[] {a1, a2, a3, a4, a5, a6, a7, a8});
-  }
-
-  public static void put(Object disp, String name, Object val)
-  {
-    invoke(disp, name, Put, new Object[] {val}, new int[1]);
-  }
-
-  public static void put(Object disp, int dispid, Object val)
-  {
-    invoke(disp, dispid, Put, new Object[] {val}, new int[1]);
-  }
-
-  // removed _Guid argument
-  public static native Variant invokev(Object disp, String name, 
-    int dispID, int lcid, int wFlags, Variant[] vArg, int[] uArgErr);
-
-  public static Variant invokev(Object disp, String name, int wFlags,
-    Variant[] vArg, int[] uArgErr)
-  {
-    if (!(disp instanceof Dispatch))
-      throw new ClassCastException("Dispatch object expected");
-    return invokev(disp, name, 0, LOCALE_SYSTEM_DEFAULT, wFlags, vArg, uArgErr);
-  }
-
-  public static Variant invokev(Object disp, String name, int wFlags,
-    Variant[] vArg, int[] uArgErr, int wFlagsEx)
-  {
-    if (!(disp instanceof Dispatch))
-      throw new ClassCastException("Dispatch object expected");
-    // do not implement IDispatchEx for now
-    return invokev(disp, name, 0, LOCALE_SYSTEM_DEFAULT, wFlags, vArg, uArgErr);
-  }
-
-  public static Variant invokev(Object disp, int dispID, int wFlags, Variant[] vArg, int[] uArgErr)
-  {
-    if (!(disp instanceof Dispatch))
-      throw new ClassCastException("Dispatch object expected");
-    return invokev(disp, null, dispID, LOCALE_SYSTEM_DEFAULT, wFlags, vArg, uArgErr);
-  }
-
-  // removed _Guid argument
-  public static void invokeSub(Object disp, String name, int dispid,
-    int lcid, int wFlags, Object[] oArg, int[] uArgErr)
-  {
-    invokeSubv(disp, name, dispid, lcid, wFlags, obj2variant(oArg), uArgErr);
-  }
-
-  public static void invokeSub(Object disp, String name, int wFlags, Object[] oArg, int[] uArgErr)
-  {
-    invokeSub(disp, name, 0, LOCALE_SYSTEM_DEFAULT, wFlags, oArg, uArgErr);
-  }
-
-  public static void invokeSub(Object disp, int dispid, int wFlags, Object[] oArg, int[] uArgErr)
-  {
-    invokeSub(disp, null, dispid, LOCALE_SYSTEM_DEFAULT, wFlags, oArg, uArgErr);
-  }
-
-  public static void callSub(Object disp, String name)
-  {
-    callSubN(disp, name, new Object[0]);
-  }
-
-  public static void callSub(Object disp, String name, Object a1)
-  {
-    callSubN(disp, name, new Object[] {a1});
-  }
-
-  public static void callSub(Object disp, String name, Object a1, Object a2)
-  {
-    callSubN(disp, name, new Object[] {a1, a2});
-  }
-
-  public static void callSub(Object disp, String name, Object a1, Object a2, Object a3)
-  {
-    callSubN(disp, name, new Object[] {a1, a2, a3});
-  }
-
-  public static void callSub(Object disp, String name, Object a1, Object a2, Object a3, Object a4)
-  {
-    callSubN(disp, name, new Object[] {a1, a2, a3, a4});
-  }
-
-  public static void callSub(Object disp, String name, Object a1, Object a2, Object a3, Object a4, Object a5)
-  {
-    callSubN(disp, name, new Object[] {a1, a2, a3, a4, a5});
-  }
-
-  public static void callSub(Object disp, String name, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6)
-  {
-    callSubN(disp, name, new Object[] {a1, a2, a3, a4, a5, a6});
-  }
-
-  public static void callSub(Object disp, String name, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7)
-  {
-    callSubN(disp, name, new Object[] {a1, a2, a3, a4, a5, a6, a7});
-  }
-
-  public static void callSub(Object disp, String name, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7, Object a8)
-  {
-    callSubN(disp, name, new Object[] {a1, a2, a3, a4, a5, a6, a7, a8});
-  }
-
-  public static void callSub(Object disp, int dispid)
-  {
-    callSubN(disp, dispid, new Object[0]);
-  }
-
-  public static void callSub(Object disp, int dispid, Object a1)
-  {
-    callSubN(disp, dispid, new Object[] {a1});
-  }
-
-  public static void callSub(Object disp, int dispid, Object a1, Object a2)
-  {
-    callSubN(disp, dispid, new Object[] {a1, a2});
-  }
-
-  public static void callSub(Object disp, int dispid, Object a1, Object a2, Object a3)
-  {
-    callSubN(disp, dispid, new Object[] {a1, a2, a3});
-  }
-
-  public static void callSub(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4)
-  {
-    callSubN(disp, dispid, new Object[] {a1, a2, a3, a4});
-  }
-
-  public static void callSub(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4, Object a5)
-  {
-    callSubN(disp, dispid, new Object[] {a1, a2, a3, a4, a5});
-  }
-
-  public static void callSub(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6)
-  {
-    callSubN(disp, dispid, new Object[] {a1, a2, a3, a4, a5, a6});
-  }
-
-  public static void callSub(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7)
-  {
-    callSubN(disp, dispid, new Object[] {a1, a2, a3, a4, a5, a6, a7});
-  }
-
-  public static void callSub(Object disp, int dispid, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7, Object a8)
-  {
-    callSubN(disp, dispid, new Object[] {a1, a2, a3, a4, a5, a6, a7, a8});
-  }
-
-  public static Variant get(Object disp, String name)
-  {
-    return invokev(disp, name, Get, new Variant[0], new int[0]);
-  }
-
-  public static Variant get(Object disp, int dispid)
-  {
-    return invokev(disp, dispid, Get, new Variant[0], new int[0]);
-  }
-
-
-  public static void putRef(Object disp, String name, Object val)
-  {
-    invoke(disp, name, PutRef, new Object[] {val}, new int[1]);
-  }
-
-  public static void putRef(Object disp, int dispid, Object val)
-  {
-    invoke(disp, dispid, PutRef, new Object[] {val}, new int[1]);
-  }
-
-  public static Variant get_CaseSensitive(Object disp, String name)
-  {
-    throw new ClassCastException("not implemented yet");
-  }
-
-  static {
-    System.loadLibrary("jacob");
-  }
-
-  protected void finalize()
-  {
-    //System.out.println("Dispatch finalize start");
-    if (m_pDispatch != 0) release();
-    //System.out.println("Dispatch finalize end");
-  }
+
+    /**
+     * zero argument constructor that sets the dispatch pointer to 0
+     */
+    public Dispatch() {
+        m_pDispatch = 0;
+    }
+
+    /**
+     * Constructor that calls createInstance with progid. This is the
+     * constructor used by the ActiveXComponent
+     * 
+     * @param requestedProgramId
+     */
+    public Dispatch(String requestedProgramId) {
+        programId = requestedProgramId;
+        createInstance(requestedProgramId);
+    }
+
+    /**
+     * return a different interface by IID string
+     * 
+     * @param iid
+     * @return Dispatch a disptach that matches ??
+     */
+    public native Dispatch QueryInterface(String iid);
+
+    /**
+     * Constructor that only gets called from JNI
+     * 
+     * @param pDisp
+     */
+    protected Dispatch(int pDisp) {
+        m_pDispatch = pDisp;
+    }
+
+    /**
+     * native call createIstnace only used by the constructor with the same parm
+     * type could this be private?
+     * 
+     * @param progid
+     */
+    protected native void createInstance(String progid);
+
+    public String getProgramId(){
+        return programId;
+    }
+    
+    /**
+     * call this to explicitly release the com object before gc
+     */
+    public native void release();
+
+    /**
+     * not implemented yet
+     * 
+     * @param disp
+     * @param name
+     * @param val
+     * @throws ClassCastException
+     *             because???
+     */
+    public static void put_Casesensitive(Object disp, String name, Object val) {
+        throw new ClassCastException("not implemented yet");
+    }
+
+    // eliminate _Guid arg
+    public static void invokeSubv(Object disp, String name, int dispID,
+            int lcid, int wFlags, Variant[] vArg, int[] uArgErr) {
+        invokev(disp, name, dispID, lcid, wFlags, vArg, uArgErr);
+    }
+
+    public static void invokeSubv(Object disp, String name, int wFlags,
+            Variant[] vArg, int[] uArgErr) {
+        invokev(disp, name, 0, LOCALE_SYSTEM_DEFAULT, wFlags, vArg, uArgErr);
+    }
+
+    public static void invokeSubv(Object disp, int dispID, int wFlags,
+            Variant[] vArg, int[] uArgErr) {
+        invokev(disp, null, dispID, LOCALE_SYSTEM_DEFAULT, wFlags, vArg,
+                uArgErr);
+    }
+
+    public static Variant callN_CaseSensitive(Object disp, String name,
+            Object[] values) {
+        throw new ClassCastException("not implemented yet");
+    }
+
+    public static void callSubN(Object disp, String name, Object[] args) {
+        invokeSubv(disp, name, Method | Get, obj2variant(args),
+                new int[args.length]);
+    }
+
+    public static void callSubN(Object disp, int dispID, Object[] args) {
+        invokeSubv(disp, dispID, Method | Get, obj2variant(args),
+                new int[args.length]);
+    }
+
+    public static int getIDOfName(Object disp, String name) {
+        int ids[] = getIDsOfNames(disp, LOCALE_SYSTEM_DEFAULT,
+                new String[] { name });
+        return ids[0];
+    }
+
+    // eliminated _Guid argument
+    public static native int[] getIDsOfNames(Object disp, int lcid,
+            String[] names);
+
+    // eliminated _Guid argument
+    public static int[] getIDsOfNames(Object disp, String[] names) {
+        return getIDsOfNames(disp, LOCALE_SYSTEM_DEFAULT, names);
+    }
+
+    public static Variant callN(Object disp, String name, Object[] args) {
+        return invokev(disp, name, Method | Get, obj2variant(args),
+                new int[args.length]);
+    }
+
+    public static Variant callN(Object disp, int dispID, Object[] args) {
+        return invokev(disp, dispID, Method | Get, obj2variant(args),
+                new int[args.length]);
+    }
+
+    public static Variant invoke(Object disp, String name, int dispID,
+            int lcid, int wFlags, Object[] oArg, int[] uArgErr) {
+        return invokev(disp, name, dispID, lcid, wFlags, obj2variant(oArg),
+                uArgErr);
+    }
+
+    public static Variant invoke(Object disp, String name, int wFlags,
+            Object[] oArg, int[] uArgErr) {
+        return invokev(disp, name, wFlags, obj2variant(oArg), uArgErr);
+    }
+
+    public static Variant invoke(Object disp, int dispID, int wFlags,
+            Object[] oArg, int[] uArgErr) {
+        return invokev(disp, dispID, wFlags, obj2variant(oArg), uArgErr);
+    }
+
+    public static Variant call(Object disp, String name) {
+        return callN(disp, name, new Variant[0]);
+    }
+
+    public static Variant call(Object disp, String name, Object a1) {
+        return callN(disp, name, new Object[] { a1 });
+    }
+
+    public static Variant call(Object disp, String name, Object a1, Object a2) {
+        return callN(disp, name, new Object[] { a1, a2 });
+    }
+
+    public static Variant call(Object disp, String name, Object a1, Object a2,
+            Object a3) {
+        return callN(disp, name, new Object[] { a1, a2, a3 });
+    }
+
+    public static Variant call(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4) {
+        return callN(disp, name, new Object[] { a1, a2, a3, a4 });
+    }
+
+    public static Variant call(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4, Object a5) {
+        return callN(disp, name, new Object[] { a1, a2, a3, a4, a5 });
+    }
+
+    public static Variant call(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6) {
+        return callN(disp, name, new Object[] { a1, a2, a3, a4, a5, a6 });
+    }
+
+    public static Variant call(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6, Object a7) {
+        return callN(disp, name, new Object[] { a1, a2, a3, a4, a5, a6, a7 });
+    }
+
+    public static Variant call(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6, Object a7, Object a8) {
+        return callN(disp, name,
+                new Object[] { a1, a2, a3, a4, a5, a6, a7, a8 });
+    }
+
+    public static Variant call(Object disp, int dispid) {
+        return callN(disp, dispid, new Variant[0]);
+    }
+
+    public static Variant call(Object disp, int dispid, Object a1) {
+        return callN(disp, dispid, new Object[] { a1 });
+    }
+
+    public static Variant call(Object disp, int dispid, Object a1, Object a2) {
+        return callN(disp, dispid, new Object[] { a1, a2 });
+    }
+
+    public static Variant call(Object disp, int dispid, Object a1, Object a2,
+            Object a3) {
+        return callN(disp, dispid, new Object[] { a1, a2, a3 });
+    }
+
+    public static Variant call(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4) {
+        return callN(disp, dispid, new Object[] { a1, a2, a3, a4 });
+    }
+
+    public static Variant call(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4, Object a5) {
+        return callN(disp, dispid, new Object[] { a1, a2, a3, a4, a5 });
+    }
+
+    public static Variant call(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6) {
+        return callN(disp, dispid, new Object[] { a1, a2, a3, a4, a5, a6 });
+    }
+
+    public static Variant call(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6, Object a7) {
+        return callN(disp, dispid, new Object[] { a1, a2, a3, a4, a5, a6, a7 });
+    }
+
+    public static Variant call(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6, Object a7, Object a8) {
+        return callN(disp, dispid, new Object[] { a1, a2, a3, a4, a5, a6, a7,
+                a8 });
+    }
+
+    public static void put(Object disp, String name, Object val) {
+        invoke(disp, name, Put, new Object[] { val }, new int[1]);
+    }
+
+    public static void put(Object disp, int dispid, Object val) {
+        invoke(disp, dispid, Put, new Object[] { val }, new int[1]);
+    }
+
+    // removed _Guid argument
+    public static native Variant invokev(Object disp, String name, int dispID,
+            int lcid, int wFlags, Variant[] vArg, int[] uArgErr);
+
+    public static Variant invokev(Object disp, String name, int wFlags,
+            Variant[] vArg, int[] uArgErr) {
+        if (!(disp instanceof Dispatch))
+            throw new ClassCastException("Dispatch object expected");
+        return invokev(disp, name, 0, LOCALE_SYSTEM_DEFAULT, wFlags, vArg,
+                uArgErr);
+    }
+
+    public static Variant invokev(Object disp, String name, int wFlags,
+            Variant[] vArg, int[] uArgErr, int wFlagsEx) {
+        if (!(disp instanceof Dispatch))
+            throw new ClassCastException("Dispatch object expected");
+        // do not implement IDispatchEx for now
+        return invokev(disp, name, 0, LOCALE_SYSTEM_DEFAULT, wFlags, vArg,
+                uArgErr);
+    }
+
+    public static Variant invokev(Object disp, int dispID, int wFlags,
+            Variant[] vArg, int[] uArgErr) {
+        if (!(disp instanceof Dispatch))
+            throw new ClassCastException("Dispatch object expected");
+        return invokev(disp, null, dispID, LOCALE_SYSTEM_DEFAULT, wFlags, vArg,
+                uArgErr);
+    }
+
+    // removed _Guid argument
+    public static void invokeSub(Object disp, String name, int dispid,
+            int lcid, int wFlags, Object[] oArg, int[] uArgErr) {
+        invokeSubv(disp, name, dispid, lcid, wFlags, obj2variant(oArg), uArgErr);
+    }
+
+    public static void invokeSub(Object disp, String name, int wFlags,
+            Object[] oArg, int[] uArgErr) {
+        invokeSub(disp, name, 0, LOCALE_SYSTEM_DEFAULT, wFlags, oArg, uArgErr);
+    }
+
+    public static void invokeSub(Object disp, int dispid, int wFlags,
+            Object[] oArg, int[] uArgErr) {
+        invokeSub(disp, null, dispid, LOCALE_SYSTEM_DEFAULT, wFlags, oArg,
+                uArgErr);
+    }
+
+    public static void callSub(Object disp, String name) {
+        callSubN(disp, name, new Object[0]);
+    }
+
+    public static void callSub(Object disp, String name, Object a1) {
+        callSubN(disp, name, new Object[] { a1 });
+    }
+
+    public static void callSub(Object disp, String name, Object a1, Object a2) {
+        callSubN(disp, name, new Object[] { a1, a2 });
+    }
+
+    public static void callSub(Object disp, String name, Object a1, Object a2,
+            Object a3) {
+        callSubN(disp, name, new Object[] { a1, a2, a3 });
+    }
+
+    public static void callSub(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4) {
+        callSubN(disp, name, new Object[] { a1, a2, a3, a4 });
+    }
+
+    public static void callSub(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4, Object a5) {
+        callSubN(disp, name, new Object[] { a1, a2, a3, a4, a5 });
+    }
+
+    public static void callSub(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6) {
+        callSubN(disp, name, new Object[] { a1, a2, a3, a4, a5, a6 });
+    }
+
+    public static void callSub(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6, Object a7) {
+        callSubN(disp, name, new Object[] { a1, a2, a3, a4, a5, a6, a7 });
+    }
+
+    public static void callSub(Object disp, String name, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6, Object a7, Object a8) {
+        callSubN(disp, name, new Object[] { a1, a2, a3, a4, a5, a6, a7, a8 });
+    }
+
+    public static void callSub(Object disp, int dispid) {
+        callSubN(disp, dispid, new Object[0]);
+    }
+
+    public static void callSub(Object disp, int dispid, Object a1) {
+        callSubN(disp, dispid, new Object[] { a1 });
+    }
+
+    public static void callSub(Object disp, int dispid, Object a1, Object a2) {
+        callSubN(disp, dispid, new Object[] { a1, a2 });
+    }
+
+    public static void callSub(Object disp, int dispid, Object a1, Object a2,
+            Object a3) {
+        callSubN(disp, dispid, new Object[] { a1, a2, a3 });
+    }
+
+    public static void callSub(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4) {
+        callSubN(disp, dispid, new Object[] { a1, a2, a3, a4 });
+    }
+
+    public static void callSub(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4, Object a5) {
+        callSubN(disp, dispid, new Object[] { a1, a2, a3, a4, a5 });
+    }
+
+    public static void callSub(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6) {
+        callSubN(disp, dispid, new Object[] { a1, a2, a3, a4, a5, a6 });
+    }
+
+    public static void callSub(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6, Object a7) {
+        callSubN(disp, dispid, new Object[] { a1, a2, a3, a4, a5, a6, a7 });
+    }
+
+    public static void callSub(Object disp, int dispid, Object a1, Object a2,
+            Object a3, Object a4, Object a5, Object a6, Object a7, Object a8) {
+        callSubN(disp, dispid, new Object[] { a1, a2, a3, a4, a5, a6, a7, a8 });
+    }
+
+    public static Variant get(Object disp, String name) {
+        return invokev(disp, name, Get, new Variant[0], new int[0]);
+    }
+
+    public static Variant get(Object disp, int dispid) {
+        return invokev(disp, dispid, Get, new Variant[0], new int[0]);
+    }
+
+    public static void putRef(Object disp, String name, Object val) {
+        invoke(disp, name, PutRef, new Object[] { val }, new int[1]);
+    }
+
+    public static void putRef(Object disp, int dispid, Object val) {
+        invoke(disp, dispid, PutRef, new Object[] { val }, new int[1]);
+    }
+
+    public static Variant get_CaseSensitive(Object disp, String name) {
+        throw new ClassCastException("not implemented yet");
+    }
+
+    static {
+        System.loadLibrary("jacob");
+    }
+
+    protected void finalize() {
+        //System.out.println("Dispatch finalize start");
+        if (m_pDispatch != 0)
+            release();
+        //System.out.println("Dispatch finalize end");
+    }
 }
