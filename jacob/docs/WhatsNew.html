@@ -57,7 +57,7 @@ format or ActiveXComponentFormat </li>
 <b>JNI Changes</b>
 <ul>
 
-<li>Object removal has been accellerated through the use of hash maps in the ROT class.
+<li>Object removal has been accelerated through the use of weak reference hash maps in the ROT class.
 </li>
 <li>Array dimension checking fixed for certain boolean set and get functions
 </li>
@@ -79,15 +79,20 @@ This fix only applies to Variants created in callbacks. </li>
 <b>Build Changes</b>
 <ul>
 
-<li>The project can now be built using just MS command line commands
-and nmake.  Previous builds required some unix style command line
-tools like 'cp' </li>
-<li>src and bin zip files are now built with release name from the makefile</li>
+<li>The project is now being built using ANT.&nbsp; Most of the developers are 
+running this from inside of Eclipse</li>
+<li>makefiles will be purged in a future release</li>
 
 </ul>
 
+<p>&nbsp;</p>
+
 <h2>Bugs Fixed</h2>
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+  <tr>
+    <td width="13%">1114159</td>
+    <td width="87%">Problem with COM Error Trapping in Jacob DLL</td>
+  </tr>
   <tr>
     <td width="13%">1113610</td>
     <td width="87%">Bad error check in SafeArray.cpp</td>
@@ -103,6 +108,10 @@ tools like 'cp' </li>
   <tr>
     <td width="13%">1053871</td>
     <td width="87%">solution for memory leak in 1.7</td>
+  </tr>
+  <tr>
+    <td width="13%">1053870</td>
+    <td width="87%">jacob0msg 2019 - Safe Array</td>
   </tr>
   <tr>
     <td width="13%">1053866</td>
@@ -123,6 +132,10 @@ tools like 'cp' </li>
   <tr>
     <td width="13%">1105915</td>
     <td width="87%">Fix for event handling memory corruption</td>
+  </tr>
+  <tr>
+    <td width="13%">1090104</td>
+    <td width="87%">Weak Reference in teh ROT</td>
   </tr>
   <tr>
     <td width="13%">1068544</td>
