@@ -47,6 +47,6 @@ public class JacobObject {
      *  
      */
     public void release() {
-        // currently does nothing
+        // currently does nothing - subclasses may do something
     }
 }

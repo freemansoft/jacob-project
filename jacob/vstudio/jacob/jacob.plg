@@ -6,28 +6,19 @@
 --------------------Configuration: jacob - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\TEMP\RSPED5.tmp" with contents
+Creating temporary file "C:\DOCUME~1\joe\LOCALS~1\Temp\RSPDC.tmp" with contents
 [
 /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "JACOB_EXPORTS" /Fp"Debug/jacob.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"D:\jacob_17\vstudio\jacob\ComThread.cpp"
-"D:\jacob_17\vstudio\jacob\Dispatch.cpp"
-"D:\jacob_17\vstudio\jacob\DispatchEvents.cpp"
-"D:\jacob_17\vstudio\jacob\EnumVariant.cpp"
-"D:\jacob_17\vstudio\jacob\EventProxy.cpp"
-"D:\jacob_17\vstudio\jacob\SafeArray.cpp"
-"D:\jacob_17\vstudio\jacob\STA.cpp"
-"D:\jacob_17\vstudio\jacob\StdAfx.cpp"
-"D:\jacob_17\vstudio\jacob\util.cpp"
-"D:\jacob_17\vstudio\jacob\Variant.cpp"
-"D:\jacob_17\vstudio\jacob\DispatchProxy.cpp"
+"D:\jacob_18\jni\SafeArray.cpp"
 ]
-Creating command line "cl.exe @C:\TEMP\RSPED5.tmp" 
-Creating temporary file "C:\TEMP\RSPED6.tmp" with contents
+Creating command line "cl.exe @C:\DOCUME~1\joe\LOCALS~1\Temp\RSPDC.tmp" 
+Creating temporary file "C:\DOCUME~1\joe\LOCALS~1\Temp\RSPDD.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:yes /pdb:"Debug/jacob.pdb" /debug /machine:I386 /out:"Debug/jacob.dll" /implib:"Debug/jacob.lib" /pdbtype:sept 
 .\Debug\ComThread.obj
 .\Debug\Dispatch.obj
 .\Debug\DispatchEvents.obj
+.\Debug\DispatchProxy.obj
 .\Debug\EnumVariant.obj
 .\Debug\EventProxy.obj
 .\Debug\SafeArray.obj
@@ -35,32 +26,18 @@ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32
 .\Debug\StdAfx.obj
 .\Debug\util.obj
 .\Debug\Variant.obj
-.\Debug\DispatchProxy.obj
 ]
-Creating command line "link.exe @C:\TEMP\RSPED6.tmp"
+Creating command line "link.exe @C:\DOCUME~1\joe\LOCALS~1\Temp\RSPDD.tmp"
 <h3>Output Window</h3>
 Compiling...
-ComThread.cpp
-Dispatch.cpp
-d:\jacob_17\vstudio\jacob\dispatch.cpp(383) : warning C4244: 'argument' : conversion from 'long' to 'unsigned short', possible loss of data
-DispatchEvents.cpp
-d:\jacob_17\vstudio\jacob\dispatchevents.cpp(114) : warning C4101: 'dwEventCookie' : unreferenced local variable
-EnumVariant.cpp
-EventProxy.cpp
-d:\jacob_17\vstudio\jacob\eventproxy.cpp(119) : warning C4101: 'hr' : unreferenced local variable
 SafeArray.cpp
-STA.cpp
-StdAfx.cpp
-util.cpp
-Variant.cpp
-DispatchProxy.cpp
 Linking...
    Creating library Debug/jacob.lib and object Debug/jacob.exp
 
 
 
 <h3>Results</h3>
-jacob.dll - 0 error(s), 3 warning(s)
+jacob.dll - 0 error(s), 0 warning(s)
 </pre>
 </body>
 </html>

@@ -30,6 +30,7 @@
 package com.jacob.com;
 
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -44,45 +45,81 @@ import java.util.Vector;
  * initialized for COM, and also the component itself may have been freed.
  */
 public abstract class ROT {
+    /**
+     * A hash table where each element is another 
+     * Hashtable that represents a thread.  
+     * Each thread hashtable contains the com objects created
+     * in that thread
+     */
     private static Hashtable rot = new Hashtable();
 
+    /**
+     * adds a new thread storage area to rot
+     *
+     */
     protected static void addThread() {
         String t_name = Thread.currentThread().getName();
         if (rot.contains(t_name))
             return;
-        Vector v = new Vector();
-        rot.put(t_name, v);
+        Hashtable tab = new Hashtable();
+        rot.put(t_name,tab);
     }
 
+    /**
+     * Iterates across all the entries in rot 
+     * each of which is a Hashtable.  This
+     * releases each entry in the hashtable
+     * before removing the hashtable from rot
+     *
+     */
     protected static void clearObjects() {
         String t_name = Thread.currentThread().getName();
-        Vector v = (Vector) rot.get(t_name);
-        if (v != null) {
-            while (!v.isEmpty()) {
-                JacobObject o = (JacobObject) v.elementAt(0);
-                //System.out.println(t_name + "
-                // release:"+o+"->"+o.getClass().getName());
-                if (o != null)
+        Hashtable tab = (Hashtable)rot.get(t_name);
+        if (tab != null){
+            Iterator it = tab.values().iterator();
+            while (it.hasNext()) {
+                JacobObject o = (JacobObject) it.next();
+                if (o != null && o.toString() != null){
+                    //System.out.println(t_name + "
+                    // release:"+o+"->"+o.getClass().getName());
                     o.release();
-                v.removeElementAt(0);
+                }
+                it.remove();
             }
             rot.remove(t_name);
         }
     }
 
+    /**
+     * Lets someone remove an entry for a thread
+     * 
+     * @param o
+     */
+    protected static void removeObject(Object o) {
+        String t_name = Thread.currentThread().getName();
+        Hashtable tab = (Hashtable) rot.get(t_name);
+        if (tab != null) {
+            tab.remove(new Integer(o.hashCode()));
+        }
+    }
+    
+    /**
+     * adds an object to the hashtable for the current thread
+     * @param o
+     */
     protected static void addObject(JacobObject o) {
         String t_name = Thread.currentThread().getName();
         //System.out.println(t_name + " add:"+o+"->"+o.getClass().getName());
-        Vector v = (Vector) rot.get(t_name);
-        if (v == null) {
+        Hashtable tab = (Hashtable) rot.get(t_name);
+        if (tab == null) {
             // this thread has not been initialized as a COM thread
             // so make it part of MTA for backwards compatibility
             ComThread.InitMTA(false);
             addThread();
-            v = (Vector) rot.get(t_name);
+            tab = (Hashtable) rot.get(t_name);
         }
-        if (v != null) {
-            v.addElement(o);
+        if (tab != null) {
+            tab.put(new Integer(o.hashCode()),o);
         }
     }
 

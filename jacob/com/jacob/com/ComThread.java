@@ -125,6 +125,15 @@ public abstract class ComThread {
         doCoUninitialize();
         //System.out.println("after UnInit");
     }
+    
+    /**
+     * This will remove an object from the ROT
+     * @param o
+     */
+    public static synchronized void RemoveObject(Object o)
+    {
+        ROT.removeObject(o);    
+    }
 
     /**
      * @param threadModel
