@@ -27,10 +27,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.jacob.com;
 
-import java.util.Hashtable;
-import java.util.Iterator;
+package com.jacob.com;
+import java.util.Vector;
+
 
 /**
  * The Running Object Table (ROT) maps each thread to a vector of all the
@@ -43,86 +43,166 @@ import java.util.Iterator;
  * collector, then finalize might get called from a separate thread which is not
  * initialized for COM, and also the component itself may have been freed.
  */
-public abstract class ROT {
+public abstract class ROT
+{        
     /**
-     * A hash table where each element is another 
-     * Hashtable that represents a thread.  
-     * Each thread hashtable contains the com objects created
-     * in that thread
+     * A hash table where each key is a thread name and each element 
+     *  is a vector of WeakReferences to all the COM objects created in that thread.
      */
-    private static Hashtable rot = new Hashtable();
-
+    private static java.util.Map rot = new java.util.WeakHashMap();
+    
     /**
-     * adds a new thread storage area to rot
+     * A Reference queue allowing the Garbage Collector of informing us
+     * of dereferenced objects.
+     */
+    private static java.lang.ref.ReferenceQueue rq = new java.lang.ref.ReferenceQueue();
+        
+    /**
+     * Adds a new thread storage area to the ROT, keyed against the thread name
      *
      */
-    protected static void addThread() {
-        String t_name = Thread.currentThread().getName();
-        if (rot.contains(t_name))
-            return;
-        Hashtable tab = new Hashtable();
-        rot.put(t_name,tab);
+    protected static void addThread()
+    {
+      String t_name = Thread.currentThread().getName();
+      if (rot.containsKey(t_name)) return;
+      Vector v = new Vector();
+      rot.put(t_name, v);
+      debug(t_name+":addThread()");
     }
 
     /**
-     * Iterates across all the entries in rot 
-     * each of which is a Hashtable.  This
-     * releases each entry in the hashtable
-     * before removing the hashtable from rot
-     *
+     * Release all the COM objects created by the current thread.
+     * And dereference the thread from the ROT.
+     * This method is called by {@link com.jacob.com.ComThread#Release()}.
      */
-    protected static void clearObjects() {
-        String t_name = Thread.currentThread().getName();
-        Hashtable tab = (Hashtable)rot.get(t_name);
-        if (tab != null){
-            Iterator it = tab.values().iterator();
-            while (it.hasNext()) {
-                JacobObject o = (JacobObject) it.next();
-                if (o != null && o.toString() != null){
-                    //System.out.println(t_name + "
-                    // release:"+o+"->"+o.getClass().getName());
-                    o.release();
-                }
-                it.remove();
-            }
-            rot.remove(t_name);
+    protected static void clearObjects()
+    {
+      String t_name = Thread.currentThread().getName();
+      Vector v = (Vector)rot.get(t_name);
+      if (v != null)
+      {
+        // For each object created by this thread
+        while (!v.isEmpty())
+        {
+          // Obtain the first object in the vector
+          JacobObject o = (JacobObject)((java.lang.ref.WeakReference)v.elementAt(0)).get();
+          debug(t_name + ":release("+((o!=null)? o.toString() : o.getClass().getName())+")");
+          // If this object is not null, release it
+          if (o != null) o.release();
+          // remove that object from our vector
+          v.removeElementAt(0);
         }
+        // Remove the vector from the ROT
+        rot.remove(t_name);
+      }
     }
 
     /**
-     * Lets someone remove an entry for a thread
+     * Add a reference to a new object to the ROT, keyed against the current thread name.
+     * This is called by {@link com.jacob.com.JacobObject#JacobObject()}
      * 
-     * @param o
+     * @param o : the JacobObject to add to the ROT
      */
-    protected static void removeObject(Object o) {
-        String t_name = Thread.currentThread().getName();
-        Hashtable tab = (Hashtable) rot.get(t_name);
-        if (tab != null) {
-            tab.remove(new Integer(o.hashCode()));
-        }
+    protected static void addObject(JacobObject o)
+    {
+      String t_name = Thread.currentThread().getName();
+      debug(t_name + ":addObject("+o.getClass().getName()+"#"+(o!=null? (""+o.hashCode()):"null")+")");
+      Vector v = (Vector)rot.get(t_name);
+      if (v == null)
+      {
+        // this thread has not been initialized as a COM thread
+        // so make it part of MTA for backwards compatibility
+        ComThread.InitMTA(false);
+        addThread();
+        v = (Vector)rot.get(t_name);
+      }
+      if (v != null)
+      {
+        // Before we add any new object, we remove all references to object that have already 
+        // been garbage collected. This will keep the ROT from growing infinitively for long 
+        // lived threads.
+        purgeGCObjects(t_name, v);
+        
+        // Add a WeakReference to the object to our vector. Using a WeakReference means that 
+        // we won't stop the object being garbage collected when it gets dereferenced.
+        v.addElement(new java.lang.ref.WeakReference(o,rq));
+        
+        debug(t_name+" has "+v.size()+" objects referenced");
+      }
+    }
+
+    /**
+     * @see java.lang.ref.WeakReference
+     * @see java.lang.ref.ReferenceQueue#poll()
+     * 
+     * Given a vector of WeakReferences, poll our ReferenceQueue for garbageCollected
+     * object, and attempt to remove these objects from the vector.
+     * 
+     * @param istrThreadName : the name of the current thread, used only for debug purpose
+     * @param ivThreadObjects : a vector of weakReferences to JacobObject created by a given thread
+     */
+    protected static void purgeGCObjects(String istrThreadName, Vector ivThreadObjects) 
+    {
+        int count = 0;
+        java.lang.ref.WeakReference weak = (java.lang.ref.WeakReference)rq.poll();
+        
+        // For all weakReferences contained in our reference queue
+        while(weak != null)
+        {
+            // get the JacobObject encapsulated by the weakReference.
+            JacobObject o = (JacobObject)weak.get();
+            if (o != null) 
+            {
+                // This SHOULD NEVER HAPPEN because the JacobObject jo has already been garbage collected.
+                debug(istrThreadName + ":release("+((o!=null)? o.toString() : o.getClass().getName())+") !!!!! SHOULD NOT HAPPEN!");
+                o.release();
+            }
+
+            if(ivThreadObjects!=null)
+            {
+                // Attempt to remove the JacobObject from the vector. If the vector
+                // doesn't actually contain this object, nothing happens.
+                ivThreadObjects.remove(weak);
+                count++;
+            }
+            else
+            {
+                // This should not happen, but it is possible that while purgeGCObjects()
+                // is running, the thread gets removed from the ROT.
+                debug(istrThreadName+":purgeGCObjects() : thread removed from ROT!!!");
+            }
+            
+            // get the next weakReference from our reference queue
+            weak = (java.lang.ref.WeakReference)rq.poll();
+        }  
+        
+        // For debug purpose, list how many dead references got purged
+        if(count > 0)
+        {
+            debug(istrThreadName+":purgeGCObjects() : "+count+" dead references purged");
+        }  
+    }//purgeGCObjects()
+    
+    // If this class gets loaded first, make sure we load the underlying JNI layer.
+    static {
+      System.loadLibrary("jacob");
     }
     
     /**
-     * adds an object to the hashtable for the current thread
-     * @param o
+     * When things go wrong, it is usefull to be able to debug the ROT.
      */
-    protected static void addObject(JacobObject o) {
-        String t_name = Thread.currentThread().getName();
-        //System.out.println(t_name + " add:"+o+"->"+o.getClass().getName());
-        Hashtable tab = (Hashtable) rot.get(t_name);
-        if (tab == null) {
-            // this thread has not been initialized as a COM thread
-            // so make it part of MTA for backwards compatibility
-            ComThread.InitMTA(false);
-            addThread();
-            tab = (Hashtable) rot.get(t_name);
+    private static final boolean DEBUG = 
+        "true".equalsIgnoreCase(System.getProperty("com.jacob.debug"));
+    
+    /**
+     * Very basic debugging fucntion.
+     * @param istrMessage
+     */
+    private static void debug(String istrMessage)
+    {
+        if(DEBUG)
+        {
+            System.out.println(istrMessage);
         }
-        if (tab != null) {
-            tab.put(new Integer(o.hashCode()),o);
-        }
-    }
-
-    static {
-        System.loadLibrary("jacob");
     }
 }
