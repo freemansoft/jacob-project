@@ -7,7 +7,7 @@ xmlns="http://www.w3.org/TR/REC-html40">
 <meta name=ProgId content=Word.Document>
 <meta name=Generator content="Microsoft Word 11">
 <meta name=Originator content="Microsoft Word 11">
-<link rel=File-List href="EventsAndCallBacks_files/filelist.xml">
+<link rel=File-List href="EventCallbacks_files/filelist.xml">
 <title>Jacob can register Java classes for MS application events or callbacks</title>
 <!--[if gte mso 9]><xml>
  <o:OfficeDocumentSettings>
@@ -75,6 +75,38 @@ div.Section1
 	mso-level-number-position:left;
 	margin-left:42.0pt;
 	text-indent:-24.0pt;}
+@list l0:level2
+	{mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
 @list l1
 	{mso-list-id:1316765558;
 	mso-list-type:hybrid;
@@ -85,6 +117,38 @@ div.Section1
 	mso-level-number-position:left;
 	margin-left:42.0pt;
 	text-indent:-24.0pt;}
+@list l1:level2
+	{mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
 ol
 	{margin-bottom:0in;}
 ul
@@ -124,48 +188,48 @@ is:</p>
 <p class=MsoPlainText><o:p>&nbsp;</o:p></p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l1 level1 lfo1;tab-stops:list 42.0pt'><![if !supportLists]><span
+l1 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
 style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>1)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>Application thread creates an instance of the
 event handler and registers it with Jacob</p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l1 level1 lfo1;tab-stops:list 42.0pt'><![if !supportLists]><span
+l1 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
 style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>2)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>The application continues on doing other work.</p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l1 level1 lfo1;tab-stops:list 42.0pt'><![if !supportLists]><span
+l1 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
 style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>3)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>Some time later, the MS application takes some
 action and initiates the event callback.</p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l1 level1 lfo1;tab-stops:list 42.0pt'><![if !supportLists]><span
+l1 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
 style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>4)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>The Java VM receives the event and spins up a
 new thread to handle it.</p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l1 level1 lfo1;tab-stops:list 42.0pt'><![if !supportLists]><span
+l1 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
 style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>5)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>The Jacob <span class=SpellE>EventProxy</span>
 in the <span class=SpellE>dll</span> is called by the VM.</p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l1 level1 lfo1;tab-stops:list 42.0pt'><![if !supportLists]><span
+l1 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
 style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>6)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>The Jacob <span class=SpellE>EventProxy</span>
 creates Variant objects to handle the parameters of the passed in event.</p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l1 level1 lfo1;tab-stops:list 42.0pt'><![if !supportLists]><span
+l1 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
 style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>7)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>The Jacob <span class=SpellE>EventProxy</span>
@@ -173,7 +237,7 @@ uses reflection to map the event name to a method name with the exact same
 name.</p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l1 level1 lfo1;tab-stops:list 42.0pt'><![if !supportLists]><span
+l1 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
 style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>8)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>The Jacob <span class=SpellE>EventProxy</span>
@@ -214,60 +278,66 @@ class loader of the event handler class.</p>
 <p class=MsoPlainText><o:p>&nbsp;</o:p></p>
 
 <p class=MsoPlainText>The Jacob <span class=SpellE>EventProxy</span> class has
-been modified (off of the 1.8 tree) so that it takes a two step approach to towards
-fixing these problems.</p>
+been modified (off of the 1.8 tree) so that it takes a two step approach to
+towards fixing these problems.</p>
 
-<p class=MsoPlainText><span style='mso-tab-count:1'>      </span><span
-style='mso-tab-count:1'>      </span></p>
+<p class=MsoPlainText><span style='mso-tab-count:2'>            </span></p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l0 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
+l0 level1 lfo4;tab-stops:list 42.0pt'><![if !supportLists]><span
 style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>1)<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>The <span class=SpellE>EventProxy</span>
+constructor now accepts an extra object, an instance of the Variant class.<span
+style='mso-spacerun:yes'>  </span>This gives the <span class=SpellE>EventProxy</span>
+a way to get to the Variant class and thus to its <span class=SpellE>classloader</span>.
+All of the callers of the constructor have been modified to pass a Variant
+object to the <span class=SpellE>EventProxy</span> without programmer
+intervention.</p>
+
+<p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
+l0 level1 lfo4;tab-stops:list 42.0pt'><![if !supportLists]><span
+style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>2)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span class=SpellE>EventProxy</span> first
 attempts to locate the Variant class using <span class=SpellE>FindClass</span>()</p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l0 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
-style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>2)<span
+l0 level1 lfo4;tab-stops:list 42.0pt'><![if !supportLists]><span
+style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>3)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>Failing that, it looks to see if the event
-callback object implements <span class=SpellE><span class=GramE>getVariantClass</span></span><span
-class=GramE>(</span>) that returns the <span class=SpellE>Variant.class</span>
-object.<span style='mso-spacerun:yes'>  </span>If so, it uses that class to
-create variants for the callback parameters.</p>
+</span></span></span><![endif]>Failing that, it looks to see if a variant
+object had been passed in. If so, it calls <span class=GramE>class(</span>) and
+goes from there.<span style='mso-spacerun:yes'>  </span></p>
 
 <p class=MsoPlainText style='margin-left:42.0pt;text-indent:-24.0pt;mso-list:
-l0 level1 lfo2;tab-stops:list 42.0pt'><![if !supportLists]><span
-style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>3)<span
+l0 level1 lfo4;tab-stops:list 42.0pt'><![if !supportLists]><span
+style='mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>4)<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>If all that fails, it logs a message and then
 fails in the spectacular fashion of the previous versions.</p>
 
 <p class=MsoPlainText><o:p>&nbsp;</o:p></p>
 
-<p class=MsoPlainText>This means developers can receive call back events in JWS
-other Java launching programs by implementing <span class=SpellE><span
-class=GramE>getVariantClass</span></span><span class=GramE>(</span>) on all of
-their classes that receive Microsoft Events.<span style='mso-spacerun:yes'> 
-</span>The <span class=SpellE><span class=GramE>getVariantClass</span></span><span
-class=GramE>(</span>) method has the added benefit of providing a spot for the
-thread <span class=SpellE>classloader</span> to be set:</p>
+<p class=MsoPlainText>Developers can receive call back events in JWS other Java
+launching programs without implementing any additional code.<span
+style='mso-spacerun:yes'>  </span>They should be aware that their callback
+methods may need to set the class <span class=GramE>loader.:</span></p>
 
-<p class=MsoPlainText><span style='mso-tab-count:1'>      </span>Public Class <span
-class=SpellE><span class=GramE>getVariantClass</span></span><span class=GramE>(</span>){</p>
+<p class=MsoPlainText><span style='mso-tab-count:1'>      </span>Public xxx <span
+class=SpellE><span class=GramE>someHandler</span></span><span class=GramE>(</span>Variant[]
+<span class=SpellE>foo</span>){</p>
 
-<p class=MsoPlainText><span style='mso-tab-count:1'>      </span><span
-style='mso-tab-count:1'>      </span><span class=SpellE><span class=GramE>Thread.currentThread</span></span><span
+<p class=MsoPlainText><span style='mso-tab-count:2'>            </span><span
+class=SpellE><span class=GramE>Thread.currentThread</span></span><span
 class=GramE>(</span>).<span class=SpellE>setContextClassLoader</span>(</p>
 
 <p class=MsoPlainText><span style='mso-tab-count:3'>                  </span><span
 class=SpellE><span class=GramE>this.getClass</span></span><span class=GramE>(</span>).<span
 class=SpellE>getClassLoader</span>());</p>
 
-<p class=MsoPlainText><span style='mso-tab-count:1'>      </span><span
-style='mso-tab-count:1'>      </span><span class=GramE>return</span> <span
-class=SpellE>Variant.class</span></p>
+<p class=MsoPlainText><span style='mso-tab-count:2'>            </span>// do
+something</p>
 
 <p class=MsoPlainText><span style='mso-tab-count:1'>      </span>}</p>
 
@@ -275,6 +345,8 @@ class=SpellE>Variant.class</span></p>
 
 <p class=MsoPlainText>There may still be a dual event queue issue in JWS
 applications that needs to be looked at.</p>
+
+<p class=MsoPlainText><o:p>&nbsp;</o:p></p>
 
 </div>
 
