@@ -80,7 +80,12 @@ EventProxy::~EventProxy()
   pCP->Unadvise(dwEventCookie);
 	JNIEnv *env;
   // attach to the current running thread
-  jvm->AttachCurrentThread((void **)&env, jvm);
+  #ifdef JNI_VERSION_1_2
+     jvm->AttachCurrentThread((void **)&env, jvm);
+  #else
+     jvm->AttachCurrentThread((void**)&env, NULL);
+  #endif
+  
 
   env->DeleteGlobalRef(javaSinkObj);
 	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
@@ -140,7 +145,11 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
   if (DISPATCH_METHOD & wFlags) 
   {
     // attach to the current running thread
-    jvm->AttachCurrentThread((void**)&env, jvm);
+    #ifdef JNI_VERSION_1_2
+      jvm->AttachCurrentThread((void **)&env, jvm);
+    #else
+      jvm->AttachCurrentThread((void**)&env, NULL);
+	#endif
 
 
     // get variant class

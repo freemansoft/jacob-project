@@ -1028,7 +1028,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArray
       VARTYPE vt;
       SafeArrayGetVartype(psa, &vt);
       V_VT(v) = VT_ARRAY | vt;
-      V_ARRAY(v) = psa;
+      V_ARRAY(v) = copySA(psa);
       return;
     }
     ThrowComFail(env, "Can't get variant pointer", -1);

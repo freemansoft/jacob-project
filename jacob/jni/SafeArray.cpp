@@ -98,13 +98,18 @@ SAFEARRAY *copySA(SAFEARRAY *psa)
     SafeArrayGetVartype(psa, &vt);
     VARIANT v1, v2;
 
-    VariantClear(&v1);
-    VariantClear(&v2);
+    VariantInit(&v1);
+    VariantInit(&v2);
     V_VT(&v1) = VT_ARRAY | vt;
     V_ARRAY(&v1) = psa;
     VariantCopy(&v2, &v1);
     SAFEARRAY *sa = V_ARRAY(&v2);
     VariantInit(&v2); // make sure it's not owned by this variant
+    
+    VariantClear(&v2);
+    VariantInit(&v1);
+    VariantClear(&v1);
+    
     return sa;
 }
 
