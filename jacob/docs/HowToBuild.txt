@@ -1,33 +1,35 @@
-For documentation see: http://danadler.com/jacob/
-
-The java code is in com\jacob\*.
-
-The C++ code is in .\jni.
-
 To build, run:
+Unpack this archive into d:\jacob
 
-cd d:\jacob
-nmake -f makefile
+The following assumptions are coded into the makefile in the 
+root directory and may have to be changed for your environment
+	JDK = d:\j2sdk1.4.2_06
+	DEST_DIR = d:\jacob
+	MSDEVDIR = d:\apps\\"Microsoft Visual Studio"\VC98
 
-That will first compile the JAVA files and build the JAR file, and
-then compile the C++ code and build the DLL.
+The makefiles will:
+	Build the Java code
+	Build the jni code
+	create the dll
+	create jar file
+	<optionally> create the zip files
+	
+To build:
+	Run VCVARS32 to set up your MS Visual C++ environment
+	cd d:\jacob
+	nmake
 
-Building the jni:
-
-The following are hardcoded into the makefile, so you may have to
-change it. I developed this with the C++ compiler and ATL version
+(from dan)I developed this with the C++ compiler and ATL version
 that ship with VC++ 6.0, so I'm not sure if different versions will
 work.
 
-I have compiled this against JDK 1.1.6 and 1.2.2 as well as Microsoft
-SDK for Java 3.2 as the JDK setting.
+This is currently designed to compile against JDK 1.4.2.  The future
+of the Microsoft SDK is in doubt so support may be discontinued
+in the future.
 
-DEST_DIR is a destination directory into which to copy the final DLL.
 
-JDK = d:\j2sdk1.4.2_06
-DEST_DIR = d:\jacob
-MSDEVDIR = d:\apps\\"Microsoft Visual Studio"\VC98
-
+The java code is in com\jacob\*.
+The C++ code is in .\jni.
 
 
 Release Notes:
