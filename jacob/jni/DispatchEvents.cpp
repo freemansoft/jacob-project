@@ -104,7 +104,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init2
     return;
   }
   HRESULT hr = pCPC->FindConnectionPoint(eventIID, &pCP);
-  DWORD dwEventCookie;
+  // VC++ 6.0 compiler realiized we weren't using this variable
+  //DWORD dwEventCookie;
   if (SUCCEEDED(hr))
   {
     EventProxy *ep = new EventProxy(env, sink, pCP, eventIID, mNames, mIDs, n_EventMethods);

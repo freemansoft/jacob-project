@@ -12,7 +12,7 @@ CC = cl $(OPT) $(JDK_INC) $(MS_INC)
 OBJFILES = stdafx.obj util.obj EventProxy.obj Variant.obj Dispatch.obj SafeArray.obj DispatchEvents.obj ComThread.obj EnumVariant.obj STA.obj DispatchProxy.obj
 
 all: jacob.dll
-  cp jacob.dll $(DEST_DIR)
+  copy jacob.dll $(DEST_DIR)
 
 jacob.dll: $(OBJFILES)
 	link /dll /out:jacob.dll $(OBJFILES) $(JDK_LIB) $(SYS_LIB)

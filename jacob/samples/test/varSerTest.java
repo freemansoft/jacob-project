@@ -1,7 +1,6 @@
 package samples.test;
 
 import com.jacob.com.*;
-import com.jacob.activeX.*;
 import java.io.*;
 
 class varSerTest 

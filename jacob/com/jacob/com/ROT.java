@@ -31,7 +31,6 @@ package com.jacob.com;
 
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
 
 /**
  * The Running Object Table (ROT) maps each thread to a vector of all the

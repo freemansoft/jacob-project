@@ -53,9 +53,16 @@ EventProxy::EventProxy(JNIEnv *env, jobject aSinkObj,
     javaSinkClass = env->GetObjectClass(javaSinkObj);
 		if (javaSinkClass == NULL){ printf("can't figure out java sink class"); }
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+	// proactivly go out and see if the sink object implements getVariantClass()
+	// we only use this method if FindClass() fails 
 	variantClassMethod = env->GetMethodID(javaSinkClass, "getVariantClass", "()Ljava/lang/Class;");
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
-		if (variantClassMethod == NULL) { printf("variantClassMethod == null\n"); }
+		if (env->ExceptionOccurred()) { 
+			// will raise NoSuchMethodException if the sink object doesn't implement 
+			// this but this is no big deal if FindClass works
+			variantClassMethod = NULL;
+			//don't need to confuse the user with output
+			//env->ExceptionDescribe(); 
+		}
 
     const char *method;
     for(int i=0;i<MethNum;i++) 
@@ -120,7 +127,8 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
     LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams,
     VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr)
 {
-  HRESULT     hr;
+  //Visual C++ 6.0 recognized this as an unused variable
+  //HRESULT     hr;
   jmethodID meth = 0;
   JNIEnv      *env = NULL;
 
@@ -144,7 +152,7 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 
 
     // get variant class
-	jclass vClass;
+	jclass vClass = NULL;
 	// do this in a JACOB 1.8 backwards compatable way
 	// this succeeds if the class was loaded from the bootstrap class loader
     vClass = env->FindClass("com/jacob/com/Variant");
@@ -152,12 +160,19 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 		// see if our call back class implements our "special" method
 		if (variantClassMethod != NULL){
 			jobject variantFound = env->CallObjectMethod(javaSinkObj, variantClassMethod);
-				if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
-				if (variantFound == NULL) { printf("variantFound == null\n"); }
-			vClass = (jclass)variantFound;
+				if (env->ExceptionOccurred()) { 
+					printf("FindClass() failed. We found the getVariantClass() method but it failed also");
+					//env->ExceptionDescribe(); 
+				} else 	if (variantFound == NULL) { 
+					printf("FindClass failed and getVariantClass() == null This means the callback will fail\n"); 
+				} else {
+					vClass = (jclass)variantFound;
+				}
 		} else {
 			// dang they didn't.  lets tell the user they are having a bad day
-			printf("We're going to fail now in a way that is probably pretty ugly");
+			printf("You won't be getting your callback. FindClass failed no getVariantClass() is available. ");
+		}
+		if (vClass == NULL){
 			printf("This application is probably running from a launcher where system class loader knows not Jacob\n");
 			printf("The call back class does not implement 'Class getVariantClass()' that we can use to work around this\n");
 		}

@@ -54,7 +54,7 @@ class ScriptTest3 extends Thread
       Variant result = Dispatch.call(sControl, "Eval", args[0]);
       System.out.println("eval("+args[0]+") = "+ result);
       System.out.println("setting quit");
-      script.quit = true;
+      ScriptTest3.quit = true;
     } catch (ComException e) {
       e.printStackTrace();
     }
