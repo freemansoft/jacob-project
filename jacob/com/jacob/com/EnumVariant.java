@@ -49,7 +49,7 @@ public class EnumVariant extends JacobObject implements java.util.Enumeration {
      */
     public EnumVariant(Dispatch disp) {
         int[] hres = new int[1];
-        Variant evv = DispatchNative.invokev(disp, 
+        Variant evv = Dispatch.invokev(disp, 
                 DispatchConstants.DISPID_NEWENUM,
                 DispatchConstants.Get, 
                 new Variant[0], hres);

@@ -69,7 +69,7 @@ public class Connection extends Dispatch
   // how to deal with RecordsAffected being output?
   public Variant Execute(String CommandText, Variant RecordsAffected, int Options)
   {
-    return DispatchNative.call(this, CommandText, RecordsAffected, new Variant(Options));
+    return Dispatch.call(this, CommandText, RecordsAffected, new Variant(Options));
   }
 
   public int BeginTrans()
@@ -89,7 +89,7 @@ public class Connection extends Dispatch
 
   public void Open(String ConnectionString, String UserID, String Password, int Options)
   {
-    DispatchNative.call(this, "Open", ConnectionString, UserID, Password, new Variant(Options));
+    Dispatch.call(this, "Open", ConnectionString, UserID, Password, new Variant(Options));
   }
 
   public void Open()
@@ -169,7 +169,7 @@ public class Connection extends Dispatch
 
   public Variant OpenSchema(int Schema, Variant Restrictions, Variant SchemaID)
   {
-    return DispatchNative.call(this, "OpenSchema", 
+    return Dispatch.call(this, "OpenSchema", 
             new Variant(Schema), 
             Restrictions, 
             SchemaID);

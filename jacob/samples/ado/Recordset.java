@@ -152,7 +152,7 @@ public class Recordset extends Dispatch
 
   public Variant GetRows(int Rows, Variant Start, Variant Fields)
 	{
-	  return DispatchNative.call(this,"GetRows", new Variant(Rows), Start, Fields); 
+	  return Dispatch.call(this,"GetRows", new Variant(Rows), Start, Fields); 
 	}
 
 	// get all rows
@@ -188,7 +188,7 @@ public class Recordset extends Dispatch
 
   public void Open(Variant Source, Variant ActiveConnection, int CursorType, int LockType, int Options)
 	{
-	  DispatchNative.call(this,"Open", 
+	  Dispatch.call(this,"Open", 
 	          Source, 
 	          ActiveConnection, 
 	          new Variant(CursorType), 
@@ -325,7 +325,7 @@ public class Recordset extends Dispatch
           int SkipRecords, int SearchDirection, 
           Variant Start)
 	{
-	  DispatchNative.call(this,"Find", Criteria, 
+	  Dispatch.call(this,"Find", Criteria, 
 	          new Variant(SkipRecords), 
 	          new Variant(SearchDirection), 
 	          Start);
@@ -368,7 +368,7 @@ public class Recordset extends Dispatch
 
   public String GetString(int StringFormat, int NumRows, String ColumnDelimeter, String RowDelimeter, String NullExpr)
 	{
-	  return DispatchNative.call(this,"GetString", new Variant(StringFormat),
+	  return Dispatch.call(this,"GetString", new Variant(StringFormat),
 		    new Variant(NumRows), ColumnDelimeter, RowDelimeter, NullExpr).toString();
 	}
 

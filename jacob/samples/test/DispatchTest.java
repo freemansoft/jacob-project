@@ -22,10 +22,10 @@ class DispatchTest
       Dispatch workbooks = xl.getPropertyAsDispatch("Workbooks");
       Dispatch workbook = workbooks.getPropertyAsDispatch("Add");
       Dispatch sheet = workbook.getPropertyAsDispatch("ActiveSheet");
-      Dispatch a1 = DispatchNative.invoke(sheet, "Range", DispatchConstants.Get,
+      Dispatch a1 = Dispatch.invoke(sheet, "Range", DispatchConstants.Get,
                                   new Object[] {"A1"},
                                   new int[1]).toDispatch();
-      Dispatch a2 = DispatchNative.invoke(sheet, "Range", DispatchConstants.Get,
+      Dispatch a2 = Dispatch.invoke(sheet, "Range", DispatchConstants.Get,
                                   new Object[] {"A2"},
                                   new int[1]).toDispatch();
       a1.setProperty("Value", "123.456");
@@ -36,7 +36,7 @@ class DispatchTest
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      xl.invoke("Quit", new Variant[] {});
+      xl.call("Quit", new Variant[] {});
       ComThread.Release();
     }
   }

@@ -36,7 +36,7 @@ public class Fields extends Dispatch
 
   public void Append(String Name, int Type, int DefinedSize, int Attrib)
 	{
-	  DispatchNative.call(this,"Append", Name, new Variant(Type),
+	  Dispatch.call(this,"Append", Name, new Variant(Type),
 		    new Variant(DefinedSize), new Variant(Attrib));
 	}
 

@@ -79,7 +79,7 @@ public class Command extends Dispatch
 
   public Variant CreateParameter(String Name, int Type, int Direction, int Size, Variant Value)
   {
-    return DispatchNative.call(this, "CreateParameter", Name, new Variant(Type), new Variant(Direction), new Variant(Size), Value);
+    return Dispatch.call(this, "CreateParameter", Name, new Variant(Type), new Variant(Direction), new Variant(Size), Value);
   }
 
   // need to wrap Parameters

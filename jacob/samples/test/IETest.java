@@ -34,7 +34,7 @@ class IETest
       } catch (Exception e) {
         e.printStackTrace();
       } finally {
-        ie.invoke("Quit", new Variant[] {});
+        ie.call("Quit", new Variant[] {});
       }
     }
 }

@@ -61,7 +61,7 @@ public class Outlook {
             recurseFolders(0, oNameSpace);
 
         } finally {
-            axOutlook.invoke("Quit", new Variant[] {});
+            axOutlook.call("Quit", new Variant[] {});
         }
     }
 

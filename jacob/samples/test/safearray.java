@@ -20,7 +20,7 @@ public class safearray
 		Dispatch workbook = workbooks.call("Open", "d:\\jacob_15\\samples\\test\\jacobtest.xls").toDispatch();
 		System.out.println("Opened File - jacobtest.xls\n");
 		Dispatch sheet = workbook.getPropertyAsDispatch("ActiveSheet");
-		cell = DispatchNative.invoke(sheet,"Range",DispatchConstants.Get,new Object[] {"A1:D1000"},new int[1]).toDispatch();
+		cell = Dispatch.invoke(sheet,"Range",DispatchConstants.Get,new Object[] {"A1:D1000"},new int[1]).toDispatch();
 		System.out.println("have cell:"+cell);
 		sAProdText = cell.getProperty("Value").toSafeArray();
 		System.out.println("sa: dim="+sAProdText.getNumDim());
@@ -55,7 +55,7 @@ public class safearray
 	} catch (Exception e) {
 	  e.printStackTrace();
 	} finally {
-	  xl.invoke("Quit", new Variant[] {});
+	  xl.call("Quit", new Variant[] {});
 	}
  }
 }

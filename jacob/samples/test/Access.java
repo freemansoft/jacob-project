@@ -39,7 +39,7 @@ class Access
     Variant f = new Variant(false);
     // open the file in read-only mode
     Variant[] args = new Variant[] {new Variant(fileName), f, f};
-    Dispatch openDB = ax.invoke("OpenDatabase", args).toDispatch();
+    Dispatch openDB = ax.call("OpenDatabase", args).toDispatch();
     return openDB;
   }
 
@@ -59,7 +59,7 @@ class Access
    */
   public static Variant getValues(Dispatch recset)
   {
-    DispatchNative.callSub(recset,"moveFirst");
+    Dispatch.callSub(recset,"moveFirst");
     Variant vi = new Variant(4096);
     Variant v = recset.call("GetRows", vi);
     return v;
@@ -100,7 +100,7 @@ class Access
       vi.putInt(i);
       // must use the invoke method because this is a method call
       // that wants to have a Dispatch.Get flag...
-      Dispatch fld = DispatchNative.invoke(recset, "Fields",
+      Dispatch fld = Dispatch.invoke(recset, "Fields",
                        DispatchConstants.Get, new Object[] {vi}, new int[1]).toDispatch();
       s[i] = fld.getPropertyAsString("Name");
     }
