@@ -49,6 +49,11 @@ public abstract class ROT
     /**
      * A hash table where each key is a thread name and each element 
      *  is a vector of WeakReferences to all the COM objects created in that thread.
+     * <p>
+     * This was a WeakHashMap but that caused problems because the Lists
+     * would get garbage collected because their string keys would get GC'd 
+     * because the getName() method on the thread creates a new name object
+     * each time. 
      */
     private static java.util.Map rot = new java.util.HashMap();
     
