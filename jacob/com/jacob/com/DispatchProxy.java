@@ -30,36 +30,48 @@
 package com.jacob.com;
 
 /**
- * If you need to pass a COM Dispatch object between STA threads, you
- * have to marshall the interface.
- * This class is used as follows: the STA that creates the Dispatch
- * object must construct an instance of this class. Another thread
- * can then call toDispatch() on that instance and get a Dispatch
- * pointer which has been marshalled.
- * WARNING: You can only call toDispatch() once! If you need to call
- * it multiple times (or from multiple threads) you need to construct
- * a separate DispatchProxy instance for each such case!
+ * If you need to pass a COM Dispatch object between STA threads, you have to
+ * marshall the interface. This class is used as follows: the STA that creates
+ * the Dispatch object must construct an instance of this class. Another thread
+ * can then call toDispatch() on that instance and get a Dispatch pointer which
+ * has been marshalled. WARNING: You can only call toDispatch() once! If you
+ * need to call it multiple times (or from multiple threads) you need to
+ * construct a separate DispatchProxy instance for each such case!
  */
-public class DispatchProxy extends JacobObject
-{
-  public int m_pStream;
+public class DispatchProxy extends JacobObject {
+    /**
+     * Comment for <code>m_pStream</code>
+     */
+    public int m_pStream;
 
-  public DispatchProxy(Dispatch localDispatch)
-  {
-    MarshalIntoStream(localDispatch);
-  }
+    /**
+     * @param localDispatch
+     */
+    public DispatchProxy(Dispatch localDispatch) {
+        MarshalIntoStream(localDispatch);
+    }
 
-  public Dispatch toDispatch()
-  {
-    return MarshalFromStream();
-  }
+    /**
+     * @return
+     */
+    public Dispatch toDispatch() {
+        return MarshalFromStream();
+    }
 
-  private native void MarshalIntoStream(Dispatch d);
-  private native Dispatch MarshalFromStream();
-  public native void release();
+    private native void MarshalIntoStream(Dispatch d);
 
-  public void finalize()
-  {
-    if (m_pStream != 0) release();
-  }
+    private native Dispatch MarshalFromStream();
+
+    /* (non-Javadoc)
+     * @see com.jacob.com.JacobObject#release()
+     */
+    public native void release();
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#finalize()
+     */
+    public void finalize() {
+        if (m_pStream != 0)
+            release();
+    }
 }

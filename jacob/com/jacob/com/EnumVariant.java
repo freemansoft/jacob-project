@@ -30,93 +30,102 @@
 package com.jacob.com;
 
 /**
- * An implementation of IEnumVariant based on code submitted by
- * Thomas Hallgren (mailto:Thomas.Hallgren@eoncompany.com)
+ * An implementation of IEnumVariant based on code submitted by Thomas Hallgren
+ * (mailto:Thomas.Hallgren@eoncompany.com)
  */
-public class EnumVariant extends JacobObject implements java.util.Enumeration
-{
-  private int m_pIEnumVARIANT;
-  private final Variant[] m_recBuf = new Variant[1];
+public class EnumVariant extends JacobObject implements java.util.Enumeration {
+    private int m_pIEnumVARIANT;
 
-  // this only gets called from JNI
-  //
-  protected EnumVariant(int pIEnumVARIANT)
-  {
-    m_pIEnumVARIANT = pIEnumVARIANT;
-  }
+    private final Variant[] m_recBuf = new Variant[1];
 
-  public EnumVariant(Object disp)
-  {
-    int[] hres = new int[1];
-    Variant evv = Dispatch.invokev(
-              disp,
-              Dispatch.DISPID_NEWENUM,
-              Dispatch.Get,
-              new Variant[0],
-              hres);
-    if(evv.getvt() != Variant.VariantObject)
+    // this only gets called from JNI
     //
-    // The DISPID_NEWENUM did not result in a valid object
-    //
-    throw new ComFailException("Can't obtain EnumVARIANT");
-
-    EnumVariant tmp = evv.toEnumVariant();
-    m_pIEnumVARIANT = tmp.m_pIEnumVARIANT;
-    tmp.m_pIEnumVARIANT = 0;
-  }
-
-  /**
-   * Implements java.util.Enumeration
-   */
-  public boolean hasMoreElements()
-  {
-    {
-      if(m_recBuf[0] == null)
-      {
-        if(this.Next(m_recBuf) <= 0)
-          return false;
-      }
-      return true;
+    protected EnumVariant(int pIEnumVARIANT) {
+        m_pIEnumVARIANT = pIEnumVARIANT;
     }
-  }
 
-  /**
-   * Implements java.util.Enumeration
-   */
-  public Object nextElement()
-  {
-    Object last = m_recBuf[0];
-    if(last == null)
-    {
-      if(this.Next(m_recBuf) <= 0)
-        throw new java.util.NoSuchElementException();
-      last = m_recBuf[0];
+    /**
+     * @param disp
+     */
+    public EnumVariant(Object disp) {
+        int[] hres = new int[1];
+        Variant evv = Dispatch.invokev(disp, Dispatch.DISPID_NEWENUM,
+                Dispatch.Get, new Variant[0], hres);
+        if (evv.getvt() != Variant.VariantObject)
+            //
+            // The DISPID_NEWENUM did not result in a valid object
+            //
+            throw new ComFailException("Can't obtain EnumVARIANT");
+
+        EnumVariant tmp = evv.toEnumVariant();
+        m_pIEnumVARIANT = tmp.m_pIEnumVARIANT;
+        tmp.m_pIEnumVARIANT = 0;
     }
-    m_recBuf[0] = null;
-    return last;
-  }
 
-  /**
-   * Get next element in collection or null if at end
-   */
-  public Variant Next()
-  {
-    if (hasMoreElements()) return (Variant)nextElement();
-    return null;
-  }
+    /**
+     * Implements java.util.Enumeration
+     * @return
+     */
+    public boolean hasMoreElements() {
+        {
+            if (m_recBuf[0] == null) {
+                if (this.Next(m_recBuf) <= 0)
+                    return false;
+            }
+            return true;
+        }
+    }
 
-  public native int Next(Variant[] receiverArray);
+    /**
+     * Implements java.util.Enumeration
+     * @return
+     */
+    public Object nextElement() {
+        Object last = m_recBuf[0];
+        if (last == null) {
+            if (this.Next(m_recBuf) <= 0)
+                throw new java.util.NoSuchElementException();
+            last = m_recBuf[0];
+        }
+        m_recBuf[0] = null;
+        return last;
+    }
 
-  public native void Skip(int count);
+    /**
+     * Get next element in collection or null if at end
+     * @return
+     */
+    public Variant Next() {
+        if (hasMoreElements())
+            return (Variant) nextElement();
+        return null;
+    }
 
-  public native void Reset();
+    /**
+     * @param receiverArray
+     * @return
+     */
+    public native int Next(Variant[] receiverArray);
 
-  public native void release();
+    /**
+     * @param count
+     */
+    public native void Skip(int count);
 
-  protected void finalize()
-  {
-		//System.out.println("EnumVariant finalize start");
-    if (m_pIEnumVARIANT != 0) this.release();
-		//System.out.println("EnumVariant finalize end");
-  }
+    /**
+     * 
+     */
+    public native void Reset();
+
+    /* (non-Javadoc)
+     * @see com.jacob.com.JacobObject#release()
+     */
+    public native void release();
+
+    protected void finalize() {
+        //System.out.println("EnumVariant finalize start");
+        if (m_pIEnumVARIANT != 0)
+            this.release();
+        //System.out.println("EnumVariant finalize end");
+    }
 }

@@ -28,72 +28,65 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package com.jacob.com;
+
 import java.util.Hashtable;
 import java.util.Vector;
 
 /**
- * The Running Object Table (ROT) maps each thread to a vector of
- * all the JacobObjects that were created in that thread. It always
- * operates on the current thread so all the methods are static and
- * they implicitly get the current thread.
- * Conceptually, this is similar to the ThreadLocal class of Java 1.2
- * but we are also supporting Java 1.6
- * The clearObjects method is used to release all the COM objects
- * created by Jacob in the current thread prior to uninitializing COM
- * for that thread. If we leave this job to the garbage collector,
- * then finalize might get called from a separate thread which is not
- * initialized for COM, and also the component itself may have been
- * freed.
+ * The Running Object Table (ROT) maps each thread to a vector of all the
+ * JacobObjects that were created in that thread. It always operates on the
+ * current thread so all the methods are static and they implicitly get the
+ * current thread. Conceptually, this is similar to the ThreadLocal class of
+ * Java 1.2 but we are also supporting Java 1.6 The clearObjects method is used
+ * to release all the COM objects created by Jacob in the current thread prior
+ * to uninitializing COM for that thread. If we leave this job to the garbage
+ * collector, then finalize might get called from a separate thread which is not
+ * initialized for COM, and also the component itself may have been freed.
  */
-public abstract class ROT
-{
+public abstract class ROT {
     private static Hashtable rot = new Hashtable();
 
-    protected static void addThread()
-    {
-      String t_name = Thread.currentThread().getName();
-      if (rot.contains(t_name)) return;
-      Vector v = new Vector();
-      rot.put(t_name, v);
+    protected static void addThread() {
+        String t_name = Thread.currentThread().getName();
+        if (rot.contains(t_name))
+            return;
+        Vector v = new Vector();
+        rot.put(t_name, v);
     }
 
-    protected static void clearObjects()
-    {
-      String t_name = Thread.currentThread().getName();
-      Vector v = (Vector)rot.get(t_name);
-      if (v != null)
-      {
-        while (!v.isEmpty())
-        {
-          JacobObject o = (JacobObject)v.elementAt(0);
-          //System.out.println(t_name + "  release:"+o+"->"+o.getClass().getName());
-          if (o != null) o.release();
-          v.removeElementAt(0);
+    protected static void clearObjects() {
+        String t_name = Thread.currentThread().getName();
+        Vector v = (Vector) rot.get(t_name);
+        if (v != null) {
+            while (!v.isEmpty()) {
+                JacobObject o = (JacobObject) v.elementAt(0);
+                //System.out.println(t_name + "
+                // release:"+o+"->"+o.getClass().getName());
+                if (o != null)
+                    o.release();
+                v.removeElementAt(0);
+            }
+            rot.remove(t_name);
         }
-        rot.remove(t_name);
-      }
     }
 
-    protected static void addObject(JacobObject o)
-    {
-      String t_name = Thread.currentThread().getName();
-      //System.out.println(t_name + "  add:"+o+"->"+o.getClass().getName());
-      Vector v = (Vector)rot.get(t_name);
-      if (v == null)
-      {
-        // this thread has not been initialized as a COM thread
-        // so make it part of MTA for backwards compatibility
-        ComThread.InitMTA(false);
-        addThread();
-        v = (Vector)rot.get(t_name);
-      }
-      if (v != null)
-      {
-        v.addElement(o);
-      }
+    protected static void addObject(JacobObject o) {
+        String t_name = Thread.currentThread().getName();
+        //System.out.println(t_name + " add:"+o+"->"+o.getClass().getName());
+        Vector v = (Vector) rot.get(t_name);
+        if (v == null) {
+            // this thread has not been initialized as a COM thread
+            // so make it part of MTA for backwards compatibility
+            ComThread.InitMTA(false);
+            addThread();
+            v = (Vector) rot.get(t_name);
+        }
+        if (v != null) {
+            v.addElement(o);
+        }
     }
 
     static {
-      System.loadLibrary("jacob");
+        System.loadLibrary("jacob");
     }
 }

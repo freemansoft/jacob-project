@@ -1,3 +1,5 @@
+package samples.ado;
+
 import com.jacob.com.*;
 
 public class Command extends Dispatch
@@ -12,13 +14,14 @@ public class Command extends Dispatch
 	 * turn a Dispatch object into a wider object - it must exist
 	 * in every wrapper class whose instances may be returned from
 	 * method calls wrapped in VT_DISPATCH Variants.
+	 * @param dispatchTarget
 	 */
-	public Command(Dispatch d)
+	public Command(Dispatch dispatchTarget)
 	{
 		// take over the IDispatch pointer
-	  m_pDispatch = d.m_pDispatch;
+	  m_pDispatch = dispatchTarget.m_pDispatch;
 		// null out the input's pointer
-		d.m_pDispatch = 0;
+		dispatchTarget.m_pDispatch = 0;
 	}
 
   public Variant getProperties()

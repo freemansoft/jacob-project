@@ -29,36 +29,50 @@
  */
 package com.jacob.com;
 
-public class DispatchEvents extends JacobObject
-{
-  int    m_pConnPtProxy = 0;
+/**
+ * @author joe
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
+ */
+public class DispatchEvents extends JacobObject {
+    int m_pConnPtProxy = 0;
 
-  public DispatchEvents(Dispatch src, Object sink)
-  {
-    init(src, sink);
-  }
-  public DispatchEvents(Dispatch src, Object sink, String progId)
-  {
-    init2(src, sink,progId);
-  }
+    /**
+     * @param src
+     * @param sink
+     */
+    public DispatchEvents(Dispatch src, Object sink) {
+        init(src, sink);
+    }
 
-  // hook up a connection point proxy object
-  // event methods on the sink object will be called
-  // by name with a signature of <name>(Variant[] args)
-  protected native void init(Dispatch src, Object sink);
-  protected native void init2(Dispatch src, Object sink, String progId);
+    /**
+     * @param src
+     * @param sink
+     * @param progId
+     */
+    public DispatchEvents(Dispatch src, Object sink, String progId) {
+        init2(src, sink, progId);
+    }
 
-	// call this to explicitly release the com object before gc
-  public native void release();
+    // hook up a connection point proxy object
+    // event methods on the sink object will be called
+    // by name with a signature of <name>(Variant[] args)
+    protected native void init(Dispatch src, Object sink);
 
-  protected void finalize()
-  {
-		//System.out.println("DispatchEvents finalize start");
-    if (m_pConnPtProxy != 0) release();
-		//System.out.println("DispatchEvents finalize end");
-  }
+    protected native void init2(Dispatch src, Object sink, String progId);
 
-  static {
-    System.loadLibrary("jacob");
-  }
+    // call this to explicitly release the com object before gc
+    public native void release();
+
+    protected void finalize() {
+        //System.out.println("DispatchEvents finalize start");
+        if (m_pConnPtProxy != 0)
+            release();
+        //System.out.println("DispatchEvents finalize end");
+    }
+
+    static {
+        System.loadLibrary("jacob");
+    }
 }

@@ -35,18 +35,28 @@ EventProxy::EventProxy(JNIEnv *env, jobject aSinkObj,
         IID eid, CComBSTR mName[], DISPID mID[], int mNum) :
    m_cRef(0), pCP(pConn), 
    eventIID(eid), MethNum(mNum), MethName(mName), 
-   MethID(mID), JMethID(NULL), javaSinkClass(NULL)
+   MethID(mID), JMethID(NULL), javaSinkClass(NULL),
+   variantClassMethod(NULL)
 {
   javaSinkObj = env->NewGlobalRef(aSinkObj);
+	if (env->ExceptionOccurred()) { env->ExceptionDescribe();}
 	// we need this to attach to the event invocation thread
   env->GetJavaVM(&jvm);
+	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
   AddRef();
   HRESULT hr = pCP->Advise(this, &dwEventCookie);
   if (SUCCEEDED(hr)) {
     // create a mapping from the DISPID's to jmethodID's by using
     // the method names I extracted from the classinfo
     JMethID = new jmethodID[MethNum];
+
     javaSinkClass = env->GetObjectClass(javaSinkObj);
+		if (javaSinkClass == NULL){ printf("can't figure out java sink class"); }
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+	variantClassMethod = env->GetMethodID(javaSinkClass, "getVariantClass", "()Ljava/lang/Class;");
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+		if (variantClassMethod == NULL) { printf("variantClassMethod == null\n"); }
+
     const char *method;
     for(int i=0;i<MethNum;i++) 
     {
@@ -73,6 +83,7 @@ EventProxy::~EventProxy()
   jvm->AttachCurrentThread((void **)&env, jvm);
 
   env->DeleteGlobalRef(javaSinkObj);
+	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
   if (MethNum) {
     delete [] MethName;
     delete [] MethID;
@@ -131,19 +142,41 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
     // attach to the current running thread
     jvm->AttachCurrentThread((void**)&env, jvm);
 
+
+    // get variant class
+	jclass vClass;
+	// do this in a JACOB 1.8 backwards compatable way
+	// this succeeds if the class was loaded from the bootstrap class loader
+    vClass = env->FindClass("com/jacob/com/Variant");
+	if (vClass == NULL){
+		// see if our call back class implements our "special" method
+		if (variantClassMethod != NULL){
+			jobject variantFound = env->CallObjectMethod(javaSinkObj, variantClassMethod);
+				if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
+				if (variantFound == NULL) { printf("variantFound == null\n"); }
+			vClass = (jclass)variantFound;
+		} else {
+			// dang they didn't.  lets tell the user they are having a bad day
+			printf("We're going to fail now in a way that is probably pretty ugly");
+			printf("This application is probably running from a launcher where system class loader knows not Jacob\n");
+			printf("The call back class does not implement 'Class getVariantClass()' that we can use to work around this\n");
+		}
+	}
+
     // how many params
     int num = pDispParams->cArgs;
-    // get variant class
-    jclass vClass = env->FindClass("com/jacob/com/Variant");
     // and the constructor
     jmethodID vCons = env->GetMethodID(vClass, "<init>", "()V");
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
     // make an array of them
     jobjectArray varr = env->NewObjectArray(num, vClass, 0);
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
     int i,j;
     for(i=num-1,j=0;i>=0;i--,j++) 
     {
       // construct a java variant holder
       jobject arg = env->NewObject(vClass, vCons);
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
       // get the empty variant from it
       VARIANT *va = extractVariant(env, arg);
       // copy the value
@@ -151,11 +184,638 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
       // put it in the array
       env->SetObjectArrayElement(varr, j, arg);
 			env->DeleteLocalRef(arg);
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
     }
     // call the method
     env->CallVoidMethod(javaSinkObj, meth, varr); 
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); }
 
-		// detach from thread
+
+    // Begin code from Jiffie team that copies parameters back from java to COM
+    for(i=num-1,j=0;i>=0;i--,j++) 
+    {
+	  jobject arg = env->GetObjectArrayElement(varr, j);
+      VARIANT *java = extractVariant(env, arg);
+	  VARIANT *com = &pDispParams->rgvarg[i];
+
+	  switch (com->vt)
+	  {	  
+		case VT_DISPATCH:
+		{
+			switch (java->vt)
+			{
+				case VT_DISPATCH:
+				{
+					V_DISPATCH(com) = V_DISPATCH(java);
+					break;
+				}
+
+				case VT_DISPATCH | VT_BYREF:
+				{
+					V_DISPATCH(com) = *V_DISPATCHREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_DISPATCH | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_DISPATCH:
+				{
+					*V_DISPATCHREF(com) = V_DISPATCH(java);
+					break;
+				}
+
+				case VT_DISPATCH | VT_BYREF:
+				{
+					*V_DISPATCHREF(com) = *V_DISPATCHREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_BOOL:
+		{
+			switch (java->vt)
+			{
+				case VT_BOOL:
+				{
+					V_BOOL(com) = V_BOOL(java);
+					break;
+				}
+
+				case VT_BOOL | VT_BYREF:
+				{
+					V_BOOL(com) = *V_BOOLREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_BOOL | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_BOOL:
+				{
+					*V_BOOLREF(com) = V_BOOL(java);
+					break;
+				}
+
+				case VT_BOOL | VT_BYREF:
+				{
+					*V_BOOLREF(com) = *V_BOOLREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_UI1:
+		{
+			switch (java->vt)
+			{
+				case VT_UI1:
+				{
+					V_UI1(com) = V_UI1(java);
+					break;
+				}
+
+				case VT_UI1 | VT_BYREF:
+				{
+					V_UI1(com) = *V_UI1REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_UI1 | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_UI1:
+				{
+					*V_UI1REF(com) = V_UI1(java);
+					break;
+				}
+
+				case VT_UI1 | VT_BYREF:
+				{
+					*V_UI1REF(com) = *V_UI1REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+
+		case VT_I2:
+		{
+			switch (java->vt)
+			{
+				case VT_I2:
+				{
+					V_I2(com) = V_I2(java);
+					break;
+				}
+
+				case VT_I2 | VT_BYREF:
+				{
+					V_I2(com) = *V_I2REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_I2 | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_I2:
+				{
+					*V_I2REF(com) = V_I2(java);
+					break;
+				}
+
+				case VT_I2 | VT_BYREF:
+				{
+					*V_I2REF(com) = *V_I2REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_I4:
+		{
+			switch (java->vt)
+			{
+				case VT_I4:
+				{
+					V_I4(com) = V_I4(java);
+					break;
+				}
+
+				case VT_I4 | VT_BYREF:
+				{
+					V_I4(com) = *V_I4REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_I4 | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_I4:
+				{
+					*V_I4REF(com) = V_I4(java);
+					break;
+				}
+
+				case VT_I4 | VT_BYREF:
+				{
+					*V_I4REF(com) = *V_I4REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_R4:
+		{
+			switch (java->vt)
+			{
+				case VT_R4:
+				{
+					V_R4(com) = V_R4(java);
+					break;
+				}
+
+				case VT_R4 | VT_BYREF:
+				{
+					V_R4(com) = *V_R4REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_R4 | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_R4:
+				{
+					*V_R4REF(com) = V_R4(java);
+					break;
+				}
+
+				case VT_R4 | VT_BYREF:
+				{
+					*V_R4REF(com) = *V_R4REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_R8:
+		{
+			switch (java->vt)
+			{
+				case VT_R8:
+				{
+					V_R8(com) = V_R8(java);
+					break;
+				}
+
+				case VT_R8 | VT_BYREF:
+				{
+					V_R8(com) = *V_R8REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_R8 | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_R8:
+				{
+					*V_R8REF(com) = V_R8(java);
+					break;
+				}
+
+				case VT_R8 | VT_BYREF:
+				{
+					*V_R8REF(com) = *V_R8REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+				case VT_I1:
+		{
+			switch (java->vt)
+			{
+				case VT_I1:
+				{
+					V_I1(com) = V_I1(java);
+					break;
+				}
+
+				case VT_I1 | VT_BYREF:
+				{
+					V_I1(com) = *V_I1REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_I1 | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_I1:
+				{
+					*V_I1REF(com) = V_I1(java);
+					break;
+				}
+
+				case VT_I1 | VT_BYREF:
+				{
+					*V_I1REF(com) = *V_I1REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+				case VT_UI2:
+		{
+			switch (java->vt)
+			{
+				case VT_UI2:
+				{
+					V_UI2(com) = V_UI2(java);
+					break;
+				}
+
+				case VT_UI2 | VT_BYREF:
+				{
+					V_UI2(com) = *V_UI2REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_UI2 | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_UI2:
+				{
+					*V_UI2REF(com) = V_UI2(java);
+					break;
+				}
+
+				case VT_UI2 | VT_BYREF:
+				{
+					*V_UI2REF(com) = *V_UI2REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+				case VT_UI4:
+		{
+			switch (java->vt)
+			{
+				case VT_UI4:
+				{
+					V_UI4(com) = V_UI4(java);
+					break;
+				}
+
+				case VT_UI4 | VT_BYREF:
+				{
+					V_UI4(com) = *V_UI4REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_UI4 | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_UI4:
+				{
+					*V_UI4REF(com) = V_UI4(java);
+					break;
+				}
+
+				case VT_UI4 | VT_BYREF:
+				{
+					*V_UI4REF(com) = *V_UI4REF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+				case VT_INT:
+		{
+			switch (java->vt)
+			{
+				case VT_INT:
+				{
+					V_INT(com) = V_INT(java);
+					break;
+				}
+
+				case VT_INT | VT_BYREF:
+				{
+					V_INT(com) = *V_INTREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_INT | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_INT:
+				{
+					*V_INTREF(com) = V_INT(java);
+					break;
+				}
+
+				case VT_INT | VT_BYREF:
+				{
+					*V_INTREF(com) = *V_INTREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+				case VT_UINT:
+		{
+			switch (java->vt)
+			{
+				case VT_UINT:
+				{
+					V_UINT(com) = V_UINT(java);
+					break;
+				}
+
+				case VT_UINT | VT_BYREF:
+				{
+					V_UINT(com) = *V_UINTREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_UINT | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_UINT:
+				{
+					*V_UINTREF(com) = V_UINT(java);
+					break;
+				}
+
+				case VT_UINT | VT_BYREF:
+				{
+					*V_UINTREF(com) = *V_UINTREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+				case VT_CY:
+		{
+			switch (java->vt)
+			{
+				case VT_CY:
+				{
+					V_CY(com) = V_CY(java);
+					break;
+				}
+
+				case VT_CY | VT_BYREF:
+				{
+					V_CY(com) = *V_CYREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_CY | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_CY:
+				{
+					*V_CYREF(com) = V_CY(java);
+					break;
+				}
+
+				case VT_CY | VT_BYREF:
+				{
+					*V_CYREF(com) = *V_CYREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+				case VT_DATE:
+		{
+			switch (java->vt)
+			{
+				case VT_DATE:
+				{
+					V_DATE(com) = V_DATE(java);
+					break;
+				}
+
+				case VT_DATE | VT_BYREF:
+				{
+					V_DATE(com) = *V_DATEREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_DATE | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_DATE:
+				{
+					*V_DATEREF(com) = V_DATE(java);
+					break;
+				}
+
+				case VT_DATE | VT_BYREF:
+				{
+					*V_DATEREF(com) = *V_DATEREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+				case VT_BSTR:
+		{
+			switch (java->vt)
+			{
+				case VT_BSTR:
+				{
+					V_BSTR(com) = V_BSTR(java);
+					break;
+				}
+
+				case VT_BSTR | VT_BYREF:
+				{
+					V_BSTR(com) = *V_BSTRREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_BSTR | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_BSTR:
+				{
+					*V_BSTRREF(com) = V_BSTR(java);
+					break;
+				}
+
+				case VT_BSTR | VT_BYREF:
+				{
+					*V_BSTRREF(com) = *V_BSTRREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+				case VT_DECIMAL:
+		{
+			switch (java->vt)
+			{
+				case VT_DECIMAL:
+				{
+					V_DECIMAL(com) = V_DECIMAL(java);
+					break;
+				}
+
+				case VT_DECIMAL | VT_BYREF:
+				{
+					V_DECIMAL(com) = *V_DECIMALREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+		case VT_DECIMAL | VT_BYREF:
+		{
+			switch (java->vt)
+			{
+				case VT_DECIMAL:
+				{
+					*V_DECIMALREF(com) = V_DECIMAL(java);
+					break;
+				}
+
+				case VT_DECIMAL | VT_BYREF:
+				{
+					*V_DECIMALREF(com) = *V_DECIMALREF(java);
+					break;
+				}
+			}
+			break;
+		}
+
+
+	  }
+      env->DeleteLocalRef(arg);
+    }
+    // End code from Jiffie team that copies parameters back from java to COM
+
+	// detach from thread
     jvm->DetachCurrentThread();
     return S_OK;
   }

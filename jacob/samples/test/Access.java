@@ -5,6 +5,11 @@ import com.jacob.activeX.*;
 
 class Access 
 {
+    /**
+     * the main loop for the test
+     * @param args
+     * @throws Exception
+     */
   public static void main(String[] args) throws Exception
   {
     ComThread.InitSTA();
@@ -25,6 +30,9 @@ class Access
 
   /**
    * Open a database 
+   * @param ax
+   * @param fileName
+   * @return dispatch object that was opened
    */
   public static Dispatch open(ActiveXComponent ax, String fileName)
   {
@@ -37,6 +45,7 @@ class Access
 
   /**
    * Close a database
+   * @param openDB db to be closed
    */
   public static void close(Dispatch openDB)
   {
@@ -45,6 +54,8 @@ class Access
 
   /**
    * Extract the values from the recordset
+   * @param recset
+   * @return Variant that is the returned values
    */
   public static Variant getValues(Dispatch recset)
   {
@@ -54,6 +65,11 @@ class Access
     return v;
   }
 
+  /**
+   * should return ?? for the passed in ??
+   * @param qd
+   * @return Variant results of query?
+   */
   public static Variant getByQueryDef(Dispatch qd)
   {
     // get a reference to the recordset
@@ -69,6 +85,11 @@ class Access
     return vals;
   }
 
+  /**
+   * gets the columns form the rec set
+   * @param recset
+   * @return list of column names
+   */
   public static String[] getColumns(Dispatch recset)
   {
     Dispatch flds = Dispatch.get(recset, "Fields").toDispatch();

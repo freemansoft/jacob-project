@@ -32,42 +32,57 @@ package com.jacob.activeX;
 import com.jacob.com.*;
 
 /**
- * This class simulates com.ms.activeX.ActiveXComponent only as
- * it used for creating Dispatch objects
+ * This class simulates com.ms.activeX.ActiveXComponent only as it used for
+ * creating Dispatch objects
  */
-public class ActiveXComponent extends Dispatch
-{
-  public ActiveXComponent(String progid)
-  {
-    super(progid);
-  }
+public class ActiveXComponent extends Dispatch {
+    /**
+     * @param progid
+     */
+    public ActiveXComponent(String progid) {
+        super(progid);
+    }
 
-  public Object getObject()
-  {
-    return this;
-  }
+    /**
+     * @return actually returns this bject
+     */
+    public Object getObject() {
+        return this;
+    }
 
-  public Variant invoke(String name, Variant[] args)
-  {
-    return Dispatch.callN(this, name, args);
-  }
+    /**
+     * @param name
+     * @param args
+     * @return Variant result of the invoke
+     */
+    public Variant invoke(String name, Variant[] args) {
+        return Dispatch.callN(this, name, args);
+    }
 
-  public Variant getProperty(String name)
-  {
-    return Dispatch.get(this, name);
-  }
+    /**
+     * @param name property name
+     * @return Variant value of property
+     */
+    public Variant getProperty(String name) {
+        return Dispatch.get(this, name);
+    }
 
-  public void setProperty(String name, Variant arg)
-  {
-    Dispatch.put(this, name, arg);
-  }
+    /**
+     * @param name
+     * @param arg
+     */
+    public void setProperty(String name, Variant arg) {
+        Dispatch.put(this, name, arg);
+    }
 
-  protected void finalize()
-  {
-    super.finalize();
-  }
+    /**
+     * @see com.jacob.com.Dispatch#finalize()
+     */
+    protected void finalize() {
+        super.finalize();
+    }
 
-  static {
-    System.loadLibrary("jacob");
-  }
+    static {
+        System.loadLibrary("jacob");
+    }
 }

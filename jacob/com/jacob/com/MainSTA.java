@@ -35,9 +35,8 @@ package com.jacob.com;
  * threaded components will be created if the client chooses an MTA
  * threading model for the java side of the app.
  */
-public class MainSTA extends STA
-{
+public class MainSTA extends STA {
     static {
-      System.loadLibrary("jacob");
+        System.loadLibrary("jacob");
     }
 }

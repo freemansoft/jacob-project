@@ -59,6 +59,8 @@ private:
   DWORD   dwEventCookie; // connection point cookie
   jobject javaSinkObj;   // the java object to delegate calls
   jclass  javaSinkClass; // the java class of the object
+  jmethodID variantClassMethod;  // the method on the javaSinkObj that will return the Variant class
+
   IID     eventIID;      // the interface iid passed in
   int     MethNum;
   CComBSTR *MethName;   // Array of method names

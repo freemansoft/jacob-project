@@ -30,17 +30,23 @@
 package com.jacob.com;
 
 /**
- * All COM object created by JACOB extend this class so that
- * we can automatically release them when the thread is detached from
- * COM - if we leave it to the finalizer it will call the release from
- * another thread, which may result in a segmentation violation.
+ * All COM object created by JACOB extend this class so that we can
+ * automatically release them when the thread is detached from COM - if we leave
+ * it to the finalizer it will call the release from another thread, which may
+ * result in a segmentation violation.
  */
-public class JacobObject
-{
-  public JacobObject()
-  {
-    ROT.addObject(this);
-  }
+public class JacobObject {
+    /**
+     *  Standard constructor
+     */
+    public JacobObject() {
+        ROT.addObject(this);
+    }
 
-  public void release() {}
+    /**
+     *  
+     */
+    public void release() {
+        // currently does nothing
+    }
 }

@@ -1,3 +1,5 @@
+package samples.ado;
+
 // Enum: CommandTypeEnum
 
 public interface CommandTypeEnum

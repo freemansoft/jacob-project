@@ -1,3 +1,5 @@
+package samples.ado;
+
 import com.jacob.com.*;
 
 public class Connection extends Dispatch

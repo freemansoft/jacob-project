@@ -1,3 +1,5 @@
+package samples.applet;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.applet.*;
@@ -5,6 +7,9 @@ import java.applet.*;
 import com.jacob.com.*;
 import com.jacob.activeX.*;
 
+/**
+ * Applet test case
+ */
 public class AppTest extends Applet implements ActionListener 
 {
   TextField in;
@@ -13,6 +18,9 @@ public class AppTest extends Applet implements ActionListener
   ActiveXComponent sC = null;
   Object sControl = null;
 
+  /**
+   * startup method
+   */
   public void init() 
   {
     setLayout(new FlowLayout());
@@ -23,6 +31,10 @@ public class AppTest extends Applet implements ActionListener
 
   }
 
+  /**
+   * action method that receives button actions
+   * @param ev the event
+   */
   public void actionPerformed(ActionEvent ev) 
   {
     if (sC == null) {

@@ -30,56 +30,62 @@
 package com.jacob.com;
 
 /**
- * A class that implements a Single Threaded Apartment.
- * Users will subclass this and override OnInit() and OnQuit()
- * where they will create and destroy a COM component that wants to
- * run in an STA other than the main STA.
+ * A class that implements a Single Threaded Apartment. Users will subclass this
+ * and override OnInit() and OnQuit() where they will create and destroy a COM
+ * component that wants to run in an STA other than the main STA.
  */
-public class STA extends Thread
-{
+public class STA extends Thread {
+    /**
+     * TODO: no references exist to this.  should it be dropped
+     */
     public int threadID;
 
-		public STA()
-		{
-		  start(); // start the thread
-		}
+    /**
+     * constructor for STA
+     */
+    public STA() {
+        start(); // start the thread
+    }
 
-    public void run()
-    {
-      // init COM
-      ComThread.InitSTA();
-      if (OnInit())
-      {
-        // this call blocks in the win32 message loop
-        // until quitMessagePump is called
-        doMessagePump();
-      }
-      OnQuit();
-      // uninit COM
-      ComThread.Release();
+    /* (non-Javadoc)
+     * @see java.lang.Thread#run()
+     */
+    public void run() {
+        // init COM
+        ComThread.InitSTA();
+        if (OnInit()) {
+            // this call blocks in the win32 message loop
+            // until quitMessagePump is called
+            doMessagePump();
+        }
+        OnQuit();
+        // uninit COM
+        ComThread.Release();
     }
 
     /**
-     * Override this method to create and initialize any COM
-     * component that you want to run in this thread. If anything
-     * fails, return false to terminate the thread.
+     * Override this method to create and initialize any COM component that you
+     * want to run in this thread. If anything fails, return false to terminate
+     * the thread.
+     * @return always returns true
      */
-    public boolean OnInit()
-    {
-      return true;
+    public boolean OnInit() {
+        return true;
     }
 
     /**
-     * Override this method to destroy any resource
-     * before the thread exits and COM in uninitialized
+     * Override this method to destroy any resource before the thread exits and
+     * COM in uninitialized
      */
-    public void OnQuit()
-    {
+    public void OnQuit() {
+        // there is nothing to see here
     }
 
-    public void quit()
-    {
-      quitMessagePump();
+    /**
+     * calls quitMessagePump
+     */
+    public void quit() {
+        quitMessagePump();
     }
 
     /**
@@ -93,6 +99,6 @@ public class STA extends Thread
     public native void quitMessagePump();
 
     static {
-      System.loadLibrary("jacob");
+        System.loadLibrary("jacob");
     }
 }

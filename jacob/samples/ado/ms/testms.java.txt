@@ -1,7 +1,10 @@
-package samples.ado;
-import com.jacob.com.*;
+package samples.ado.ms;
 
-public class test
+import com.ms.com.*;
+import com.ms.wfc.data.*;
+
+// an ms-only version of test.java
+public class testms
 {
   public static void printRS(Recordset rs)
   {
@@ -13,7 +16,7 @@ public class test
     }
     System.out.println("");
 
-    rs.MoveFirst();
+    rs.moveFirst();
     while (!rs.getEOF())
     {
       for(int i=0;i<fs.getCount();i++)
@@ -23,7 +26,7 @@ public class test
         System.out.print(v + " ");
       }
       System.out.println("");
-      rs.MoveNext();
+      rs.moveNext();
     }
   }
 
@@ -32,7 +35,7 @@ public class test
 	{
 	  System.out.println("Recordset Open");
 		Recordset rs = new Recordset();
-		rs.Open(new Variant(query), new Variant(con));
+		rs.open(new Variant(query), new Variant(con));
 	  printRS(rs);
 	}
 
@@ -43,14 +46,14 @@ public class test
 	   System.out.println("Command+Connection -> Recordset");
 	   Connection c = new Connection();
 		 c.setConnectionString(con);
-		 c.Open();
+		 c.open();
 	   Command comm = new Command();
 		 comm.setActiveConnection(c);
-		 comm.setCommandType(CommandTypeEnum.adCmdText);
+		 comm.setCommandType(AdoEnums.CommandType.TEXT);
 		 comm.setCommandText(query);
-	   Recordset rs = comm.Execute();
+	   Recordset rs = comm.execute();
 	   printRS(rs);
-		 c.Close();
+		 c.close();
 	}
 
 	public static void main(String[] args)

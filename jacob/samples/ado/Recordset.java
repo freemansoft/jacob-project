@@ -1,3 +1,4 @@
+package samples.ado;
 import com.jacob.com.*;
 
 public class Recordset extends Dispatch
