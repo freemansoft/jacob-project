@@ -26,3 +26,6 @@ DEST_DIR is a destination directory into which to copy the final DLL.
 JDK = d:\j2sdk1.4.2_06
 DEST_DIR = d:\jacob
 MSDEVDIR = d:\apps\\"Microsoft Visual Studio"\VC98
+
+1/2005 code should compile now without out any additional tools. 
+References to cp and rm were removed from makefiles
