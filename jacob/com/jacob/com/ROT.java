@@ -53,13 +53,6 @@ public abstract class ROT
     private static Map rot = new WeakHashMap();
     
     /**
-     * A Reference queue allowing the Garbage Collector of informing us
-     * of dereferenced objects.
-     */
-    private static java.lang.ref.ReferenceQueue rq = new java.lang.ref.ReferenceQueue();
-        
-    
-    /**
      * utility method used to get the thread name
      * @return
      */
