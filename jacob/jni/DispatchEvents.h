@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (LDispatch;Ljava/lang/Object;)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init
-  (JNIEnv *, jobject, jobject, jobject);
+  (JNIEnv *, jobject, jobject, jobject, jobject);
 
 /*
  * Class:     DispatchEvents
@@ -21,7 +21,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init
  * Signature: (LDispatch;Ljava/lang/Object;Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init2
-  (JNIEnv *, jobject, jobject, jobject, jstring);
+  (JNIEnv *, jobject, jobject, jobject, jobject, jstring);
 
 /*
  * Class:     DispatchEvents
