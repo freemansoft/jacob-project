@@ -1,0 +1,7 @@
+jacob.dll
+jacob.jar
+*.zip
+RELEASE.txt
+.project
+.classpath
+
