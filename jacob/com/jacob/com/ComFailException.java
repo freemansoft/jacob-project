@@ -27,10 +27,7 @@
 package com.jacob.com;
 
 /**
- * @author joe
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * COM Fail Exception class raise dwhen there is a problem
  */
 public class ComFailException extends ComException {
     /**

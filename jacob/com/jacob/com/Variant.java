@@ -29,6 +29,10 @@
  */
 package com.jacob.com;
 
+/**
+ * The multi-format data type used for all call backs and most
+ * communications between Java and COM
+ */
 public class Variant extends JacobObject implements java.io.Serializable
 {
   int m_pVariant = 0;

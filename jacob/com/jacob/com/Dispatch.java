@@ -31,6 +31,10 @@ package com.jacob.com;
 
 import java.lang.reflect.Array;
 
+/**
+ * Object represents MS level dispatch object. You're going to live here
+ * a lot
+ */
 public class Dispatch extends JacobObject
 {
   public int m_pDispatch;

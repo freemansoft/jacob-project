@@ -27,10 +27,7 @@
 package com.jacob.com;
 
 /**
- * @author joe
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * represents a COM level thread 
  */
 public abstract class ComThread {
     private static final int MTA = 0x0;
