@@ -41,6 +41,12 @@ Array dimension checking fixed for certain boolean set and get functions
 Alternative method for finding Variant class for callbacks in JWS
 or other application lanchers where the system classloader does not
 know about jacob classes.
+<p>
+EventProxy zeros out the com object reference in the Variant objects
+that are created by EventProxy so that they are not double released, 
+by both the Java VM and calling code from the COM side.  The caller
+is supposed to be responsible for releasing the memory it created.
+This fix only applies to Variants created in callbacks.
 </li>
 
 <li>

@@ -1,5 +1,5 @@
 JDK = d:\j2sdk1.4.2_06
-DEST_DIR = d:\jacob_18
+DEST_DIR = d:\jacob
 MSDEVDIR = d:\apps\\"Microsoft Visual Studio"\VC98
 
 JDK_INC = -I$(JDK)\include -I$(JDK)\include\win32
