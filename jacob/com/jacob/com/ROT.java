@@ -132,6 +132,41 @@ public abstract class ROT
     }
 
     /**
+     * @deprecated the java model leave the responsibility of clearing up objects 
+     * to the Garbage Collector. Our programming model should not require that the
+     * user specifically remove object from the thread.
+     *  
+     * Lets someone remove an entry for a thread
+     * 
+     * @param iObjectToRemove
+     */
+    protected static void removeObject(Object iObjectToRemove) 
+    {
+        if(iObjectToRemove == null)
+        {
+            return;
+        }
+        
+        String t_name = Thread.currentThread().getName();
+        Vector v = (Vector)rot.get(t_name);
+        if (v != null)
+        {
+            java.util.Iterator it = v.iterator();
+            while (it.hasNext()) 
+            {
+                java.lang.ref.WeakReference weak = (java.lang.ref.WeakReference)it.next();
+                JacobObject o = (JacobObject)weak.get(); 
+                if (o != null && o.toString() != null)
+                {
+                    debug(t_name + "release:"+o+"->"+o.getClass().getName());
+                    o.release();
+                }
+                it.remove();
+            }
+        }
+    }
+    
+    /**
      * @see java.lang.ref.WeakReference
      * @see java.lang.ref.ReferenceQueue#poll()
      * 
