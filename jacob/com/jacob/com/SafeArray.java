@@ -27,10 +27,7 @@
 package com.jacob.com;
 
 /**
- * @author joe
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * TODO: Need javadoc here
  */
 public class SafeArray extends JacobObject {
     int m_pV = 0;
