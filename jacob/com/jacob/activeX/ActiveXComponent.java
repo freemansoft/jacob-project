@@ -91,12 +91,12 @@ public class ActiveXComponent extends Dispatch {
     }
 
     /**
-     * returns the selected proeprty as a dispatch
+     * returns the selected proeprty as a ActiveXComponent
      * @param propertyName
      * @return Dispatch representing the object under the property name
      */
-    public Dispatch getPropertyAsDispatch(String propertyName){
-        return new Dispatch(Dispatch.get(this,propertyName).toDispatch());
+    public ActiveXComponent getPropertyAsComponent(String propertyName){
+        return new ActiveXComponent(Dispatch.get(this,propertyName).toDispatch());
         
     }
     
