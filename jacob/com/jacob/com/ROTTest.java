@@ -43,11 +43,10 @@ public class ROTTest {
             System.out.println("Still there as expected");
         }
         ROT.clearObjects();
-        sizeAfterClearObjects = ROT.getThreadObjects().size();
-        if (sizeAfterClearObjects == 0){
-            System.out.println("Everything was correcly cleared");
+        if (ROT.getThreadObjects() == null){
+            System.out.println("ROT pool was destroyed as expected after cleObjects called.");
         } else {
-            System.out.println("More than expected: "+sizeAfterClearObjects);
+            System.out.println("ROT pool for thread still exists when it shouldn't");
         }
     }
 }
