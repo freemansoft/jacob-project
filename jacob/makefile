@@ -5,11 +5,13 @@ ACX_DIR = com\jacob\activeX
 
 all: java jni
 	@echo about to remove zipfiles
-	del jacobSrc_18.zip jacobBin_18.zip
-	@echo about to jar source
-	@$(JAR) -cvf jacobSrc_18.zip .
+        del jacobSrc_18.zip jacobBin_18.zip
+        del com\jacob\com\*.class
+        del jni\*.obj jni\jacob.dll jni\jacob.exp jni\jacob.lib
+        @echo about to jar source                    
+        @$(JAR) -cvf jacobSrc_18.zip LICENSE.TXT com docs jni samples vstudio makefile
 	@echo about to jar bin
-	@$(JAR) -cvf jacobBin_18.zip jacob.dll jacob.jar LICENSE.TXT README.TXT samples
+        @$(JAR) -cvf jacobBin_18.zip jacob.dll jacob.jar LICENSE.TXT docs samples
 
 java::
 	$(JAVAC) $(COM_DIR)\*.java $(ACX_DIR)\*.java
