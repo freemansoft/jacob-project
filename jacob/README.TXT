@@ -1,4 +1,4 @@
-For documentation see: http://users.rcn.com/danadler/jacob/
+For documentation see: http://danadler.com/jacob/
 
 The java code is in com\jacob\*.
 
