@@ -35,87 +35,165 @@ package com.jacob.com;
  */
 public class Variant extends JacobObject implements java.io.Serializable
 {
+    /**
+     * Use this constant for optional parameters
+     */
+    public final static com.jacob.com.Variant DEFAULT;
+    /**
+     * Same than {@link #DEFAULT}
+     */
+    public final static com.jacob.com.Variant VT_MISSING;
+    static 
+    {
+        com.jacob.com.Variant vtMissing = new com.jacob.com.Variant();
+        vtMissing.noParam();
+        DEFAULT = vtMissing;
+        VT_MISSING = vtMissing;
+    }
+    
+    /**
+     * Use for true/false variant parameters
+     */
+    public final static com.jacob.com.Variant VT_TRUE = new com.jacob.com.Variant(true);
+    
+    /**
+     * Use for true/false variant parameters
+     */
+    public final static com.jacob.com.Variant VT_FALSE = new com.jacob.com.Variant(false);
+    
   int m_pVariant = 0;
 
+  /** variant's type is empty : equivalent to VB Nothing */
   public static final short VariantEmpty = 0;
+  /** variant's type is null : equivalent to VB Null */
   public static final short VariantNull = 1;
+  /** variant's type is short */
   public static final short VariantShort = 2;
+  /** variant's type is int */
   public static final short VariantInt = 3;
+  /** variant's type is float */
   public static final short VariantFloat = 4;
+  /** variant's type is double */
   public static final short VariantDouble = 5;
+  /** variant's type is currency */
   public static final short VariantCurrency = 6;
+  /** variant's type is date */
   public static final short VariantDate = 7;
+  /** variant's type is string */
   public static final short VariantString = 8;
+  /** variant's type is dispatch */
   public static final short VariantDispatch = 9;
+  /** variant's type is error */
   public static final short VariantError = 10;
+  /** variant's type is boolean */
   public static final short VariantBoolean = 11;
+  /** variant's type is variant : i.e. it encapsulate another variant */
   public static final short VariantVariant = 12;
+  /** variant's type is object */
   public static final short VariantObject = 13;
+  /** variant's type is byte */
   public static final short VariantByte = 17;
+  /** @todo */
   public static final short VariantTypeMask = 4095;
+  /** variant's type is array */
   public static final short VariantArray = 8192;
+  /** variant's type is a reference (to IDispatch?) */
   public static final short VariantByref = 16384;
-
+  
+  /** Returns the value of this variant as an int */
   public native int toInt();
+  /** Returns the value of this variant as a date */
   public native double toDate();
+  /** Returns the value of this variant as boolean */
   public native boolean toBoolean();
+  /** Returns the value of this variant as an enumeration (java style) */
   public native EnumVariant toEnumVariant();
 
+  /** As far as I can tell : this does absolutely nothing */
   public native void getNull();
+  /** Set this Variant's type to VT_NULL (the VB equivalent of NULL) */
   public native void putNull();
 
+  /** @deprecated This returns null !*/
   public native Variant cloneIndirect();
+  
+  /** returns the content of this variant as a double */
   public native double toDouble();
+  /** returns the content of this variant as a long reprensenting a monetary amount */
   public native long toCurrency();
 
-  // superceded by SafeArray
+  /** @deprecated superceded by SafeArray */
   public void putVariantArray(Variant[] in)
   {
     throw new ComFailException("Not implemented");
   }
 
-  // superceded by SafeArray
+  /** @deprecated superceded by SafeArray */
   public Variant[] getVariantArray()
   {
     throw new ComFailException("Not implemented");
   }
 
-  // superceded by SafeArray
+  /** @deprecated superceded by SafeArray */
   public void putByteArray(Object in)
   {
     throw new ComFailException("Not implemented");
   }
 
+  /** set the content of this variant to a short (VT_I2|VT_BYREF)*/
   public native void putShortRef(short in);
+  /** set the content of this variant to an int (VT_I4|VT_BYREF)*/
   public native void putIntRef(int in);
+  /** set the content of this variant to a double (VT_R8|VT_BYREF)*/
   public native void putDoubleRef(double in);
+  /** set the content of this variant to a date (VT_DATE|VT_BYREF)*/
   public native void putDateRef(double in);
+  /** set the content of this variant to a string (VT_BSTR|VT_BYREF)*/
   public native void putStringRef(String in);
+  
+  /** get the content of this variant as a short */
   public native short getShortRef();
+  /** get the content of this variant as an int */
   public native int getIntRef();
+  
+  /** set the content of this variant to a short (VT_I2)*/
   public native void putShort(short in);
+  /** get the content of this variant as a short */
   public native short getShort();
+  /** get the content of this variant as a double */
   public native double getDoubleRef();
+  /** get the content of this variant as a double representing a date */
   public native double getDateRef();
+  /** get the content of this variant as a string */
   public native String getStringRef();
 
-  // superceded by SafeArray
+  /** @deprecated superceded by SafeArray */
   public Object toCharArray()
   {
     throw new ComFailException("Not implemented");
   }
 
+  /** Clear the content of this variant */
   public native void VariantClear();
+  /** return the content of this variant as a Dispatch object */
   public native Dispatch toDispatch();
+  /** this returns null */
   public native Object clone();
+  /** attempts to return the content of this variant as a string */
   public native String toString();
+  /** return the int value held in this variant (fails on other types?) */
   public native int getInt();
+  /** return the date (as a double) value held in this variant (fails on other types?) */
   public native double getDate();
+  /** set the value of this variant */
   public native void putInt(int in);
+  /** set the value of this variant */
   public native void putDate(double in);
+  /** attempts to return the content of this variant as a double */
   public native byte toByte();
-
+  /** same as {@link #toDispatch()} */
   public Object getDispatch() { return toDispatch(); }
+  /** same as {@link #putObject()} */
   public void putDispatch(Object in) { putObject(in); }
 
   public native boolean getBoolean();
