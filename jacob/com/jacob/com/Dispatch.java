@@ -38,10 +38,9 @@ import java.lang.reflect.Array;
 public class Dispatch extends JacobObject
 {
     /**
-     * why is this public?
-     * it could be protected and the Dispatch subclasses could still
-     * get it.
-     * This makes it hard to rename this thing
+     * This is public because Dispatch.cpp knows its name and accesses
+     * it directly to get the disptach id.  You really can't rename
+     * it or make it private
      */
     public int m_pDispatch;
 	/** program Id passed in by ActiveX components in their constructor */
