@@ -132,6 +132,7 @@ public class SafeArray extends JacobObject {
      */
     public void safeRelease()
     {
+        super.safeRelease();
         if (m_pV != 0){
             destroy();
             m_pV = 0;

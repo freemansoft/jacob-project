@@ -52,12 +52,16 @@ public class JacobObject {
      */
     public void safeRelease() {
         // currently does nothing - subclasses may do something
+        if (isDebugEnabled()){
+            debug(this.getClass().getName()+":"+this.hashCode()+" release");
+        }
     }
     
     /**
      * When things go wrong, it is usefull to be able to debug the ROT.
      */
     private static final boolean DEBUG = 
+        //true;
         "true".equalsIgnoreCase(System.getProperty("com.jacob.debug"));
     
     protected static boolean isDebugEnabled(){

@@ -1,4 +1,4 @@
-package samples.test;
+package com.jacob.com;
 
 /**
  * SF 1085370

@@ -168,7 +168,7 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 	jclass vClass = NULL;
 	// do this in a JACOB 1.8 backwards compatable way
 	// this succeeds if the class was loaded from the bootstrap class loader
-    vClass = env->FindClass("com/jacob/com/Variant");
+    //vClass = env->FindClass("com/jacob/com/Variant");
     // this is guarenteed to work so there really isn't any need for the line above
     // but I don't want to bust anything so we leave it in
     // the following code exists to support launchers like JWS where jacob isn't 

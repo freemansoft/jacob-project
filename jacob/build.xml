@@ -111,6 +111,7 @@
 		<echo>Packaging java classes...</echo>		
 		<jar destfile="${jacob.jar}" basedir="${jacob_java.bin}" update="false">
 			<exclude name="**/CVS" />
+			<exclude name="com/**/*Test.class"/>
 			<include name="com/**/*.class" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />

@@ -10,9 +10,11 @@ public class ROTTest {
         int sizeAfterBuild = 0;
         int sizeAfterGC = 0;
 
-        System.out.println("creating 10,000 objects");
+        System.out.println("creating 10,000 object sets");
         for ( int i = 0 ; i <= 10000; i++){
-            new JacobObject();
+            SafeArray a1 = new SafeArray(Variant.VariantVariant, 2);
+            a1.setVariant(0, new Variant("foo"));
+            a1.setVariant(1, new Variant("bar"));
         }
         sizeAfterBuild = ROT.getThreadObjects().size();
         if (sizeAfterBuild < 10000){

@@ -141,6 +141,7 @@ public class EnumVariant extends JacobObject implements java.util.Enumeration {
      */
     public void safeRelease()
     {
+        super.safeRelease();
         if (m_pIEnumVARIANT != 0){
             this.release();
             m_pIEnumVARIANT = 0;

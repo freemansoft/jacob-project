@@ -293,10 +293,17 @@ public class Variant extends JacobObject implements java.io.Serializable
 
   public Object toScriptObject() { return toDispatch(); }
 
+  /**
+   * public constructor
+   */
   public Variant()
   {
     init();
     putEmpty();
+    if (isDebugEnabled()){
+        debug("create "+getClass().getName()+
+                " in thread "+Thread.currentThread().getName());
+    }    
   }
 
   public Variant(int in)
@@ -405,6 +412,7 @@ public class Variant extends JacobObject implements java.io.Serializable
    */
   protected void finalize()
   {
+      super.safeRelease();
       safeRelease();
   }
   
@@ -414,6 +422,7 @@ public class Variant extends JacobObject implements java.io.Serializable
    */
   public void safeRelease()
   {
+    super.safeRelease();
     if (m_pVariant != 0) {
         release();
         m_pVariant = 0;

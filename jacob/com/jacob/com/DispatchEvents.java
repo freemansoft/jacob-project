@@ -30,17 +30,26 @@
 package com.jacob.com;
 
 /**
- * ???
+ * This class creates the scaffolding for event callbacks.
+ * 
  */
 public class DispatchEvents extends JacobObject {
     int m_pConnPtProxy = 0;
 
     /**
+     * create a permanent reference to this Variant so that
+     * it never gets garbage collected.   The 
+     * Dispatch proxies will keep a handle on this so
+     * we don't really want it released
+     */
+    private static Variant prototypicalVariant = new VariantViaEvent();
+    
+    /**
      * @param src
      * @param sink
      */
     public DispatchEvents(Dispatch src, Object sink) {
-        init(src, sink, new Variant());
+        init(src, sink, prototypicalVariant);
     }
 
     /**
@@ -49,7 +58,7 @@ public class DispatchEvents extends JacobObject {
      * @param progId
      */
     public DispatchEvents(Dispatch src, Object sink, String progId) {
-        init2(src, sink, new Variant(), progId);
+        init2(src, sink, prototypicalVariant, progId);
     }
 
     /**
@@ -88,6 +97,7 @@ public class DispatchEvents extends JacobObject {
      * @see com.jacob.com.JacobObject#safeRelease()
      */
     public void safeRelease(){
+        super.safeRelease();
         if (m_pConnPtProxy != 0){
             release();
             m_pConnPtProxy = 0;

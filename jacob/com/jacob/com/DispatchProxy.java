@@ -82,6 +82,7 @@ public class DispatchProxy extends JacobObject {
      */
     public void safeRelease()
     {
+        super.safeRelease();
         if (m_pStream != 0){
             release();
             m_pStream = 0;

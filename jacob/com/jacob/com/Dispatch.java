@@ -206,6 +206,7 @@ public class Dispatch extends JacobObject
      */
     public void safeRelease()
     {
+        super.safeRelease();
         if (m_pDispatch != 0){
             release();
             m_pDispatch = 0;
