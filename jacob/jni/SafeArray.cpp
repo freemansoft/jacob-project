@@ -1714,8 +1714,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString__IILjava_lang_Stri
     ThrowComFail(env, "safearray object corrupted", -1);
     return;
   } 
-  if (SafeArrayGetDim(sa) != 1) { 
-    ThrowComFail(env, "safearray is not 1D", -1); 
+  if (SafeArrayGetDim(sa) != 2) { 
+    ThrowComFail(env, "safearray is not 2D", -1); 
     return;
   }
   VARTYPE vt;
