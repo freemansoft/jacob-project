@@ -2107,7 +2107,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBoolean__IIZ
   }
   if (SafeArrayGetDim(sa) != 2) {
     ThrowComFail(env, "safearray is not 2D", -1);
-    return NULL;
+    return;
   } 
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
