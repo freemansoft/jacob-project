@@ -29,6 +29,8 @@ The package target creates the
 	javadoc and 
 	zip files
 
+ECLIPSE
+
 Eclipse users will have to do some minor tweaks to their project if they 
 want to use the integrated build process.  This is because the unit
 tests are com.jacob.com files located in the unittest directory while
@@ -38,6 +40,11 @@ the jacob files themselves are in com.jacob.com off the root directory.
 	Remove the root of the project from the build path
 	Add folders samples, src and unittest to the build path
 	Exclude *.txt from each of the newly added folders.  
+	
+A couple of the samples require a J2EE library in order to compile. This
+means you'll have to add a J2EE jar file to your classpath.  This
+isn't a problem when using ANT because the Servlet examples are excluded
+from the build.
 	
 	
 	
