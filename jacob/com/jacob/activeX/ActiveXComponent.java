@@ -32,15 +32,30 @@ package com.jacob.activeX;
 import com.jacob.com.*;
 
 /**
- * This class simulates com.ms.activeX.ActiveXComponent only as it used for
- * creating Dispatch objects
+ * This class provides a higher level, more object like, wrapper for
+ * top of the Dispatch object.  The Dispatch class's method essentially 
+ * directly map to Microsoft C API including the first parameter that is
+ * almost always the target of the message.
+ * ActiveXComponent assumes the target of every message is the MS
+ * COM object behind the ActiveXComponent.  This removes the need
+ * to pass the Dispatch object into every method.
+ * <p>
+ * It is really up to the developer as to whether they want to 
+ * use the Dispatch interface or the ActiveXComponent interface.
+ * <p>
+ * This class simulates com.ms.activeX.ActiveXComponent only in
+ * the senese that it is used for creating Dispatch objects
  */
 public class ActiveXComponent extends Dispatch {
     /**
-     * @param progid
+     * Normally used to create a new connection to a microsoft application.
+     * The passed in parameter is the name of the program as registred
+     * in the registry.  It can also be the object name.
+     * <pre>new ActiveXComponent("ScriptControl");</pre>
+     * @param programId
      */
-    public ActiveXComponent(String progid) {
-        super(progid);
+    public ActiveXComponent(String programId) {
+        super(programId);
     }
 
     /**
@@ -55,7 +70,9 @@ public class ActiveXComponent extends Dispatch {
     }
 
     /**
-     * @return actually returns this bject
+     * Probably was a cover for something else in the past.
+     * Should be depricated.
+     * @return Now it actually returns this exact same object.
      */
     public Dispatch getObject() {
         return this;
@@ -186,7 +203,7 @@ public class ActiveXComponent extends Dispatch {
     }
 
     /**
-     * sets teh property as an int value
+     * sets the property as an int value
      * @param propName
      * @param propValue the int value we want the prop to be set to.
      */

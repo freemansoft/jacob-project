@@ -35,15 +35,20 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * The Running Object Table (ROT) maps each thread to a vector of all the
+ * The Running Object Table (ROT) maps each thread to a collection of all the
  * JacobObjects that were created in that thread. It always operates on the
  * current thread so all the methods are static and they implicitly get the
- * current thread. Conceptually, this is similar to the ThreadLocal class of
- * Java 1.2 but we are also supporting Java 1.6 The clearObjects method is used
- * to release all the COM objects created by Jacob in the current thread prior
- * to uninitializing COM for that thread. If we leave this job to the garbage
- * collector, then finalize might get called from a separate thread which is not
- * initialized for COM, and also the component itself may have been freed.
+ * current thread. 
+ * <p>
+ * The clearObjects method is used to release all the COM objects created by Jacob 
+ * in the current thread prior to uninitializing COM for that thread. 
+ * <p>
+ * Prior to 1.9, manual garbage collection was the only option in Jacob, but
+ * from 1.9 onward, setting the com.jacob.autogc system property
+ * allows the objects referenced by the ROT to be automatically GCed.
+ * <p>
+ * TODO : explain when automatic GC is preferable, and when it isn't. 
+ * Is [ 1116101 ] jacob-msg 0284 relevant???
  */
 public abstract class ROT {
     /**

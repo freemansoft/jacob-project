@@ -36,6 +36,10 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
+ * The superclass of all Jacob objects.  It is used to
+ * create a standard API framework and to facillitate memory management
+ * for Java and COM memory elements.
+ * <p>
  * All COM object created by JACOB extend this class so that we can
  * automatically release them when the thread is detached from COM - if we leave
  * it to the finalizer it will call the release from another thread, which may
@@ -46,12 +50,18 @@ public class JacobObject {
     private static String buildDate = "";
 
     /**
-     *  Standard constructor
+     *  Standard constructor that adds this JacobObject
+     * to the memory management pool.
      */
     public JacobObject() {
         ROT.addObject(this);
     }
 
+    /**
+     * Loads version information from version.properties that was 
+     * built as part of this release.
+     *
+     */
     private static void loadVersionProperties(){
         Properties versionProps = new Properties();
         // can't use system class loader cause won't work in jws

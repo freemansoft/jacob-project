@@ -31,9 +31,22 @@ package com.jacob.com;
 
 /**
  * This class creates the scaffolding for event callbacks.
+ * Every instance of tis acts as a wrapper around some java object
+ * that wants callbacks from the microsoft side.  It represents
+ * the connection between Java and COM for callbacks.
+ * <p>
+ * The callback mechanism will take any event that it receives and
+ * try and find a java method with the same name that accepts the
+ * Variant... as a parameter.  It will then wrap the call back data
+ * in the Variant array and call the java method of the object
+ * that this DispatchEvents object was initialized with.
  * 
  */
 public class DispatchEvents extends JacobObject {
+    
+    /**
+     * ponter to an MS data struct.
+     */
     int m_pConnPtProxy = 0;
 
     /**
@@ -45,20 +58,26 @@ public class DispatchEvents extends JacobObject {
     private static Variant prototypicalVariant = new VariantViaEvent();
     
     /**
-     * @param src
-     * @param sink
+     * Creates the event callback linkage between the the
+     * MS program represented by the Dispatch object and the
+     * Java object that will receive the callback.
+     * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
+     * @param eventSink Java object that wants to receive the events
      */
-    public DispatchEvents(Dispatch src, Object sink) {
-        init(src, sink, prototypicalVariant);
+    public DispatchEvents(Dispatch sourceOfEvent, Object eventSink) {
+        init(sourceOfEvent, eventSink, prototypicalVariant);
     }
 
     /**
-     * @param src
-     * @param sink
+     * Creates the event callback linkage between the the
+     * MS program represented by the Dispatch object and the
+     * Java object that will receive the callback.
+     * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
+     * @param eventSink Java object that wants to receive the events
      * @param progId
      */
-    public DispatchEvents(Dispatch src, Object sink, String progId) {
-        init2(src, sink, prototypicalVariant, progId);
+    public DispatchEvents(Dispatch sourceOfEvent, Object eventSink, String progId) {
+        init2(sourceOfEvent, eventSink, prototypicalVariant, progId);
     }
 
     /**

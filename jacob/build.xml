@@ -222,8 +222,8 @@
 			<tag name="todo" scope="all" description="To do:" />
 			<group title="Jacob COM" packages="com.jacob.com/**"/>
 			<group title="Higher Level Active X" packages="com.jacob.activeX/**"/>
-			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="C:\tmp"/>
-			<link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+			<link offline="true" href="http://java.sun.com/j2se/1.4.2/docs/api/" packagelistLoc="C:\tmp"/>
+			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
 		</javadoc>
 		<defaultexcludes default="true"/>
 	</target>
