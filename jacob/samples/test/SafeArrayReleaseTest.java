@@ -22,7 +22,7 @@ package samples.test;
 	contains a pointer to the same SAFEARRAY like this:
 	
 	+-----------+
-	|SafeArray  | +------------+
+	|SafeArray  | +------------+ 
 	| m_pV--->VARIANT(a) |
 	+-----------+ | VT_ARRAY| +---------+
 	| parray---->SAFEARRAY|
@@ -68,20 +68,36 @@ package samples.test;
  */
 import com.jacob.com.*;
 
-public class SafeArrayReleaseTest {
-    public static void main(String[] args) {
-        try {
-            ComThread.InitMTA();
-            for (int i = 0; i < 200; i++) {
-                SafeArray a1 = new SafeArray(Variant.VariantVariant, 2);
-                a1.setVariant(0, new Variant("foo"));
-                a1.setVariant(1, new Variant("bar"));
-                Variant v = new Variant(a1);
-                SafeArray a2 = v.toSafeArray(true);
+public class SafeArrayReleaseTest 
+{
+    final static int MAX = 300; 
+    public static void main(String[] args) 
+    {
+        int count;
+        System.out.println("Starting test for max = "+MAX);
+        for(count = 1; count<MAX; count++)
+        {
+            int i = 0;
+            try 
+            {
+                ComThread.InitMTA();
+                for (i = 0; i < count; i++) 
+                {
+                    SafeArray a1 = new SafeArray(Variant.VariantVariant, 2);
+                    a1.setVariant(0, new Variant("foo"));
+                    a1.setVariant(1, new Variant("bar"));
+                    Variant v = new Variant(a1);
+                    SafeArray a2 = v.toSafeArray(true);
+                }
+                ComThread.Release();
+            } 
+            catch (Exception e) 
+            {
+                System.out.println("Test fails with i = " + i + " (max = "+MAX+")");
+                e.printStackTrace();
+                break;
             }
-            ComThread.Release();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        System.out.println("Test ends with count = " + count + " (max = "+MAX+")");
     }
 }
