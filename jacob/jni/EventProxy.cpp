@@ -28,6 +28,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "EventProxy.h"
+#include "Variant.h"
 
 // hook myself up as a listener for delegate
 EventProxy::EventProxy(JNIEnv *env, jobject aSinkObj, 
@@ -826,6 +827,7 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 
 
 	  }
+      zeroVariant(env, arg);
       env->DeleteLocalRef(arg);
     }
     // End code from Jiffie team that copies parameters back from java to COM

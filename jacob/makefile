@@ -1,19 +1,30 @@
-RELEASE = 1_9
-JAVAC = d:\j2sdk1.4.2_06\bin\javac -O
-JAR = d:\j2sdk1.4.2_06\bin\jar
+#
+#
+#
+RELEASE_MAJOR = 1_9
+RELEASE_MINOR = -pre1
+JDK = d:\j2sdk1.4.2_06
+JAVAC = $(JDK)\bin\javac -O
+JAR = $(JDK)\bin\jar
 COM_DIR = com\jacob\com
 ACX_DIR = com\jacob\activeX
 
-all: java jni
-	@echo about to remove zipfiles
-		echo This package contains Jacob release $(RELEASE) > RELEASE.TXT
-        del jacobSrc_*.zip jacobBin_*.zip
-        del com\jacob\com\*.class
-        del jni\*.obj jni\jacob.dll jni\jacob.exp jni\jacob.lib
-        @echo about to jar source                    
-        @$(JAR) -cvf jacobSrc_$(RELEASE).zip RELEASE.TXT LICENSE.TXT com docs jni samples vstudio makefile
+help:
+	@echo run "nmake build" to build the code 
+	@echo run "nmake createZips" to remove obj and class files and create the zip files
+
+build: java jni
+
+#
+# we really nee dtou build with ANT.  That would make
+# it easy to exclude the CVS directories
+#
+createZips:: build clean
+	echo This package contains Jacob release $(RELEASE_MAJOR)$(RELEASE_MINOR) > RELEASE.txt
+    @echo about to jar source                    
+    	@$(JAR) -cvf jacobSrc_$(RELEASE_MAJOR)$(RELEASE_MINOR).zip RELEASE.txt LICENSE.TXT com docs jni samples vstudio makefile
 	@echo about to jar bin
-        @$(JAR) -cvf jacobBin_$(RELEASE).zip RELEASE.TXT jacob.dll jacob.jar LICENSE.TXT docs samples
+	    @$(JAR) -cvf jacobBin_$(RELEASE_MAJOR)$(RELEASE_MINOR).zip RELEASE.txt jacob.dll jacob.jar LICENSE.TXT docs samples
 
 java::
 	$(JAVAC) $(COM_DIR)\*.java $(ACX_DIR)\*.java
@@ -23,3 +34,10 @@ jni::
  	@cd jni
 	@nmake -f makefile all
 	@cd ..\
+
+clean::	
+	@echo about to cleanup compiled files and zipfiles
+		if exist release rmdir /s /q release
+        del jacobSrc_*.zip jacobBin_*.zip
+        del $(COM_DIR)\*.class $(ACX_DIR)\*.class
+        del jni\*.obj jni\jacob.dll jni\jacob.exp jni\jacob.lib

@@ -91,6 +91,25 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_init
   env->SetIntField(_this, jf, (unsigned int)v);
 }
 
+
+/*
+ * Class:     com_jacob_com_Variant
+ * Method:    zeroVariant
+ * Signature: ()V
+ *
+ * This should only be used on variant objects created by teh
+ * com layer as part of a call through EventProxy.
+ * This zeros out the variant pointer in the Variant object
+ * so that the calling COM program can free the memory.
+ * instead of both the COM program and the Java GC doing it.
+ */
+void zeroVariant(JNIEnv *env, jobject _this)
+{
+  jclass clazz = env->GetObjectClass(_this);
+  jfieldID jf = env->GetFieldID(clazz, VARIANT_FLD, "I");
+  env->SetIntField(_this, jf, (unsigned int)0);
+}
+
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_Save
   (JNIEnv *env, jobject _this, jobject outStream)
 {
