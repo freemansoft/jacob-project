@@ -248,6 +248,8 @@ public class Dispatch extends JacobObject
             return (Variant) o;
         if (o instanceof Integer)
             return new Variant(((Integer) o).intValue());
+        if (o instanceof Short)
+            return new Variant(((Short) o).shortValue());
         if (o instanceof String)
             return new Variant((String) o);
         if (o instanceof Boolean)
