@@ -34,15 +34,17 @@
 
 	<property name="application.title" value="JACOB : Java COM Bridge" />
 	<property name="application.vendor" value="http://jacob-project.sourceforge.net, created by Dan Adler (http://danadler.com)" />
-	<property name="instal.dir" value="${basedir}/release" />
+	<property name="install.dir" value="${basedir}/release" />
 	
 	<property name="jacob_java.src" value="${basedir}" />
-	<property name="jacob_java.bin" value="${instal.dir}" />
+	<property name="jacob_java.bin" value="${install.dir}" />
 	<property name="jacob_cpp.src" value="${basedir}/jni" />
-	<property name="jacob_cpp.bin" value="${instal.dir}/jni" />
+	<property name="jacob_cpp.bin" value="${install.dir}/jni" />
+	<property name="jacob_zip.src" value="${install.dir}/JacobSrc_${version}.zip" />
+	<property name="jacob_zip.bin" value="${install.dir}/JacobBin_${version}.zip" />
 	
-	<property name="jacob.jar" value="${instal.dir}/jacob.jar" />
-	<property name="jacob.dll" value="${instal.dir}/jacob.dll" />
+	<property name="jacob.jar" value="${install.dir}/jacob.jar" />
+	<property name="jacob.dll" value="${install.dir}/jacob.dll" />
 	
 	<property name="compiler" value="${MSDEVDIR}\bin\cl.exe" />
 	<property name="linker"  value="${MSDEVDIR}\bin\link.exe" />
@@ -50,7 +52,7 @@
 	<!-- ================================= 
           target: default              
          ================================= -->
-	<target name="default" depends="createDirectoryStructure,build_jacob_jar,build_jacob_dll">
+	<target name="default" depends="createDirectoryStructure,jacob_java_bin_jar,build_jacob_dll">
 
 		<echo message="Jacob ${version} build ${build.iteration} : finished on ${build.date}" />
 	</target>
@@ -71,7 +73,7 @@
 	<target name="createDirectoryStructure">
 		<mkdir dir="${jacob_java.bin}"/>
 		<mkdir dir="${jacob_cpp.bin}"/>
-		<mkdir dir="${instal.dir}"/>
+		<mkdir dir="${install.dir}"/>
 	</target>
 
 	<!-- ======================================================================
@@ -91,7 +93,7 @@
 	<!-- ======================================================================
 		      Compile the java files and package the classes into a JAR.             
 		 ================================================================== -->
-	<target name="build_jacob_jar" depends="createDirectoryStructure,checkJarUpToDate,IncrementBuildNumber" unless="jarUpToDate">
+	<target name="jacob_java_bin_jar" depends="createDirectoryStructure,checkJarUpToDate,IncrementBuildNumber" unless="jarUpToDate">
 		<echo>Clean up the target folders and file, for safety</echo>
 		<delete file="${jacob.jar}" />
 		<delete dir="${jacob_java.bin}/com" />
@@ -182,20 +184,37 @@
 	<!-- ======================================================================
 		       Use this target to package all the files for a release
 		 ================================================================== -->
-	<target name="PackageRelease" depends="createDirectoryStructure,build_jacob_dll,build_jacob_jar">
+	<target name="PackageRelease" depends="createDirectoryStructure,build_jacob_dll,jacob_java_bin_jar">
 
 		<echo>Packaging release...</echo>
-		<zip basedir="${application.dir}" destfile="${releases.folder}/jacob_${version}.zip">
+		<zip basedir="${basedir}" 
+			destfile="${install.dir}/jacob_${version}.zip">
 			<exclude name="**/CVS" />
-			<include name="jacob.jar" />
-			<include name="jacob.dll" />
+			<exclude name="**/*.obj" />
+			<exclude name="**/*.class" />
+			<include name="docs/**" />
+			<include name="samples/**" />
+			<include name="LICENSE.*" />
+			<include name="version.properties" />
+			<fileset dir="${install.dir}" includes="jacob.jar jacob.dll"/>
 		</zip>
-		<zip basedir="${application.dir}" destfile="${releases.folder}/jacob_${version}_src.zip">
+		<zip basedir="${basedir}" 
+			destfile="${install.dir}/jacob_${version}_src.zip">
 			<exclude name="**/CVS" />
-			<include name="jacob.jar" />
-			<include name="jacob.dll" />
-			<include name="src/**/*.*" />
-			<include name="jni/*.*" />
+			<exclude name="**/*.obj" />
+			<exclude name="**/*.class" />
+			<exclude name="**/*.dll" />
+			<exclude name="**/*.exp" />
+			<exclude name="**/*.jar" />
+			<include name="com/**" />
+			<include name="docs/**" />
+			<include name="jni/**" />
+			<include name="samples/**" />
+			<include name="vstudio/**" />
+			<include name="build.xml" />
+			<include name="makefile" />
+			<include name="LICENSE.*" />
+			<include name="version.properties" />
 		</zip>
 	</target>
 </project>
