@@ -3,57 +3,89 @@
 
 <li>
 <b>Event Callbacks</b>
-Variant parameters can now be modified by the receiver to be passed
-back to the COM caller
+<ul>
+
+<li>Variant parameters can now be modified by the receiver to be passed
+back to the COM caller </li>
+<li>Callbacks can now be received when running in JWS</li>
+
+</ul>
+
 </li>
 
 
 <li>
 <b>Dispatch API Clarifications</B>
-All static method's first parameters have been more strongly typed
+<ul>
+
+<li>All static method's first parameters have been more strongly typed
 to the Dispatch class, rather than Object.  This may call for code
 changes in the cases of code that just asigned Dispatch objects 
-to variables of type Object rather than Dispatch or one of its subclasses
+to variables of type Object rather than Dispatch or one of its subclasses </li>
+
+</ul>
+
 </li>
 
 <li>
 <b>Dispatch subclasses are now supported with pointer modifying constructor</b>
-Dispatch and ActiveXComponent now includes a constructor to be used by Dispatch subclasses
+<ul>
+
+<li>Dispatch and ActiveXComponent now includes a constructor to be used by Dispatch subclasses
 that swaps the pointers around.  This eliminates the need for every Dispatch subclass
 to have a constructor that swapped and nulled the pointers to the COM layer.
-All samples have updated to use the new api
+All samples have updated to use the new api </li>
+
+</ul>
+
 </li>
 
 <li>
-<b>ActiveXComponent can return ActiveXComponets</b>
-Methods have been added to the ActiveXComponents to retrieve
+<b>ActiveXComponent has been upgraded</b><ul>
+
+<li>ActiveXComponent methods return ActiveXComponets </li>
+<li>Methods have been added to the ActiveXComponents to retrieve
 parameters as Dispatch objects or ActiveX components.  The
 Script Tests have been updated to show the same programs in Dispatch
-format or ActiveXComponentFormat
+format or ActiveXComponentFormat </li>
+
+</ul>
+
 </li>
 
 <li>
 <b>JNI Changes</b>
-Object removal has been accellerated through the use of hash maps in the ROT class.
-<p>
-Array dimension checking fixed for certain boolean set and get functions
-<p>
-Alternative method for finding Variant class for callbacks in JWS
+<ul>
+
+<li>Object removal has been accellerated through the use of hash maps in the ROT class.
+</li>
+<li>Array dimension checking fixed for certain boolean set and get functions
+</li>
+<li>Alternative method for finding Variant class for callbacks in JWS
 or other application lanchers where the system classloader does not
-know about jacob classes.
-<p>
-EventProxy zeros out the com object reference in the Variant objects
+know about jacob classes. </li>
+<li>Unicode is supported for putString and putStringRef</li>
+<li>EventProxy zeros out the com object reference in the Variant objects
 that are created by EventProxy so that they are not double released, 
 by both the Java VM and calling code from the COM side.  The caller
 is supposed to be responsible for releasing the memory it created.
-This fix only applies to Variants created in callbacks.
+This fix only applies to Variants created in callbacks. </li>
+
+</ul>
+
 </li>
 
 <li>
 <b>Build Changes</b>
-The project can now be built using just MS command line commands
+<ul>
+
+<li>The project can now be built using just MS command line commands
 and nmake.  Previous builds required some unix style command line
-tools like 'cp'
+tools like 'cp' </li>
+<li>src and bin zip files are now built with release name from the makefile</li>
+
+</ul>
+
 </li>
 
 </ul>
@@ -170,5 +202,4 @@ and at the bottom of the page is a link that says:
 Microsoft SDK for Java 4.0 Documentation Only. You should download
 that file and install it. Then, view sdkdocs.chm and look for
 "Microsoft Packages Reference". Hopefully, the next release of
-JACOB will include full javadoc (volunteers?)...
-</li>
+JACOB will include full javadoc (volunteers?)...</li>
