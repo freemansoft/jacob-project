@@ -15,7 +15,7 @@ import com.jacob.com.Dispatch;
  * I am comitting this to the tree just in case we need to come back to it.
  */
 public class PowerpointTest extends Thread {      
-	private static final int NUM_THREADS = 3;
+	private static final int NUM_THREADS = 5;
     protected static final int NUM_ITERATIONS = 50;    
           
     private static String POWERPOINT_TEST_PATH = 
