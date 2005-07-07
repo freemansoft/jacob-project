@@ -58,7 +58,7 @@ JNIEXPORT jint JNICALL
 Java_com_jacob_com_EnumVariant_Next(JNIEnv* env, jobject _this, jobjectArray vars)
 {
   IEnumVARIANT* self = extractEnumVariant(env, _this);
-	printf("self=%x\n", self);
+	//printf("self=%x\n", self);
   if(self == NULL)
     return 0;
 
