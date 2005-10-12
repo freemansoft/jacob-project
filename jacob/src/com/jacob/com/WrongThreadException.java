@@ -27,7 +27,7 @@
 package com.jacob.com;
 
 /**
- * TODO: Exception thrown when?  No references found
+ * thrown in util.cpp
  */
 public class WrongThreadException extends RuntimeException {
     /**

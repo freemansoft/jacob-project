@@ -75,7 +75,9 @@ public abstract class ROT {
             // nothing to do
         } else {
             Map tab = null;
-            if (JacobObject.isDebugEnabled()){ JacobObject.debug("Automatic GC flag == "+USE_AUTOMATIC_GARBAGE_COLLECTION);}
+            if (JacobObject.isDebugEnabled()){ 
+            	JacobObject.debug("ROT: Automatic GC flag == "+ USE_AUTOMATIC_GARBAGE_COLLECTION 
+            			);}
             if (!USE_AUTOMATIC_GARBAGE_COLLECTION){
                 tab = new HashMap();
             } else {
@@ -112,8 +114,13 @@ public abstract class ROT {
      */
     protected static void clearObjects() {
         Map tab = getThreadObjects(false);
-        if (JacobObject.isDebugEnabled()){ JacobObject.debug("starting clear objects");}
+        if (JacobObject.isDebugEnabled()){ 
+        	JacobObject.debug("ROT: "+rot.keySet().size()+" thread tables exist");
+        }
         if (tab != null){
+            if (JacobObject.isDebugEnabled()){ 
+            	JacobObject.debug("ROT: "+tab.keySet().size()+ " objects to clear in this thread " );
+            }
             // walk the values
             Iterator it;
             if (USE_AUTOMATIC_GARBAGE_COLLECTION){
@@ -128,7 +135,9 @@ public abstract class ROT {
                     // and we get an exceptin modifying the collection while iterating
                     // && o.toString() != null
                 ){
-                    if (JacobObject.isDebugEnabled()){ JacobObject.debug(" removing "+o.getClass().getName());}
+                    if (JacobObject.isDebugEnabled()){ 
+                    	JacobObject.debug("ROT: removing "+o+"->"+o.getClass().getName());
+                	}
                     o.safeRelease();
                 }
                 // used to be an iterator.remove() but why bother when we're nuking them all anyway?
@@ -137,8 +146,11 @@ public abstract class ROT {
             tab.clear();
             // remove the collection from rot
             rot.remove(Thread.currentThread().getName());
+            if (JacobObject.isDebugEnabled()){ 
+            	JacobObject.debug("ROT: thread table cleared and removed");
+        	}
         } else {
-            if (JacobObject.isDebugEnabled()){ JacobObject.debug("nothing to clear!");}
+            if (JacobObject.isDebugEnabled()){ JacobObject.debug("ROT: nothing to clear!");}
         }
     }
 
@@ -192,8 +204,6 @@ public abstract class ROT {
      * @param o
      */
     protected static void addObject(JacobObject o) {
-        String t_name = Thread.currentThread().getName();
-        if (JacobObject.isDebugEnabled()){ JacobObject.debug(" add:"+o+"->"+o.getClass().getName());}
         Map tab = getThreadObjects(false);
         if (tab == null) {
             // this thread has not been initialized as a COM thread
@@ -201,9 +211,12 @@ public abstract class ROT {
             ComThread.InitMTA(false);
             tab = getThreadObjects(true);
         }
+        if (JacobObject.isDebugEnabled()){ 
+        	JacobObject.debug(
+        			"ROT: adding "+o+"->"+o.getClass().getName() +
+        			" table size prior to addition:" +tab.size());}
         if (tab != null) {
             tab.put(getMapKey(tab,o),getMapValue(tab,o));
-            if (JacobObject.isDebugEnabled()){ JacobObject.debug(" ROT thread table size after addition is :"+tab.size());}
         }
     }
 

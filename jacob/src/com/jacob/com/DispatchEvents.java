@@ -48,14 +48,11 @@ public class DispatchEvents extends JacobObject {
      * ponter to an MS data struct.
      */
     int m_pConnPtProxy = 0;
-
     /**
-     * create a permanent reference to this Variant so that
-     * it never gets garbage collected.   The 
-     * Dispatch proxies will keep a handle on this so
-     * we don't really want it released
+     * the wrapper for the event sink
      */
-    private static Variant prototypicalVariant = new VariantViaEvent();
+    InvocationProxy mInvocationProxy = null;
+
     
     /**
      * Creates the event callback linkage between the the
@@ -65,7 +62,12 @@ public class DispatchEvents extends JacobObject {
      * @param eventSink Java object that wants to receive the events
      */
     public DispatchEvents(Dispatch sourceOfEvent, Object eventSink) {
-        init(sourceOfEvent, eventSink, prototypicalVariant);
+		if (JacobObject.isDebugEnabled()){
+			System.out.println(
+					"DispatchEvents: Registering "+ eventSink + "for events ");
+		}
+    	mInvocationProxy = new InvocationProxy(eventSink);
+        init(sourceOfEvent, mInvocationProxy);
     }
 
     /**
@@ -77,31 +79,32 @@ public class DispatchEvents extends JacobObject {
      * @param progId
      */
     public DispatchEvents(Dispatch sourceOfEvent, Object eventSink, String progId) {
-        init2(sourceOfEvent, eventSink, prototypicalVariant, progId);
+		if (JacobObject.isDebugEnabled()){
+			System.out.println(
+					"DispatchEvents: Registering "+ eventSink + "for events ");
+		}
+    	mInvocationProxy = new InvocationProxy(eventSink);
+        init2(sourceOfEvent, mInvocationProxy, progId);
     }
 
     /**
      * hooks up a connection point proxy by progId
      * event methods on the sink object will be called
      * by name with a signature of <name>(Variant[] args)
-     * protoVariant is a sacrificial variant object so we don't have to do findClass in callbacks
      * @param src
      * @param sink
-     * @param protoVariant
      */
-    protected native void init(Dispatch src, Object sink, Object protoVariant);
+    protected native void init(Dispatch src, Object sink);
 
     /**
      * hooks up a connection point proxy by progId
      * event methods on the sink object will be called
      * by name with a signature of <name>(Variant[] args)
-     * protoVariant is a sacrificial variant object so we don't have to do findClass in callbacks
      * @param src
      * @param sink
-     * @param protoVariant
      * @param progId
      */
-    protected native void init2(Dispatch src, Object sink, Object protoVariant, String progId);
+    protected native void init2(Dispatch src, Object sink, String progId);
 
     /**
      *  now private so only this object can asccess
@@ -123,13 +126,17 @@ public class DispatchEvents extends JacobObject {
      * @see com.jacob.com.JacobObject#safeRelease()
      */
     public void safeRelease(){
+    	if (mInvocationProxy!=null){
+    		mInvocationProxy.clearTarget();
+    	}
+        mInvocationProxy = null;
         super.safeRelease();
         if (m_pConnPtProxy != 0){
             release();
             m_pConnPtProxy = 0;
         } else {
             // looks like a double release
-            if (isDebugEnabled()){debug(this.getClass().getName()+":"+this.hashCode()+" double release");}
+            if (isDebugEnabled()){debug("DispatchEvents:"+this.hashCode()+" double release");}
         }
     }
 

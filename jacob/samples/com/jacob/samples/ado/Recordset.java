@@ -16,10 +16,7 @@ public class Recordset extends Dispatch
 	 */
 	public Recordset(Dispatch d)
 	{
-		// take over the IDispatch pointer
-	  m_pDispatch = d.m_pDispatch;
-		// null out the input's pointer
-		d.m_pDispatch = 0;
+		super(d);
 	}
 
   public Variant getProperties()

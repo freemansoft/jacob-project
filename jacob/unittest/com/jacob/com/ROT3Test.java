@@ -74,7 +74,7 @@ class ROT3TestThread extends Thread
             String message = "";
             message = getName()+" Workingset=" +ThreadObjects.size()
             	+" ROT: "+ROT.getThreadObjects(true).hashCode();
-			message += "before mods and gc "+ROT.getThreadObjects(true).size()+")";
+			message += " before mods and gc "+ROT.getThreadObjects(true).size()+")";
             // if there is an odd number of objects greater than 2
             if (ThreadObjects.size() > 10)
             {

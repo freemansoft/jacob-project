@@ -379,7 +379,12 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putStringRef
     VariantClear(v); // whatever was there before
 
 	const jchar *cStr = env->GetStringChars(s,NULL);
-    CComBSTR bs(cStr);
+	// SF 1314116 
+	// DBeck: 2005-09-23: changed CComBSTR c-tor to accept
+	//	Unicode string (no terminating NULL) provided by GetStringChars
+	const jsize numChars = env->GetStringLength(s);
+    //CComBSTR bs(cStr);
+	CComBSTR bs( numChars, cStr );
 
     BSTR *pbs = (BSTR *)CoTaskMemAlloc(sizeof(BSTR));
     bs.CopyTo(pbs);
@@ -882,7 +887,12 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putString
     V_VT(v) = VT_BSTR;
 
     const jchar *cStr = env->GetStringChars(s,NULL);
-    CComBSTR bs(cStr);
+    // SF 1314116 
+	// DBeck: 2005-09-23: changed CComBSTR c-tor to accept
+	//	Unicode string (no terminating NULL) provided by GetStringChars
+	const jsize numChars = env->GetStringLength(s);
+    //CComBSTR bs(cStr);
+	CComBSTR bs( numChars, cStr );
 
     V_VT(v) = VT_BSTR;
     V_BSTR(v) = bs.Copy();

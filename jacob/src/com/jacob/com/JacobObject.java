@@ -31,9 +31,7 @@ package com.jacob.com;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 /**
  * The superclass of all Jacob objects.  It is used to
@@ -109,7 +107,7 @@ public class JacobObject {
     public void safeRelease() {
         // currently does nothing - subclasses may do something
         if (isDebugEnabled()){
-            debug(this.getClass().getName()+":"+this.hashCode()+" release");
+            debug(this.getClass().getName()+":"+this+":"+this.hashCode()+" release");
         }
     }
     
@@ -132,7 +130,8 @@ public class JacobObject {
     {
         if(isDebugEnabled())
         {
-            System.out.println(istrMessage);
+            System.out.println(istrMessage 
+            		+ " in thread "+ Thread.currentThread().getName());
         }
     }
     

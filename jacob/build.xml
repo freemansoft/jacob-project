@@ -158,7 +158,7 @@
 	<target name="jacob_c_compile" depends="createDirectoryStructure,jacob_c_check,IncrementBuildNumber" unless="dllUpToDate">
 		<echo>Clean up the target folders and file, for safety</echo>
 		<delete file="${jacob_cpp.bin}/**/*.*" />
-		<echo>Compiling C++ classes</echo>
+		<echo>Compiling C++ classes with JDK JNI library ${JDK}</echo>
 		<apply executable="${compiler}" dir="${jacob_cpp.bin}" parallel="false" verbose="true" failonerror="true">
 			<arg value="-c" />
 			<arg value="/nologo" />

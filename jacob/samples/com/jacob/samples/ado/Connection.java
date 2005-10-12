@@ -17,10 +17,7 @@ public class Connection extends Dispatch
 	 */
 	public Connection(Dispatch d)
 	{
-		// take over the IDispatch pointer
-	  m_pDispatch = d.m_pDispatch;
-		// null out the input's pointer
-		d.m_pDispatch = 0;
+		super(d);
 	}
 
   // need to wrap Properties

@@ -36,7 +36,7 @@ package com.jacob.com;
  */
 public class STA extends Thread {
     /**
-     * TODO: no references exist to this.  should it be dropped
+     * referenced by STA.cpp
      */
     public int threadID;
 

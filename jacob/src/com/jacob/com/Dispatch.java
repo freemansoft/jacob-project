@@ -163,8 +163,10 @@ public class Dispatch extends JacobObject
     }
 
     /**
-     * native call createIstnace only used by the constructor with the same parm
-     * type could this be private?
+     * native call createInstance only used by the constructor with the same parm
+     * type. This probably should be private
+     * <P>
+     * This ends up calling CoCreate down in the JNI layer
      * 
      * @param progid
      */
@@ -172,6 +174,17 @@ public class Dispatch extends JacobObject
 
     /**
      * return a different interface by IID string
+     * <p>
+     * Once you have a Dispatch object, you can navigate to the other 
+     * interfaces of a COM object by calling QueryInterafce. 
+     * The argument is an IID string in the format: 
+     * "{9BF24410-B2E0-11D4-A695-00104BFF3241}". You typically get 
+     * this string from the idl file (it's called uuid in there). 
+     * Any interface you try to use must be derived from IDispatch. T
+     * The atl example uses this.
+     * <p>
+     * The Dispatch instance resulting from this query is instanciated in the
+     * JNI code.
      * 
      * @param iid
      * @return Dispatch a disptach that matches ??
@@ -180,7 +193,9 @@ public class Dispatch extends JacobObject
 
     /**
      * Constructor that only gets called from JNI
-     * 
+     * QueryInterface calls JNI code that looks up the object 
+     * for the key passed in.  The JNI CODE then creates a new dispatch object
+     * using this constructor
      * @param pDisp
      */
     protected Dispatch(int pDisp) {

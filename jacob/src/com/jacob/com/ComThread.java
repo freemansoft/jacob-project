@@ -27,7 +27,9 @@
 package com.jacob.com;
 
 /**
- * represents a COM level thread 
+ * Represents a COM level thread 
+ * This is an abstract class because all the methods are static
+ * and no instances are ever created.
  */
 public abstract class ComThread {
     private static final int MTA = 0x0;
@@ -108,22 +110,22 @@ public abstract class ComThread {
             // to avoid COM creating its own
             startMainSTA();
         }
-        //System.out.println("before Init: "+mode);
+        if (JacobObject.isDebugEnabled()){JacobObject.debug("ComThread: before Init: "+mode);}
         doCoInitialize(mode);
-        //System.out.println("after Init");
+        if (JacobObject.isDebugEnabled()){JacobObject.debug("ComThread: after Init: "+mode);}
         ROT.addThread();
-        //System.out.println("after ROT.addThread");
+        if (JacobObject.isDebugEnabled()){JacobObject.debug("ComThread: after ROT.addThread: "+mode); }
     }
 
     /**
      * Call CoUninitialize to release this java thread from COM
      */
     public static synchronized void Release() {
-        //System.out.println("before clearObjects");
+        if (JacobObject.isDebugEnabled()){JacobObject.debug("ComThread: before clearObjects"); }
         ROT.clearObjects();
-        //System.out.println("before UnInit");
+        if (JacobObject.isDebugEnabled()){JacobObject.debug("ComThread: before UnInit"); }
         doCoUninitialize();
-        //System.out.println("after UnInit");
+        if (JacobObject.isDebugEnabled()){JacobObject.debug("ComThread: after UnInit"); }
     }
     
     /**

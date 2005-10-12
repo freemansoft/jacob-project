@@ -79,8 +79,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
   }
 
   jclass autoClass = env->FindClass("com/jacob/com/Dispatch");
-  jmethodID autoCons =
-  env->GetMethodID(autoClass, "<init>", "(I)V");
+  jmethodID autoCons = env->GetMethodID(autoClass, "<init>", "(I)V");
   // construct a Dispatch object to return
   // I am copying the pointer to java
   // jacob-msg 1817 - SF 1053871 :  QueryInterface already called AddRef!!

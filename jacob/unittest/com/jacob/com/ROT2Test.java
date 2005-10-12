@@ -8,7 +8,7 @@ package com.jacob.com;
  * This will eventually be changed to a unit test.
  * 
  * Run in Eclipse with command line arguments
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
+ * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=false
  */
 public class ROT2Test
 {

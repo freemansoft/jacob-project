@@ -472,8 +472,7 @@ public class Variant extends JacobObject implements java.io.Serializable {
         init();
         putEmpty();
         if (isDebugEnabled()) {
-            debug("create " + getClass().getName() + " in thread "
-                    + Thread.currentThread().getName());
+            debug("Variant: " +	"create " + this );
         }
     }
 
@@ -662,7 +661,7 @@ public class Variant extends JacobObject implements java.io.Serializable {
             // this should almost always happen due to gc
             // after someone has called ComThread.Release
             if (isDebugEnabled()) {
-                debug(this.getClass().getName() + ":" + this.hashCode()
+                debug("Variant: " + this.hashCode()
                         + " double release");
                 //Throwable x = new Throwable();
                 //x.printStackTrace();

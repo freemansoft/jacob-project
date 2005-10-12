@@ -74,7 +74,7 @@ void putProxy(JNIEnv *env, jobject arg, EventProxy *ep)
 JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init2
   (JNIEnv *env, 
   jobject _this, jobject src, 
-  jobject sink, jobject protoVariant, 
+  jobject sink, 
   jstring _progid)
 {
 	USES_CONVERSION;
@@ -111,7 +111,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init2
   //DWORD dwEventCookie;
   if (SUCCEEDED(hr))
   {
-    EventProxy *ep = new EventProxy(env, sink, protoVariant, pCP, eventIID, mNames, mIDs, n_EventMethods);
+    EventProxy *ep = new EventProxy(env, sink, pCP, eventIID, mNames, mIDs, n_EventMethods);
     // need to store ep on _this, in case it gets collected
     putProxy(env, _this, ep);
   } else {
@@ -125,9 +125,9 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init2
  * Signature: (LDispatch;Ljava/lang/Object;)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init
-  (JNIEnv *env, jobject _this, jobject src, jobject sink, jobject protoVariant)
+  (JNIEnv *env, jobject _this, jobject src, jobject sink)
 {
-	Java_com_jacob_com_DispatchEvents_init2(env,_this,src,sink, protoVariant, NULL);
+	Java_com_jacob_com_DispatchEvents_init2(env,_this,src,sink, NULL);
 }
 
 /*
