@@ -45,14 +45,43 @@ package com.jacob.com;
 public class DispatchEvents extends JacobObject {
     
     /**
-     * ponter to an MS data struct.
+     * pointer to an MS data struct.
+     * The COM layer knows the name of this variable and puts the windows
+     * memory pointer here.
      */
     int m_pConnPtProxy = 0;
     /**
-     * the wrapper for the event sink
+     * the wrapper for the event sink.
+     * This object is the one that will be sent a message when an event
+     * occurs in the MS layer.  Normally, the InvocationProxy will forward
+     * the messages to a wrapped object that it contains.
      */
     InvocationProxy mInvocationProxy = null;
 
+    
+    /**
+     * A constructor for those that want to supply their own InvocationProxy.
+     * or subclass (future implementations may take an interface).
+     * This lets someone distribute their events to other objects
+     * at the single method dispatch point.
+     * <p>
+     * Most users of this class will use the other constructors!
+     * 
+     * @param sourceOfEvent the Dispatch object that will send events
+     * @param pInvocationProxy the proxy object that expects to receive the
+     * 	events for some other object
+     */
+    public DispatchEvents(Dispatch sourceOfEvent, InvocationProxy pInvocationProxy){
+    	mInvocationProxy = pInvocationProxy;
+    	if (mInvocationProxy != null){
+    		init(sourceOfEvent, mInvocationProxy);
+    	} else {
+    		if (JacobObject.isDebugEnabled()){
+    			JacobObject.debug("Cannot register null invocation proxy for events");
+    		}
+    		throw new IllegalArgumentException("Cannot register null invocation proxy for events");
+    	}
+    }
     
     /**
      * Creates the event callback linkage between the the
@@ -67,7 +96,14 @@ public class DispatchEvents extends JacobObject {
 					"DispatchEvents: Registering "+ eventSink + "for events ");
 		}
     	mInvocationProxy = new InvocationProxy(eventSink);
-        init(sourceOfEvent, mInvocationProxy);
+    	if (mInvocationProxy != null){
+    		init(sourceOfEvent, mInvocationProxy);
+    	} else {
+    		if (JacobObject.isDebugEnabled()){
+    			JacobObject.debug("Cannot register null event sink for events");
+    		}
+    		throw new IllegalArgumentException("Cannot register null event sink for events");
+    	}    		
     }
 
     /**
@@ -76,7 +112,7 @@ public class DispatchEvents extends JacobObject {
      * Java object that will receive the callback.
      * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
      * @param eventSink Java object that wants to receive the events
-     * @param progId
+     * @param progId ???
      */
     public DispatchEvents(Dispatch sourceOfEvent, Object eventSink, String progId) {
 		if (JacobObject.isDebugEnabled()){
@@ -84,7 +120,14 @@ public class DispatchEvents extends JacobObject {
 					"DispatchEvents: Registering "+ eventSink + "for events ");
 		}
     	mInvocationProxy = new InvocationProxy(eventSink);
-        init2(sourceOfEvent, mInvocationProxy, progId);
+    	if (mInvocationProxy != null) {
+	        init2(sourceOfEvent, mInvocationProxy, progId);
+		} else {
+			if (JacobObject.isDebugEnabled()){
+				JacobObject.debug("Cannot register null event sink for events");
+			}
+    		throw new IllegalArgumentException("Cannot register null event sink for events");
+		}
     }
 
     /**

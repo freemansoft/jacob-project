@@ -1598,6 +1598,11 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setDoubles
  * Class:     SafeArray
  * Method:    getString
  * Signature: (I)Ljava/lang/String;
+ * 
+ * There is supposed to be a leak in here, SourceForge 1224219 
+ * that should be fixed with a call to 
+ * "StrFree, Release or VariantClear to release the memory"
+ * waiting on the actual patch the submitter used before modifying this
  */
 JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString__I
   (JNIEnv *env, jobject _this, jint idx)

@@ -1,77 +1,123 @@
-<h1>What's New in JACOB 1.9</H1>
+<h2>What's New in JACOB 1.9.1</h2>
+<ul>
+<li>
+	<b>Event Callbacks</b>
+	<ul>
+	<li>Event handlers are now wrapped in an InvocationProxy.  The COM/JNI event 
+	code knows only about InvocationProxies and calls the appropriate methods
+	on the Invocation proxy to get needed Variant instances and to forward 
+	events to the Java layer.
+	</ul>
+</li>
+<li>
+	<b>Variants</b>
+	<ul>
+	<li>Automatic conversion between Windows Time and Java Date is now supported
+	</ul>
+</li>
+
+
+<h2>Tracked Changes</h2>
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+  <tr>
+    <td width="100%" colspan="2"><b>Bugs</b></td>
+  </tr>
+  <tr>
+    <td width="13%">0000000</td>
+    <td width="87%">No reported bugs fixed in this release</td>
+  </tr>
+  <tr>
+    <td width="13%">&nbsp;</td>
+    <td width="87%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="2"><b>Patches</b></td>
+  </tr>
+  <tr>
+    <td width="13%">1314116 </td>
+    <td width="87%"> putString UNICODE string length not detected</td>
+  </tr>
+  <tr>
+    <td width="13%">&nbsp;</td>
+    <td width="87%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="2"><b>Feature Requests</b></td>
+  </tr>
+  <tr>
+    <td width="13%">1264850</td>
+    <td width="87%">Custom Event Dispatching</td>
+  </tr>
+  <tr>
+    <td width="13%">959382</td>
+    <td width="87%">Time Conversion</td>
+  </tr>
+</table>
+
+</ul>
+
+<!---------------------------------------/>
+
+<h2>What's New in JACOB 1.9</h2>
 <ul>
 
 <li>
 <b>Event Callbacks</b>
 <ul>
-
 <li>Variant parameters can now be modified by the receiver to be passed
 back to the COM caller </li>
+<li>Callbacks now create objects of class VariantViaEvent rather than Variant.
+This was aided to add debugging and tracing</li>
 <li>Callbacks can now be received when running in JWS other launchers where 
 JACOB.jar is not in the system classloader's path.</li>
-
 </ul>
-
 </li>
 
 
 <li>
 <b>Dispatch API Clarifications</B>
 <ul>
-
 <li>All static method's first parameters have been more strongly typed
 to the Dispatch class, rather than Object.  This may call for code
 changes in the cases of code that just asigned Dispatch objects 
 to variables of type Object rather than Dispatch or one of its subclasses </li>
-
 </ul>
-
 </li>
 
 <li>
 <b>Dispatch subclasses are now supported with pointer modifying constructor</b>
 <ul>
-
 <li>Dispatch and ActiveXComponent now includes a constructor to be used by Dispatch subclasses
 that swaps the pointers around.  This eliminates the need for every Dispatch subclass
 to have a constructor that swapped and nulled out the pointers to the COM layer.
 All samples have updated to use the new api </li>
-
 </ul>
-
 </li>
 
 <li>
 <b>ActiveXComponent has been upgraded</b><ul>
-
 <li>ActiveXComponent methods return ActiveXComponets </li>
 <li>Methods have been added to the ActiveXComponents to retrieve
 parameters as Dispatch objects or ActiveX components.  The
 Script Tests have been updated to show the same programs in Dispatch
 format or ActiveXComponentFormat </li>
-
 </ul>
-
 </li>
 
 <li>
 <b>Memory Management</b>
 <ul>
-
 <li>Beta test option that lets an application use automatic object object 
 removal through the use of weak reference hash maps in the ROT class.&nbsp; The 
 default behavior of manual release via the COMThread class has been retained as 
 the default behavior.&nbsp; Developers can test automatic memory collection by 
 using the command line option <i>-Dcom.JACOB.autogc=true</i> </li>
-
 </ul>
-
 </li>
 
 <li>
 <b>JNI Changes</b>
 <ul>
-
 <li>Erroneous Array dimension checking fixed for certain boolean set and get functions
 </li>
 <li>Alternative method for finding Variant class for callbacks in JWS
@@ -90,46 +136,33 @@ This fix only applies to Variants created in callbacks. </li>
 
 <li>
 <b>Logging Additions</b><ul>
-
 <li>Debugging logging to standard out for JACOB can be turned on by using the 
 command line option <i>-Dcom.JACOB.debug=true</i></li>
-
 </ul>
-
 </li>
 
 <li>
 <b>Visual Studio</b><ul>
-
 <li>The VisualStudio directory in the CVS repository will be removed in the next 
 release</li>
-
 </ul>
-
 </li>
 
 <li>
 <b>Documentation</b><ul>
-
 <li>API documentation via Javadoc&nbsp; is now being generated for all classes.</li>
-
 <li>The development team is looking for help in upgrading the quality of the 
 class documentation</li>
-
 </ul>
-
 </li>
 
 <li>
 <b>Build Changes</b>
 <ul>
-
 <li>A static method has been added to JacobObject that returns the build version</li>
-
 <li>The project is now being built using ANT.&nbsp; Most of the developers are 
 running this from inside of Eclipse</li>
 <li>All makefiles have been purged</li>
-
 </ul>
 
 <h2>Tracked Changes</h2>
@@ -229,7 +262,7 @@ running this from inside of Eclipse</li>
 
 </ul>
 
-<h1>What's New in JACOB 1.8</H1>
+<h2>What's New in JACOB 1.8</h2>
 <ul>
 
 <li>
@@ -260,7 +293,7 @@ people to start contributing to the project with this version.
 </ul>
 
 <li>
-<h1>What's New in JACOB 1.7</H1>
+<h2>What's New in JACOB 1.7</h2>
 <ul>
 
 <li>
@@ -313,7 +346,7 @@ native code is replicated there from the jni directory...
 </li>
 
 </ul>
-<H1>Related Links</H1>
+<h2>Related Links</h2>
 <ul>
 <li>
 The JACOB mailing list is hosted at yahoo groups:
