@@ -87,6 +87,9 @@ public class SafeArrayReleaseTest
                     a1.setVariant(1, new Variant("bar"));
                     Variant v = new Variant(a1);
                     SafeArray a2 = v.toSafeArray(true);
+                    if (a2 == null){
+                    	System.out.println("got null back from toSafeArray()");
+                    }
                 }
                 ComThread.Release();
                 System.gc();
