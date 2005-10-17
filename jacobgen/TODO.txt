@@ -1,0 +1,11 @@
+Jacobgen
+Version 0.4
+Copyright (C) 2001-2002 Massimiliano Bigatti
+============================================
+TODO
+
+Javadoc generation
+Events
+Structures
+Better Array support
+VT_PTR support
