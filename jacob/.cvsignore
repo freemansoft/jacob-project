@@ -8,4 +8,5 @@ RELEASE.txt
 compilation_tools.properties
 version.properties
 release
+.externalToolBuilders
 
