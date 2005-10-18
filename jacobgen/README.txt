@@ -56,6 +56,11 @@ Copyright (C) 2001-2002 Massimiliano Bigatti
 ============================================
 HISTORY (**)
 
+Version 0.4 (05/10/14)
+----------------------
++ PROJECT: source code moved to jacob-project on sourceforge
++ PROJECT: converted from makefile to ant 
+
 Version 0.4 (04/03/02)
 ----------------------
 + UPGRADE: support for middle argument list optional parameters (with Variant.noParam())
