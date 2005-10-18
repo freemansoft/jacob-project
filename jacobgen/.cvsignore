@@ -1,0 +1,12 @@
+jacob.dll
+jacob.jar
+jacobdll.jar
+*.zip
+RELEASE.txt
+.project
+.classpath
+compilation_tools.properties
+version.properties
+release
+.externalToolBuilders
+
