@@ -3,7 +3,7 @@
      Feb 4, 2005 1:23:05 PM                                                        
 
      Ant build file for JACOB. 
-     Tested on Eclipse 3.0.0 and Ant 1.6.1, with MS Visual C++ 6.0
+     Tested on Eclipse 3.0.1 and Ant 1.6.1, with MS Visual C++ 6.0
      
      Eclipse users are pretty lucky.  This works with the version of ANT
      that comes with Eclipse 3.0.1 (maybe 3.0.0).  The whole project 
@@ -43,8 +43,9 @@
 	<property name="jacob_cpp.src" value="${basedir}/jni" />
 	<property name="jacob_cpp.bin" value="${install.dir}/jni" />
 	
-	<property name="jacob.jar" value="${install.dir}/jacob.jar" />
-	<property name="jacob.dll" value="${install.dir}/jacob.dll" />
+	<property name="generated_jarfile" value="${install.dir}/jacob.jar" />
+	<property name="generated_dll" value="${install.dir}/jacob.dll" />
+	<property name="generated_zip" value="jacob_${version}" />
 	
 	<property name="compiler" value="${MSDEVDIR}\bin\cl.exe" />
 	<property name="linker"  value="${MSDEVDIR}\bin\link.exe" />
@@ -84,7 +85,7 @@
 		      of the jacob java source          
 		 ================================================================== -->
 	<target name="jacob_java_jar_check">
-		<uptodate property="jarUpToDate" targetfile="${jacob.jar}">
+		<uptodate property="jarUpToDate" targetfile="${generated_jarfile}">
 			<srcfiles dir="${jacob_java.src}">
 				<include name="com/**/*.java" />
 			</srcfiles>
@@ -118,9 +119,9 @@
 		 ================================================================== -->
 	<target name="jacob_java_jar_bin" depends="createDirectoryStructure,jacob_java_compile,jacob_java_jar_check,IncrementBuildNumber" unless="jarUpToDate">
 		<echo>Removing old jars</echo>
-		<delete file="${jacob.jar}" />
+		<delete file="${generated_jarfile}" />
 		<echo>Packaging java classes...</echo>		
-		<jar destfile="${jacob.jar}" basedir="${jacob_java.bin}" update="false">
+		<jar destfile="${generated_jarfile}" basedir="${jacob_java.bin}" update="false">
 			<exclude name="**/CVS" />
 			<exclude name="com/**/*Test.class"/>
 			<exclude name="com/jacob/samples/**"/>
@@ -142,7 +143,7 @@
 		      of the jacob cpp source              
 		 ================================================================== -->
 	<target name="jacob_c_check">
-		<uptodate property="dllUpToDate" targetfile="${jacob.dll}">
+		<uptodate property="dllUpToDate" targetfile="${generated_dll}">
 			<srcfiles dir="${jacob_cpp.src}">
 				<include name="*.cpp" />
 				<include name="*.h" />
@@ -182,13 +183,13 @@
 		 ================================================================== -->
 	<target name="jacob_c_dll" depends="createDirectoryStructure,jacob_c_check,jacob_c_compile" unless="dllUpToDate">
 		<echo>Clean up the target folders and file, for safety</echo>
-		<delete file="${jacob.dll}" />
-		<echo>Creating jacob.dll</echo>
+		<delete file="${generated_dll}" />
+		<echo>Creating generated_dll</echo>
 		<apply executable="${linker}" dir="${jacob_cpp.bin}" parallel="true" verbose="true" failonerror="true">
 			<arg value="/nologo" />
 			<arg value="/dll" />
 			<arg value="/version:${version}" />
-			<arg value="/out:${jacob.dll}" />
+			<arg value="/out:${generated_dll}" />
 			<arg value="/libpath:${MSDEVDIR}/lib" />
 			<srcfile />
 			<arg value="${JDK}\lib\jvm.lib" />
@@ -236,31 +237,31 @@
 
 		<echo>Packaging release...</echo>
 		<zip 
-			destfile="${install.dir}/jacob_${version}.zip">
+			destfile="${install.dir}/${generated_zip}.zip">
 			<exclude name="**/CVS" />
 			<exclude name="**/*.obj" />
 			<exclude name="**/*.class" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="LICENSE.* version.properties" />
-			<zipfileset dir="${install.dir}" prefix="jacob_${version}" includes="jacob.jar jacob.dll"/>
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="docs/**" />
-			<zipfileset dir="${install.dir}" prefix="jacob_${version}" includes="docs/**"/>
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="LICENSE.* version.properties" />
+			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="${generated_jarfile} ${generated_dll}"/>
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="docs/**" />
+			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="docs/**"/>
 		</zip>
 		<zip
-			destfile="${install.dir}/jacob_${version}_src.zip">
+			destfile="${install.dir}/${generated_zip}_src.zip">
 			<exclude name="**/CVS" />
 			<exclude name="**/*.obj" />
 			<exclude name="**/*.class" />
 			<exclude name="**/*.dll" />
 			<exclude name="**/*.exp" />
 			<exclude name="**/*.jar" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="src/**" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="docs/**" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="jni/**" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="samples/**" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="unittest/**" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="vstudio/**" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="build.xml, RELEASE.txt" />
-			<zipfileset dir="${basedir}"     prefix="jacob_${version}" includes="LICENSE.* version.properties" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="src/**" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="docs/**" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="jni/**" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="samples/**" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="unittest/**" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="vstudio/**" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="build.xml, RELEASE.txt" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="LICENSE.* version.properties" />
 		</zip>
 	</target>
 </project>
