@@ -34,17 +34,19 @@
 
 	<property name="application.title" value="JACOB : Java COM Bridge" />
 	<property name="application.vendor" value="http://jacob-project.sourceforge.net, created by Dan Adler (http://danadler.com)" />
-	<property name="install.dir" value="${basedir}/release" />
+	<property name="install.dir" value="${basedir}\release" />
 	
-	<property name="jacob_java.src" value="${basedir}/src" />
-	<property name="jacob_java.samples" value="${basedir}/samples" />
-	<property name="jacob_java.unittest" value="${basedir}/unittest" />
-	<property name="jacob_java.bin" value="${install.dir}" />
-	<property name="jacob_cpp.src" value="${basedir}/jni" />
-	<property name="jacob_cpp.bin" value="${install.dir}/jni" />
+	<property name="java.src" value="${basedir}/src" />
+	<property name="java.src.mainpackage" value="com.jacob" />
+	<property name="java.samples" value="${basedir}/samples" />
+	<property name="java.samples.excludes" value="com/jacob/samples/servlet/**/*.java" />
+	<property name="java.unittest" value="${basedir}/unittest" />
+	<property name="java.bin" value="${install.dir}" />
+	<property name="cpp.src" value="${basedir}/jni" />
+	<property name="cpp.bin" value="${install.dir}/jni" />
 	
-	<property name="generated_jarfile" value="${install.dir}/jacob.jar" />
-	<property name="generated_dll" value="${install.dir}/jacob.dll" />
+	<property name="generated_jarfile" value="${install.dir}\jacob.jar" />
+	<property name="generated_dll" value="${install.dir}\jacob.dll" />
 	<property name="generated_zip" value="jacob_${version}" />
 	
 	<property name="compiler" value="${MSDEVDIR}\bin\cl.exe" />
@@ -53,9 +55,9 @@
 	<!-- ================================= 
           target: default              
          ================================= -->
-	<target name="default" depends="createDirectoryStructure,jacob_java_jar_bin,jacob_c_dll">
+	<target name="default" depends="createDirectoryStructure,java_jar_bin,c_dll">
 
-		<echo message="Jacob ${version} build ${build.iteration} : finished on ${build.date}" />
+		<echo message="${application.title} ${version} build ${build.iteration} : finished on ${build.date}" />
 	</target>
 
 	<!-- ======================================================================
@@ -75,61 +77,61 @@
 		      already there)        
 		 ================================================================== -->
 	<target name="createDirectoryStructure">
-		<mkdir dir="${jacob_java.bin}"/>
-		<mkdir dir="${jacob_cpp.bin}"/>
+		<mkdir dir="${java.bin}"/>
+		<mkdir dir="${cpp.bin}"/>
 		<mkdir dir="${install.dir}"/>
 	</target>
 
 	<!-- ======================================================================
-		      Compare the date/time of the jacob JAR against that 
-		      of the jacob java source          
+		      Compare the date/time of the JAR against that 
+		      of the java source          
 		 ================================================================== -->
-	<target name="jacob_java_jar_check">
+	<target name="java_jar_check">
 		<uptodate property="jarUpToDate" targetfile="${generated_jarfile}">
-			<srcfiles dir="${jacob_java.src}">
+			<srcfiles dir="${java.src}">
 				<include name="com/**/*.java" />
 			</srcfiles>
 			<!-- Check the build file itself as well -->
 			<srcfiles file="${basedir}/build.xml" />
 		</uptodate>
-		<echo message="jacob_java_jar_check result: ${jarUpToDate}" />
+		<echo message="java_jar_check result: ${jarUpToDate}" />
 	</target>
 	<!-- ======================================================================
 		      Compile the java files
 		      Relies on ant recognizing when a file needs to be compiled
 		 ================================================================== -->
-	<target name="jacob_java_compile" depends="createDirectoryStructure,IncrementBuildNumber">
+	<target name="java_compile" depends="createDirectoryStructure,IncrementBuildNumber">
 		<echo>Building java classes...</echo>
-		<javac srcdir="${jacob_java.src}" 
-			destdir="${jacob_java.bin}" 
+		<javac srcdir="${java.src}" 
+			destdir="${java.bin}" 
 			listfiles="true" debug="on" fork="yes" />
 		<echo>Building java sample classes...</echo>
-		<javac srcdir="${jacob_java.samples}" 
-			destdir="${jacob_java.bin}" 
-			excludes="com/jacob/samples/servlet/**/*.java"
+		<javac srcdir="${java.samples}" 
+			destdir="${java.bin}" 
+			excludes="${java.samples.excludes}"
 			listfiles="true" debug="on" fork="yes" />
 		<echo>Building java test classes...</echo>
-		<javac srcdir="${jacob_java.unittest}" 
-			destdir="${jacob_java.bin}" 
+		<javac srcdir="${java.unittest}" 
+			destdir="${java.bin}" 
 			listfiles="true" debug="on" fork="yes" />
 	</target>
 	<!-- ======================================================================
-		      Package the classes into a JAR.    
-		      Put version.propertes into the jar file so getJacobVersion() can find it         
+	      Package the classes into a JAR.    
+	      Put version.propertes into the jar file so version retrieval method can find it         
 		 ================================================================== -->
-	<target name="jacob_java_jar_bin" depends="createDirectoryStructure,jacob_java_compile,jacob_java_jar_check,IncrementBuildNumber" unless="jarUpToDate">
+	<target name="java_jar_bin" depends="createDirectoryStructure,java_compile,java_jar_check,IncrementBuildNumber" unless="jarUpToDate">
 		<echo>Removing old jars</echo>
 		<delete file="${generated_jarfile}" />
 		<echo>Packaging java classes...</echo>		
-		<jar destfile="${generated_jarfile}" basedir="${jacob_java.bin}" update="false">
+		<jar destfile="${generated_jarfile}" basedir="${java.bin}" update="false">
 			<exclude name="**/CVS" />
 			<exclude name="com/**/*Test.class"/>
-			<exclude name="com/jacob/samples/**"/>
+			<exclude name="com/**/samples/**"/>
 			<include name="com/**/*.class" />
 			<include name="version.properties" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
-				<section name="com.jacob">
+				<section name="${java.src.mainpackage}}">
 					<attribute name="Specification-Title" value="${application.title}" />
 					<attribute name="Specification-Vendor" value="${application.vendor}" />
 					<attribute name="Implementation-Title" value="${application.title} Java libraries" />
@@ -139,28 +141,28 @@
 		</jar>
 	</target>
 	<!-- ======================================================================
-		      Compare the date/time of the jacob DLL against that 
-		      of the jacob cpp source              
+		      Compare the date/time of the DLL against that 
+		      of the cpp source              
 		 ================================================================== -->
-	<target name="jacob_c_check">
+	<target name="c_check">
 		<uptodate property="dllUpToDate" targetfile="${generated_dll}">
-			<srcfiles dir="${jacob_cpp.src}">
+			<srcfiles dir="${cpp.src}">
 				<include name="*.cpp" />
 				<include name="*.h" />
 			</srcfiles>
 			<!-- Check the build file itself as well -->
 			<srcfiles file="${basedir}/build.xml" />
 		</uptodate>
-		<echo message="jacob_c_check result: ${dllUpToDate}" />
+		<echo message="c_check result: ${dllUpToDate}" />
 	</target>
 	<!-- ======================================================================
 		      Compile the c source files.             
 		 ================================================================== -->
-	<target name="jacob_c_compile" depends="createDirectoryStructure,jacob_c_check,IncrementBuildNumber" unless="dllUpToDate">
+	<target name="c_compile" depends="createDirectoryStructure,c_check,IncrementBuildNumber" unless="dllUpToDate">
 		<echo>Clean up the target folders and file, for safety</echo>
-		<delete file="${jacob_cpp.bin}/**/*.*" />
+		<delete file="${cpp.bin}/**/*.*" />
 		<echo>Compiling C++ classes with JDK JNI library ${JDK}</echo>
-		<apply executable="${compiler}" dir="${jacob_cpp.bin}" parallel="false" verbose="true" failonerror="true">
+		<apply executable="${compiler}" dir="${cpp.bin}" parallel="false" verbose="true" failonerror="true">
 			<arg value="-c" />
 			<arg value="/nologo" />
 			<!-- optimize build for speed. (is this VC specific? -->
@@ -173,7 +175,7 @@
 			<arg value="${MSDEVDIR}\Include" />
 			<arg value="-I" />
 			<arg value="${MSDEVDIR}\ATL\Include" />
-			<fileset dir="${jacob_cpp.src}">
+			<fileset dir="${cpp.src}">
 				<include name="*.cpp" />
 			</fileset>
 		</apply>
@@ -181,11 +183,11 @@
 	<!-- ======================================================================
 		       Link the obj files into a DLL.
 		 ================================================================== -->
-	<target name="jacob_c_dll" depends="createDirectoryStructure,jacob_c_check,jacob_c_compile" unless="dllUpToDate">
+	<target name="c_dll" depends="createDirectoryStructure,c_check,c_compile" unless="dllUpToDate">
 		<echo>Clean up the target folders and file, for safety</echo>
 		<delete file="${generated_dll}" />
 		<echo>Creating generated_dll</echo>
-		<apply executable="${linker}" dir="${jacob_cpp.bin}" parallel="true" verbose="true" failonerror="true">
+		<apply executable="${linker}" dir="${cpp.bin}" parallel="true" verbose="true" failonerror="true">
 			<arg value="/nologo" />
 			<arg value="/dll" />
 			<arg value="/version:${version}" />
@@ -199,31 +201,31 @@
 			<arg value="kernel32.lib" />
 			<arg value="shell32.lib" />
 			<arg value="user32.lib" />
-			<fileset dir="${jacob_cpp.bin}">
+			<fileset dir="${cpp.bin}">
 				<include name="*.obj" />
 			</fileset>
 		</apply>
 	</target>
 
 	<!-- ======================================================================
-		       Use this target to create javadoc from com.jacob.*
+		       Use this target to create javadoc from ${java.src.mainpackage}/*
 		 ================================================================== -->
 	<target name="javadoc">
 		<defaultexcludes add="**/*Test*"/>
 		<javadoc
-				packagenames="com.jacob/**"
-				sourcepath="${jacob_java.src}"
-				destdir="${jacob_java.bin}/docs/api"
+				packagenames="${java.src.mainpackage}/**"
+				sourcepath="${java.src}"
+				destdir="${java.bin}/docs/api"
 				author="true"
 				version="true"
 				use="true"
-				windowtitle="Jacob API Docs">
+				windowtitle="${application.title} API Docs">
 		
 			<doctitle><![CDATA[<h1>Java Com Bridge (Jacob)</h1>]]></doctitle>
 			<bottom><![CDATA[<i>See Jacob-project on Sourceforge for more info</i>]]></bottom>
 			<tag name="todo" scope="all" description="To do:" />
-			<group title="Jacob COM" packages="com.jacob.com/**"/>
-			<group title="Higher Level Active X" packages="com.jacob.activeX/**"/>
+			<group title="Core COM Communication" packages="${java.src.mainpackage}.com/**"/>
+			<group title="Higher Level Active X" packages="${java.src.mainpackage}.activeX/**"/>
 			<link offline="true" href="http://java.sun.com/j2se/1.4.2/docs/api/" packagelistLoc="C:\tmp"/>
 			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
 		</javadoc>
@@ -233,16 +235,18 @@
 	<!-- ======================================================================
 		       Use this target to package all the files for a release
 		 ================================================================== -->
-	<target name="PackageRelease" depends="createDirectoryStructure,jacob_c_dll,jacob_java_jar_bin,javadoc">
+	<target name="PackageRelease" depends="createDirectoryStructure,c_dll,java_jar_bin,javadoc">
 
-		<echo>Packaging release...</echo>
+		<echo>Packaging release... ${generated_jarfile}</echo>
 		<zip 
 			destfile="${install.dir}/${generated_zip}.zip">
 			<exclude name="**/CVS" />
 			<exclude name="**/*.obj" />
 			<exclude name="**/*.class" />
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="LICENSE.* version.properties" />
-			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="${generated_jarfile} ${generated_dll}"/>
+			<!-- would like to have used ${generated_jarfile} and ${generated_dll} but that doesn't seem to work -->
+			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="jacob.jar" />
+			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="jacob.dll" />
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="docs/**" />
 			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="docs/**"/>
 		</zip>
