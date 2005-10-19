@@ -33,21 +33,24 @@
 	  =^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^=^ -->
 
 	<property name="application.title" value="JACOB : Java COM Bridge" />
-	<property name="application.vendor" value="http://jacob-project.sourceforge.net, created by Dan Adler (http://danadler.com)" />
-	<property name="install.dir" value="${basedir}\release" />
-	
-	<property name="java.src" value="${basedir}/src" />
+	<property name="application.vendor" value="http://jacob-project.sourceforge.net" />
 	<property name="java.src.mainpackage" value="com.jacob" />
+	<property name="generated_jar" value="jacob.jar" />
+	<property name="generated_dll" value="jacob.dll" />
+	<property name="generated_zip" value="jacob_${version}" />
+	
+	<property name="install.dir" value="${basedir}\release" />
+	<property name="java.src" value="${basedir}/src" />
 	<property name="java.samples" value="${basedir}/samples" />
-	<property name="java.samples.excludes" value="com/jacob/samples/servlet/**/*.java" />
 	<property name="java.unittest" value="${basedir}/unittest" />
 	<property name="java.bin" value="${install.dir}" />
 	<property name="cpp.src" value="${basedir}/jni" />
 	<property name="cpp.bin" value="${install.dir}/jni" />
+
+	<property name="java.samples.excludes" value="com/jacob/samples/servlet/**/*.java" />
 	
-	<property name="generated_jarfile" value="${install.dir}\jacob.jar" />
-	<property name="generated_dll" value="${install.dir}\jacob.dll" />
-	<property name="generated_zip" value="jacob_${version}" />
+	<property name="jarfile_fullpath" value="${install.dir}\${generated_jar}" />
+	<property name="dll_fullpath" value="${install.dir}\${generated_dll}" />
 	
 	<property name="compiler" value="${MSDEVDIR}\bin\cl.exe" />
 	<property name="linker"  value="${MSDEVDIR}\bin\link.exe" />
@@ -87,7 +90,7 @@
 		      of the java source          
 		 ================================================================== -->
 	<target name="java_jar_check">
-		<uptodate property="jarUpToDate" targetfile="${generated_jarfile}">
+		<uptodate property="jarUpToDate" targetfile="${jarfile_fullpath}">
 			<srcfiles dir="${java.src}">
 				<include name="com/**/*.java" />
 			</srcfiles>
@@ -105,7 +108,7 @@
 		<javac srcdir="${java.src}" 
 			destdir="${java.bin}" 
 			listfiles="true" debug="on" fork="yes" />
-		<echo>Building java sample classes...</echo>
+		<echo>Building java sample classes (skipping ${java.samples.excludes})...</echo>
 		<javac srcdir="${java.samples}" 
 			destdir="${java.bin}" 
 			excludes="${java.samples.excludes}"
@@ -121,9 +124,9 @@
 		 ================================================================== -->
 	<target name="java_jar_bin" depends="createDirectoryStructure,java_compile,java_jar_check,IncrementBuildNumber" unless="jarUpToDate">
 		<echo>Removing old jars</echo>
-		<delete file="${generated_jarfile}" />
+		<delete file="${jarfile_fullpath}" />
 		<echo>Packaging java classes...</echo>		
-		<jar destfile="${generated_jarfile}" basedir="${java.bin}" update="false">
+		<jar destfile="${jarfile_fullpath}" basedir="${java.bin}" update="false">
 			<exclude name="**/CVS" />
 			<exclude name="com/**/*Test.class"/>
 			<exclude name="com/**/samples/**"/>
@@ -145,7 +148,7 @@
 		      of the cpp source              
 		 ================================================================== -->
 	<target name="c_check">
-		<uptodate property="dllUpToDate" targetfile="${generated_dll}">
+		<uptodate property="dllUpToDate" targetfile="${dll_fullpath}">
 			<srcfiles dir="${cpp.src}">
 				<include name="*.cpp" />
 				<include name="*.h" />
@@ -185,13 +188,13 @@
 		 ================================================================== -->
 	<target name="c_dll" depends="createDirectoryStructure,c_check,c_compile" unless="dllUpToDate">
 		<echo>Clean up the target folders and file, for safety</echo>
-		<delete file="${generated_dll}" />
-		<echo>Creating generated_dll</echo>
+		<delete file="${dll_fullpath}" />
+		<echo>Creating dll_fullpath</echo>
 		<apply executable="${linker}" dir="${cpp.bin}" parallel="true" verbose="true" failonerror="true">
 			<arg value="/nologo" />
 			<arg value="/dll" />
 			<arg value="/version:${version}" />
-			<arg value="/out:${generated_dll}" />
+			<arg value="/out:${dll_fullpath}" />
 			<arg value="/libpath:${MSDEVDIR}/lib" />
 			<srcfile />
 			<arg value="${JDK}\lib\jvm.lib" />
@@ -221,11 +224,12 @@
 				use="true"
 				windowtitle="${application.title} API Docs">
 		
-			<doctitle><![CDATA[<h1>Java Com Bridge (Jacob)</h1>]]></doctitle>
-			<bottom><![CDATA[<i>See Jacob-project on Sourceforge for more info</i>]]></bottom>
+			<doctitle><![CDATA[<h1>${application.title}</h1>]]></doctitle>
+			<bottom><![CDATA[<i>${application.vendor}</i>]]></bottom>
 			<tag name="todo" scope="all" description="To do:" />
 			<group title="Core COM Communication" packages="${java.src.mainpackage}.com/**"/>
 			<group title="Higher Level Active X" packages="${java.src.mainpackage}.activeX/**"/>
+			<group title="API Stub Generator" packages="${java.src.mainpackage}.jacobgen/**"/>
 			<link offline="true" href="http://java.sun.com/j2se/1.4.2/docs/api/" packagelistLoc="C:\tmp"/>
 			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
 		</javadoc>
@@ -237,16 +241,15 @@
 		 ================================================================== -->
 	<target name="PackageRelease" depends="createDirectoryStructure,c_dll,java_jar_bin,javadoc">
 
-		<echo>Packaging release... ${generated_jarfile}</echo>
+		<echo>Packaging release... ${jarfile_fullpath}</echo>
 		<zip 
 			destfile="${install.dir}/${generated_zip}.zip">
 			<exclude name="**/CVS" />
 			<exclude name="**/*.obj" />
 			<exclude name="**/*.class" />
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="LICENSE.* version.properties" />
-			<!-- would like to have used ${generated_jarfile} and ${generated_dll} but that doesn't seem to work -->
-			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="jacob.jar" />
-			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="jacob.dll" />
+			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="${generated_jar}" />
+			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="${generated_dll}" />
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="docs/**" />
 			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="docs/**"/>
 		</zip>
