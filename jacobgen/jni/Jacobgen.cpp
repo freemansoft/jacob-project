@@ -21,52 +21,12 @@
 #include <windows.h>
 #include <ole2.h>
 #include <tchar.h>
-#include "it_bigatti_jacobgen_TypeLibInspector.h"
-#include "JacobgenDll.h"
+#include "Jacobgen.h"
 
 char *buffer;
 char *current_position;
 
 
-/**
- * Java_it_bigatti_jacobgen_JacobgenDll_queryInterface
- *
- * Main Java function
- */
-JNIEXPORT jbyteArray JNICALL Java_it_bigatti_jacobgen_TypeLibInspector_queryInterface
-(JNIEnv *env, jobject jobj, jstring name) {
-
-	jbyteArray jb;
-	jboolean iscopy;
-	int cchWideChar;
-	LPWSTR wname;
-	LPCSTR sname;
-
-	buffer = NULL;
-	sname = env->GetStringUTFChars( name, &iscopy );
-	cchWideChar = strlen( sname ) * 2;
-	wname = (LPWSTR)malloc( cchWideChar );
-
-	//Perform conversion from non Unicode to Unicode string
-	int i = MultiByteToWideChar(CP_ACP,0,sname,WC_SEPCHARS,wname,cchWideChar);
-
-	CoInitialize( 0 );
-	ExtractTypeLib( wname );
-	CoUninitialize();
-
-	if( buffer == NULL ) {
-		buffer = (char * )malloc( 1 );
-		if( buffer != NULL )
-			*buffer = '\0';
-	}
-
-	//Construct return Java byte array
-	size_t dim = strlen( buffer );
-	jb = env->NewByteArray( dim );
-	env->SetByteArrayRegion( jb, 0, dim, (jbyte *)buffer );
-
-	return jb;
-}
 
 /**
  * ExtractTypeLib
@@ -83,7 +43,7 @@ void ExtractTypeLib( LPCTSTR pszFileName )
 	buffer = (char *)malloc( BUF_SIZE );
 	if( buffer == NULL )
 	{
-		_tprintf( _T("JacobgenDll: unable to allocate temporary buffer\n") );
+		_tprintf( _T("Jacobgen: unable to allocate temporary buffer\n") );
 		return;
 	}
 	current_position = buffer;

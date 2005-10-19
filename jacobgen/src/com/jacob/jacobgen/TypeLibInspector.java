@@ -1,6 +1,6 @@
 /*
- * AliasGenerator.java
- * Copyright (C) 2002 Massimiliano Bigatti
+ * TypeLibInspector.java
+ * Copyright (C) 2000-2002 Massimiliano Bigatti
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,31 +16,29 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package it.bigatti.jacobgen;
+package com.jacob.jacobgen;
 
-import java.io.*;
-import java.util.*;
+public class TypeLibInspector {
 
-class AliasGenerator extends AbstractGenerator {
+	public native byte[] queryInterface( String filename );
+	
+	static {
+		System.loadLibrary("Jacobgen");
+	}
+	
+	public static void main(String[] argv) {
+		byte buf[];
 		
-	public AliasGenerator( String filename, String typelibName, String destinationPackage,
-		String className, String baseClass ) {
-		super( filename, typelibName, destinationPackage, className, baseClass, 
-				null, null );
-	}
-	
-	protected void writeClassDeclaration() throws IOException {
-		w.write( "public interface " + className + " extends " + baseClass + " {\n\n" );
-	}
-	
-	protected void writeFields() throws IOException {
-	}
-
-	protected void writeConstructors() throws IOException {
-	}
-	
-	protected void writeMethods() throws IOException {
+		TypeLibInspector dll = new TypeLibInspector();
+		
+		if( argv.length > 0 ) {
+			buf = dll.queryInterface( argv[0] );
+			
+			for( int i=0; i<buf.length; i++ ) {
+				System.out.print( (char)buf[i] );
+			}
+		} else
+			System.out.println("TypeLibInspector <tlbfilename>");
 	}
 	
 }
-
