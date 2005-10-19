@@ -7,13 +7,12 @@ public class safearray
 {
  public static void main(java.lang.String[] args) 
  {
-	System.runFinalizersOnExit(true);
+	 //deprecated
+	 //System.runFinalizersOnExit(true);
 
 	ActiveXComponent xl = new ActiveXComponent("Excel.Application");
 	try {
 		Dispatch cell;
-		Dispatch cellstart;
-		Dispatch cellstop;
 		SafeArray sAProdText;
 		Dispatch workbooks = xl.getProperty("Workbooks").toDispatch();
 		System.out.println("have workbooks");
@@ -30,7 +29,6 @@ public class safearray
 		System.out.println("sa: end col="+sAProdText.getUBound(2));
 		int i;
 		int lineNumber=1;
-		boolean stringFound = true;
 		int n = 0;
 		for(lineNumber=1; lineNumber < 1000; lineNumber++)
 		{

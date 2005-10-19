@@ -22,6 +22,9 @@ class ScriptTest
       Dispatch.put(sControl, "Language", lang);
       ScriptTestErrEvents te = new ScriptTestErrEvents();
       de = new DispatchEvents(sControl, te);
+      if (de == null){
+    	  System.out.println("Received null when trying to create new DispatchEvents");
+      }
       Variant result = Dispatch.call(sControl, "Eval", args[0]);
       // call it twice to see the objects reused
       result = Dispatch.call(sControl, "Eval", args[0]);

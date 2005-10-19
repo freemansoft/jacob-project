@@ -22,7 +22,8 @@ public class WordDocumentProperties {
 
     private Dispatch builtInDocProps;
 
-    private Dispatch documents;
+    //the doucments object is important in any real app but this demo doesn't use it
+    //private Dispatch documents;
 
     private Dispatch document;
 

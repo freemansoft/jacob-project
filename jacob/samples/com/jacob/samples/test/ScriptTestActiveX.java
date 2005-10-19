@@ -20,6 +20,9 @@ class ScriptTestActiveX
       sC.setProperty("Language",lang);
       ScriptTestErrEvents te = new ScriptTestErrEvents();
       de = new DispatchEvents(sC, te);
+      if (de == null){
+    	  System.out.println("null returned when trying to create DispatchEvents");
+      }
       Variant result;
       result = sC.invoke("Eval",args[0]);
       // call it twice to see the objects reused
