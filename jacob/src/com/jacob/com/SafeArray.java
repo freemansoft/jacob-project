@@ -67,11 +67,19 @@ public class SafeArray extends JacobObject {
     }
 
     /**
-     * constructor
-     * @param vt
-     * @param lbounds
-     * @param celems
-     */
+	 * constructor (needs more java doc)
+	 * 
+	 * With the addition of N-dimensional array support
+	 * 
+	 * You create an N-D SafeArray by: SafeArray sa = new
+	 * SafeArray(Variant.VariantVariant, new int[] {0,0,0,0}, new int[]
+	 * {4,4,4,4}); Where the 1st array is lower bounds and 2nd has the lengths
+	 * of each dimension *
+	 * 
+	 * @param vt
+	 * @param lbounds
+	 * @param celems
+	 */
     public SafeArray(int vt, int lbounds[], int celems[]) {
         init(vt, lbounds, celems);
     }
@@ -753,6 +761,127 @@ public class SafeArray extends JacobObject {
         return s;
     }
 
+    /*================================================================
+     * The beginning of N-dimensional array support 
+     *================================================================*/
+    
+    /**
+     * get Variant value from N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     */
+    public native Variant getVariant(int indices[]);
+    
+    /**
+     * set Variant value in N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     * @param v
+     */
+    public native void setVariant(int indices[], Variant v);
+    
+    
+    /**
+     * get char value from N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     */
+    public native char getChar(int indices[]);
+    
+    /**
+     * set char value in N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     * @param c
+     */
+    public native void setChar(int indices[], char c);
+    
+    /**
+     * get int value from N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     */
+    public native int getInt(int indices[]);
+    
+    /**
+     * set int value in N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     * @param c
+     */
+    public native void setInt(int indices[], int c);
+    
+    /**
+     * get short value from N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     */
+    public native short getShort(int indices[]);
+    
+    /**
+     * set short value in N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     * @param c
+     */
+    public native void setShort(int indices[], short c);
+    
+    /**
+     * get double value from N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     */
+    public native double getDouble(int indices[]);
+    
+    /**
+     * set double value in N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     * @param c
+     */
+    public native void setDouble(int indices[], double c);
+    
+    /**
+     * get String value from N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     */
+    public native String getString(int indices[]);
+    
+    /**
+     * set Stringvalue in N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     * @param c
+     */
+    public native void setString(int indices[], String c);
+    
+    /**
+     * get byte value from N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     */
+    public native byte getByte(int indices[]);
+
+    /**
+     * set byte value in N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     * @param c
+     */
+    public native void setByte(int indices[], byte c);
+    
+    /**
+     * get float value from N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     */
+    public native float getFloat(int indices[]);
+
+    /**
+     * set float value in N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     * @param c
+     */
+    public native void setFloat(int indices[], float c);
+    
+    /**
+     * get boolean value from N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     */
+    public native boolean getBoolean(int indices[]);
+    /**
+     * set boolean value in N-dimensional array
+     * @param indices - length must equal Dimension of SafeArray
+     * @param c
+     */
+    public native void setBoolean(int indices[], boolean c);
+    
     static {
         System.loadLibrary("jacob");
     }

@@ -7,6 +7,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* Inaccessible static: buildVersion */
+/* Inaccessible static: buildDate */
+/* Inaccessible static: DEBUG */
+/* Inaccessible static: class_00024com_00024jacob_00024com_00024JacobObject */
 /*
  * Class:     com_jacob_com_SafeArray
  * Method:    init
@@ -42,7 +46,7 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_SafeArray_getvt
 /*
  * Class:     com_jacob_com_SafeArray
  * Method:    reinit
- * Signature: (Lcom_jacob_com_SafeArray;)V
+ * Signature: (Lcom/jacob/com/SafeArray;)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_reinit
   (JNIEnv *, jobject, jobject);
@@ -178,7 +182,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromBooleanArray
 /*
  * Class:     com_jacob_com_SafeArray
  * Method:    fromVariantArray
- * Signature: ([LVariant;)V
+ * Signature: ([Lcom/jacob/com/Variant;)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromVariantArray
   (JNIEnv *, jobject, jobjectArray);
@@ -250,7 +254,7 @@ JNIEXPORT jbooleanArray JNICALL Java_com_jacob_com_SafeArray_toBooleanArray
 /*
  * Class:     com_jacob_com_SafeArray
  * Method:    toVariantArray
- * Signature: ()[LVariant;
+ * Signature: ()[Lcom/jacob/com/Variant;
  */
 JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toVariantArray
   (JNIEnv *, jobject);
@@ -642,7 +646,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBooleans
 /*
  * Class:     com_jacob_com_SafeArray
  * Method:    getVariant
- * Signature: (I)LVariant;
+ * Signature: (I)Lcom/jacob/com/Variant;
  */
 JNIEXPORT jobject JNICALL Java_com_jacob_com_SafeArray_getVariant__I
   (JNIEnv *, jobject, jint);
@@ -650,7 +654,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_SafeArray_getVariant__I
 /*
  * Class:     com_jacob_com_SafeArray
  * Method:    getVariant
- * Signature: (II)LVariant;
+ * Signature: (II)Lcom/jacob/com/Variant;
  */
 JNIEXPORT jobject JNICALL Java_com_jacob_com_SafeArray_getVariant__II
   (JNIEnv *, jobject, jint, jint);
@@ -674,7 +678,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setVariant__IILcom_jacob_com
 /*
  * Class:     com_jacob_com_SafeArray
  * Method:    getVariants
- * Signature: (II[LVariant;I)V
+ * Signature: (II[Lcom/jacob/com/Variant;I)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getVariants
   (JNIEnv *, jobject, jint, jint, jobjectArray, jint);
@@ -682,10 +686,154 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getVariants
 /*
  * Class:     com_jacob_com_SafeArray
  * Method:    setVariants
- * Signature: (II[LVariant;I)V
+ * Signature: (II[Lcom/jacob/com/Variant;I)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setVariants
   (JNIEnv *, jobject, jint, jint, jobjectArray, jint);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getVariant
+ * Signature: ([I)Lcom/jacob/com/Variant;
+ */
+JNIEXPORT jobject JNICALL Java_com_jacob_com_SafeArray_getVariant___3I
+  (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setVariant
+ * Signature: ([ILcom/jacob/com/Variant;)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setVariant___3ILcom_jacob_com_Variant_2
+  (JNIEnv *, jobject, jintArray, jobject);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getChar
+ * Signature: ([I)C
+ */
+JNIEXPORT jchar JNICALL Java_com_jacob_com_SafeArray_getChar___3I
+  (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setChar
+ * Signature: ([IC)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setChar___3IC
+  (JNIEnv *, jobject, jintArray, jchar);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getInt
+ * Signature: ([I)I
+ */
+JNIEXPORT jint JNICALL Java_com_jacob_com_SafeArray_getInt___3I
+  (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setInt
+ * Signature: ([II)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setInt___3II
+  (JNIEnv *, jobject, jintArray, jint);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getShort
+ * Signature: ([I)S
+ */
+JNIEXPORT jshort JNICALL Java_com_jacob_com_SafeArray_getShort___3I
+  (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setShort
+ * Signature: ([IS)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setShort___3IS
+  (JNIEnv *, jobject, jintArray, jshort);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getDouble
+ * Signature: ([I)D
+ */
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_SafeArray_getDouble___3I
+  (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setDouble
+ * Signature: ([ID)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setDouble___3ID
+  (JNIEnv *, jobject, jintArray, jdouble);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getString
+ * Signature: ([I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString___3I
+  (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setString
+ * Signature: ([ILjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString___3ILjava_lang_String_2
+  (JNIEnv *, jobject, jintArray, jstring);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getByte
+ * Signature: ([I)B
+ */
+JNIEXPORT jbyte JNICALL Java_com_jacob_com_SafeArray_getByte___3I
+  (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setByte
+ * Signature: ([IB)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setByte___3IB
+  (JNIEnv *, jobject, jintArray, jbyte);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getFloat
+ * Signature: ([I)F
+ */
+JNIEXPORT jfloat JNICALL Java_com_jacob_com_SafeArray_getFloat___3I
+  (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setFloat
+ * Signature: ([IF)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setFloat___3IF
+  (JNIEnv *, jobject, jintArray, jfloat);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getBoolean
+ * Signature: ([I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_jacob_com_SafeArray_getBoolean___3I
+  (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setBoolean
+ * Signature: ([IZ)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBoolean___3IZ
+  (JNIEnv *, jobject, jintArray, jboolean);
 
 #ifdef __cplusplus
 }
