@@ -15,6 +15,29 @@ extern "C" {
 JNIEXPORT jbyteArray JNICALL Java_com_jacob_jacobgen_TypeLibInspector_queryInterface
   (JNIEnv *, jobject, jstring);
 
+void ExtractTypeLib( LPWSTR pszFileName );
+void EnumTypeLib( LPTYPELIB pITypeLib );
+void ExtractTypeInfo( LPTYPEINFO pITypeInfo );
+void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr);
+void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *f );
+
+BSTR GetUserDefinedType( LPTYPEINFO pITypeInfo, TYPEDESC tdesc );
+
+LPCTSTR GetTypeKindName( TYPEKIND typekind );
+LPCTSTR GetInvokeKindName( INVOKEKIND invkind );
+LPCTSTR GetVarTypeName( VARTYPE vt );
+LPCTSTR GetVarKindName( VARKIND vk );
+LPTSTR GetVarDefaultValue( VARIANT *pv );
+
+void append1( char *string );
+void append2( char *format, LPCTSTR s1 );
+void append2b( char *format, BSTR s1);
+void append3( char *format, BSTR bstr1, LPCTSTR s2 );
+
+//Output buffer size
+#define BUF_SIZE 5000000
+
+
 #ifdef __cplusplus
 }
 #endif
