@@ -4,7 +4,7 @@ To build and run:
 Unpack the source archive or check the files out of CVS into d:\jacob 
 
 Install the following tools
-	Microsfot Visual Studio, a stripped down version is available from the MS web site.
+	Microsoft Visual Studio, a stripped down version is available from the MS web site.
 	Eclipse from www.eclipse.org.
 	Java jdk 1.4 (this was built using 1.4.2.06)
 	
