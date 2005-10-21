@@ -47,8 +47,6 @@
 	<property name="cpp.src" value="${basedir}/jni" />
 	<property name="cpp.bin" value="${install.dir}/jni" />
 
-	<property name="java.samples.excludes" value="com/jacob/samples/servlet/**/*.java" />
-	
 	<property name="jarfile_fullpath" value="${install.dir}\${generated_jar}" />
 	<property name="dll_fullpath" value="${install.dir}\${generated_dll}" />
 	
@@ -104,14 +102,13 @@
 		      Relies on ant recognizing when a file needs to be compiled
 		 ================================================================== -->
 	<target name="java_compile" depends="createDirectoryStructure,IncrementBuildNumber">
-		<echo>Building java classes...</echo>
+		<echo>Building java classes in ${java.bin}...</echo>
 		<javac srcdir="${java.src}" 
 			destdir="${java.bin}" 
 			listfiles="true" debug="on" fork="yes" />
-		<echo>Building java sample classes (skipping ${java.samples.excludes})...</echo>
+		<echo>Building java sample classes ...</echo>
 		<javac srcdir="${java.samples}" 
 			destdir="${java.bin}" 
-			excludes="${java.samples.excludes}"
 			listfiles="true" debug="on" fork="yes" />
 		<echo>Building java test classes...</echo>
 		<javac srcdir="${java.unittest}" 
