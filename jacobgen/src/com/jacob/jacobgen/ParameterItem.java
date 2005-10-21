@@ -29,7 +29,7 @@ public class ParameterItem {
 	private String nativeType;
 	private String type;
 	private String objectType;
-	private String arrayType;
+	//private String arrayType;
 	private int direction;
 	private boolean optional;
 	private boolean object;

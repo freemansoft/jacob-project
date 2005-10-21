@@ -26,9 +26,10 @@
 #include <atlconv.h>
 #include "TypeLibInspector.h"
 
+extern "C" 
+{
 LPTSTR buffer;
 LPTSTR current_position;
-
 
 
 /**
@@ -557,4 +558,6 @@ LPTSTR  GetVarDefaultValue( VARIANT *pv )
 	}
 
 	return buf;
+}
+
 }

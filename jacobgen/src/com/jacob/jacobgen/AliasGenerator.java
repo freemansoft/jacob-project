@@ -19,7 +19,6 @@
 package com.jacob.jacobgen;
 
 import java.io.*;
-import java.util.*;
 
 class AliasGenerator extends AbstractGenerator {
 		

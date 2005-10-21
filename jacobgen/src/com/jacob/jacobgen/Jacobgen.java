@@ -113,9 +113,10 @@ public class Jacobgen {
 		
 		//Create a list of external classes
 		loadExternalClasses();
-		
+		System.out.println("creating TypeLibInspector");
 		//Query TypeLib informations
 		TypeLibInspector inspector = new TypeLibInspector();
+		System.out.println("calling TypeLibInspector.queryInterface with "+typelibFilename);
 		byte[] typelibinfo = inspector.queryInterface(typelibFilename);
 		
 		//Convert byte array to a vector of lines
@@ -370,8 +371,8 @@ public class Jacobgen {
 		if( args.length == 0 ) {
 			System.out.println("JacobGen [options] typelibfile\n");
 			System.out.println("Options:");
-			System.out.println("\t-package:<package>");
-			System.out.println("\t-destdir:<output dir>");
+			System.out.println("\t-package:<destination package name>");
+			System.out.println("\t-destdir:<root dir for classes>");
 			System.out.println("\t-listfile:<listing file>");
 			System.out.println();
 			System.exit(0);
