@@ -35,8 +35,6 @@ class ROT3TestThread extends Thread
 {
     private java.util.List ThreadObjects;
 
-    private boolean DivideMode = true;
-
     private int initialRunSize = 0;
     /**
      * @param arg0
