@@ -29,10 +29,11 @@ LPCTSTR GetVarTypeName( VARTYPE vt );
 LPCTSTR GetVarKindName( VARKIND vk );
 LPTSTR GetVarDefaultValue( VARIANT *pv );
 
-void append1( char *string );
-void append2( char *format, LPCTSTR s1 );
-void append2b( char *format, BSTR s1);
-void append3( char *format, BSTR bstr1, LPCTSTR s2 );
+void append1( LPTSTR string );
+void append2( LPTSTR format, LPCTSTR s1 );
+void append2b( LPTSTR format, BSTR s1);
+void append2c ( LPTSTR format, LPCWSTR s1);
+void append3( LPTSTR format, BSTR bstr1, LPCTSTR s2 );
 
 //Output buffer size
 #define BUF_SIZE 5000000

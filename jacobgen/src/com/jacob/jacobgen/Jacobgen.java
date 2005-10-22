@@ -164,7 +164,7 @@ public class Jacobgen {
 		String baseClass = "<unknown>";
 		
 		int enums = 0;
-		System.out.print("finding ENUMS ... " );
+		System.out.print("finding ENUMS ("+lines.size()+")... " );
 		for( int i=0; i<lines.size(); i++ ) {
 			String line = (String)lines.elementAt( i );
 			if( line.startsWith( "CLASS" ) ) {
@@ -289,17 +289,20 @@ public class Jacobgen {
 			if( !destinationPath.endsWith( File.separator ) )
 				destinationPath += File.separator;
 				
-		if( destinationPackage.length() > 0 )
+		if( destinationPackage.length() > 0 ){
 			directory = convertPackageToDir(destinationPackage)	+ File.separator;
+		}
 
 		filename = destinationPath + directory + className + ".java";
 
 		System.out.println("Creating " + filename + " ..." );
 
 		File file = new File( destinationPath + directory );
-		if( !file.exists() )
-			if( !file.mkdirs() )
+		if( !file.exists() ){
+			if( !file.mkdirs() ){
 				System.err.println("Unable to create directories (" + destinationPath + directory + ") !" );
+			}
+		}
 		
 		g = null;
 		if( classType.equals("TKIND_ENUM") ) {
@@ -310,6 +313,8 @@ public class Jacobgen {
 			g = new ClassGenerator( filename, typelibName, destinationPackage, className, baseClass, null, classMethods );
 		} else if( classType.equals("TKIND_ALIAS") ) {
 			g = new AliasGenerator( filename, typelibName, destinationPackage, className, baseClass );
+		} else {
+			System.err.println("Uncrcognized class type "+classType);
 		}
 		
 		if( g != null )

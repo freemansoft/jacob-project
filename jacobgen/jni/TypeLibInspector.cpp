@@ -52,9 +52,11 @@ JNIEXPORT jbyteArray JNICALL Java_com_jacob_jacobgen_TypeLibInspector_queryInter
 	wname = (LPWSTR)malloc( cchWideChar );
 
 	//Perform conversion from non Unicode to Unicode string
-	int i = MultiByteToWideChar(CP_ACP,0,sname,WC_SEPCHARS,wname,cchWideChar);
+	int i = MultiByteToWideChar(CP_ACP,0,sname,strlen(sname),wname,cchWideChar);
+	printf("converted %s to %ls\n",sname,wname);
 
 	CoInitialize( 0 );
+	printf("calling ExtractTypeLib with %ls",wname);
 	ExtractTypeLib( wname );
 	CoUninitialize();
 
@@ -84,6 +86,7 @@ void ExtractTypeLib( LPWSTR pszFileName )
 {
 	LPTYPELIB pITypeLib;
 
+	printf("trying to extract library %ls\n", pszFileName);
 	buffer = (LPTSTR )malloc( BUF_SIZE );
 	if( buffer == NULL )
 	{
@@ -105,7 +108,7 @@ void ExtractTypeLib( LPWSTR pszFileName )
 void EnumTypeLib( LPTYPELIB pITypeLib )
 {
 	UINT tiCount = pITypeLib->GetTypeInfoCount();
-	
+	printf("enumerating %d\n",tiCount);
 	//Extract Type lib name
 	BSTR pLibName;
 	pITypeLib->GetDocumentation(-1, &pLibName, NULL, 0, NULL );
@@ -137,16 +140,18 @@ void ExtractTypeInfo( LPTYPEINFO pITypeInfo )
 	hr = pITypeInfo->GetDocumentation(MEMBERID_NIL, &pszTypeInfoName, 0, 0, 0);
 	if ( S_OK != hr )
 		return;
-	
+	printf("retrieved documentation %ls\n",pszTypeInfoName);
 	TYPEATTR * pTypeAttr;
 	hr = pITypeInfo->GetTypeAttr( &pTypeAttr );
 	if ( S_OK != hr )
 	{
+		printf("failed to get attribute!!!!!!!\n");
 		SysFreeString( pszTypeInfoName );
 		return;
 	}
 
-	append3("CLASS %ls;%ls\n", pszTypeInfoName,
+	//append3("CLASS %ls;%ls\n", pszTypeInfoName,
+	append3("CLASS %ls;%s\n", pszTypeInfoName,
 		GetTypeKindName(pTypeAttr->typekind) );
 
 	if( pTypeAttr->typekind == TKIND_ALIAS ) {
@@ -387,43 +392,54 @@ void append1( LPTSTR string ) {
 }
 
 void append2b ( LPTSTR format, BSTR s1){
-	USES_CONVERSION;
-	append2(format,W2A(s1));
+	append2c(format,s1);
 }
+
+void append2c ( LPTSTR format, LPCWSTR s1){
+	LPTSTR s;
+	//printf("append2c: '%s' %ls -- ",format, s1);
+	size_t dim = (wcslen( s1 )+ strlen(format)+1) * 2;
+	//printf("allocating %d -- ", dim);
+	//size_t dim = _tcslen( s1 ) * sizeof(_TCHAR) * 2;
+
+	if( (dim > 0) ) {
+		s = (LPTSTR )malloc( dim );
+		if( s != NULL ) {
+			*(s + dim - 1) = '\0';
+			sprintf( s, format, s1 );
+			//printf("generated %s\n", s);
+			append1( s );
+			free( s );
+		}
+	}
+}
+
 /**
  * Copy a generic text string to a char array and copies it
  * to destination array
  */
 void append2( LPTSTR format, LPCTSTR s1 ) {
-	LPTSTR s;
-	//size_t dim = wcslen( s1 ) * 2;
-	size_t dim = _tcslen( s1 ) * sizeof(_TCHAR) * 2;
-
-	if( (strlen( s1 ) != 0) ) {
-		s = (LPTSTR )malloc( dim );
-		if( s != NULL ) {
-			*(s + dim - 1) = '\0';
-			sprintf( s, format, s1 );
-			append1( s );
-			free( s );
-		}
-	}
-
+	//printf("append2 %s\n",s1);
+	USES_CONVERSION;
+	append2c(format,A2W(s1));
 }
 
 /**
  * Copy two generic text strings to a char array and copies it
  * to destination array
  */
-void append3( LPTSTR format, BSTR bstr1, LPCTSTR s2 ) {
-	LPCTSTR s1;
+void append3( LPTSTR format, BSTR s1, LPCTSTR s2 ) {
+	LPCWSTR wideS2;
 	LPTSTR s;
 	USES_CONVERSION;
-	s1 = W2A(bstr1);
-	//size_t dim = ( wcslen( s1 ) + wcslen( s2 ) ) * 2;
-	size_t dim = ( _tcslen( s1 ) + _tcslen( s2 ) ) * sizeof(_TCHAR) * 2;
+	wideS2 = A2W(s2);
+	int formatLength = strlen(format);
+	int width1 = wcslen(s1);
+	int width2 = wcslen(wideS2);
+	size_t dim = ( formatLength+ width1 + width2 +1  ) * 2;
+	//size_t dim = ( _tcslen( s1 ) + _tcslen( wideS2 ) ) * sizeof(_TCHAR) * 2;
 
-	if( (_tcslen( s1 ) != 0) && (_tcslen( s2 ) != 0 ) ) {
+	if( width1 > 0 && width2 > 0 ) {
 		s = (LPTSTR )malloc( dim );
 		if( s != NULL ) {
 			*(s + dim - 1) = '\0';
@@ -452,6 +468,7 @@ LPCTSTR GetTypeKindName( TYPEKIND typekind )
     	CASE_STRING( TKIND_ALIAS )
     	CASE_STRING( TKIND_UNION )
 	}
+		printf("found type %s\n");
 	
 	return s;
 }

@@ -4,7 +4,7 @@ cls
 REM run this from the root directory of the Jacobgen project
 REM it will spit out the interface classes for a dll you pass in as a parameter
 REM sample command line while sitting in the JACOBGEN project directory
-REM $ scripts/jacobgen.bat -destdir:foo -listfile:foo.txt "C:\Program Files\Common Files\Microsoft Shared\VBA\VBA6\VBE6.dll"
+REM $ scripts/jacobgen.bat -destdir:foo -listfile:foo.txt -package:com.jacobgen.test "C:\Program Files\Common Files\Microsoft Shared\VBA\VBA6\VBE6.dll"
 set JAVA_HOME=D:\j2sdk1.4.2_09
 set JRE=%JAVA_HOME%\bin\java
 
