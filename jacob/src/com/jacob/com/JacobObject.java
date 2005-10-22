@@ -44,7 +44,19 @@ import java.util.Properties;
  * result in a segmentation violation.
  */
 public class JacobObject {
+	/**
+	 * holds the build version as retrieved from the version.properties
+	 * file that exists in the JAR.
+	 * This can be retrived by calling the static method getBuildVersion()
+	 * @see getBuildVersion()
+	 */
     private static String buildVersion = "";
+	/**
+	 * holds the build date as retrieved from the version.properties
+	 * file that exists in the JAR
+	 * This can be retrived by calling the static method getBuildDate()
+	 * @see getBuildDate()
+	 */
     private static String buildDate = "";
 
     /**
