@@ -92,6 +92,8 @@ class ROT3TestThread extends Thread
                 {
                     // remove the reference so gc can get it
                     if (!ROT.USE_AUTOMATIC_GARBAGE_COLLECTION){
+                    	// uses deprecated API to set up a special situation
+                    	// because this is an ROT test
                         ROT.removeObject((JacobObject)ThreadObjects.get(i-1));
                     }
                     ThreadObjects.remove(i-1);

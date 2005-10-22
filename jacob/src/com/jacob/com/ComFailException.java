@@ -31,14 +31,20 @@ package com.jacob.com;
  */
 public class ComFailException extends ComException {
     /**
+	 * eclipse generated to get rid of a wanring
+	 */
+	private static final long serialVersionUID = -266047261992987700L;
+
+	/**
+	 * Constructor
      * @param hrNew
      */
-    // Constructors
     public ComFailException(int hrNew) {
         super(hrNew);
     }
 
     /**
+     * Constructor
      * @param hrNew
      * @param message
      */
@@ -58,6 +64,7 @@ public class ComFailException extends ComException {
     }
 
     /**
+     * Constructor
      * @param hrNew
      * @param description
      * @param source
@@ -70,7 +77,7 @@ public class ComFailException extends ComException {
     }
 
     /**
-     * 
+     * No argument Constructor
      */
     public ComFailException() {
         super();
