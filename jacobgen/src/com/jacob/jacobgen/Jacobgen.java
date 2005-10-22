@@ -320,7 +320,7 @@ public class Jacobgen {
 		} else if( classType.equals("TKIND_ALIAS") ) {
 			g = new AliasGenerator( filename, typelibName, destinationPackage, className, baseClass );
 		} else {
-			System.err.println("Uncrcognized class type "+classType);
+			//System.err.println("Unrecognized class type "+classType);
 		}
 		
 		if( g != null )
