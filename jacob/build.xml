@@ -35,6 +35,7 @@
 	<property name="application.title" value="JACOB : Java COM Bridge" />
 	<property name="application.vendor" value="http://jacob-project.sourceforge.net" />
 	<property name="java.src.mainpackage" value="com.jacob" />
+	<property name="java.class.main" value="com.jacob.com.Jacob" />
 	<property name="generated_jar" value="jacob.jar" />
 	<property name="generated_dll" value="jacob.dll" />
 	<property name="generated_zip" value="jacob_${version}" />
@@ -131,7 +132,8 @@
 			<include name="version.properties" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
-				<section name="${java.src.mainpackage}}">
+                <attribute name="Main-Class" value="${java.class.main}"/>
+				<section name="${java.src.mainpackage}">
 					<attribute name="Specification-Title" value="${application.title}" />
 					<attribute name="Specification-Vendor" value="${application.vendor}" />
 					<attribute name="Implementation-Title" value="${application.title} Java libraries" />
@@ -247,6 +249,7 @@
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="LICENSE.* version.properties" />
 			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="${generated_jar}" />
 			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="${generated_dll}" />
+			<zipfileset dir="${basedir}/lib" prefix="${generated_zip}" includes="*.jar" />
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="docs/**" />
 			<zipfileset dir="${install.dir}" prefix="${generated_zip}" includes="docs/**"/>
 		</zip>
@@ -264,7 +267,8 @@
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="samples/**" />
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="unittest/**" />
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="vstudio/**" />
-			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="build.xml, RELEASE.txt" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="lib/**" />
+			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="build.xml, README.txt" />
 			<zipfileset dir="${basedir}"     prefix="${generated_zip}" includes="LICENSE.* version.properties" />
 		</zip>
 	</target>
