@@ -24,9 +24,15 @@ import java.util.*;
 import com.samskivert.viztool.enum.*;
 
 /**
- * Jacobgen produces wrapper output source code
+ * This is the root class for Jacobgen.  It generates 
+ * Jacob wrapper class for windows DLLs.  Run this class
+ * with no command line parameters to get a list of the valid command line options
+ * 
+ * <code>
+ * %JRE% -Xint com.jacob.jacobgen.Jacobgen %1 %2 %3 %4 %5
+ * </code>
  *
- * @version 0.4
+ * @version $Id$
  * @author  Massimiliano Bigatti
  */
 public class Jacobgen {
@@ -63,17 +69,17 @@ public class Jacobgen {
 	
 	protected void loadExternalClasses() {
         String classpath = System.getProperty("java.class.path");
-        ClassEnumerator enum = new ClassEnumerator(classpath);
+        ClassEnumerator aClassEnumerator = new ClassEnumerator(classpath);
 
         // print out the warnings
-        ClassEnumerator.Warning[] warnings = enum.getWarnings();
+        ClassEnumerator.Warning[] warnings = aClassEnumerator.getWarnings();
         for (int i = 0; i < warnings.length; i++) {
             System.out.println("External Class Loader Warning: " + warnings[i].reason);
         }
 
 		externalClasses = new Hashtable();
-        while (enum.hasNext()) {
-			String s = (String)enum.next();
+        while (aClassEnumerator.hasNext()) {
+			String s = (String)aClassEnumerator.next();
 			int p = s.lastIndexOf('.');
             externalClasses.put(s.substring(p+1), s);
         }

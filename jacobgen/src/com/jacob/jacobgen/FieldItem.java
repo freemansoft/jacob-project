@@ -23,7 +23,7 @@ import java.util.*;
 /**
  * Represents a class method
  *
- * @version 0.2
+ * @version $Id$
  * @author  Massimiliano Bigatti
  */
 public class FieldItem {
@@ -37,7 +37,7 @@ public class FieldItem {
 	public static final int FIELDTYPE_UNKNOWN = -1;
 	public static final int FIELDTYPE_CONST = 0;
 	
-	public FieldItem(String line) throws IllegalFormatException {
+	protected FieldItem(String line) throws IllegalFormatException {
 		extractData( line );
 	}
 	

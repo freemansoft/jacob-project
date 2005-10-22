@@ -20,9 +20,14 @@ package com.jacob.jacobgen;
 
 import java.io.*;
 
+/**
+ * This class creates any of the wrapper classes that map to a DLL object
+ * of type TKIND_ALIAS
+ * @version $Id$
+ */
 class AliasGenerator extends AbstractGenerator {
 		
-	public AliasGenerator( String filename, String typelibName, String destinationPackage,
+	protected AliasGenerator( String filename, String typelibName, String destinationPackage,
 		String className, String baseClass ) {
 		super( filename, typelibName, destinationPackage, className, baseClass, 
 				null, null );

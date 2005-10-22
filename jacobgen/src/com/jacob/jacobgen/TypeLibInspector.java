@@ -18,6 +18,12 @@
  */
 package com.jacob.jacobgen;
 
+/**
+ * The wrapper for the jni code that generates the tokenized
+ * representatation of the DLL that is used by the java classes to generate the stubs
+ * @version $Id$
+ *
+ */
 public class TypeLibInspector {
 
 	public native byte[] queryInterface( String filename );
@@ -26,7 +32,7 @@ public class TypeLibInspector {
 		System.loadLibrary("Jacobgen");
 	}
 	
-	public static void main(String[] argv) {
+	protected static void main(String[] argv) {
 		byte buf[];
 		
 		TypeLibInspector dll = new TypeLibInspector();

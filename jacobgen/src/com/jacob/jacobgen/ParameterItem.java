@@ -21,6 +21,7 @@ package com.jacob.jacobgen;
 /**
  * Represent a method parameter
  *
+ * @version $Id$
  * @author  Massimiliano Bigatti
  */
 public class ParameterItem {
@@ -48,7 +49,7 @@ public class ParameterItem {
 							"Long", "Date", "String", "Dispatch", "Error",
 							"Boolean", "Variant", "Byte" };
 
-	public ParameterItem( String name, String nativeType, String type, int direction, boolean optional) {
+	protected ParameterItem( String name, String nativeType, String type, int direction, boolean optional) {
 		this.name = name.substring(0,1).toLowerCase() + name.substring(1);
 		this.nativeType = nativeType;
 		this.type = type;

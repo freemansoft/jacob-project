@@ -21,6 +21,13 @@ package com.jacob.jacobgen;
 import java.io.*;
 import java.util.*;
 
+/**
+ * The standard class generator for DLL entities of type 
+ * TKIND_COCLASS and TKIND_DISPATCH
+ * 
+ * @version $Id$
+ *
+ */
 class ClassGenerator extends AbstractGenerator {
 
 	public static String[] javaKeywords = { "goto", "default", "volatile", "import",
@@ -28,7 +35,7 @@ class ClassGenerator extends AbstractGenerator {
 
 	protected boolean containsDate = false;
 
-	public ClassGenerator( String filename, String typelibName, String destinationPackage,
+	protected ClassGenerator( String filename, String typelibName, String destinationPackage,
 		String className, String baseClass, Vector classFields, Vector classMethods ) {
 		super( filename, typelibName, destinationPackage, className, baseClass,
 				classFields, classMethods );
@@ -155,8 +162,10 @@ class ClassGenerator extends AbstractGenerator {
         // this is only necessary if we want to comment non-basetypes and if it is an output-parameter
         char[] achParamSpace = new char[p.getJavaName().length()];
         Arrays.fill(achParamSpace, ' ');
+        // don't want to put a char array in a write() statement
+        String achParamSpaceString = new String(achParamSpace);
         w.write( "\t * @param " + p.getJavaName() + " is an one-element array which sends the input-parameter\n"
-               + "\t *        " + achParamSpace   + " to the ActiveX-Component and receives the output-parameter\n" );
+               + "\t *        " + achParamSpaceString   + " to the ActiveX-Component and receives the output-parameter\n" );
       }
     }
 
@@ -235,8 +244,6 @@ class ClassGenerator extends AbstractGenerator {
 
 	protected void writeMethodBody( MethodItem mi, int paramNum,
 					boolean	baseTypes ) throws IOException {
-		ParameterItem[] params;
-		params = mi.getParameters();
 
 		switch( mi.getMethodType() ) {
 			case MethodItem.METHODTYPE_FUNCTION:

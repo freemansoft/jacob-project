@@ -21,9 +21,15 @@ package com.jacob.jacobgen;
 import java.io.*;
 import java.util.*;
 	
+/**
+ * the class that generates java classes representing DLL entities of type TKIND_ENUM
+ * 
+ * @version $Id$
+ *
+ */
 class EnumGenerator extends AbstractGenerator {
 
-	public EnumGenerator( String filename, String typelibName, String destinationPackage,
+	protected EnumGenerator( String filename, String typelibName, String destinationPackage,
 		String className, String baseClass, Vector classFields, Vector classMethods ) {
 		super( filename, typelibName, destinationPackage, className, baseClass,
 				classFields, classMethods );

@@ -21,8 +21,9 @@ package com.jacob.jacobgen;
 import java.util.*;
 
 /**
- * Represents a class method
+ * Represents a class method.
  *
+ * @version $Id$
  * @author  Massimiliano Bigatti
  */
 public class MethodItem {
@@ -41,7 +42,7 @@ public class MethodItem {
 	public static final int METHODTYPE_PROPERTYPUT = 3;
 	public static final int METHODTYPE_PROPERTYPUTREF = 4;
 	
-	public MethodItem(String line) throws IllegalFormatException {
+	protected MethodItem(String line) throws IllegalFormatException {
 		parametersList = new Vector();
 		extractData( line );
 	}
