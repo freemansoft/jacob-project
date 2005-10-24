@@ -18,10 +18,7 @@ public class Command extends Dispatch
 	 */
 	public Command(Dispatch dispatchTarget)
 	{
-		// take over the IDispatch pointer
-	  m_pDispatch = dispatchTarget.m_pDispatch;
-		// null out the input's pointer
-		dispatchTarget.m_pDispatch = 0;
+		super(dispatchTarget);
 	}
 
   public Variant getProperties()

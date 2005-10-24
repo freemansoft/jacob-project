@@ -1,38 +1,21 @@
 /*
- * Copyright (c) 1999 Dan Adler, 315 E72 St. NY, NY, 10021, USA.
- * mailto:danadler@rcn.com. All rights reserved.
+ * Copyright (c) 1999-2004 Sourceforge JACOB Project.
+ * All rights reserved. Originator: Dan Adler (http://danadler.com).
+ * Get more information about JACOB at www.sourceforge.net/jacob-project
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the
- *    distribution.
- * 3. Redistributions in any form must be accompanied by information on
- *    how to obtain complete source code for the JACOB software.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * Redistribution of the JACOB software is not permitted as part of any
- * commercial product that is targeted primarily at Java developers.
- * Such products include, but are not limited to: Java virtual machines,
- * integrated development environments, code libraries, and application
- * server products. Licensing terms for such distribution may be
- * obtained from the copyright holder.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED 
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, 
- * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #include <jni.h>
 #include <windows.h>
@@ -54,25 +37,21 @@
 class EventProxy : public IDispatch
 {
 private:
-  LONG    m_cRef;
+  LONG    m_cRef;		// a reference counter
   CComPtr<IConnectionPoint> pCP; // the connection point
   DWORD   dwEventCookie; // connection point cookie
   jobject javaSinkObj;   // the java object to delegate calls
-  jclass  javaSinkClass; // the java class of the object
-  jobject javaVariantObj;	// a variant object passed in so we can find Variant later
 
   IID     eventIID;      // the interface iid passed in
-  int     MethNum;
+  int     MethNum;		// number of methods in the callback interface
   CComBSTR *MethName;   // Array of method names
-  DISPID   *MethID;     // Array of method ids
-  jmethodID *JMethID;   // Array of java method ids
-	JavaVM   *jvm;        // The java vm we are running
+  DISPID   *MethID;     // Array of method ids, used to match invokations to method names
+  JavaVM   *jvm;        // The java vm we are running
 public:
   // constuct with a global JNI ref to a sink object
   // to which we will delegate event callbacks
   EventProxy(JNIEnv *jenv, 
   		jobject aSinkObj, 
-  		jobject aVariantObj,
         CComPtr<IConnectionPoint> pConn, 
         IID eventIID, 
         CComBSTR *mName, 
@@ -89,8 +68,11 @@ public:
   STDMETHODIMP_(ULONG) Release(void)
   {
     LONG res = InterlockedDecrement(&m_cRef);
-    if (res == 0) delete this;
+    if (res == 0) {
+    	delete this;
+    }
     return res;
+    
   }
 
   STDMETHODIMP QueryInterface(REFIID rid, void **ppv);

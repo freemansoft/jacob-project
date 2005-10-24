@@ -1,0 +1,1 @@
+Information about what's new in this release can be found in docs/ReleaseNotes.html

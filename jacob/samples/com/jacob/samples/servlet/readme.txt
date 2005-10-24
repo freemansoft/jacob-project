@@ -1,5 +1,6 @@
 This sample runs in Weblogic 5.1 as a servlet.
 
+0. Rename JacobScript.java_nocompile to JacobScript.java
 1. Compile this file (make sure you have jdk1.2 installed or the
    javax.servlet.* classes in your classpath).
 2. Make sure the weblogic policy file allows native access. The easiest

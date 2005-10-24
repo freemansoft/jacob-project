@@ -35,8 +35,6 @@ class ROT3TestThread extends Thread
 {
     private java.util.List ThreadObjects;
 
-    private boolean DivideMode = true;
-
     private int initialRunSize = 0;
     /**
      * @param arg0
@@ -74,7 +72,7 @@ class ROT3TestThread extends Thread
             String message = "";
             message = getName()+" Workingset=" +ThreadObjects.size()
             	+" ROT: "+ROT.getThreadObjects(true).hashCode();
-			message += "before mods and gc "+ROT.getThreadObjects(true).size()+")";
+			message += " before mods and gc "+ROT.getThreadObjects(true).size()+")";
             // if there is an odd number of objects greater than 2
             if (ThreadObjects.size() > 10)
             {
@@ -94,6 +92,8 @@ class ROT3TestThread extends Thread
                 {
                     // remove the reference so gc can get it
                     if (!ROT.USE_AUTOMATIC_GARBAGE_COLLECTION){
+                    	// uses deprecated API to set up a special situation
+                    	// because this is an ROT test
                         ROT.removeObject((JacobObject)ThreadObjects.get(i-1));
                     }
                     ThreadObjects.remove(i-1);

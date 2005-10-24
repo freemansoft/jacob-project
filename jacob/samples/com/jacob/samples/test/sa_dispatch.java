@@ -5,9 +5,10 @@ import com.jacob.activeX.*;
 
 class sa_dispatch
 {
-  public static void main(String args[])
-  {
-    System.runFinalizersOnExit(true);
+	public static void main(String args[])
+	{
+	  // deprecated
+	  //System.runFinalizersOnExit(true);
 
     try {
       String lang = "VBScript";

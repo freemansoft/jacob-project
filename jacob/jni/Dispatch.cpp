@@ -1,31 +1,21 @@
 /*
  * Copyright (c) 1999-2004 Sourceforge JACOB Project.
  * All rights reserved. Originator: Dan Adler (http://danadler.com).
+ * Get more information about JACOB at www.sourceforge.net/jacob-project
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution. 
- * 3. Redistributions in any form must be accompanied by information on
- *    how to obtain complete source code for the JACOB software.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #include "stdafx.h"
 #include <objbase.h>
@@ -53,6 +43,12 @@ IDispatch *extractDispatch(JNIEnv *env, jobject arg)
   return v;
 }
 
+/**
+ * This method finds an interface rooted on the passed in dispatch object.
+ * This creates a new Dispatch object so it is NOT reliable 
+ * in the event callback thread of a JWS client where the root class loader
+ * does not have com.jacob.com.Dispatch in its classpath
+ */
 JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
   (JNIEnv *env, jobject _this, jstring _iid)
 {
@@ -79,8 +75,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
   }
 
   jclass autoClass = env->FindClass("com/jacob/com/Dispatch");
-  jmethodID autoCons =
-  env->GetMethodID(autoClass, "<init>", "(I)V");
+  jmethodID autoCons = env->GetMethodID(autoClass, "<init>", "(I)V");
   // construct a Dispatch object to return
   // I am copying the pointer to java
   // jacob-msg 1817 - SF 1053871 :  QueryInterface already called AddRef!!

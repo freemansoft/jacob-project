@@ -1,31 +1,21 @@
 /*
  * Copyright (c) 1999-2004 Sourceforge JACOB Project.
  * All rights reserved. Originator: Dan Adler (http://danadler.com).
+ * Get more information about JACOB at www.sourceforge.net/jacob-project
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution. 
- * 3. Redistributions in any form must be accompanied by information on
- *    how to obtain complete source code for the JACOB software.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package com.jacob.com;
 
@@ -152,9 +142,14 @@ public class Dispatch extends JacobObject
     }
 
     /**
-     * Constructor that calls createInstance with progid. This is the
-     * constructor used by the ActiveXComponent
-     * 
+     * This constructor calls createInstance with progid. This is the
+     * constructor used by the ActiveXComponent or by programs that 
+     * don't like the activeX interface but wish to create new connections
+     * to windows programs.
+     * <p>
+     * This constructor always creates a new windows/program object
+     * because it is based on the CoCreate() windows function.  
+     * <p>
      * @param requestedProgramId
      */
     public Dispatch(String requestedProgramId) {
@@ -163,15 +158,29 @@ public class Dispatch extends JacobObject
     }
 
     /**
-     * native call createIstnace only used by the constructor with the same parm
-     * type could this be private?
+     * native call createInstance only used by the constructor with the same parm
+     * type. This probably should be private.  It is the wrapper for the
+     * Windows CoCreate() call
+     * <P>
+     * This ends up calling CoCreate down in the JNI layer
      * 
      * @param progid
      */
     protected native void createInstance(String progid);
 
     /**
-     * return a different interface by IID string
+     * Return a different interface by IID string.
+     * <p>
+     * Once you have a Dispatch object, you can navigate to the other 
+     * interfaces of a COM object by calling QueryInterafce. 
+     * The argument is an IID string in the format: 
+     * "{9BF24410-B2E0-11D4-A695-00104BFF3241}". You typically get 
+     * this string from the idl file (it's called uuid in there). 
+     * Any interface you try to use must be derived from IDispatch. T
+     * The atl example uses this.
+     * <p>
+     * The Dispatch instance resulting from this query is instanciated in the
+     * JNI code.
      * 
      * @param iid
      * @return Dispatch a disptach that matches ??
@@ -180,7 +189,9 @@ public class Dispatch extends JacobObject
 
     /**
      * Constructor that only gets called from JNI
-     * 
+     * QueryInterface calls JNI code that looks up the object 
+     * for the key passed in.  The JNI CODE then creates a new dispatch object
+     * using this constructor
      * @param pDisp
      */
     protected Dispatch(int pDisp) {

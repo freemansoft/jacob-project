@@ -1,31 +1,21 @@
 /*
  * Copyright (c) 1999-2004 Sourceforge JACOB Project.
  * All rights reserved. Originator: Dan Adler (http://danadler.com).
+ * Get more information about JACOB at www.sourceforge.net/jacob-project
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution. 
- * 3. Redistributions in any form must be accompanied by information on
- *    how to obtain complete source code for the JACOB software.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #include "EventProxy.h"
 #include "Variant.h"
@@ -33,7 +23,6 @@
 // hook myself up as a listener for delegate
 EventProxy::EventProxy(JNIEnv *env, 
 		jobject aSinkObj, 
-		jobject aVariantObj,
         CComPtr<IConnectionPoint> pConn,
         IID eid, 
         CComBSTR mName[], 
@@ -42,14 +31,11 @@ EventProxy::EventProxy(JNIEnv *env,
    // initialize some variables
    m_cRef(0), pCP(pConn), 
    eventIID(eid), MethNum(mNum), MethName(mName), 
-   MethID(mID), JMethID(NULL), 
-   javaSinkClass(NULL)
+   MethID(mID)
 {
 	// don't really need the variant object but we keep a reference 
 	// anyway
   javaSinkObj = env->NewGlobalRef(aSinkObj);
-	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
-  javaVariantObj = env->NewGlobalRef(aVariantObj);
 	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 
 	// we need this to attach to the event invocation thread
@@ -58,28 +44,6 @@ EventProxy::EventProxy(JNIEnv *env,
   AddRef();
   HRESULT hr = pCP->Advise(this, &dwEventCookie);
   if (SUCCEEDED(hr)) {
-
-    // create a mapping from the DISPID's to jmethodID's by using
-    // the method names I extracted from the classinfo
-    JMethID = new jmethodID[MethNum];
-
-    javaSinkClass = env->GetObjectClass(javaSinkObj);
-		if (javaSinkClass == NULL){ printf("can't figure out java sink class"); }
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
-
-    const char *method;
-    for(int i=0;i<MethNum;i++) 
-    {
-      // look for a method with the specified name, that takes an
-      // array of variants and return void
-      USES_CONVERSION;
-      method = W2A((OLECHAR *)MethName[i]);
-      JMethID[i] = env->GetMethodID(javaSinkClass, method, "([Lcom/jacob/com/Variant;)V");
-      // need to clear exceptions because GetMethodID above may fail
-      // if the user didn't implement all the methods
-      env->ExceptionClear();
-    }
-
   } else {
     ThrowComFail(env, "Advise failed", hr);
   }
@@ -92,8 +56,10 @@ EventProxy::~EventProxy()
 	JNIEnv *env;
   // attach to the current running thread
   #ifdef JNI_VERSION_1_2
+  	printf("using version 1.2 API\n");
      jvm->AttachCurrentThread((void **)&env, jvm);
   #else
+  	printf("not using version 1.2 API\n");
      jvm->AttachCurrentThread((void**)&env, NULL);
   #endif
 
@@ -103,7 +69,6 @@ EventProxy::~EventProxy()
   if (MethNum) {
     delete [] MethName;
     delete [] MethID;
-    if (JMethID) delete [] JMethID;
   }
 	// detach from thread
   jvm->DetachCurrentThread();
@@ -138,22 +103,18 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 {
   //Visual C++ 6.0 recognized this as an unused variable
   //HRESULT     hr;
-  jmethodID meth = 0;
+  
+  const char *eventMethodName;
   JNIEnv      *env = NULL;
-
 
   // map dispID to jmethodID
   for(int i=0;i<MethNum;i++) 
   {
-    if (MethID[i] == dispID) { meth = JMethID[i]; break; }
+    if (MethID[i] == dispID) { 
+		USES_CONVERSION;
+		eventMethodName = W2A((OLECHAR *)MethName[i]);
+    	}
   }
-
-  if (!meth) 
-  {
-    // user did not implement this method
-    return S_OK;
-  }
-
   if (DISPATCH_METHOD & wFlags) 
   {
     // attach to the current running thread
@@ -163,43 +124,41 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
      jvm->AttachCurrentThread((void**)&env, NULL);
   	#endif
 
+	if (!eventMethodName) 
+  	{
+  		ThrowComFail(env, "Event method received was not defined as part of callback interface", -1);
+	    // user did not implement this method
+    	return S_OK;
+	  }
 
-    // get variant class
-	jclass vClass = NULL;
-	// do this in a JACOB 1.8 backwards compatable way
-	// this succeeds if the class was loaded from the bootstrap class loader
-    //vClass = env->FindClass("com/jacob/com/Variant");
-    // this is guarenteed to work so there really isn't any need for the line above
-    // but I don't want to bust anything so we leave it in
-    // the following code exists to support launchers like JWS where jacob isn't 
-    // in the system classloader so we wouldn't be able to create a variant class
-	if (vClass == NULL){
-		// there will be a stored up exception if FindClass failed so lets clear it
-		if (env->ExceptionOccurred()) { env->ExceptionClear(); }
-		//printf("using variant class passed in via constructor\n");
-	    jclass javaVariantClass = env->GetObjectClass(javaVariantObj);
-			if (javaVariantClass == NULL){ printf("can't figure out java Variant class"); }
+
+	// find the class of the InvocationHandler
+   	jclass javaSinkClass = env->GetObjectClass(javaSinkObj);
 			if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
-		vClass = javaVariantClass;
-		if (vClass == NULL){
-			printf("This application is probably running from a launcher where system class loader knows not Jacob\n");
-			printf("And for some reason we couldn't find the variant class from the passed in variant\n");
-		}
-	}
-
-    // how many params
-    int num = pDispParams->cArgs;
-    // and the constructor
-    jmethodID vCons = env->GetMethodID(vClass, "<init>", "()V");
+    jmethodID invokeMethod = env->GetMethodID(javaSinkClass, "invoke", 
+    		"(Ljava/lang/String;[Lcom/jacob/com/Variant;)V");
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+    jstring eventMethodNameAsString = env->NewStringUTF(eventMethodName);
+	// now do what we need for the variant
+    jmethodID getVariantMethod = 
+    	env->GetMethodID(javaSinkClass, "getVariant", "()Lcom/jacob/com/Variant;");
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+    jobject aVariantObj = env->CallObjectMethod(javaSinkObj, getVariantMethod); 
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+   	jclass variantClass = env->GetObjectClass(aVariantObj);
+			if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+
+	// create the variant parameter array
+    // how many params
+    int numVariantParams = pDispParams->cArgs;
     // make an array of them
-    jobjectArray varr = env->NewObjectArray(num, vClass, 0);
+    jobjectArray varr = env->NewObjectArray(numVariantParams, variantClass, 0);
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     int i,j;
-    for(i=num-1,j=0;i>=0;i--,j++) 
+    for(i=numVariantParams-1,j=0;i>=0;i--,j++) 
     {
       // construct a java variant holder
-      jobject arg = env->NewObject(vClass, vCons);
+	  jobject arg = env->CallObjectMethod(javaSinkObj, getVariantMethod); 
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
       // get the empty variant from it
       VARIANT *va = extractVariant(env, arg);
@@ -210,13 +169,15 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 			env->DeleteLocalRef(arg);
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     }
-    // call the method
-    env->CallVoidMethod(javaSinkObj, meth, varr); 
+    env->CallVoidMethod(javaSinkObj, invokeMethod, 
+    		eventMethodNameAsString, varr); 
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+	// don't need the first variant we created to get the class
+	env->DeleteLocalRef(aVariantObj);
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 
-
     // Begin code from Jiffie team that copies parameters back from java to COM
-    for(i=num-1,j=0;i>=0;i--,j++) 
+    for(i=numVariantParams-1,j=0;i>=0;i--,j++) 
     {
 	  jobject arg = env->GetObjectArrayElement(varr, j);
       VARIANT *java = extractVariant(env, arg);

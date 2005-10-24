@@ -1,31 +1,21 @@
 /*
  * Copyright (c) 1999-2004 Sourceforge JACOB Project.
  * All rights reserved. Originator: Dan Adler (http://danadler.com).
+ * Get more information about JACOB at www.sourceforge.net/jacob-project
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution. 
- * 3. Redistributions in any form must be accompanied by information on
- *    how to obtain complete source code for the JACOB software.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package com.jacob.com;
 
@@ -45,17 +35,43 @@ package com.jacob.com;
 public class DispatchEvents extends JacobObject {
     
     /**
-     * ponter to an MS data struct.
+     * pointer to an MS data struct.
+     * The COM layer knows the name of this variable and puts the windows
+     * memory pointer here.
      */
     int m_pConnPtProxy = 0;
-
     /**
-     * create a permanent reference to this Variant so that
-     * it never gets garbage collected.   The 
-     * Dispatch proxies will keep a handle on this so
-     * we don't really want it released
+     * the wrapper for the event sink.
+     * This object is the one that will be sent a message when an event
+     * occurs in the MS layer.  Normally, the InvocationProxy will forward
+     * the messages to a wrapped object that it contains.
      */
-    private static Variant prototypicalVariant = new VariantViaEvent();
+    InvocationProxy mInvocationProxy = null;
+
+    
+    /**
+     * A constructor for those that want to supply their own InvocationProxy.
+     * or subclass (future implementations may take an interface).
+     * This lets someone distribute their events to other objects
+     * at the single method dispatch point.
+     * <p>
+     * Most users of this class will use the other constructors!
+     * 
+     * @param sourceOfEvent the Dispatch object that will send events
+     * @param pInvocationProxy the proxy object that expects to receive the
+     * 	events for some other object
+     */
+    public DispatchEvents(Dispatch sourceOfEvent, InvocationProxy pInvocationProxy){
+    	mInvocationProxy = pInvocationProxy;
+    	if (mInvocationProxy != null){
+    		init(sourceOfEvent, mInvocationProxy);
+    	} else {
+    		if (JacobObject.isDebugEnabled()){
+    			JacobObject.debug("Cannot register null invocation proxy for events");
+    		}
+    		throw new IllegalArgumentException("Cannot register null invocation proxy for events");
+    	}
+    }
     
     /**
      * Creates the event callback linkage between the the
@@ -65,7 +81,19 @@ public class DispatchEvents extends JacobObject {
      * @param eventSink Java object that wants to receive the events
      */
     public DispatchEvents(Dispatch sourceOfEvent, Object eventSink) {
-        init(sourceOfEvent, eventSink, prototypicalVariant);
+		if (JacobObject.isDebugEnabled()){
+			System.out.println(
+					"DispatchEvents: Registering "+ eventSink + "for events ");
+		}
+    	mInvocationProxy = new InvocationProxy(eventSink);
+    	if (mInvocationProxy != null){
+    		init(sourceOfEvent, mInvocationProxy);
+    	} else {
+    		if (JacobObject.isDebugEnabled()){
+    			JacobObject.debug("Cannot register null event sink for events");
+    		}
+    		throw new IllegalArgumentException("Cannot register null event sink for events");
+    	}    		
     }
 
     /**
@@ -74,34 +102,42 @@ public class DispatchEvents extends JacobObject {
      * Java object that will receive the callback.
      * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
      * @param eventSink Java object that wants to receive the events
-     * @param progId
+     * @param progId ???
      */
     public DispatchEvents(Dispatch sourceOfEvent, Object eventSink, String progId) {
-        init2(sourceOfEvent, eventSink, prototypicalVariant, progId);
+		if (JacobObject.isDebugEnabled()){
+			System.out.println(
+					"DispatchEvents: Registering "+ eventSink + "for events ");
+		}
+    	mInvocationProxy = new InvocationProxy(eventSink);
+    	if (mInvocationProxy != null) {
+	        init2(sourceOfEvent, mInvocationProxy, progId);
+		} else {
+			if (JacobObject.isDebugEnabled()){
+				JacobObject.debug("Cannot register null event sink for events");
+			}
+    		throw new IllegalArgumentException("Cannot register null event sink for events");
+		}
     }
 
     /**
      * hooks up a connection point proxy by progId
      * event methods on the sink object will be called
      * by name with a signature of <name>(Variant[] args)
-     * protoVariant is a sacrificial variant object so we don't have to do findClass in callbacks
      * @param src
      * @param sink
-     * @param protoVariant
      */
-    protected native void init(Dispatch src, Object sink, Object protoVariant);
+    protected native void init(Dispatch src, Object sink);
 
     /**
      * hooks up a connection point proxy by progId
      * event methods on the sink object will be called
      * by name with a signature of <name>(Variant[] args)
-     * protoVariant is a sacrificial variant object so we don't have to do findClass in callbacks
      * @param src
      * @param sink
-     * @param protoVariant
      * @param progId
      */
-    protected native void init2(Dispatch src, Object sink, Object protoVariant, String progId);
+    protected native void init2(Dispatch src, Object sink, String progId);
 
     /**
      *  now private so only this object can asccess
@@ -123,13 +159,17 @@ public class DispatchEvents extends JacobObject {
      * @see com.jacob.com.JacobObject#safeRelease()
      */
     public void safeRelease(){
+    	if (mInvocationProxy!=null){
+    		mInvocationProxy.clearTarget();
+    	}
+        mInvocationProxy = null;
         super.safeRelease();
         if (m_pConnPtProxy != 0){
             release();
             m_pConnPtProxy = 0;
         } else {
             // looks like a double release
-            if (isDebugEnabled()){debug(this.getClass().getName()+":"+this.hashCode()+" double release");}
+            if (isDebugEnabled()){debug("DispatchEvents:"+this.hashCode()+" double release");}
         }
     }
 

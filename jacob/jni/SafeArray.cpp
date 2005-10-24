@@ -1,31 +1,21 @@
 /*
  * Copyright (c) 1999-2004 Sourceforge JACOB Project.
  * All rights reserved. Originator: Dan Adler (http://danadler.com).
+ * Get more information about JACOB at www.sourceforge.net/jacob-project
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution. 
- * 3. Redistributions in any form must be accompanied by information on
- *    how to obtain complete source code for the JACOB software.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #include "SafeArray.h"
 // Win32 support for Ole Automation
@@ -1598,6 +1588,11 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setDoubles
  * Class:     SafeArray
  * Method:    getString
  * Signature: (I)Ljava/lang/String;
+ * 
+ * There is supposed to be a leak in here, SourceForge 1224219 
+ * that should be fixed with a call to 
+ * "StrFree, Release or VariantClear to release the memory"
+ * waiting on the actual patch the submitter used before modifying this
  */
 JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString__I
   (JNIEnv *env, jobject _this, jint idx)
@@ -2438,5 +2433,507 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setVariants
     ThrowComFail(env, "safearray type is not variant", -1);
   } 
 }
+
+/* PLEASE NOTE THE LINE: 
+jint *jIndices = env->GetIntArrayElements(indices, NULL);
+which I added to replace "long idx[2] = {i,j};" from the 2D case.
+Not sure if this is correct. Also, check that I am doing the null test and
+dimension test correctly.
+*/
+
+#define GETNDCODE(varType, varAccess, jtyp) \
+  SAFEARRAY *sa = extractSA(env, _this); \
+  if (!sa) { \
+    ThrowComFail(env, "safearray object corrupted", -1); \
+    return NULL; \
+  } \
+  jint *jIndices = env->GetIntArrayElements(indices, NULL); \
+  if (!jIndices) { \
+    ThrowComFail(env, "null indices array", -1); \
+    return NULL; \
+  } \
+  if (SafeArrayGetDim(sa) != env->GetArrayLength(indices)) { \
+    ThrowComFail(env, "safearray and indices array have different dimensions", -1); \
+    return NULL; \
+  } \
+  VARTYPE vt; \
+  SafeArrayGetVartype(sa, &vt); \
+  if (vt == VT_VARIANT) { \
+    VARIANT v; \
+    VariantInit(&v); \
+    SafeArrayGetElement(sa, jIndices, (void*) &v); \
+    if (FAILED(VariantChangeType(&v, &v, 0, varType))) { \
+      ThrowComFail(env, "VariantChangeType failed", -1); \
+      return NULL; \
+    } \
+    return (jtyp)varAccess(&v); \
+  } else if (vt == varType) { \
+    jtyp jc; \
+    SafeArrayGetElement(sa, jIndices, (void*) &jc); \
+    return jc; \
+  } else { \
+    return NULL; \
+  } 
+
+
+//---------------------------------
+
+/* PLEASE NOTE THE LINE: 
+jint *jIndices = env->GetIntArrayElements(indices, NULL);
+which I added to replace "long idx[2] = {i,j};" from the 2D case.
+Not sure if this is correct. Also, check that I am doing the null test and
+dimension test correctly.
+ */
+
+#define SETNDCODE(varType, varAccess) \
+  SAFEARRAY *sa = extractSA(env, _this); \
+  if (!sa) { \
+    ThrowComFail(env, "safearray object corrupted", -1); \
+    return; \
+  } \
+  jint *jIndices = env->GetIntArrayElements(indices, NULL); \
+  if (!jIndices) { \
+    ThrowComFail(env, "null indices array", -1); \
+    return; \
+  } \
+  if (SafeArrayGetDim(sa) != env->GetArrayLength(indices)) { \
+    ThrowComFail(env, "safearray and indices array have different dimensions", -1); \
+    return; \
+  } \
+  VARTYPE vt; \
+  SafeArrayGetVartype(sa, &vt); \
+  if (vt == VT_VARIANT) { \
+    VARIANT v; \
+    VariantInit(&v); \
+    V_VT(&v) = varType; \
+    varAccess(&v) = c; \
+    SafeArrayPutElement(sa,jIndices,&v); \
+  } else if (vt == varType) { \
+    SafeArrayPutElement(sa, jIndices,&c); \
+  } else { \
+    ThrowComFail(env, "safearray type mismatch", -1); \
+  } 
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getVariant
+ * Signature: ([I)Lcom/jacob/com/Variant;
+ */
+JNIEXPORT jobject JNICALL Java_com_jacob_com_SafeArray_getVariant___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+
+  SAFEARRAY *psa = extractSA(env, _this);
+  if (!psa) {
+    ThrowComFail(env, "safearray object corrupted", -1);
+    return NULL;
+  }
+  VARTYPE vt;
+  SafeArrayGetVartype(psa, &vt);
+
+  // ??? Not sure if this is correct type for call to SafeArrayGetElement()
+  jint *jIndices = env->GetIntArrayElements(indices, NULL);
+
+  if (!jIndices) {
+    ThrowComFail(env, "null indices array", -1);
+    return NULL;
+  }
+  if (SafeArrayGetDim(psa) != env->GetArrayLength(indices)) { 
+    ThrowComFail(env, "safearray and indices array have different dimensions", -1);
+    return NULL;
+  }
+
+
+  // prepare a new return value
+  jclass variantClass = env->FindClass("com/jacob/com/Variant");
+  jmethodID variantCons = 
+      env->GetMethodID(variantClass, "<init>", "()V");
+  // construct a variant to return
+  jobject newVariant = env->NewObject(variantClass, variantCons);
+  // get the VARIANT from the newVariant
+  VARIANT *v = extractVariant(env, newVariant);
+  if (vt == VT_VARIANT) {
+    SafeArrayGetElement(psa, jIndices, v);
+  } else if (vt == VT_DISPATCH || vt == VT_UNKNOWN) {
+    IDispatch *disp;
+    SafeArrayGetElement(psa, jIndices, (void *)&disp);
+    VariantClear(v); // whatever was there before
+    V_VT(v) = VT_DISPATCH;
+    V_DISPATCH(v) = disp;
+    // I am handing the pointer to COM
+    disp->AddRef();
+  } else {
+    ThrowComFail(env, "safearray type is not variant/dispatch", -1);
+  }
+  return newVariant;
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setVariant
+ * Signature: ([ILcom/jacob/com/Variant;)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setVariant___3ILcom_jacob_com_Variant_2
+  (JNIEnv *env, jobject _this, jintArray indices, jobject s)
+{
+
+  SAFEARRAY *sa = extractSA(env, _this);
+  if (!sa) {
+    ThrowComFail(env, "safearray object corrupted", -1);
+    return;
+  } 
+
+  // ??? Not sure if this is correct type for call to SafeArrayGetElement()
+  jint *jIndices = env->GetIntArrayElements(indices, NULL);
+
+  if (!jIndices) {
+    ThrowComFail(env, "null indices array", -1);
+    return;
+  }
+  if (SafeArrayGetDim(sa) != env->GetArrayLength(indices)) { 
+    ThrowComFail(env, "safearray and indices array have different dimensions", -1);
+    return;
+  }
+
+  VARTYPE vt;
+  SafeArrayGetVartype(sa, &vt);
+  
+  if (vt == VT_VARIANT) {
+    VARIANT *v = extractVariant(env, s);
+    SafeArrayPutElement(sa, jIndices, v);
+  } else if (vt == VT_DISPATCH || vt == VT_UNKNOWN) {
+    VARIANT *v = extractVariant(env, s);
+    if (V_VT(v) != VT_DISPATCH) {
+      ThrowComFail(env, "variant is not dispatch", -1);
+      return;
+    }
+    IDispatch *disp = V_DISPATCH(v);
+    SafeArrayPutElement(sa, jIndices, disp);
+  } else {
+    ThrowComFail(env, "safearray type is not variant/dispatch", -1);
+  }
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getChar
+ * Signature: ([I)C
+ */
+JNIEXPORT jchar JNICALL Java_com_jacob_com_SafeArray_getChar___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+  GETNDCODE(VT_UI2, V_UI2, jchar)
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setChar
+ * Signature: ([IC)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setChar___3IC
+  (JNIEnv *env, jobject _this, jintArray indices, jchar c)
+{
+  SETNDCODE(VT_UI2, V_UI2);
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getInt
+ * Signature: ([I)I
+ */
+JNIEXPORT jint JNICALL Java_com_jacob_com_SafeArray_getInt___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+  GETNDCODE(VT_I4, V_I4, jint)
+}
+
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setInt
+ * Signature: ([II)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setInt___3II
+  (JNIEnv *env, jobject _this, jintArray indices, jint c)
+{
+  SETNDCODE(VT_I4, V_I4);
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getShort
+ * Signature: ([I)S
+ */
+JNIEXPORT jshort JNICALL Java_com_jacob_com_SafeArray_getShort___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+  GETNDCODE(VT_I2, V_I2, jshort)
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setShort
+ * Signature: ([IS)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setShort___3IS
+  (JNIEnv *env, jobject _this, jintArray indices, jshort c)
+{
+  SETNDCODE(VT_I2, V_I2);
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getDouble
+ * Signature: ([I)D
+ */
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_SafeArray_getDouble___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+  GETNDCODE(VT_R8, V_R8, jdouble)
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setDouble
+ * Signature: ([ID)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setDouble___3ID
+  (JNIEnv *env, jobject _this, jintArray indices, jdouble c)
+{
+  SETNDCODE(VT_R8, V_R8);
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getString
+ * Signature: ([I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+  SAFEARRAY *psa = extractSA(env, _this);
+  if (!psa) {
+    ThrowComFail(env, "safearray object corrupted", -1); \
+    return NULL;
+  }
+
+  // ??? Not sure if this is correct type for call to SafeArrayGetElement()
+  jint *jIndices = env->GetIntArrayElements(indices, NULL);
+
+  if (!jIndices) {
+    ThrowComFail(env, "null indices array", -1);
+    return NULL;
+  }
+  if (SafeArrayGetDim(psa) != env->GetArrayLength(indices)) { 
+    ThrowComFail(env, "safearray and indices array have different dimensions", -1);
+    return NULL;
+  }
+
+  VARTYPE vt;
+  SafeArrayGetVartype(psa, &vt);
+  if (vt == VT_VARIANT) {
+    VARIANT v;
+    VariantInit(&v);
+    SafeArrayGetElement(psa, jIndices, &v);
+    if (FAILED(VariantChangeType(&v, &v, 0, VT_BSTR))) {
+      return NULL;
+    }
+    BSTR bs = V_BSTR(&v);
+    jstring js = env->NewString(bs, SysStringLen(bs));
+    return js;
+  } else if (vt == VT_BSTR) {
+    BSTR bs = NULL;
+    SafeArrayGetElement(psa, jIndices, &bs);
+    jstring js = env->NewString(bs, SysStringLen(bs));
+    return js;
+  }
+  ThrowComFail(env, "safearray cannot get string", 0);
+  return NULL;
+}
+
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setString
+ * Signature: ([ILjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString___3ILjava_lang_String_2
+  (JNIEnv *env, jobject _this, jintArray indices, jstring s)
+{
+  SAFEARRAY *sa = extractSA(env, _this);
+  if (!sa) {
+    ThrowComFail(env, "safearray object corrupted", -1);
+    return;
+  } 
+
+  // ??? Not sure if this is correct type for call to SafeArrayGetElement()
+  jint *jIndices = env->GetIntArrayElements(indices, NULL);
+
+  if (!jIndices) {
+    ThrowComFail(env, "null indices array", -1);
+    return;
+  }
+  if (SafeArrayGetDim(sa) != env->GetArrayLength(indices)) { 
+    ThrowComFail(env, "safearray and indices array have different dimensions", -1);
+    return;
+  }
+
+  VARTYPE vt;
+  SafeArrayGetVartype(sa, &vt);
+  if (vt == VT_VARIANT) {
+    VARIANT v;
+    VariantInit(&v);
+    const char *str = env->GetStringUTFChars(s, NULL);
+    CComBSTR bs(str);
+    V_VT(&v) = VT_BSTR;
+    V_BSTR(&v) = bs.Copy();
+    SafeArrayPutElement(sa, jIndices,&v);
+    env->ReleaseStringUTFChars(s, str);
+    VariantClear(&v);
+  } else if (vt == VT_BSTR) {
+    const char *str = env->GetStringUTFChars(s, NULL);
+    CComBSTR bs(str);
+    SafeArrayPutElement(sa, jIndices,bs.Detach());
+    env->ReleaseStringUTFChars(s, str);
+  } else {
+    ThrowComFail(env, "safearray cannot set string", 0);
+  }
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getByte
+ * Signature: ([I)B
+ */
+JNIEXPORT jbyte JNICALL Java_com_jacob_com_SafeArray_getByte___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+  GETNDCODE(VT_UI1, V_UI1, jbyte)
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setByte
+ * Signature: ([IB)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setByte___3IB
+  (JNIEnv *env, jobject _this, jintArray indices, jbyte c)
+{
+  SETNDCODE(VT_UI1, V_UI1);
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getFloat
+ * Signature: ([I)F
+ */
+JNIEXPORT jfloat JNICALL Java_com_jacob_com_SafeArray_getFloat___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+  GETNDCODE(VT_R4, V_R4, jfloat)
+}
+
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setFloat
+ * Signature: ([IF)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setFloat___3IF
+  (JNIEnv *env, jobject _this, jintArray indices, jfloat c)
+{
+  SETNDCODE(VT_R4, V_R4);
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getBoolean
+ * Signature: ([I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_jacob_com_SafeArray_getBoolean___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+  // code is inline because of size mismatch
+  SAFEARRAY *sa = extractSA(env, _this);
+  if (!sa) { 
+    ThrowComFail(env, "safearray object corrupted", -1);
+    return NULL; 
+  } 
+  // ??? Not sure if this is correct type for call to SafeArrayGetElement()
+  jint *jIndices = env->GetIntArrayElements(indices, NULL);
+
+  if (!jIndices) {
+    ThrowComFail(env, "null indices array", -1);
+    return NULL;
+  }
+  if (SafeArrayGetDim(sa) != env->GetArrayLength(indices)) { 
+    ThrowComFail(env, "safearray and indices array have different dimensions", -1);
+    return NULL;
+  }
+
+  VARTYPE vt;
+  SafeArrayGetVartype(sa, &vt);
+  if (vt == VT_VARIANT) {
+    VARIANT v;
+    VariantInit(&v);
+    SafeArrayGetElement(sa, jIndices, (void*) &v);
+    if (FAILED(VariantChangeType(&v, &v, 0, VT_BOOL))) {
+      ThrowComFail(env, "safearray change type failed", -1);
+      return NULL;
+    }
+    jboolean jb = V_BOOL(&v) == VARIANT_TRUE ? JNI_TRUE: JNI_FALSE;
+    return jb;
+  } else if (vt == VT_BOOL) {
+    VARIANT_BOOL vb;
+    SafeArrayGetElement(sa, jIndices, (void*) &vb);
+    jboolean jb = vb == VARIANT_TRUE ? JNI_TRUE: JNI_FALSE;
+    return jb;
+  } else {
+    return NULL;
+  }
+}
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setBoolean
+ * Signature: ([IZ)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBoolean___3IZ
+  (JNIEnv *env, jobject _this, jintArray indices, jboolean c)
+{
+  // code is inline because of size mismatch
+  SAFEARRAY *sa = extractSA(env, _this);
+  if (!sa) {
+    ThrowComFail(env, "safearray object corrupted", -1);
+    return;
+  }
+  // ??? Not sure if this is correct type for call to SafeArrayGetElement()
+  jint *jIndices = env->GetIntArrayElements(indices, NULL);
+
+  if (!jIndices) {
+    ThrowComFail(env, "null indices array", -1);
+    return;
+  }
+  if (SafeArrayGetDim(sa) != env->GetArrayLength(indices)) { 
+    ThrowComFail(env, "safearray and indices array have different dimensions", -1);
+    return;
+  }
+
+  VARTYPE vt;
+  SafeArrayGetVartype(sa, &vt);
+  if (vt == VT_VARIANT) {
+    VARIANT v;
+    VariantInit(&v);
+    V_VT(&v) = VT_BOOL;
+    V_BOOL(&v) = c == JNI_TRUE ? VARIANT_TRUE : VARIANT_FALSE;
+    SafeArrayPutElement(sa,jIndices,&v);
+  } else if (vt == VT_BOOL) {
+    VARIANT_BOOL vb = c == JNI_TRUE ? VARIANT_TRUE : VARIANT_FALSE;
+    SafeArrayPutElement(sa,jIndices,&vb);
+  } else {
+    ThrowComFail(env, "safearray type mismatch", -1);
+  }
+}
+
 
 }

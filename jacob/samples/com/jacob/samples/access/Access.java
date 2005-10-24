@@ -1,8 +1,13 @@
-package com.jacob.samples.test;
+package com.jacob.samples.access;
 
 import com.jacob.com.*;
 import com.jacob.activeX.*;
 
+/**
+ * this 
+ * @author joe
+ *
+ */
 class Access 
 {
     /**
@@ -13,9 +18,15 @@ class Access
   public static void main(String[] args) throws Exception
   {
     ComThread.InitSTA();
-    ActiveXComponent ax = new ActiveXComponent("DAO.PrivateDBEngine");
-		// this only works for access files pre-access-2000
-    Dispatch db = open(ax, ".\\sample2.mdb");
+    // original test used this
+    // ActiveXComponent ax = new ActiveXComponent("DAO.PrivateDBEngine");
+    // my xp box with a later release of access needed this
+    ActiveXComponent ax = new ActiveXComponent("DAO.PrivateDBEngine.35");
+	// this only works for access files pre-access-2000
+    // this line doesn't work on my xp box in Eclipse
+    //Dispatch db = open(ax, ".\\sample2.mdb");
+    // this works when running in eclipse because the test cases run pwd project root
+    Dispatch db = open(ax, "samples/com/jacob/samples/access/sample2.mdb");
     String sql = "select * from MainTable";
     // make a temporary querydef
     Dispatch qd = Dispatch.call(db, "CreateQueryDef","").toDispatch();
@@ -23,9 +34,10 @@ class Access
     Dispatch.put(qd, "SQL", sql);
     Variant result = getByQueryDef(qd);
 		// the 2-d safearray is transposed from what you might expect
-    System.out.println(result.toSafeArray());
+    System.out.println("resulting array is "+result.toSafeArray());
     close(db);
-		ComThread.Release();
+    System.out.println("about to call ComThread.Release()");
+	ComThread.Release();
   }
 
   /**

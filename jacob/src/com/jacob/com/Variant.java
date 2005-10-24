@@ -29,6 +29,8 @@
  */
 package com.jacob.com;
 
+import java.util.Date;
+
 /**
  * The multi-format data type used for all call backs and most communications
  * between Java and COM. It provides a single class that can handle all data
@@ -122,13 +124,21 @@ public class Variant extends JacobObject implements java.io.Serializable {
     /** variant's type is a reference (to IDispatch?) */
     public static final short VariantByref = 16384;
 
-    /** @return the value of this variant as an int */
+    /** 
+     * @return the value of this variant as an int 
+     * (after possible conversion)
+     */
     public native int toInt();
 
-    /** @return the value of this variant as a date */
+    /** 
+     * @return the value of this variant as a date 
+     * (after possible conversion)
+     */
     public native double toDate();
 
-    /** @return the value of this variant as boolean */
+    /** 
+     * @return the value of this variant as boolean (after possible conversion) 
+     */
     public native boolean toBoolean();
 
     /** @return the value of this variant as an enumeration (java style) */
@@ -209,6 +219,21 @@ public class Variant extends JacobObject implements java.io.Serializable {
     public native void putDateRef(double in);
 
     /**
+     * converts a java date to a windows time and calls putDateRef(double)
+     * SF 959382 
+     * @throws IllegalArgumentException if inDate = null
+     * @param inDate a Java date to be converted
+     */
+    public void putDateRef(Date inDate){
+    	if (inDate == null){
+    		throw new IllegalArgumentException("Cannot put null in as windows date");
+    		// do nothing
+    	} else {
+    		putDateRef(DateUtilities.convertDateToWindowsTime(inDate));
+    	}
+    }
+    
+    /**
      * set the content of this variant to a string (VT_BSTR|VT_BYREF)
      * @param in
      */
@@ -250,6 +275,21 @@ public class Variant extends JacobObject implements java.io.Serializable {
      */
     public native double getDateRef();
 
+    /**
+     * returns the windows time contained in this Variant to a Java Date
+     * should return null if this is not a date reference Variant
+     * SF 959382 
+     * @return java.util.Date
+     */
+    public Date getJavaDateRef(){
+    	double windowsDate = getDateRef();
+    	if (windowsDate == 0){
+    		return null;
+    	} else {
+    		return DateUtilities.convertWindowsTimeToDate(getDate());
+    	}
+    }
+    
     /**
      * get the content of this variant as a string
      * @return String
@@ -300,6 +340,21 @@ public class Variant extends JacobObject implements java.io.Serializable {
      */
     public native double getDate();
 
+    /**
+     * returns the windows time contained in this Variant to a Java Date
+     * should return null if this is not a date Variant
+     * SF 959382 
+     * @return java.util.Date
+     */
+    public Date getJavaDate(){
+    	double windowsDate = getDate();
+    	if (windowsDate == 0){
+    		return null;
+    	} else {
+    		return DateUtilities.convertWindowsTimeToDate(getDate());
+    	}
+    }
+    
     /** 
      * set the value of this variant 
      * @param in
@@ -312,8 +367,24 @@ public class Variant extends JacobObject implements java.io.Serializable {
      */
     public native void putDate(double in);
 
+    /**
+     * converts a java date to a windows time and calls putDate(double)
+     * SF 959382 
+     * @throws IllegalArgumentException if inDate = null
+     * @param inDate a Java date to be converted
+     */
+    public void putDate(Date inDate){
+    	if (inDate == null){
+    		throw new IllegalArgumentException("Cannot put null in as windows date");
+    		// do nothing
+    	} else {
+    		putDate(DateUtilities.convertDateToWindowsTime(inDate));
+    	}
+    }
+    
     /** 
      * attempts to return the content of this variant as a double 
+     * (after possible conversion)
      * @return byte
      */
     public native byte toByte();
@@ -334,8 +405,16 @@ public class Variant extends JacobObject implements java.io.Serializable {
         putObject(in);
     }
 
+    /**
+     * 
+     * @return the value in this Variant as a boolean, null if not a boolean
+     */
     public native boolean getBoolean();
 
+    /**
+     * 
+     * @return the value in this Variant as a byte, null if not a byte
+     */
     public native byte getByte();
 
     public native void putBoolean(boolean in);
@@ -369,6 +448,10 @@ public class Variant extends JacobObject implements java.io.Serializable {
 
     public native void putDouble(double in);
 
+    /**
+     * 
+     * @return the value in this Variant as a long, null if not a long
+     */
     public native long getCurrency();
 
     public native void putFloatRef(float in);
@@ -401,6 +484,11 @@ public class Variant extends JacobObject implements java.io.Serializable {
 
     public native byte getByteRef();
 
+    /**
+     * attempts to return the contents of this variant as a float
+     * (after possible conversion)
+     * @return float
+     */
     public native float toFloat();
 
     /**
@@ -472,8 +560,7 @@ public class Variant extends JacobObject implements java.io.Serializable {
         init();
         putEmpty();
         if (isDebugEnabled()) {
-            debug("create " + getClass().getName() + " in thread "
-                    + Thread.currentThread().getName());
+            debug("Variant: " +	"create " + this );
         }
     }
 
@@ -626,6 +713,11 @@ public class Variant extends JacobObject implements java.io.Serializable {
 
     public native short getvt();
 
+    /**
+     * attempts tor return the contents of this Variant as a short
+     * (after possible conversion)
+     * @return short
+     */
     public native short toShort();
 
     /**
@@ -662,7 +754,7 @@ public class Variant extends JacobObject implements java.io.Serializable {
             // this should almost always happen due to gc
             // after someone has called ComThread.Release
             if (isDebugEnabled()) {
-                debug(this.getClass().getName() + ":" + this.hashCode()
+                debug("Variant: " + this.hashCode()
                         + " double release");
                 //Throwable x = new Throwable();
                 //x.printStackTrace();

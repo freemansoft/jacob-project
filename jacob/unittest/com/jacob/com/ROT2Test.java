@@ -8,7 +8,7 @@ package com.jacob.com;
  * This will eventually be changed to a unit test.
  * 
  * Run in Eclipse with command line arguments
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
+ * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=false
  */
 public class ROT2Test
 {
@@ -34,8 +34,6 @@ public class ROT2Test
 class ROT2TestThread extends Thread
 {
     private java.util.List ThreadObjects;
-
-    private boolean DivideMode = true;
 
     private int initialRunSize = 0;
     /**
