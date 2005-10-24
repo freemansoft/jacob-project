@@ -169,7 +169,7 @@ public class Dispatch extends JacobObject
     protected native void createInstance(String progid);
 
     /**
-     * return a different interface by IID string
+     * Return a different interface by IID string.
      * <p>
      * Once you have a Dispatch object, you can navigate to the other 
      * interfaces of a COM object by calling QueryInterafce. 

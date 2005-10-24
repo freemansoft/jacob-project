@@ -70,7 +70,7 @@ public class InvocationProxy {
 	/**
 	 * the method actually invoked by EventProxy.cpp
 	 * @param methodName name of method in mTargetObject we will invoke
-	 * @param parameters Variant[] that is the single parameter to the method
+	 * @param targetParameter Variant[] that is the single parameter to the method
 	 */
 	public void invoke(String methodName, Variant targetParameter[]){
 		if (mTargetObject == null){ 
@@ -124,7 +124,7 @@ public class InvocationProxy {
 	
     /**
      * used by EventProxy.cpp to create variant objects in the right thread
-     * @return
+     * @return Variant object that will be used by the COM layer
      */
     public Variant getVariant(){
     	return new VariantViaEvent();

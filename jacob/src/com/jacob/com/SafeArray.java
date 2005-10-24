@@ -555,7 +555,7 @@ public class SafeArray extends JacobObject {
     public native void setByte(int sa_idx1, int sa_idx2, byte c);
 
     /**
-     * Fills byte array(?) from contents of this array
+     * Fills byte array from contents of this array
      * @param sa_idx
      * @param nelems
      * @param ja

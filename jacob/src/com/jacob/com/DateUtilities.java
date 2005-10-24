@@ -32,14 +32,14 @@ public class DateUtilities {
 	/**
 	 * converts a windows time to a Java Date Object
 	 * @param comTime
-	 * @return
+	 * @return Date object representing the windows time as specified in comTime
 	 */
 	static public Date convertWindowsTimeToDate(double comTime){
 		return new Date(convertWindowsTimeToMilliseconds (comTime));
 	}
 	
 	 /**
-	 * Convert a COM time (e.g. from functions Date(), Time(), Now()) to a
+	 * Convert a COM time from functions Date(), Time(), Now() to a
 	 * Java time (milliseconds). Visual Basic time values are based to
 	 * 30.12.1899, Java time values are based to 1.1.1970 (= 0
 	 * milliseconds). The difference is added to the Visual Basic value to
@@ -87,7 +87,6 @@ public class DateUtilities {
 	 * @param milliseconds
 	 *            Java time.
 	 * @return COM time.
-	 * @see #toMilliseconds
 	 */
 	static public double convertMillisecondsToWindowsTime(long milliseconds) {
 		double result = 0.0;
