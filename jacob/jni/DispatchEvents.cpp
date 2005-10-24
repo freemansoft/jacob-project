@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999-2004 Sourceforge JACOB Project.
  * All rights reserved. Originator: Dan Adler (http://danadler.com).
- * Get more information about JACOB at www.sourceforge.net/jacob-project
+ * Get more information about JACOB at http://sourceforge.net/projects/jacob-project
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
