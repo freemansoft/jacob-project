@@ -126,7 +126,13 @@ public abstract class ROT {
                     // && o.toString() != null
                 ){
                     if (JacobObject.isDebugEnabled()){ 
-                    	JacobObject.debug("ROT: removing "+o+"->"+o.getClass().getName());
+                    	if (o instanceof SafeArray){
+                    		// SafeArray create more objects when calling toString() 
+                    		// which causes a concurrent modification exception in HashMap
+                    		JacobObject.debug("ROT: removing "+o.getClass().getName());
+                    	} else {
+                    		JacobObject.debug("ROT: removing "+o+"->"+o.getClass().getName());
+                    	}
                 	}
                     o.safeRelease();
                 }

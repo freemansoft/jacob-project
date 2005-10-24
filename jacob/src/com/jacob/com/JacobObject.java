@@ -109,7 +109,8 @@ public class JacobObject {
     public void safeRelease() {
         // currently does nothing - subclasses may do something
         if (isDebugEnabled()){
-            debug(this.getClass().getName()+":"+this+":"+this.hashCode()+" release");
+        	// this used to do a toString() but that is bad for SafeArray
+            debug("SafeRelease: "+this.getClass().getName());
         }
     }
     
