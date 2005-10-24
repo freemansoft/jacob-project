@@ -43,6 +43,12 @@ IDispatch *extractDispatch(JNIEnv *env, jobject arg)
   return v;
 }
 
+/**
+ * This method finds an interface rooted on the passed in dispatch object.
+ * This creates a new Dispatch object so it is NOT reliable 
+ * in the event callback thread of a JWS client where the root class loader
+ * does not have com.jacob.com.Dispatch in its classpath
+ */
 JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
   (JNIEnv *env, jobject _this, jstring _iid)
 {

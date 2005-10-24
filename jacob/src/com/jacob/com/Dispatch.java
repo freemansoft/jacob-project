@@ -142,9 +142,14 @@ public class Dispatch extends JacobObject
     }
 
     /**
-     * Constructor that calls createInstance with progid. This is the
-     * constructor used by the ActiveXComponent
-     * 
+     * This constructor calls createInstance with progid. This is the
+     * constructor used by the ActiveXComponent or by programs that 
+     * don't like the activeX interface but wish to create new connections
+     * to windows programs.
+     * <p>
+     * This constructor always creates a new windows/program object
+     * because it is based on the CoCreate() windows function.  
+     * <p>
      * @param requestedProgramId
      */
     public Dispatch(String requestedProgramId) {
@@ -154,7 +159,8 @@ public class Dispatch extends JacobObject
 
     /**
      * native call createInstance only used by the constructor with the same parm
-     * type. This probably should be private
+     * type. This probably should be private.  It is the wrapper for the
+     * Windows CoCreate() call
      * <P>
      * This ends up calling CoCreate down in the JNI layer
      * 

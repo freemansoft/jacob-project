@@ -41,6 +41,11 @@ public class ActiveXComponent extends Dispatch {
      * Normally used to create a new connection to a microsoft application.
      * The passed in parameter is the name of the program as registred
      * in the registry.  It can also be the object name.
+     * <p>
+     * This constructor causes a new Windows object of the requested
+     * type to be created.  The windows CoCreate() function gets called
+     * to create the underlying windows object.
+     * 
      * <pre>new ActiveXComponent("ScriptControl");</pre>
      * @param programId
      */
