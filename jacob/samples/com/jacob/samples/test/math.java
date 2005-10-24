@@ -1,16 +1,20 @@
 package com.jacob.samples.test;
 
+import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.*;
 
-/*
+/**
  * This example uses the MathTest sample VB COM DLL under
  * the MathProj directory
+ * <pre>
+ * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=true
+ * </pre>
  */
 class math {
 	public static void main(String[] args) {
 		// deprecated
 		// System.runFinalizersOnExit(true);
-		Dispatch test = new Dispatch("MathTest.Math");
+		Dispatch test = new ActiveXComponent("MathTest.Math");
 		testEvents te = new testEvents();
 		DispatchEvents de = new DispatchEvents(test, te);
 		if (de == null) {
