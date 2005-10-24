@@ -31,7 +31,7 @@ public abstract class AbstractGenerator {
 		"/**\n" + 
 		" * JacobGen generated file --- do not edit\n" +
 		" *\n" + 
-		" * (http://www.sourceforge.net/project/jacob-project"+
+		" * (http://www.sourceforge.net/projects/jacob-project"+
 		" */\n"; 
 
 	protected String filename;
