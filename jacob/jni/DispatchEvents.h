@@ -25,21 +25,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Class:     DispatchEvents
- * Method:    init
- * Signature: (LDispatch;Ljava/lang/Object;)V
- */
-JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init
-  (JNIEnv *, jobject, jobject, jobject);
 
 /*
- * Class:     DispatchEvents
- * Method:    init2
- * Signature: (LDispatch;Ljava/lang/Object;Ljava/lang/String;)V
+ * Class:     com_jacob_com_DispatchEvents
+ * Method:    init3
+ * Signature: (Lcom/jacob/com/Dispatch;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init2
-  (JNIEnv *, jobject, jobject, jobject, jstring);
+JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init3
+  (JNIEnv *, jobject, jobject, jobject, jstring, jstring);
 
 /*
  * Class:     DispatchEvents

@@ -30,6 +30,14 @@ package com.jacob.com;
  * Variant... as a parameter.  It will then wrap the call back data
  * in the Variant array and call the java method of the object
  * that this DispatchEvents object was initialized with.
+ * <p>
+ * Instances of this class are created with "sink object" that
+ * will receive the event messages.  The sink object is wrapped in
+ * an Invocation handler that actually receives the messages and then
+ * forwards them on to the "sink object".  The constructors recognize when
+ * an instance of InvocationProxy is passed in and do not create
+ * a new InvocationProxy as a wrapper.  They instead use the passed in
+ * InvocationProxy.  
  * 
  */
 public class DispatchEvents extends JacobObject {
@@ -50,30 +58,8 @@ public class DispatchEvents extends JacobObject {
 
     
     /**
-     * A constructor for those that want to supply their own InvocationProxy.
-     * or subclass (future implementations may take an interface).
-     * This lets someone distribute their events to other objects
-     * at the single method dispatch point.
+     * This is the most commonly used constructor
      * <p>
-     * Most users of this class will use the other constructors!
-     * 
-     * @param sourceOfEvent the Dispatch object that will send events
-     * @param pInvocationProxy the proxy object that expects to receive the
-     * 	events for some other object
-     */
-    public DispatchEvents(Dispatch sourceOfEvent, InvocationProxy pInvocationProxy){
-    	mInvocationProxy = pInvocationProxy;
-    	if (mInvocationProxy != null){
-    		init(sourceOfEvent, mInvocationProxy);
-    	} else {
-    		if (JacobObject.isDebugEnabled()){
-    			JacobObject.debug("Cannot register null invocation proxy for events");
-    		}
-    		throw new IllegalArgumentException("Cannot register null invocation proxy for events");
-    	}
-    }
-    
-    /**
      * Creates the event callback linkage between the the
      * MS program represented by the Dispatch object and the
      * Java object that will receive the callback.
@@ -81,22 +67,12 @@ public class DispatchEvents extends JacobObject {
      * @param eventSink Java object that wants to receive the events
      */
     public DispatchEvents(Dispatch sourceOfEvent, Object eventSink) {
-		if (JacobObject.isDebugEnabled()){
-			System.out.println(
-					"DispatchEvents: Registering "+ eventSink + "for events ");
-		}
-    	mInvocationProxy = new InvocationProxy(eventSink);
-    	if (mInvocationProxy != null){
-    		init(sourceOfEvent, mInvocationProxy);
-    	} else {
-    		if (JacobObject.isDebugEnabled()){
-    			JacobObject.debug("Cannot register null event sink for events");
-    		}
-    		throw new IllegalArgumentException("Cannot register null event sink for events");
-    	}    		
+		this(sourceOfEvent, eventSink, null );
     }
 
     /**
+     * None of the samples use this constructor
+     * <p>
      * Creates the event callback linkage between the the
      * MS program represented by the Dispatch object and the
      * Java object that will receive the callback.
@@ -105,13 +81,37 @@ public class DispatchEvents extends JacobObject {
      * @param progId ???
      */
     public DispatchEvents(Dispatch sourceOfEvent, Object eventSink, String progId) {
+		this(sourceOfEvent, eventSink, progId, null );
+    }
+
+    /**
+     * Creates the event callback linkage between the the
+     * MS program represented by the Dispatch object and the
+     * Java object that will receive the callback.
+     * <pre>
+     * >DispatchEvents de = 
+     * 			new DispatchEvents(someDispatch,someEventHAndler,
+     * 				"Excel.Application",
+     * 				"C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE");
+     *
+     * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
+     * @param eventSink Java object that wants to receive the events
+     * @param progId , mandatory if the typelib is specified
+     * @param typeLib The location of the typelib to use
+     */
+    public DispatchEvents(Dispatch sourceOfEvent, Object eventSink, String progId, String typeLib)
+    {
 		if (JacobObject.isDebugEnabled()){
 			System.out.println(
 					"DispatchEvents: Registering "+ eventSink + "for events ");
 		}
-    	mInvocationProxy = new InvocationProxy(eventSink);
+		if (eventSink instanceof InvocationProxy) {
+			mInvocationProxy = (InvocationProxy) eventSink;
+		} else {
+			mInvocationProxy = new InvocationProxy(eventSink);
+		}
     	if (mInvocationProxy != null) {
-	        init2(sourceOfEvent, mInvocationProxy, progId);
+	        init3(sourceOfEvent, mInvocationProxy, progId, typeLib);
 		} else {
 			if (JacobObject.isDebugEnabled()){
 				JacobObject.debug("Cannot register null event sink for events");
@@ -124,20 +124,15 @@ public class DispatchEvents extends JacobObject {
      * hooks up a connection point proxy by progId
      * event methods on the sink object will be called
      * by name with a signature of <name>(Variant[] args)
-     * @param src
-     * @param sink
+     *
+     * You must specify the location of the typeLib.
+     * 
+     * @param src dispatch that is the source of the messages
+     * @param sink the object that will receive the messages
+     * @param progId optional program id.  most folks don't need this either
+     * @param typeLib optional parameter for those programs that don't register their type libs (like Excel)
      */
-    protected native void init(Dispatch src, Object sink);
-
-    /**
-     * hooks up a connection point proxy by progId
-     * event methods on the sink object will be called
-     * by name with a signature of <name>(Variant[] args)
-     * @param src
-     * @param sink
-     * @param progId
-     */
-    protected native void init2(Dispatch src, Object sink, String progId);
+    protected native void init3(Dispatch src, Object sink, String progId, String typeLib);
 
     /**
      *  now private so only this object can asccess

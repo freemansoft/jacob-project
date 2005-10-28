@@ -36,7 +36,9 @@ extern "C"
 
 // defined below
 BOOL GetEventIID(IUnknown*, IID*, CComBSTR **, DISPID **, int *,LPOLESTR);
+BOOL GetEventIIDForTypeLib(BSTR, IID*, CComBSTR **, DISPID **, int *,LPOLESTR);
 BOOL getClassInfoFromProgId(LPOLESTR bsProgId,LPTYPEINFO *pClassInfo);
+BOOL MapEventIIDs(IID*, CComBSTR **, DISPID **, int *, LPOLESTR , LPTYPEINFO );
 
 // extract a EventProxy* from a jobject
 EventProxy *extractProxy(JNIEnv *env, jobject arg)
@@ -56,25 +58,42 @@ void putProxy(JNIEnv *env, jobject arg, EventProxy *ep)
   env->SetIntField(arg, ajf, (jint)ep);
 }
 
+
 /*
- * Class:     DispatchEvents
- * Method:    init2
- * Signature: (LDispatch;Ljava/lang/Object;Ljava/lang/String;)V
+ * Class:     com_jacob_com_DispatchEvents
+ * Method:    init3
+ * Signature: (Lcom/jacob/com/Dispatch;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init2
-  (JNIEnv *env, 
-  jobject _this, jobject src, 
-  jobject sink, 
-  jstring _progid)
+JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init3
+   (JNIEnv *env,
+    jobject _this, jobject src,
+    jobject sink, 
+    jstring _progid, 
+    jstring _typelib)
 {
 	USES_CONVERSION;
-  // find progid if any
-  LPOLESTR bsProgId = NULL;
-  if (_progid!=NULL) {
-    const char *progid = env->GetStringUTFChars(_progid, NULL);
-		bsProgId = A2W(progid);
+
+  if (_typelib != NULL && _progid == NULL){
+  	// both are required if typelib exists
+  	ThrowComFail(env,"TypeLib was specified but no program id was",-1);
+  	return;
+  }
+  
+  BSTR typeLib = NULL;
+  if (_typelib != NULL){
+	  const char *typelib = env->GetStringUTFChars(_typelib, NULL);
+	  typeLib = A2W(typelib);
+	  //printf("we have a type lib %ls\n",typeLib);
   }
 
+  // find progid if any
+  LPOLESTR bsProgId = NULL;
+    if (_progid!=NULL) {
+    const char *progid = env->GetStringUTFChars(_progid, NULL);
+		bsProgId = A2W(progid);
+		//printf("we have an applicaton %ls\n",bsProgId);
+  }
+  
   // get the IDispatch for the source object
   IDispatch *pDisp = extractDispatch(env, src);
   CComQIPtr<IUnknown, &IID_IUnknown> pUnk(pDisp);
@@ -86,19 +105,26 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init2
     ThrowComFail(env, "Can't find IConnectionPointContainer", -1);
     return;
   }
-  // hook up to the default source iid
-  CComPtr<IConnectionPoint> pCP;
+   
   IID eventIID;
   CComBSTR *mNames;
   DISPID *mIDs;
   int n_EventMethods;
-  if (!GetEventIID(pUnk, &eventIID, &mNames, &mIDs, &n_EventMethods,bsProgId)) {
-    ThrowComFail(env, "Can't find event iid", -1);
-    return;
+  if (_typelib == NULL){
+	  if (!GetEventIID(pUnk, &eventIID, &mNames, &mIDs, &n_EventMethods,bsProgId)) {
+    	ThrowComFail(env, "Can't find event iid", -1);
+	    return;
+	  }
+  } else {
+	  if (!GetEventIIDForTypeLib(typeLib, &eventIID, &mNames, &mIDs, &n_EventMethods,bsProgId)) {
+    	ThrowComFail(env, "Can't find event iid for type lib", -1);
+	    return;
+	  }
   }
+
+  // hook up to the default source iid
+  CComPtr<IConnectionPoint> pCP;
   HRESULT hr = pCPC->FindConnectionPoint(eventIID, &pCP);
-  // VC++ 6.0 compiler realiized we weren't using this variable
-  //DWORD dwEventCookie;
   if (SUCCEEDED(hr))
   {
     EventProxy *ep = new EventProxy(env, sink, pCP, eventIID, mNames, mIDs, n_EventMethods);
@@ -107,17 +133,6 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init2
   } else {
     ThrowComFail(env, "Can't FindConnectionPoint", hr);
   }
-}
-
-/*
- * Class:     DispatchEvents
- * Method:    init
- * Signature: (LDispatch;Ljava/lang/Object;)V
- */
-JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init
-  (JNIEnv *env, jobject _this, jobject src, jobject sink)
-{
-	Java_com_jacob_com_DispatchEvents_init2(env,_this,src,sink, NULL);
 }
 
 /*
@@ -179,7 +194,6 @@ LoadNameCache(LPTYPEINFO pTypeInfo, LPTYPEATTR pta,
 #define IMPLTYPE_DEFAULTSOURCE \
   (IMPLTYPEFLAG_FDEFAULT | IMPLTYPEFLAG_FSOURCE)
 
-
 BOOL GetEventIID(IUnknown *m_pObject, IID* piid,
      CComBSTR **mNames, DISPID **mIDs, int *nmeth,LPOLESTR bsProgId)
 {
@@ -200,17 +214,22 @@ BOOL GetEventIID(IUnknown *m_pObject, IID* piid,
   else if (getClassInfoFromProgId(bsProgId,&pClassInfo)) {
 	}
 	else  {
-    printf("couldn't get IProvideClassInfo\n");
+    printf("GetEventIID: couldn't get IProvideClassInfo\n");
 		return false;
   }
 
+  return MapEventIIDs(piid, mNames, mIDs, nmeth, bsProgId, pClassInfo);
+}
 
-      //printf("got ClassInfo\n");
+BOOL MapEventIIDs(IID* piid,
+     CComBSTR **mNames, DISPID **mIDs, int *nmeth, LPOLESTR bsProgId, LPTYPEINFO pClassInfo)
+{
       ATLASSERT(pClassInfo != NULL);
+      //printf("MapEventIIDs: got past ClassInfo assert\n");
       LPTYPEATTR pClassAttr;
       if (SUCCEEDED(pClassInfo->GetTypeAttr(&pClassAttr)))
       {
-        //printf("got TypeAttr\n");
+        //printf("MapEventIIDs: got TypeAttr\n");
         ATLASSERT(pClassAttr != NULL);
         ATLASSERT(pClassAttr->typekind == TKIND_COCLASS);
 
@@ -218,6 +237,7 @@ BOOL GetEventIID(IUnknown *m_pObject, IID* piid,
         int nFlags;
         HREFTYPE hRefType;
 
+		//printf("MapEventIIDs: looking at %d class attribute impl types \n");
         for (unsigned int i = 0; i < pClassAttr->cImplTypes; i++)
         {
           if (SUCCEEDED(pClassInfo->GetImplTypeFlags(i, &nFlags)) &&
@@ -300,6 +320,42 @@ BOOL getClassInfoFromProgId(LPOLESTR bsProgId,LPTYPEINFO *pClassInfo)
   return true;
 }
 
+/*
+ * Get the class info from the progId using the given typeLib.
+ */
+BOOL getClassInfoFromProgIdTypeLib(BSTR typeLib, LPOLESTR bsProgId, LPTYPEINFO *pClassInfo)
+{
+  USES_CONVERSION;
+  CLSID clsid;
+
+  if (FAILED(CLSIDFromProgID(bsProgId, &clsid))) return false;
+  if (FAILED(StringFromCLSID(clsid,&bsProgId))) return false;
+
+  ITypeLib* pITypeLib;
+  if (FAILED(LoadTypeLib(typeLib, &pITypeLib)))	return false;
+
+  //Find ITypeInfo for coclass.
+  pITypeLib->GetTypeInfoOfGuid(clsid, pClassInfo);
+  pITypeLib->Release();
+  return true;
 }
 
+BOOL GetEventIIDForTypeLib(BSTR typeLib, IID* piid,
+     CComBSTR **mNames, DISPID **mIDs, int *nmeth,LPOLESTR bsProgId)
+{
+  LPTYPEINFO pClassInfo = NULL;
+  if(getClassInfoFromProgIdTypeLib(typeLib, bsProgId,&pClassInfo))
+  {
+  	if (pClassInfo == NULL){
+  		printf("we had a successful return but pClassInfo is null\n");
+  	}
+    return MapEventIIDs(piid, mNames, mIDs, nmeth, bsProgId, pClassInfo);
+  }
+  else
+  {
+    printf("GetEventIIDForTypeLib: couldn't get IProvideClassInfo\n");
+    return false;
+  }
+}
 
+}

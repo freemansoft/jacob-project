@@ -44,7 +44,17 @@ public class InvocationProxy {
 	Object mTargetObject = null;
 	
 	/**
-	 * constructs an invocation proxy that fronts for an event listener 
+	 * dummy constructor for subclasses that don't actually wrap
+	 * anything and just want to override the invoke() method 
+	 */
+	protected InvocationProxy(){
+		
+	}
+	
+	/**
+	 * Constructs an invocation proxy that fronts for an event listener.
+	 * The InvocationProxy will wrap the target object and forward
+	 * any received messages to the wrapped object 
 	 * @param pTargetObject
 	 */
 	protected InvocationProxy(Object pTargetObject){

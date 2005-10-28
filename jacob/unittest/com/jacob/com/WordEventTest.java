@@ -12,15 +12,15 @@ import com.jacob.com.DispatchEvents;
  * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
  * -Dcom.jacob.debug=false
  */
-public class ExcelEventTest extends InvocationProxy {
+public class WordEventTest extends InvocationProxy {
 
 	/**
 	 * load up excel, register for events and make stuff happen
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		String pid = "Excel.Application";
-		String typeLibLocation = "C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE";
+		String pid = "Word.Application";
+		String typeLibLocation = null;
 
 		// Grab The Component.
 		ActiveXComponent axc = new ActiveXComponent(pid);
@@ -28,36 +28,27 @@ public class ExcelEventTest extends InvocationProxy {
 			// Add a listener (doesn't matter what it is).
 			DispatchEvents de;
 			if (typeLibLocation == null) {
-				de = new DispatchEvents(axc, new ExcelEventTest());
+				de = new DispatchEvents(axc, new WordEventTest());
 			} else {
-				de = new DispatchEvents(axc, new ExcelEventTest(), pid,
+				de = new DispatchEvents(axc, new WordEventTest(), pid,
 						typeLibLocation);
 			}
 			if (de == null) {
 				System.out
-						.println("No exception thrown but no dispatch returned for Excel events");
+						.println("No exception thrown but no dispatch returned for Word events");
 			} else {
 				// Yea!
 				System.out.println("Successfully attached to " + pid);
 
 			}
-
-			System.out.println("version=" + axc.getProperty("Version"));
-			System.out.println("version=" + Dispatch.get(axc, "Version"));
-			axc.setProperty("Visible", true);
-			Dispatch workbooks = axc.getPropertyAsComponent("Workbooks");
-			Dispatch workbook = Dispatch.get(workbooks, "Add").toDispatch();
-			Dispatch sheet = Dispatch.get(workbook, "ActiveSheet").toDispatch();
-			Dispatch a1 = Dispatch.invoke(sheet, "Range", Dispatch.Get,
-					new Object[] { "A1" }, new int[1]).toDispatch();
-			Dispatch a2 = Dispatch.invoke(sheet, "Range", Dispatch.Get,
-					new Object[] { "A2" }, new int[1]).toDispatch();
-			Dispatch.put(a1, "Value", "123.456");
-			Dispatch.put(a2, "Formula", "=A1*2");
-			System.out.println("Retrieved a1 from excel:" + Dispatch.get(a1, "Value"));
-			System.out.println("REtrieved a2 from excel:" + Dispatch.get(a2, "Value"));
-			Variant f = new Variant(false);
-			Dispatch.call(workbook, "Close", f);
+			// this is different from the ExcelEventTest because it uses
+			// the jacob active X api instead of the Dispatch api
+			System.out.println("version=" + axc.getPropertyAsString("Version"));
+			axc.setProperty("Visible",true);
+			ActiveXComponent documents = axc.getPropertyAsComponent("Documents");
+			if (documents == null){
+				System.out.println("unable to get documents");
+			}
 			axc.invoke("Quit", new Variant[] {});
 
 		} catch (ComFailException cfe) {
@@ -71,7 +62,7 @@ public class ExcelEventTest extends InvocationProxy {
 	/**
 	 * dummy consturctor to create an InvocationProxy that wraps nothing
 	 */
-	public ExcelEventTest() {
+	public WordEventTest() {
 	}
 
 	/**
