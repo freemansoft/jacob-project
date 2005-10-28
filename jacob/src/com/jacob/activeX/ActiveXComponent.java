@@ -37,7 +37,8 @@ import com.jacob.com.*;
  * the senese that it is used for creating Dispatch objects
  */
 public class ActiveXComponent extends Dispatch {
-    /**
+
+	/**
      * Normally used to create a new connection to a microsoft application.
      * The passed in parameter is the name of the program as registred
      * in the registry.  It can also be the object name.
@@ -65,6 +66,14 @@ public class ActiveXComponent extends Dispatch {
     }
 
     /**
+     * only used by the factories
+     *
+     */
+    private ActiveXComponent() {
+        super();
+    }
+
+    /**
      * Probably was a cover for something else in the past.
      * Should be deprecated.
      * @return Now it actually returns this exact same object.
@@ -73,6 +82,64 @@ public class ActiveXComponent extends Dispatch {
         return this;
     }
 
+    /**
+     * Most code should use the standard ActiveXComponent(String) contructor
+     * and not this factory method.  This method exists for applications
+     * that need special behavior.
+     * <B>Experimental in release 1.9.2.</B> 
+     * <p>
+     * Factory that returns a Dispatch object wrapped around the result
+     * of a CoCreate() call. This differs from the standard constructor
+     * in that it throws no exceptions and returns null on failure.
+     * <p>
+     * This will fail for any prog id with a ":" in it.
+     *
+     * @param pRequestedProgramId
+     * @return Dispatch pointer to the COM object or null if couldn't create
+     */
+    public static ActiveXComponent createNewInstance(String pRequestedProgramId){
+    	ActiveXComponent mCreatedDispatch = null;
+    	try {
+    		mCreatedDispatch = new ActiveXComponent();
+    		mCreatedDispatch.coCreateInstanceJava(pRequestedProgramId);
+    	} catch (Exception e){
+    		mCreatedDispatch =null;
+    		if (JacobObject.isDebugEnabled()){
+    			JacobObject.debug("Unable to co-create instance of "+pRequestedProgramId);
+    		}
+    	}
+		return mCreatedDispatch;  
+    }
+    
+    /**
+     * Most code should use the standard ActiveXComponent(String) contructor
+     * and not this factory method.  This method exists for applications
+     * that need special behavior.
+     * <B>Experimental in release 1.9.2.</B> 
+     * <p>
+     * Factory that returns a Dispatch wrapped around the result
+     * of a getActiveObject() call.  This differs from the standard constructor
+     * in that it throws no exceptions and returns null on failure.
+     * <p>
+     * This will fail for any prog id with a ":" in it
+     * 
+     * @param pRequestedProgramId
+     * @return Dispatch pointer to a COM object or null if wasn't already running
+     */
+    public static ActiveXComponent connectToActiveInstance(String pRequestedProgramId){
+    	ActiveXComponent mCreatedDispatch = null;
+    	try {
+    		mCreatedDispatch = new ActiveXComponent();
+    		mCreatedDispatch.getActiveInstanceJava(pRequestedProgramId);
+    	} catch (Exception e){
+    		mCreatedDispatch =null;
+    		if (JacobObject.isDebugEnabled()){
+    			JacobObject.debug("Unable to attach to running instance of "+pRequestedProgramId);
+    		}
+    	}
+		return mCreatedDispatch;  
+    }
+    
     /**
      * @see com.jacob.com.Dispatch#finalize()
      */

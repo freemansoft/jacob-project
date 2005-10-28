@@ -43,6 +43,22 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_createInstance
 
 /*
  * Class:     Dispatch
+ * Method:    getActiveInstance
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstance
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     Dispatch
+ * Method:    coCreateInstance
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_coCreateInstance
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     Dispatch
  * Method:    release
  * Signature: ()V
  */

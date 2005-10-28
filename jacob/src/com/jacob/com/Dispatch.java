@@ -150,11 +150,18 @@ public class Dispatch extends JacobObject
      * This constructor always creates a new windows/program object
      * because it is based on the CoCreate() windows function.  
      * <p>
+     * Fails silently if null is passed in as the program id
+     * <p>
      * @param requestedProgramId
      */
     public Dispatch(String requestedProgramId) {
         programId = requestedProgramId;
-        createInstance(requestedProgramId);
+        if (programId != null && !"".equals(programId)){
+        	createInstance(requestedProgramId);
+        } else {
+        	throw new IllegalArgumentException(
+        			"Dispatch(String) does not accept null or an empty string as a parameter");
+        }
     }
 
     /**
@@ -163,10 +170,59 @@ public class Dispatch extends JacobObject
      * Windows CoCreate() call
      * <P>
      * This ends up calling CoCreate down in the JNI layer
+     * <p>
+     * The behavior is different if a ":" character exists in the progId.  In that
+     * case CoGetObject and CreateInstance (someone needs to describe this better)
      * 
      * @param progid
      */
-    protected native void createInstance(String progid);
+    private native void createInstance(String progid);
+
+    /**
+     * native call getActiveInstance only used by the constructor with the same parm
+     * type. This probably should be private.  It is the wrapper for the
+     * Windows GetActiveObject() call
+     * <P>
+     * This ends up calling GetActiveObject down in the JNI layer
+     * <p>
+     * This does not have the special behavior for program ids with ":" in them
+     * that createInstance has. 
+     * 
+     * @param progid
+     */
+    private native void getActiveInstance(String progid);
+    
+    /**
+     * Wrapper around the native method
+     * @param progid
+     */
+    protected void getActiveInstanceJava(String progid){
+    	this.programId = progid;
+    	getActiveInstance(progid);
+    }
+
+    /**
+     * native call coCreateInstance only used by the constructor with the same parm
+     * type. This probably should be private.  It is the wrapper for the
+     * Windows CoCreate() call
+     * <P>
+     * This ends up calling CoCreate down in the JNI layer
+     * <p>
+     * This does not have the special behavior for program ids with ":" in them
+     * that createInstance has. 
+     * 
+     * @param progid
+     */
+    private native void coCreateInstance(String progid);
+
+    /**
+     * Wrapper around the native method
+     * @param progid
+     */
+    protected void coCreateInstanceJava(String progid){
+    	this.programId = progid;
+    	coCreateInstance(progid);
+    }
 
     /**
      * Return a different interface by IID string.

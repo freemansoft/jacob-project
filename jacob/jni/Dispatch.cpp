@@ -84,6 +84,11 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
   return newAuto;
 }
 
+/**
+ * starts up a new instance of the requested program (progId)
+ * and connects to it.  does special code if the progid 
+ * is of the alternate format (with ":")
+ **/
 JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_createInstance
   (JNIEnv *env, jobject _this, jstring _progid)
 {
@@ -146,6 +151,92 @@ doDisp:
   env->SetIntField(_this, jf, (unsigned int)pIDispatch);
 }
 
+/**
+ * attempts to connect to an running instance of the requested program
+ * This exists solely for the factory method connectToActiveInstance.
+ **/
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstance
+  (JNIEnv *env, jobject _this, jstring _progid)
+{
+  jclass clazz = env->GetObjectClass(_this);
+  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "I");
+
+  const char *progid = env->GetStringUTFChars(_progid, NULL);
+  CLSID clsid;
+  HRESULT hr;
+  IUnknown *punk = NULL;
+  IDispatch *pIDispatch;
+  USES_CONVERSION;
+  LPOLESTR bsProgId = A2W(progid);
+  env->ReleaseStringUTFChars(_progid, progid);
+  // Now, try to find an IDispatch interface for progid
+  hr = CLSIDFromProgID(bsProgId, &clsid);
+  if (FAILED(hr)) {
+    ThrowComFail(env, "Can't get object clsid from progid", hr);
+    return;
+  }
+  // standard connection
+  //printf("trying to connect to running %ls\n",bsProgId);
+  hr = GetActiveObject(clsid,NULL, &punk);
+  if (!SUCCEEDED(hr)) {
+     ThrowComFail(env, "Can't get active object", hr);
+     return;
+  }
+  // now get an IDispatch pointer from the IUnknown
+  hr = punk->QueryInterface(IID_IDispatch, (void **)&pIDispatch);
+  if (!SUCCEEDED(hr)) {
+    ThrowComFail(env, "Can't QI object for IDispatch", hr);
+    return;
+  }
+  // GetActiveObject called AddRef
+  punk->Release();
+  env->SetIntField(_this, jf, (unsigned int)pIDispatch);
+}
+
+/**
+ * starts up a new instance of the requested program (progId).  
+ * This exists solely for the factory method connectToActiveInstance.
+ **/
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_coCreateInstance
+  (JNIEnv *env, jobject _this, jstring _progid)
+{
+  jclass clazz = env->GetObjectClass(_this);
+  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "I");
+
+  const char *progid = env->GetStringUTFChars(_progid, NULL);
+  CLSID clsid;
+  HRESULT hr;
+  IUnknown *punk = NULL;
+  IDispatch *pIDispatch;
+  USES_CONVERSION;
+  LPOLESTR bsProgId = A2W(progid);
+  env->ReleaseStringUTFChars(_progid, progid);
+  // Now, try to find an IDispatch interface for progid
+  hr = CLSIDFromProgID(bsProgId, &clsid);
+  if (FAILED(hr)) {
+    ThrowComFail(env, "Can't get object clsid from progid", hr);
+    return;
+  }
+  // standard creation
+  hr = CoCreateInstance(clsid,NULL,CLSCTX_LOCAL_SERVER|CLSCTX_INPROC_SERVER,IID_IUnknown, (void **)&punk);
+  if (!SUCCEEDED(hr)) {
+     ThrowComFail(env, "Can't co-create object", hr);
+     return;
+  }
+  // now get an IDispatch pointer from the IUnknown
+  hr = punk->QueryInterface(IID_IDispatch, (void **)&pIDispatch);
+  if (!SUCCEEDED(hr)) {
+    ThrowComFail(env, "Can't QI object for IDispatch", hr);
+    return;
+  }
+  // CoCreateInstance called AddRef
+  punk->Release();
+  env->SetIntField(_this, jf, (unsigned int)pIDispatch);
+}
+
+/**
+ * release method
+ */
 JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_release
   (JNIEnv *env, jobject _this)
 {
