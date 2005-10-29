@@ -3,7 +3,7 @@ package com.jacob.samples.test;
 import com.jacob.com.*;
 import com.jacob.activeX.*;
 
-public class safearray
+public class SafeArrayViaExcel
 {
  public static void main(java.lang.String[] args) 
  {
@@ -16,7 +16,8 @@ public class safearray
 		SafeArray sAProdText;
 		Dispatch workbooks = xl.getProperty("Workbooks").toDispatch();
 		System.out.println("have workbooks");
-		Dispatch workbook = Dispatch.call(workbooks, "Open", "d:\\jacob_15\\samples\\test\\jacobtest.xls").toDispatch();
+		Dispatch workbook = Dispatch.call(workbooks, "Open", "d:\\jacob\\samples\\test\\ExcelSafeArray" +
+				".xls").toDispatch();
 		System.out.println("Opened File - jacobtest.xls\n");
 		Dispatch sheet = Dispatch.get(workbook,"ActiveSheet").toDispatch();
 		cell = Dispatch.invoke(sheet,"Range",Dispatch.Get,new Object[] {"A1:D1000"},new int[1]).toDispatch();

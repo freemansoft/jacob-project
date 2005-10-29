@@ -132,7 +132,7 @@ public class DispatchEvents extends JacobObject {
      * @param progId optional program id.  most folks don't need this either
      * @param typeLib optional parameter for those programs that don't register their type libs (like Excel)
      */
-    protected native void init3(Dispatch src, Object sink, String progId, String typeLib);
+    private native void init3(Dispatch src, Object sink, String progId, String typeLib);
 
     /**
      *  now private so only this object can asccess

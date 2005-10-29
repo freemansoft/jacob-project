@@ -1,7 +1,7 @@
 package com.jacob.samples.office;
 
 import com.jacob.activeX.ActiveXComponent;
-import com.jacob.com.ComFailException;
+import com.jacob.com.ComException;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 
@@ -99,7 +99,7 @@ public class WordDocumentProperties {
         try {
             cusPropName = Dispatch.call((Dispatch) custDocprops, "Item",
                     cusPropName).toString();
-        } catch (ComFailException e) {
+        } catch (ComException e) {
             // Do nothing
             cusPropName = null;
         }
@@ -117,7 +117,7 @@ public class WordDocumentProperties {
         try {
             builtInPropName = Dispatch.call((Dispatch) builtInDocProps, "Item",
                     builtInPropName).toString();
-        } catch (ComFailException e) {
+        } catch (ComException e) {
             // Do nothing
             builtInPropName = null;
         }

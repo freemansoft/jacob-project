@@ -24,9 +24,13 @@ import java.util.Date;
 /**
  * The multi-format data type used for all call backs and most communications
  * between Java and COM. It provides a single class that can handle all data
- * types
+ * types.
+ * <p>
+ * This object no longer implements Serializable because serialization is broken 
+ * (and has been since 2000/xp).  The underlying
+ * marshalling/unmarshalling code is broken in the JNI layer.
  */
-public class Variant extends JacobObject implements java.io.Serializable {
+public class Variant extends JacobObject {
     /**
      * Use this constant for optional parameters
      */
@@ -157,31 +161,29 @@ public class Variant extends JacobObject implements java.io.Serializable {
 
     /**
      * @deprecated superceded by SafeArray
-     * @param in
-     *            doesn't matter because this method does nothing
-     * @throws com.jacob.com.ComFailException
+     * @param in doesn't matter because this method does nothing
+     * @throws com.jacob.com.ComNotImplementedException
      */
     public void putVariantArray(Variant[] in) {
-        throw new ComFailException("Not implemented");
+        throw new ComNotImplementedException("Not implemented");
     }
 
     /**
      * @deprecated superceded by SafeArray
-     * @return never returns
-     * @throws com.jacob.com.ComFailException
+     * @return never returns anything
+     * @throws com.jacob.com.ComNotImplementedException
      */
     public Variant[] getVariantArray() {
-        throw new ComFailException("Not implemented");
+        throw new ComNotImplementedException("Not implemented");
     }
 
     /**
      * @deprecated superceded by SafeArray
-     * @param in
-     *            doesn't matter because this method does nothing
-     * @throws com.jacob.com.ComFailException
+     * @param in doesn't matter because this method does nothing
+     * @throws com.jacob.com.ComNotImplementedException
      */
     public void putByteArray(Object in) {
-        throw new ComFailException("Not implemented");
+        throw new ComNotImplementedException("Not implemented");
     }
 
     /**
@@ -287,12 +289,12 @@ public class Variant extends JacobObject implements java.io.Serializable {
     public native String getStringRef();
 
     /**
-     * @return never returns anything
-     * @throws com.jacob.com.ComFailException
      * @deprecated superceded by SafeArray
+     * @return never returns anything
+     * @throws com.jacob.com.ComNotImplementedException
      */
     public Object toCharArray() {
-        throw new ComFailException("Not implemented");
+        throw new ComNotImplementedException("Not implemented");
     }
 
     /**
@@ -427,10 +429,6 @@ public class Variant extends JacobObject implements java.io.Serializable {
 
     public native double getDouble();
 
-    public Object getObject() {
-        return toDispatch();
-    }
-
     public native void putCurrency(long in);
 
     /** puts an object into the */
@@ -470,8 +468,6 @@ public class Variant extends JacobObject implements java.io.Serializable {
 
     public native boolean getBooleanRef();
 
-    public native Object getObjectRef();
-
     public native byte getByteRef();
 
     /**
@@ -498,11 +494,11 @@ public class Variant extends JacobObject implements java.io.Serializable {
     public native void noParam();
 
     /**
-     * superceded by SafeArray
-     * @throws com.jacob.com.ComFailException
+     * @deprecated superceded by SafeArray
+     * @throws com.jacob.com.ComNotImplementedException
      */ 
     public void putCharArray(Object in) {
-        throw new ComFailException("Not implemented");
+        throw new ComNotImplementedException("Not implemented");
     }
 
     public native float getFloat();
@@ -518,19 +514,19 @@ public class Variant extends JacobObject implements java.io.Serializable {
     }
 
     /**
-     * superceded by SafeArray
-     * @throws com.jacob.com.ComFailException
+     * @deprecated superceded by SafeArray
+     * @throws com.jacob.com.ComNotImplementedException
      */ 
     public void putVariantArrayRef(Variant[] in) {
-        throw new ClassCastException("Not implemented");
+        throw new ComNotImplementedException("Not implemented");
     }
 
     /**
-     * superceded by SafeArray
-     * @throws com.jacob.com.ComFailException
+     * @deprecated superceded by SafeArray
+     * @throws com.jacob.com.ComNotImplementedException
      */ 
     public Variant[] getVariantArrayRef() {
-        throw new ClassCastException("Not implemented");
+        throw new ComNotImplementedException("Not implemented");
     }
 
     public native void changeType(short in);
@@ -555,7 +551,7 @@ public class Variant extends JacobObject implements java.io.Serializable {
     }
 
     /**
-     * constructor that calls init() and then putXXX()
+     * Constructor that accepts a primitive rather than an object
      * @param in
      */
     public Variant(int in) {
@@ -564,7 +560,7 @@ public class Variant extends JacobObject implements java.io.Serializable {
     }
 
     /**
-     * constructor that calls init() and then putXXX()
+     * Constructor that accepts a primitive rather than an object
      * @param in
      */
     public Variant(double in) {
@@ -573,7 +569,7 @@ public class Variant extends JacobObject implements java.io.Serializable {
     }
 
     /**
-     * constructor that calls init() and then putXXX()
+     * Constructor that accepts a primitive rather than an object
      * @param in
      */
     public Variant(boolean in) {
@@ -581,33 +577,10 @@ public class Variant extends JacobObject implements java.io.Serializable {
         putBoolean(in);
     }
 
-    /**
-     * constructor that calls init() and then putXXX()
-     * @param in
-     */
-    public Variant(String in) {
-        init();
-        putString(in);
-    }
-
-    /**
-     * constructor that calls init() and then putSafeArrayXXX()
-     * @param in
-     * @param fByRef is this data by reference or not?
-     */
-    public Variant(SafeArray in, boolean fByRef) {
-        init();
-        if (fByRef) {
-            putSafeArrayRef(in);
-        } else {
-            putSafeArray(in);
-        }
-    }
-
     /** 
-     * constructor that calls two parameter constructor
-     * with 1st parameter as object and 2nd parameter as false
-     * @param in
+     * Convenience constructor that calls the main one with
+     * a byRef value of false
+     * @param in object to be made into variant
      */
     public Variant(Object in) {
         this(in, false);
@@ -661,45 +634,6 @@ public class Variant extends JacobObject implements java.io.Serializable {
         }
     }
 
-    /**
-     * wierd constructor that is no longer supported
-     * @param in
-     * @param in1
-     * @throws com.jacob.com.ComFailException
-     */ 
-    public Variant(int in, int in1) {
-        throw new ComFailException("Not implemented");
-    }
-
-    /**
-     * wierd constructor that is no longer supported
-     * @param in
-     * @param in1
-     * @throws com.jacob.com.ComFailException
-     */ 
-    public Variant(int in, boolean in1) {
-        throw new ComFailException("Not implemented");
-    }
-
-    /**
-     * wierd constructor that is no longer supported
-     * @param in
-     * @param in1
-     * @throws com.jacob.com.ComFailException
-     */ 
-    public Variant(int in, double in1) {
-        throw new ComFailException("Not implemented");
-    }
-
-    /**
-     * wierd constructor that is no longer supported
-     * @param in
-     * @param in1
-     * @throws com.jacob.com.ComFailException
-     */ 
-    public Variant(int in, Object in1) {
-        throw new ComFailException("Not implemented");
-    }
 
     public native short getvt();
 
@@ -752,14 +686,22 @@ public class Variant extends JacobObject implements java.io.Serializable {
         }
     }
 
-    // superceded by SafeArray
+    /**
+     * @deprecated superceded by SafeArray
+     * @return
+     * @throws com.jacob.com.ComNotImplementedException
+     */
     public Variant[] toVariantArray() {
-        throw new ClassCastException("Not implemented");
+        throw new ComNotImplementedException("Not implemented");
     }
 
-    // superceded by SafeArray
+    /**
+     * @deprecated superceded by SafeArray
+     * @return
+     * @throws com.jacob.com.ComNotImplementedException
+     */
     public Object toByteArray() {
-        throw new ClassCastException("Not implemented");
+        throw new ComNotImplementedException("Not implemented");
     }
 
     static {
@@ -772,7 +714,14 @@ public class Variant extends JacobObject implements java.io.Serializable {
      */
     private void writeObject(java.io.ObjectOutputStream oos) {
         try {
-            Save(oos);
+        	byte[] ourBytes = SerializationWriteToBytes();
+        	int count = ourBytes.length;
+        	if (JacobObject.isDebugEnabled()){
+        		JacobObject.debug("writing out "+count+" bytes");
+        	}
+        	oos.writeInt(count);
+        	oos.write(ourBytes);
+            //Save(oos);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -784,7 +733,18 @@ public class Variant extends JacobObject implements java.io.Serializable {
      */
     private void readObject(java.io.ObjectInputStream ois) {
         try {
-            Load(ois);
+        	// Load will do this if we don't but lets do it
+        	// from here so that the variant is set up exactly
+        	// the same as the ones not created from a stream
+        	init();
+        	int numBytes = ois.readInt();
+        	byte[] ourBytes = new byte[numBytes];
+        	if (JacobObject.isDebugEnabled()){
+        		JacobObject.debug("reading in "+numBytes+" bytes");
+        	}
+        	ois.read(ourBytes);
+        	SerializationReadFromBytes(ourBytes);
+            //Load(ois);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -795,9 +755,18 @@ public class Variant extends JacobObject implements java.io.Serializable {
      * @return true if it is null or false if not
      */ 
     public native boolean isNull();
-
-    public native void Save(java.io.OutputStream os) throws java.io.IOException;
-
-    public native void Load(java.io.InputStream is) throws java.io.IOException;
-
+    
+    /**
+     * this is supposed to create a byte array that represents the underlying
+     * variant object struct
+     */
+    public native byte[] SerializationWriteToBytes();
+    
+    /**
+     * this is supposed to cause the underlying variant object struct to 
+     * be rebuilt from a previously serialized byte array.
+     * @param ba
+     */
+    public native void SerializationReadFromBytes(byte[] ba);
+    
 }

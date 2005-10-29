@@ -1,7 +1,7 @@
 package com.jacob.com;
 
 import com.jacob.activeX.ActiveXComponent;
-import com.jacob.com.ComFailException;
+import com.jacob.com.ComException;
 import com.jacob.com.DispatchEvents;
 
 /**
@@ -51,7 +51,7 @@ public class WordEventTest extends InvocationProxy {
 			}
 			axc.invoke("Quit", new Variant[] {});
 
-		} catch (ComFailException cfe) {
+		} catch (ComException cfe) {
 			cfe.printStackTrace();
 			System.out.println("Failed to attach to " + pid + ": "
 					+ cfe.getMessage());

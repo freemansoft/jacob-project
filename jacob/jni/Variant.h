@@ -491,14 +491,6 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBooleanRef
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getObjectRef
- * Signature: ()Ljava/lang/Object;
- */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getObjectRef
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
  * Method:    getByteRef
  * Signature: ()B
  */
@@ -601,22 +593,12 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_release
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_init
   (JNIEnv *, jobject);
 
-/*
- * Class:     com_jacob_com_Variant
- * Method:    Save
- * Signature: (Ljava/io/OutputStream;)V
- */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_Save
-  (JNIEnv *, jobject, jobject);
+JNIEXPORT jbyteArray JNICALL Java_com_jacob_com_Variant_SerializationWriteToBytes
+  (JNIEnv *, jobject);
 
-/*
- * Class:     com_jacob_com_Variant
- * Method:    Load
- * Signature: (Ljava/io/InputStream;)V
- */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_Load
-  (JNIEnv *, jobject, jobject);
-
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_SerializationReadFromBytes
+  (JNIEnv *, jobject, jbyteArray);
+  
 /*
  * Class:     com_jacob_com_Variant
  * Method:    isNull

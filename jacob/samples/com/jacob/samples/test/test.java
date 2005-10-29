@@ -266,7 +266,7 @@ class test
    printArray(bback);
 
    try {
-     // this should throw ComFailException
+     // this should throw ComException
      bba2.fromCharArray(new char[] {'a'});
    } catch (Exception e) {
      e.printStackTrace();

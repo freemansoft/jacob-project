@@ -24,8 +24,6 @@ public class AppTest extends Applet implements ActionListener {
 
 	ActiveXComponent sC = null;
 
-	Dispatch sControl = null;
-
 	/**
 	 * startup method
 	 */
@@ -46,10 +44,9 @@ public class AppTest extends Applet implements ActionListener {
 		if (sC == null) {
 			String lang = "VBScript";
 			sC = new ActiveXComponent("ScriptControl");
-			sControl = sC.getObject();
-			Dispatch.put(sControl, "Language", lang);
+			Dispatch.put(sC, "Language", lang);
 		}
-		Variant v = Dispatch.call(sControl, "Eval", in.getText());
+		Variant v = Dispatch.call(sC, "Eval", in.getText());
 		out.setText(v.toString());
 	}
 }

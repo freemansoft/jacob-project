@@ -100,87 +100,60 @@ void zeroVariant(JNIEnv *env, jobject _this)
   env->SetIntField(_this, jf, (unsigned int)0);
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_Save
-  (JNIEnv *env, jobject _this, jobject outStream)
-{
+
+/**
+ * This is the core of the old Save method.
+ * It copies this variant to a byte stream.
+ * The unmarshalling part of this doesn't work but it was left in 
+ * with the hope that someone will want to fix this later
+ **/
+JNIEXPORT jbyteArray JNICALL Java_com_jacob_com_Variant_SerializationWriteToBytes
+  (JNIEnv *env, jobject _this){
   VARIANT *v = extractVariant(env, _this);
-  if (v) 
-  {
-    DWORD flags = MSHCTX_LOCAL;
-    jint size = VARIANT_UserSize(&flags, 0L, v);
-    // allocate a byte array of the right length
-    jbyte* pBuf = new jbyte[size];
-    // clear it out
-    ZeroMemory(pBuf, size);
-    // marshall the Variant into the buffer
-    VARIANT_UserMarshal(&flags, (unsigned char *)pBuf, v);
-    // need to convert the buffer to a java byte ba[]
-    jbyteArray ba = env->NewByteArray(size);
-    env->SetByteArrayRegion(ba, 0, size, pBuf);
-    // and delete the original memory
-    delete [] pBuf;
-
-    //java code: DataOutputStream dos = new DataOutputStream(outStream);
-    jclass dosCls = env->FindClass("java/io/DataOutputStream");
-    jmethodID dosCons =
-      env->GetMethodID(dosCls, "<init>", "(Ljava/io/OutputStream;)V");
-    jmethodID dosWriteInt =
-      env->GetMethodID(dosCls, "writeInt", "(I)V");
-    jmethodID dosWriteBytes =
-      env->GetMethodID(dosCls, "write", "([B)V");
-    jobject dos = env->NewObject(dosCls, dosCons, outStream);
-    // write the size into the stream
-    env->CallVoidMethod(dos, dosWriteInt, size);
-    // write the buffer into the stream
-    env->CallVoidMethod(dos, dosWriteBytes, ba);
+	  if (v) 
+	  {
+	    DWORD flags = MSHCTX_LOCAL;
+	    jint size = VARIANT_UserSize(&flags, 0L, v);
+	    // allocate a byte array of the right length
+	    jbyte* pBuf = new jbyte[size];
+	    // clear it out
+	    ZeroMemory(pBuf, size);
+	    // marshall the Variant into the buffer
+	    VARIANT_UserMarshal(&flags, (unsigned char *)pBuf, v);
+	    // need to convert the buffer to a java byte ba[]
+	    jbyteArray ba = env->NewByteArray(size);
+	    env->SetByteArrayRegion(ba, 0, size, pBuf);
+	    // and delete the original memory
+	    delete [] pBuf;
+		return ba;
+	  } else {
+	    jbyteArray ba = env->NewByteArray(0);
+	    return ba;
+	  }
   }
-}
-
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_Load
-  (JNIEnv *env, jobject _this, jobject inStream)
-{
+  
+/**
+ * This is the core of the old Load method.  It is broken because the 
+ * unmarshalling code doesn't work under 2000/XP.
+ * 
+ * It probably needs a custom handler.
+ **/
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_SerializationReadFromBytes
+  (JNIEnv *env, jobject _this, jbyteArray ba){
 
   VARIANT *v = extractVariant(env, _this);
-  if (!v) 
-  {
-    // since the default constructor is not called when serializing in
-    // I need to init the underlying VARIANT
-    jclass clazz = env->GetObjectClass(_this);
-    jfieldID jf = env->GetFieldID( clazz, VARIANT_FLD, "I");
-    v = new VARIANT();
-    VariantInit(v);
-    env->SetIntField(_this, jf, (unsigned int)v);
-  }
-  if (v) 
-  {
-    //java code: DataInputStream dis = new DataInputStream(outStream);
-    jclass disCls = env->FindClass("java/io/DataInputStream");
-    jmethodID disCons =
-      env->GetMethodID(disCls, "<init>", "(Ljava/io/InputStream;)V");
-    jmethodID disReadInt =
-      env->GetMethodID(disCls, "readInt", "()I");
-    jmethodID disReadBytes =
-      env->GetMethodID(disCls, "readFully", "([B)V");
-    jobject dis = env->NewObject(disCls, disCons, inStream);
-
-    // read in the size from the input stream
-    jint size = env->CallIntMethod(dis, disReadInt);
-    // allocate a byte array of this size
-    jbyteArray ba = env->NewByteArray(size);
-    // read it in from the input stream
-    env->CallVoidMethod(dis, disReadBytes, ba);
-	if ( size > 0 )
-	{
+	if (v){
 		// get a buffer from it
 		jbyte *pBuf = env->GetByteArrayElements(ba, 0);
 		// unmarshall the Variant from the buffer
 		DWORD flags = MSHCTX_LOCAL;
+		printf("about to unmarshall array elements\n");
 		VARIANT_UserUnmarshal(&flags, (unsigned char *)pBuf, v);
 		// release the byte array
+	    printf("about to release array elements\n");
 		env->ReleaseByteArrayElements(ba, pBuf, 0);
 	}
   }
-}
 
 JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toInt
   (JNIEnv *env, jobject _this)
@@ -944,12 +917,6 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBooleanRef
     }
     return (jboolean)*V_BOOLREF(v);
   }
-  return NULL;
-}
-
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getObjectRef
-  (JNIEnv *env, jobject _this)
-{
   return NULL;
 }
 

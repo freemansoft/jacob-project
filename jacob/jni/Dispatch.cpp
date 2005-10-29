@@ -89,7 +89,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
  * and connects to it.  does special code if the progid 
  * is of the alternate format (with ":")
  **/
-JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_createInstance
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_createInstanceNative
   (JNIEnv *env, jobject _this, jstring _progid)
 {
   jclass clazz = env->GetObjectClass(_this);
@@ -155,7 +155,7 @@ doDisp:
  * attempts to connect to an running instance of the requested program
  * This exists solely for the factory method connectToActiveInstance.
  **/
-JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstance
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstanceNative
   (JNIEnv *env, jobject _this, jstring _progid)
 {
   jclass clazz = env->GetObjectClass(_this);
@@ -197,7 +197,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstance
  * starts up a new instance of the requested program (progId).  
  * This exists solely for the factory method connectToActiveInstance.
  **/
-JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_coCreateInstance
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_coCreateInstanceNative
   (JNIEnv *env, jobject _this, jstring _progid)
 {
   jclass clazz = env->GetObjectClass(_this);

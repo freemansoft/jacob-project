@@ -20,7 +20,7 @@
 package com.jacob.com;
 
 /**
- * COM Fail Exception class raise dwhen there is a problem
+ * COM Fail Exception class raised when there is a problem
  */
 public class ComFailException extends ComException {
     /**

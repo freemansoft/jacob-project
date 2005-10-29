@@ -157,7 +157,7 @@ public class Dispatch extends JacobObject
     public Dispatch(String requestedProgramId) {
         programId = requestedProgramId;
         if (programId != null && !"".equals(programId)){
-        	createInstance(requestedProgramId);
+        	createInstanceNative(requestedProgramId);
         } else {
         	throw new IllegalArgumentException(
         			"Dispatch(String) does not accept null or an empty string as a parameter");
@@ -176,7 +176,7 @@ public class Dispatch extends JacobObject
      * 
      * @param progid
      */
-    private native void createInstance(String progid);
+    private native void createInstanceNative(String progid);
 
     /**
      * native call getActiveInstance only used by the constructor with the same parm
@@ -190,15 +190,18 @@ public class Dispatch extends JacobObject
      * 
      * @param progid
      */
-    private native void getActiveInstance(String progid);
+    private native void getActiveInstanceNative(String progid);
     
     /**
      * Wrapper around the native method
      * @param progid
      */
-    protected void getActiveInstanceJava(String progid){
-    	this.programId = progid;
-    	getActiveInstance(progid);
+    protected void getActiveInstance(String pProgramIdentifier){
+    	if (pProgramIdentifier == null || "".equals(pProgramIdentifier)){
+    		throw new IllegalArgumentException("program id is required");
+    	}
+    	this.programId = pProgramIdentifier;
+    	getActiveInstanceNative(pProgramIdentifier);
     }
 
     /**
@@ -213,15 +216,18 @@ public class Dispatch extends JacobObject
      * 
      * @param progid
      */
-    private native void coCreateInstance(String progid);
+    private native void coCreateInstanceNative(String progid);
 
     /**
      * Wrapper around the native method
-     * @param progid
+     * @param pProgramIdentifier
      */
-    protected void coCreateInstanceJava(String progid){
-    	this.programId = progid;
-    	coCreateInstance(progid);
+    protected void coCreateInstance(String pProgramIdentifier){
+    	if (pProgramIdentifier == null || "".equals(pProgramIdentifier)){
+    		throw new IllegalArgumentException("program id is required");
+    	}
+    	this.programId = pProgramIdentifier;
+    	coCreateInstanceNative(pProgramIdentifier);
     }
 
     /**
@@ -391,11 +397,10 @@ public class Dispatch extends JacobObject
      * @param dispatchTarget
      * @param name
      * @param val
-     * @throws ClassCastException
-     *             because???
+     * @throws com.jacob.com.ComNotImplementedException
      */
     public static void put_Casesensitive(Dispatch dispatchTarget, String name, Object val) {
-        throw new ClassCastException("not implemented yet");
+        throw new ComNotImplementedException("not implemented yet");
     }
 
     /*============================================================
@@ -447,12 +452,12 @@ public class Dispatch extends JacobObject
      * @param dispatchTarget
      * @param name
      * @param values
-     * @return never returns anything because throws ClassCastException
-     * because not implemented yet
+     * @return never returns anything because 
+     * @throws com.jacob.com.ComNotImplementedException
      */
     public static Variant callN_CaseSensitive(Dispatch dispatchTarget, String name,
             Object[] values) {
-        throw new ClassCastException("not implemented yet");
+        throw new ComNotImplementedException("not implemented yet");
     }
 
     /**
@@ -1273,13 +1278,14 @@ public class Dispatch extends JacobObject
     }
 
     /**
-     * not implemented , will throw class cast exception
+     * not implemented yet
      * @param dispatchTarget
      * @param name
      * @return Variant never returned
+     * @throws com.jacob.com.ComNotImplementedException
      */
     public static Variant get_CaseSensitive(Dispatch dispatchTarget, String name) {
-        throw new ClassCastException("not implemented yet");
+        throw new ComNotImplementedException("not implemented yet");
     }
     
 }

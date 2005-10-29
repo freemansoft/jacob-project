@@ -38,7 +38,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
  * Method:    createInstance
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_createInstance
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_createInstanceNative
   (JNIEnv *, jobject, jstring);
 
 /*
@@ -46,7 +46,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_createInstance
  * Method:    getActiveInstance
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstance
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstanceNative
   (JNIEnv *, jobject, jstring);
 
 /*
@@ -54,7 +54,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstance
  * Method:    coCreateInstance
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_coCreateInstance
+JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_coCreateInstanceNative
   (JNIEnv *, jobject, jstring);
 
 /*

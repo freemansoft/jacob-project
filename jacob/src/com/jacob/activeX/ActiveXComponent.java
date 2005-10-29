@@ -101,7 +101,7 @@ public class ActiveXComponent extends Dispatch {
     	ActiveXComponent mCreatedDispatch = null;
     	try {
     		mCreatedDispatch = new ActiveXComponent();
-    		mCreatedDispatch.coCreateInstanceJava(pRequestedProgramId);
+    		mCreatedDispatch.coCreateInstance(pRequestedProgramId);
     	} catch (Exception e){
     		mCreatedDispatch =null;
     		if (JacobObject.isDebugEnabled()){
@@ -130,7 +130,7 @@ public class ActiveXComponent extends Dispatch {
     	ActiveXComponent mCreatedDispatch = null;
     	try {
     		mCreatedDispatch = new ActiveXComponent();
-    		mCreatedDispatch.getActiveInstanceJava(pRequestedProgramId);
+    		mCreatedDispatch.getActiveInstance(pRequestedProgramId);
     	} catch (Exception e){
     		mCreatedDispatch =null;
     		if (JacobObject.isDebugEnabled()){

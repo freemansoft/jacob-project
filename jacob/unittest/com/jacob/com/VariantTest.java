@@ -1,8 +1,9 @@
-package com.jacob.samples.test;
+package com.jacob.com;
 
-import com.jacob.com.*;
-
-class variant_test {
+/**
+ * runs through some of the get and set methods on Variant
+ */
+class VariantTest {
 	public static void main(String[] args) {
 		//deprecated
 		//System.runFinalizersOnExit(true);
