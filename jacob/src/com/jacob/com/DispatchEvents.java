@@ -58,7 +58,7 @@ public class DispatchEvents extends JacobObject {
 
     
     /**
-     * This is the most commonly used constructor
+     * This is the most commonly used constructor.
      * <p>
      * Creates the event callback linkage between the the
      * MS program represented by the Dispatch object and the
@@ -71,7 +71,7 @@ public class DispatchEvents extends JacobObject {
     }
 
     /**
-     * None of the samples use this constructor
+     * None of the samples use this constructor.
      * <p>
      * Creates the event callback linkage between the the
      * MS program represented by the Dispatch object and the

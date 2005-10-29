@@ -194,7 +194,7 @@ public class Dispatch extends JacobObject
     
     /**
      * Wrapper around the native method
-     * @param progid
+     * @param pProgramIdentifier name of the program you wish to connect to
      */
     protected void getActiveInstance(String pProgramIdentifier){
     	if (pProgramIdentifier == null || "".equals(pProgramIdentifier)){

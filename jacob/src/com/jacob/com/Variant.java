@@ -695,7 +695,7 @@ public class Variant extends JacobObject {
 
     /**
      * @deprecated superceded by SafeArray
-     * @return
+     * @return nothing because this method is not implemented
      * @throws com.jacob.com.NotImplementedException
      */
     public Variant[] toVariantArray() {
@@ -704,7 +704,7 @@ public class Variant extends JacobObject {
 
     /**
      * @deprecated superceded by SafeArray
-     * @return
+     * @return nothing because this method is not implemented
      * @throws com.jacob.com.NotImplementedException
      */
     public Object toByteArray() {
@@ -784,7 +784,6 @@ public class Variant extends JacobObject {
 	 * Convert a JACOB Variant value to a Java object (type conversions).
      * provided in Sourceforge feature request 959381
 	 *
-	 * @param variant Variant with value to get and convert.
 	 * @return Corresponding Java type object.
 	 * @throws Exception if conversion failed.
 	 */
