@@ -397,10 +397,10 @@ public class Dispatch extends JacobObject
      * @param dispatchTarget
      * @param name
      * @param val
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */
     public static void put_Casesensitive(Dispatch dispatchTarget, String name, Object val) {
-        throw new ComNotImplementedException("not implemented yet");
+        throw new NotImplementedException("not implemented yet");
     }
 
     /*============================================================
@@ -453,11 +453,11 @@ public class Dispatch extends JacobObject
      * @param name
      * @param values
      * @return never returns anything because 
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */
     public static Variant callN_CaseSensitive(Dispatch dispatchTarget, String name,
             Object[] values) {
-        throw new ComNotImplementedException("not implemented yet");
+        throw new NotImplementedException("not implemented yet");
     }
 
     /**
@@ -1282,10 +1282,10 @@ public class Dispatch extends JacobObject
      * @param dispatchTarget
      * @param name
      * @return Variant never returned
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */
     public static Variant get_CaseSensitive(Dispatch dispatchTarget, String name) {
-        throw new ComNotImplementedException("not implemented yet");
+        throw new NotImplementedException("not implemented yet");
     }
     
 }

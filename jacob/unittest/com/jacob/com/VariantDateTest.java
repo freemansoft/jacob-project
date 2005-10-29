@@ -22,8 +22,34 @@ public class VariantDateTest {
     	if (!now.equals(retrievedNow)){
     		System.out.println("Variant Date Test failed " +now+ " != " +retrievedNow );
     	} else {
-    		System.out.println("Variant Date Test passed");
+    		//System.out.println("Variant Date Test passed");
     	}
+    	
+    	for ( int i = 0; i < 30000; i++){
+	    	Variant dateVariant = new Variant(now);
+	    	retrievedNow = dateVariant.getJavaDate();
+	    	if (!now.equals(retrievedNow)){
+	    		System.out.println("Variant Date Test (1) failed " +now+ " != " +retrievedNow );
+	    	} else {
+	    		//System.out.println("Variant Date Test (1) passed");
+	    	}
+	    	// verify auto typecasting works
+	    	retrievedNow = (Date)dateVariant.toJavaObject();
+	    	if (!now.equals(retrievedNow)){
+	    		System.out.println("Variant Date Test (2) failed " +now+ " != " +retrievedNow );
+	    	} else {
+	    		//System.out.println("Variant Date Test (2) passed "+retrievedNow);
+	    	}
+	
+	    	Variant intVariant = new Variant(4);
+	    	Object variantReturn = intVariant.toJavaObject();
+	    	// degenerate test to make sure date isn't always returned
+	    	if (variantReturn instanceof Date ){
+	    		System.out.println("int variant returned date");
+	    	}
+    	}
+    	System.out.print("Test finished.  All tests passed if no errors before this line");
+		
     }
     
 }

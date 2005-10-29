@@ -25,7 +25,7 @@ package com.jacob.com;
  * This is a subclass of ComException so callers can still just catch 
  * ComException.
  */
-public class ComNotImplementedException extends ComException {
+public class NotImplementedException extends JacobException {
 
     /**
 	 * 
@@ -35,7 +35,7 @@ public class ComNotImplementedException extends ComException {
 	/**
      * @param description
      */
-    public ComNotImplementedException(String description) {
+    public NotImplementedException(String description) {
         super(description);
     }
 

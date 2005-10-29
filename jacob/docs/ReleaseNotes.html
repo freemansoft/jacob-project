@@ -11,6 +11,15 @@
 	</ul>
 </li>
 <li>
+	<b>Variants</b>
+	<ul>
+	<li>Variant now accept Java Dates in the constructor.
+	<li>Redundant constructors removed
+	<li>Experimental toJavaObject() method added that automatically 
+			converts to appropriate	java type
+	</ul>
+</li>
+<li>
 	<b>Event Callbacks</b>
 	<ul>
 	<li>Jacob normally uses information in the registry to find the connection
@@ -22,7 +31,6 @@
 	</ul>
 </li>
 
-
 <h2>Tracked Changes</h2>
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
   <tr>
@@ -32,6 +40,11 @@
     <td width="13%">1340233</td>
     <td width="87%">Null Program Id in Dispatch Constructor does bad things to VM</td>
   </tr>
+  <tr>
+    <td width="13%">1341763</td>
+    <td width="87%">Removed Variant serializable interface because it is not 
+    	actually serializable on 2000/xp</td>
+  </tr> 
   <tr>
     <td width="13%">&nbsp;</td>
     <td width="87%">&nbsp;</td>
@@ -53,6 +66,14 @@
   <tr>
     <td width="13%">1185167</td>
     <td width="87%">Provide methods to connect to running instance.</td>
+  </tr>
+  <tr>
+    <td width="13%">959381</td>
+    <td width="87%">Auto variant to object conversion method method added to Variant.</td>
+  </tr>
+  <tr>
+  	<td width="13%">1341779</td>
+  	<td width="87%">Variant should accept java.util.Date in Variant(Object) constructor</td>
   </tr>
 </table>
 
@@ -82,6 +103,7 @@
 	<b>Variants</b>
 	<ul>
 	<li>Automatic conversion between Windows Time and Java Date is now supported
+		in Variant object.
 	</ul>
 </li>
 <li>

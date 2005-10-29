@@ -19,6 +19,7 @@
  */
 package com.jacob.com;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -162,28 +163,28 @@ public class Variant extends JacobObject {
     /**
      * @deprecated superceded by SafeArray
      * @param in doesn't matter because this method does nothing
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */
     public void putVariantArray(Variant[] in) {
-        throw new ComNotImplementedException("Not implemented");
+        throw new NotImplementedException("Not implemented");
     }
 
     /**
      * @deprecated superceded by SafeArray
      * @return never returns anything
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */
     public Variant[] getVariantArray() {
-        throw new ComNotImplementedException("Not implemented");
+        throw new NotImplementedException("Not implemented");
     }
 
     /**
      * @deprecated superceded by SafeArray
      * @param in doesn't matter because this method does nothing
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */
     public void putByteArray(Object in) {
-        throw new ComNotImplementedException("Not implemented");
+        throw new NotImplementedException("Not implemented");
     }
 
     /**
@@ -291,10 +292,10 @@ public class Variant extends JacobObject {
     /**
      * @deprecated superceded by SafeArray
      * @return never returns anything
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */
     public Object toCharArray() {
-        throw new ComNotImplementedException("Not implemented");
+        throw new NotImplementedException("Not implemented");
     }
 
     /**
@@ -495,10 +496,10 @@ public class Variant extends JacobObject {
 
     /**
      * @deprecated superceded by SafeArray
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */ 
     public void putCharArray(Object in) {
-        throw new ComNotImplementedException("Not implemented");
+        throw new NotImplementedException("Not implemented");
     }
 
     public native float getFloat();
@@ -515,18 +516,18 @@ public class Variant extends JacobObject {
 
     /**
      * @deprecated superceded by SafeArray
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */ 
     public void putVariantArrayRef(Variant[] in) {
-        throw new ComNotImplementedException("Not implemented");
+        throw new NotImplementedException("Not implemented");
     }
 
     /**
      * @deprecated superceded by SafeArray
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */ 
     public Variant[] getVariantArrayRef() {
-        throw new ComNotImplementedException("Not implemented");
+        throw new NotImplementedException("Not implemented");
     }
 
     public native void changeType(short in);
@@ -621,6 +622,12 @@ public class Variant extends JacobObject {
                 putFloatRef(((Float) o).floatValue());
             else
                 putFloat(((Float) o).floatValue());
+        } else if (o instanceof Date){
+        	if (fByRef){
+        		putDateRef((Date) o);
+        	} else {
+        		putDate((Date)o);
+        	}
         } else if (o instanceof SafeArray) {
             if (fByRef)
                 putSafeArrayRef((SafeArray) o);
@@ -689,19 +696,19 @@ public class Variant extends JacobObject {
     /**
      * @deprecated superceded by SafeArray
      * @return
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */
     public Variant[] toVariantArray() {
-        throw new ComNotImplementedException("Not implemented");
+        throw new NotImplementedException("Not implemented");
     }
 
     /**
      * @deprecated superceded by SafeArray
      * @return
-     * @throws com.jacob.com.ComNotImplementedException
+     * @throws com.jacob.com.NotImplementedException
      */
     public Object toByteArray() {
-        throw new ComNotImplementedException("Not implemented");
+        throw new NotImplementedException("Not implemented");
     }
 
     static {
@@ -769,4 +776,94 @@ public class Variant extends JacobObject {
      */
     public native void SerializationReadFromBytes(byte[] ba);
     
+    /*=====================================================================
+     * 
+     * 
+     *=====================================================================*/
+    /**
+	 * Convert a JACOB Variant value to a Java object (type conversions).
+     * provided in Sourceforge feature request 959381
+	 *
+	 * @param variant Variant with value to get and convert.
+	 * @return Corresponding Java type object.
+	 * @throws Exception if conversion failed.
+	 */
+	protected Object toJavaObject() throws JacobException {
+	    Object result = null;
+	
+	    short type = this.getvt(); //variant type
+	
+	    if (type >= Variant.VariantArray) { //array returned?
+		    SafeArray array = null;
+		    type = (short) (type - Variant.VariantArray);
+		    array = this.toSafeArray(false);
+		    //result = toJava(array);
+		    result = array;
+	    } else { //non-array object returned
+		    switch (type) {
+		    case Variant.VariantEmpty : //0
+		    case Variant.VariantNull : //1
+		    break;
+		    case Variant.VariantShort : //2
+		    result = new Short(this.getShort());
+		    break;
+		    case Variant.VariantInt : //3
+		    result = new Integer(this.getInt());
+		    break;
+		    case Variant.VariantFloat : //4
+		    result = new Float(this.getFloat());
+		    break;
+		    case Variant.VariantDouble : //5
+		    result = new Double(this.getDouble());
+		    break;
+		    case Variant.VariantCurrency : //6
+		    result = new Long(this.getCurrency());
+		    break;
+		    case Variant.VariantDate : //7
+		    result = this.getJavaDate();
+		    break;
+		    case Variant.VariantString : //8
+		    result = this.getString();
+		    break;
+		    case Variant.VariantDispatch : //9
+		    result = this.getDispatchRef();
+		    break;
+		    case Variant.VariantError : //10
+		    result = new NotImplementedException("Not implemented: VariantError");
+		    break;
+		    case Variant.VariantBoolean : //11
+		    result = new Boolean(this.getBoolean
+		    ());
+		    break;
+		    case Variant.VariantVariant : //12
+		    result = new NotImplementedException("Not implemented: VariantVariant");
+		    break;
+		    case Variant.VariantObject : //13
+		    result = new NotImplementedException("Not implemented: VariantObject");
+		    break;
+		    case Variant.VariantByte : //17
+		    result = new NotImplementedException("Not implemented: VariantByte");
+		    break;
+		    case Variant.VariantTypeMask : //4095
+		    result = new NotImplementedException("Not implemented: VariantTypeMask");
+		    break;
+		    case Variant.VariantArray : //8192
+		    result = new NotImplementedException("Not implemented: VariantArray");
+		    break;
+		    case Variant.VariantByref : //16384
+		    result = new NotImplementedException("Not implemented: VariantByref");
+		    break;
+		    default :
+		    result = new NotImplementedException("Unknown return type: " + type);
+		    result = this;
+		    break;
+	    }//switch (type)
+	
+	    if (result instanceof JacobException) {
+	    	throw (JacobException) result;
+	    }
+	    }
+	
+	    return result;
+    }//toJava()    
 }

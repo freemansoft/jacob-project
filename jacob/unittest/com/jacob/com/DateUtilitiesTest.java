@@ -22,9 +22,9 @@ public class DateUtilitiesTest {
     	double comTimeForNow = DateUtilities.convertDateToWindowsTime(now);
     	Date retrievedNow = DateUtilities.convertWindowsTimeToDate(comTimeForNow);
     	if (!now.equals(retrievedNow)){
-    		System.out.println("Variant Date Test failed " +now+ " != " +retrievedNow );
+    		System.out.println("DateUtilities Date Test failed " +now+ " != " +retrievedNow );
     	} else {
-    		System.out.println("Variant Date Test passed");
+    		System.out.println("DateUtilities Date Test passed");
     	}
     	
     	// this is a magic time in the windows world
@@ -38,6 +38,7 @@ public class DateUtilitiesTest {
     	} else {
     		System.out.println("Beginning of windows time test passed");
     	}
+    	
     }
     
 

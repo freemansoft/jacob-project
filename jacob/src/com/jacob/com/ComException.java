@@ -22,9 +22,12 @@ package com.jacob.com;
 /**
  * Standard exception thrown by com jni code when there is a problem
  */
-public abstract class ComException extends RuntimeException {
+public abstract class ComException extends JacobException
+{
     // Fields
-    /** TODO: what is this field */
+    /** COM code initializes this filed with an appropriate return code
+     * that was returned by the underlying com code 
+     **/
     protected int hr;
     /** TODO: what is this field */
     protected int m_helpContext;
