@@ -9,4 +9,7 @@ compilation_tools.properties
 version.properties
 release
 .externalToolBuilders
+.cdtproject
+foo.foo
+foo.ser
 
