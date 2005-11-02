@@ -7,7 +7,8 @@ import java.io.InputStream;
 /**
  * It is sometimes necessary to run Jacob without being able to install the dll
  * on the client machine.  This is true in JavaWebStart (JWS) and possibly 
- * Applet environments.  The obvious thing to do here is to jar up 
+ * Applet (assuming security allows access to the file system).
+ * The obvious thing to do here is to jar up 
  * the Jacob.dll so that it can be downloaded the client along with the rest
  * of the resources.  This is simple except that the System.Load() function
  * does not search jar files for DLLs.  It searches the classpath.
