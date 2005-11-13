@@ -1,4 +1,4 @@
-package com.jacob.samples.test;
+package com.jacob.samples.test.MathProj;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.*;
@@ -10,12 +10,20 @@ import com.jacob.com.*;
  * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=true
  * </pre>
  */
-class math {
+class MathTest {
 	public static void main(String[] args) {
+		MathTest me = new MathTest();
+		me.runTest();
+	}
+	
+	public MathTest(){
+	}
+	
+	public void runTest(){
 		// deprecated
 		// System.runFinalizersOnExit(true);
 		Dispatch test = new ActiveXComponent("MathTest.Math");
-		testEvents te = new testEvents();
+		TestEvents te = new TestEvents();
 		DispatchEvents de = new DispatchEvents(test, te);
 		if (de == null) {
 			System.out
@@ -33,9 +41,8 @@ class math {
 		System.out.println("v.isNull=" + v.isNull());
 		System.out.println("v.toDispatch=" + v.toDispatch());
 	}
-}
 
-class testEvents {
+public class TestEvents {
 	public void DoneAdd(Variant[] args) {
 		System.out.println("DoneAdd called in java");
 	}
@@ -43,4 +50,6 @@ class testEvents {
 	public void DoneMult(Variant[] args) {
 		System.out.println("DoneMult called in java");
 	}
+}
+
 }
