@@ -155,6 +155,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_SerializationReadFromBytes
 	}
   }
 
+/**
+ * Converts the data to a Int object and then returns it as a Dispatch
+ */
+
 JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toInt
   (JNIEnv *env, jobject _this)
 {
@@ -170,6 +174,9 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toInt
   return NULL;
 }
 
+/**
+ * Converts the data to a Date object and then returns it as a Dispatch
+ */
 JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_toDate
   (JNIEnv *env, jobject _this)
 {
@@ -185,6 +192,9 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_toDate
   return NULL;
 }
 
+/**
+ * Converts the data to a Boolean object and then returns it as a Dispatch
+ */
 JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_toBoolean
   (JNIEnv *env, jobject _this)
 {
@@ -200,6 +210,9 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_toBoolean
   return NULL;
 }
 
+/**
+ * Converts the data to a Enum Variant object and then returns it as a Dispatch
+ */
 JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toEnumVariant
   (JNIEnv *env, jobject _this)
 {
@@ -230,6 +243,14 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toEnumVariant
   return NULL;
 }
 
+/**
+ * returns nothing.
+ * an odd void if there ever was one.
+ * It should return null if it is of type VT_NULL and
+ * null if it is not of the right type.
+ * Ie: there is no good way to differentiate between 
+ * a null value and a type mismatch
+ **/
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_getNull
   (JNIEnv *env, jobject _this)
 {
@@ -251,6 +272,9 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_cloneIndirect
   return NULL;
 }
 
+/**
+ * Converts the data to a Double object and then returns it as a Dispatch
+ */
 JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_toDouble
   (JNIEnv *env, jobject _this)
 {
@@ -266,6 +290,9 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_toDouble
   return NULL;
 }
 
+/**
+ * Converts the data to a Long object and then returns it as a Dispatch
+ */
 JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_toCurrency
   (JNIEnv *env, jobject _this)
 {
@@ -457,6 +484,9 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_VariantClear
   }
 }
 
+/**
+ * Converts the data to a Dispatch object and then returns it as a Dispatch
+ */
 JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toDispatch
   (JNIEnv *env, jobject _this)
 {
@@ -486,6 +516,9 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_clone
   return NULL;
 }
 
+/**
+ * Converts the data to a String object and then returns it as a Dispatch
+ */
 JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_toString
   (JNIEnv *env, jobject _this)
 {
@@ -511,6 +544,11 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_toString
   return NULL;
 }
 
+/**
+ * Returns the value of this int as a Boolea if it is of that type.
+ * Otherwise it will return null (no conversion done)
+ */
+
 JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getInt
   (JNIEnv *env, jobject _this)
 {
@@ -523,6 +561,11 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getInt
   }
   return NULL;
 }
+
+/**
+ * Returns the value of this Date as a Boolea if it is of that type.
+ * Otherwise it will return null (no conversion done)
+ */
 
 JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDate
   (JNIEnv *env, jobject _this)
@@ -559,6 +602,9 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDate
   }
 }
 
+/**
+ * Converts the data to a Byte object and then returns it as a Dispatch
+ */
 JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_toByte
   (JNIEnv *env, jobject _this)
 {
@@ -574,6 +620,10 @@ JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_toByte
   return NULL;
 }
 
+/**
+ * Returns the value of this Variant as a Boolea if it is of that type.
+ * Otherwise it will return null (no conversion done)
+ */
 JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBoolean
   (JNIEnv *env, jobject _this)
 {
@@ -587,6 +637,10 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBoolean
   return NULL;
 }
 
+/**
+ * Returns the value of this Variant as a Byte if it is of that type.
+ * Otherwise it will return null (no conversion done)
+ */
 JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getByte
   (JNIEnv *env, jobject _this)
 {
@@ -639,6 +693,9 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toError
   return NULL;
 }
 
+/**
+ * Not actually supported.  Always returns null
+ */
 JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toObject
   (JNIEnv *env, jobject _this)
 {
@@ -646,6 +703,10 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toObject
   return NULL;
 }
 
+/**
+ * Dummy method to provide symmetry with putEmpty.
+ * This get method should probably return null instead of void
+ */
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_getEmpty
   (JNIEnv *env, jobject _this)
 {
@@ -686,6 +747,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putError
 }
 
 
+/**
+ * Returns the value of this Variant as a double if it is of that type.
+ * Otherwise it will return null (no conversion done)
+ */
 JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDouble
   (JNIEnv *env, jobject _this)
 {
@@ -699,6 +764,9 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDouble
   return NULL;
 }
 
+/**
+ * always returns null
+ **/
 JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getObject
   (JNIEnv *env, jobject _this)
 {
@@ -719,6 +787,11 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrency
   } else ThrowComFail(env, "putCurrency failed", -1);
 }
 
+/**
+ * Accepts a dispatch object and sets the type to VT_DISPATCH.
+ * There is currently no way to pass NULL into this method 
+ * to create something like "NOTHING" from VB
+ * */
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putObject
   (JNIEnv *env, jobject _this, jobject _that)
 {
@@ -744,6 +817,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDouble
   }
 }
 
+/**
+ * Returns the value of this Variant as a long if it is of that type.
+ * Otherwise it will return null (no conversion done)
+ */
 JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getCurrency
   (JNIEnv *env, jobject _this)
 {
@@ -825,6 +902,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putByteRef
   }
 }
 
+/**
+ * Returns the value of this Variant as a String if it is of that type.
+ * Otherwise it will return null (no conversion done)
+ */
 JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getString
   (JNIEnv *env, jobject _this)
 {
@@ -934,6 +1015,9 @@ JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getByteRef
   return NULL;
 }
 
+/**
+ * Converts the data to a Float object and then returns it as a Dispatch
+ */
 JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_toFloat
   (JNIEnv *env, jobject _this)
 {
@@ -949,6 +1033,9 @@ JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_toFloat
   return NULL;
 }
 
+/**
+ * Converts the data to a Safe Array object and then returns it as a Dispatch
+ */
 JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toSafeArray
   (JNIEnv *env, jobject _this, jboolean deepCopy)
 {
@@ -1026,6 +1113,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_noParam
   }
 }
 
+/**
+ * Returns the value of this Variant as a Float if it is of that type.
+ * Otherwise it will return null (no conversion done)
+ */
 JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getFloat
   (JNIEnv *env, jobject _this)
 {
@@ -1059,6 +1150,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_changeType
   }
 }
 
+/**
+ * returns the variant type if it is set, otherwise 
+ * returns null
+ * */
 JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getvt
   (JNIEnv *env, jobject _this)
 {
@@ -1069,6 +1164,9 @@ JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getvt
   return NULL;
 }
 
+/**
+ * Converts the data to a short object and then returns it as a Dispatch
+ */
 JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_toShort
   (JNIEnv *env, jobject _this)
 {
@@ -1093,6 +1191,11 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArrayRefHelper
   }
 }
 
+/**
+ * this is a big cover method that returns TRUE if 
+ * the variant type is 
+ * 	VT_EMPTY, VT_NULL, VT_ERROR or VT_DISPATCH with no dispatch object
+ * */
 JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_isNull
   (JNIEnv *env, jobject _this)
 {
@@ -1101,10 +1204,13 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_isNull
   if ((V_VT(v) & VT_ARRAY)) 
   {
     // is it a null safearray
-    if ((V_VT(v) & VT_BYREF)) 
+    // prior to 4 Dec 2005 the squiggle brackets were missing 
+    // so this did the wrong thing for the else statement
+    if ((V_VT(v) & VT_BYREF)) {
        if (!V_ARRAYREF(v)) return JNI_TRUE;
-    else
+    } else {
        if (!V_ARRAY(v)) return JNI_TRUE;
+    }
   }
   switch (V_VT(v))
   {
