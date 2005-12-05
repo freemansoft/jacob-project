@@ -277,7 +277,7 @@ public class MethodItem {
 
 		if( nativeReturnType.equals("VT_EMPTY") )		//Pending
 			result = "";
-		else if( nativeReturnType.equals("VT_NULL") )
+		else if( nativeReturnType.equals("VT_NULL") )	//is there some better method?  this calls toDispatch() which results in what ?
 			result = ".toObject()";
 		else if( nativeReturnType.equals("VT_I2") )
 			result = ".toShort()";
@@ -289,11 +289,11 @@ public class MethodItem {
 			result = ".toDouble()";
 		else if( nativeReturnType.equals("VT_CY") )		//Currency
 			result = ".toCurrency()";
-		else if( nativeReturnType.equals("VT_DATE") )
+		else if( nativeReturnType.equals("VT_DATE") )	// this should use the new toJavaDate() so we could remove the conversion code
 			result = ".toDate()";
 		else if( nativeReturnType.equals("VT_BSTR") )
 			result = ".toString()";
-		else if( nativeReturnType.equals("VT_DISPATCH") )	//???
+		else if( nativeReturnType.equals("VT_DISPATCH") )	//??? probably not needed because he does .toDispatch() no matter what
 			//result = ".toDispatch()";
 			result = "";
 		else if( nativeReturnType.equals("VT_ERROR") )		//Pending
