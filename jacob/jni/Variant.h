@@ -59,14 +59,6 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toEnumVariant
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getNull
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_getNull
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
  * Method:    putNull
  * Signature: ()V
  */
@@ -206,7 +198,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_com_jacob_com_VariantClear
  * Method:    toDispatch
  * Signature: ()LDispatch;
  */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toDispatch
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toDispatchObject
   (JNIEnv *, jobject);
 
 /*
@@ -307,18 +299,10 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toError
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    toObject
- * Signature: ()Ljava/lang/Object;
- */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toObject
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    getEmpty
+ * Method:    putEmpty
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_getEmpty
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putEmpty
   (JNIEnv *, jobject);
 
 /*
@@ -326,7 +310,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_getEmpty
  * Method:    putEmpty
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putEmpty
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putNothing
   (JNIEnv *, jobject);
 
 /*
@@ -355,14 +339,6 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDouble
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getObject
- * Signature: ()Ljava/lang/Object;
- */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getObject
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
  * Method:    putCurrency
  * Signature: (J)V
  */
@@ -374,7 +350,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrency
  * Method:    putObject
  * Signature: (Ljava/lang/Object;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putObject
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDispatchObject
   (JNIEnv *, jobject, jobject);
 
 /*
@@ -612,7 +588,7 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_isNull
  * Method:    zeroVariant
  * Signature: ()V
  *
- * This should only be used on variant objects created by teh
+ * This should only be used on variant objects created by the
  * com layer as part of a call through EventProxy.
  * This zeros out the variant pointer in the Variant object
  * so that the calling COM program can free the memory.

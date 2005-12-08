@@ -243,19 +243,6 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toEnumVariant
   return NULL;
 }
 
-/**
- * returns nothing.
- * an odd void if there ever was one.
- * It should return null if it is of type VT_NULL and
- * null if it is not of the right type.
- * Ie: there is no good way to differentiate between 
- * a null value and a type mismatch
- **/
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_getNull
-  (JNIEnv *env, jobject _this)
-{
-}
-
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putNull
   (JNIEnv *env, jobject _this)
 {
@@ -487,7 +474,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_VariantClear
 /**
  * Converts the data to a Dispatch object and then returns it as a Dispatch
  */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toDispatch
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toDispatchObject
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -693,25 +680,6 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toError
   return NULL;
 }
 
-/**
- * Not actually supported.  Always returns null
- */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toObject
-  (JNIEnv *env, jobject _this)
-{
-  // not supported
-  return NULL;
-}
-
-/**
- * Dummy method to provide symmetry with putEmpty.
- * This get method should probably return null instead of void
- */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_getEmpty
-  (JNIEnv *env, jobject _this)
-{
-}
-
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putEmpty
   (JNIEnv *env, jobject _this)
 {
@@ -719,6 +687,19 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putEmpty
   if (v) {
     VariantClear(v); // whatever was there before
     V_VT(v) = VT_EMPTY;
+  }
+}
+
+/**
+ * Sets the variant type to dispatch with no value object
+ **/
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putNothing
+  (JNIEnv *env, jobject _this)
+{
+  VARIANT *v = extractVariant(env, _this);
+  if (v) {
+    VariantClear(v); // whatever was there before
+    V_VT(v) = VT_DISPATCH;
   }
 }
 
@@ -764,16 +745,6 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDouble
   return NULL;
 }
 
-/**
- * always returns null
- **/
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getObject
-  (JNIEnv *env, jobject _this)
-{
-  // not supported
-  return NULL;
-}
-
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrency
   (JNIEnv *env, jobject _this, jlong cur)
 {
@@ -792,7 +763,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrency
  * There is currently no way to pass NULL into this method 
  * to create something like "NOTHING" from VB
  * */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putObject
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDispatchObject
   (JNIEnv *env, jobject _this, jobject _that)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -1102,7 +1073,9 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArray
   return;
 }
 
-
+/**
+ * sets the type to VT_ERROR and the error message to DISP_E_PARAMNOTFOIUND
+ * */
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_noParam
   (JNIEnv *env, jobject _this)
 {

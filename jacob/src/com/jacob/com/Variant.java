@@ -19,7 +19,6 @@
  */
 package com.jacob.com;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -131,6 +130,25 @@ public class Variant extends JacobObject {
      */
     public native double toDate();
 
+    /**
+     * Returns the windows time contained in this Variant to a Java Date
+     * should return null if this is not a date Variant
+     * SF 959382.
+     * 
+     * This method added 12/2005 for possible use by jacobgen instead of its conversion code
+     * @return java.util.Date
+     * (after possible conversion)
+     */
+    public Date toJavaDate(){
+    	double windowsDate = toDate();
+    	if (windowsDate == 0){
+    		return null;
+    	} else {
+    		return DateUtilities.convertWindowsTimeToDate(getDate());
+    	}
+    }
+    
+    
     /** 
      * @return the value of this variant as boolean (after possible conversion) 
      */
@@ -139,10 +157,17 @@ public class Variant extends JacobObject {
     /** @return the value of this variant as an enumeration (java style) */
     public native EnumVariant toEnumVariant();
 
-    /** As far as I can tell : this does absolutely nothing */
-    public native void getNull();
+    /**
+     * This method would have returned null if the type was VT_NULL.
+     * But because we return null if the data is not of the right type,
+     *  this method should have always returned null
+     *  @deprecated method never did anything
+     */
+    public void getNull() {};
 
-    /** Set this Variant's type to VT_NULL (the VB equivalent of NULL) */
+    /** 
+     * Set this Variant's type to VT_NULL (the VB equivalent of NULL) 
+     * */
     public native void putNull();
 
     /**
@@ -306,7 +331,13 @@ public class Variant extends JacobObject {
     /**
      * @return the content of this variant as a Dispatch object
      */
-    public native Dispatch toDispatch();
+    public Dispatch toDispatch(){ return toDispatchObject(); }
+    
+    /**
+     * native method used by toDispatch()
+     * @return
+     */
+    private native Dispatch toDispatchObject();
 
     /**
      * this returns null
@@ -383,19 +414,26 @@ public class Variant extends JacobObject {
     public native byte toByte();
 
     /** 
-     * same as {@link #toDispatch()} 
-     * @return this object as a dispatch
+     * same as {@link #toDispatch()}
+     * This is different than the other get methods.
+     * It calls toDispatch wich will do type conversion.
+     * Most getXXX() methods will return null if the data is not of 
+     * the requested type
+     * @return this object as a dispatch (Why isn't this typed as type Dispatch?)
      */
-    public Object getDispatch() {
+    public Dispatch getDispatch() {
         return toDispatch();
     }
 
     /** 
-     * same as {@link #putObject(Object)} 
+     * This acts a cover for 
+     * same as @link #putObject(Object)
+     * 
+     * Why isn't this typed as type Dispatch?
      * @param in
      */
-    public void putDispatch(Object in) {
-        putObject(in);
+    public void putDispatch(Dispatch in) {
+        putDispatchObject(in);
     }
 
     /**
@@ -416,13 +454,33 @@ public class Variant extends JacobObject {
 
     public native int toError();
 
+    /**
+     * acts a a cover for toDispatch
+     * @return Object returned by toDispatch()
+     * @deprecated should use toDispatch() instead
+     */
     public Object toObject() {
         return toDispatch();
     }
 
-    public native void getEmpty();
+    /**
+     * Pointless method that was put here so that putEmpty() has a get method.
+     * This would have returned null if the value was VT_EMPTY
+     * or if it wasn't so it would have always returned the same value.
+     * @deprecated method never did anything
+     */
+    public void getEmpty() {};
 
+    /**
+     * Sets the type to VariantEmpty.  No values needed 
+     */
     public native void putEmpty();
+    
+    /**
+     * Sets the type to VariantDispatch and sets teh value to null
+     * Equivalent to VB's nothing
+     */
+    public native void putNothing();
 
     public native int getError();
 
@@ -432,8 +490,21 @@ public class Variant extends JacobObject {
 
     public native void putCurrency(long in);
 
-    /** puts an object into the */
-    public native void putObject(Object in);
+    /** 
+     * puts an object into the Variant -- converts to Dispatch
+     * @deprecated use putDispatch() 
+     * */
+    public void putObject(Object in){ 
+    	// this should verify in instanceof Dispatch
+    	putDispatchObject(in); }
+    
+    /**
+     * a cover for putDispatch() but is named differently so that 
+     * we can screen the incoming dispatches in putDispatch() before this
+     * is invoked
+     * @param in
+     */
+    private native void putDispatchObject(Object in);
 
     public native void putDouble(double in);
 
@@ -451,6 +522,11 @@ public class Variant extends JacobObject {
 
     public native void putBooleanRef(boolean in);
 
+    /**
+     * Just a cover for putObject.
+     * @deprecated we shouldn't accept any old random object
+     * @param in
+     */
     public void putObjectRef(Object in) {
         putObject(in);
     }
@@ -492,6 +568,9 @@ public class Variant extends JacobObject {
 
     public native void putSafeArray(SafeArray in);
 
+    /**
+     * sets the type to VT_ERROR and the error message to DISP_E_PARAMNOTFOIUND
+     * */
     public native void noParam();
 
     /**
@@ -502,15 +581,34 @@ public class Variant extends JacobObject {
         throw new NotImplementedException("Not implemented");
     }
 
+    /**
+     * 
+     * @return returns the value as a float if the type is of type float
+     */
     public native float getFloat();
 
+    /**
+     * fills the Variant with a float and sets the type to float
+     * @param in
+     */
     public native void putFloat(float in);
 
-    public void putDispatchRef(Object in) {
-        putDispatch(in);
+    /**
+     * Dispatch and dispatchRef are treated the same
+     * This is a cover for putDispatch().  
+     * Dispatch and dispatchRef are treated the same
+     * @param in
+     */
+    public void putDispatchRef(Dispatch in) {
+        putDispatchObject(in);
     }
 
-    public Object getDispatchRef() {
+    /**
+     * Dispatch and dispatchRef are treated the same
+     * This is just a cover for getDispatch()
+     * @return the results of getDispatch()
+     */
+    public Dispatch getDispatchRef() {
         return getDispatch();
     }
 
@@ -536,6 +634,11 @@ public class Variant extends JacobObject {
         changeType((short) in);
     }
 
+    /**
+     * I don't know what this is.  Is it some legacy (pre 1.8) thing?
+     * @deprecated
+     * @return
+     */
     public Object toScriptObject() {
         return toDispatch();
     }
@@ -589,55 +692,72 @@ public class Variant extends JacobObject {
 
     /**
      * constructor that accepts the data object and informaton about
-     * whether this is by reference or not
-     * @param o
+     * whether this is by reference or not.
+     * @param pValueObject a null object sets this to "empty"
      * @param fByRef
      */
-    public Variant(Object o, boolean fByRef) {
+    public Variant(Object pValueObject, boolean fByRef) {
         init();
-        if (o == null) {
+        if (pValueObject == null) {
             putEmpty();
-        } else if (o instanceof Integer) {
+        } else if (pValueObject instanceof Integer) {
             if (fByRef)
-                putIntRef(((Integer) o).intValue());
+                putIntRef(((Integer) pValueObject).intValue());
             else
-                putInt(((Integer) o).intValue());
-        } else if (o instanceof String) {
+                putInt(((Integer) pValueObject).intValue());
+        } else if (pValueObject instanceof Short) {
             if (fByRef)
-                putStringRef((String) o);
+                putShortRef(((Short) pValueObject).shortValue());
             else
-                putString((String) o);
-        } else if (o instanceof Boolean) {
+                putShort(((Short) pValueObject).shortValue());
+        } else if (pValueObject instanceof String) {
             if (fByRef)
-                putBooleanRef(((Boolean) o).booleanValue());
+                putStringRef((String) pValueObject);
             else
-                putBoolean(((Boolean) o).booleanValue());
-        } else if (o instanceof Double) {
+                putString((String) pValueObject);
+        } else if (pValueObject instanceof Boolean) {
             if (fByRef)
-                putDoubleRef(((Double) o).doubleValue());
+                putBooleanRef(((Boolean) pValueObject).booleanValue());
             else
-                putDouble(((Double) o).doubleValue());
-        } else if (o instanceof Float) {
+                putBoolean(((Boolean) pValueObject).booleanValue());
+        } else if (pValueObject instanceof Double) {
             if (fByRef)
-                putFloatRef(((Float) o).floatValue());
+                putDoubleRef(((Double) pValueObject).doubleValue());
             else
-                putFloat(((Float) o).floatValue());
-        } else if (o instanceof Date){
+                putDouble(((Double) pValueObject).doubleValue());
+        } else if (pValueObject instanceof Float) {
+            if (fByRef)
+                putFloatRef(((Float) pValueObject).floatValue());
+            else
+                putFloat(((Float) pValueObject).floatValue());
+        }  else if (pValueObject instanceof Byte){
         	if (fByRef){
-        		putDateRef((Date) o);
+        		putByteRef(((Byte)pValueObject).byteValue());
         	} else {
-        		putDate((Date)o);
+        		putByte(((Byte)pValueObject).byteValue());
         	}
-        } else if (o instanceof SafeArray) {
+        } else if (pValueObject instanceof Date){
+        	if (fByRef){
+        		putDateRef((Date) pValueObject);
+        	} else {
+        		putDate((Date)pValueObject);
+        	}
+        } else if (pValueObject instanceof SafeArray) {
             if (fByRef)
-                putSafeArrayRef((SafeArray) o);
+                putSafeArrayRef((SafeArray) pValueObject);
             else
-                putSafeArray((SafeArray) o);
+                putSafeArray((SafeArray) pValueObject);
+        } else if (pValueObject instanceof Dispatch){
+        	if (fByRef)
+        		putDispatchRef((Dispatch)pValueObject);
+        	else
+        		putDispatch((Dispatch)pValueObject);
         } else {
+        	// should really throw an illegal argument exception if its an invalid type
             if (fByRef)
-                putObjectRef(o);
+                putObjectRef(pValueObject);
             else
-                putObject(o);
+                putObject(pValueObject);
         }
     }
 
@@ -758,7 +878,7 @@ public class Variant extends JacobObject {
     }
 
     /**
-     *  is the variant null or empty or error or null disp
+     *  is the variant null or empty or error or null dispatch
      * @return true if it is null or false if not
      */ 
     public native boolean isNull();
@@ -831,8 +951,7 @@ public class Variant extends JacobObject {
 		    result = new NotImplementedException("Not implemented: VariantError");
 		    break;
 		    case Variant.VariantBoolean : //11
-		    result = new Boolean(this.getBoolean
-		    ());
+		    result = new Boolean(this.getBoolean());
 		    break;
 		    case Variant.VariantVariant : //12
 		    result = new NotImplementedException("Not implemented: VariantVariant");
@@ -841,7 +960,8 @@ public class Variant extends JacobObject {
 		    result = new NotImplementedException("Not implemented: VariantObject");
 		    break;
 		    case Variant.VariantByte : //17
-		    result = new NotImplementedException("Not implemented: VariantByte");
+		    result = new Byte(this.getByte());
+		    //result = new NotImplementedException("Not implemented: VariantByte");
 		    break;
 		    case Variant.VariantTypeMask : //4095
 		    result = new NotImplementedException("Not implemented: VariantTypeMask");

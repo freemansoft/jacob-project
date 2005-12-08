@@ -310,44 +310,37 @@ public class Dispatch extends JacobObject
     }
     
     /**
-     *  map args based on msdn doc
-     * @param o
+     * Map args based on msdn doc
+     * This method relies on the variant constructor except for arrays 
+     * @param objectToBeMadeIntoVariant
      * @return Variant that represents the object
      */
-    protected static Variant obj2variant(Object o) {
-        if (o == null)
+    protected static Variant obj2variant(Object objectToBeMadeIntoVariant) {
+        if (objectToBeMadeIntoVariant == null)
             return new Variant();
-        if (o instanceof Variant)
-            return (Variant) o;
-        if (o instanceof Integer)
-            return new Variant(((Integer) o).intValue());
-        if (o instanceof Short)
-            return new Variant(((Short) o).shortValue());
-        if (o instanceof String)
-            return new Variant((String) o);
-        if (o instanceof Boolean)
-            return new Variant(((Boolean) o).booleanValue());
-        if (o instanceof Double)
-            return new Variant(((Double) o).doubleValue());
-        if (o instanceof Float)
-            return new Variant(((Float) o).floatValue());
-        if (o instanceof SafeArray)
-            return new Variant((SafeArray) o);
-        if (o instanceof Dispatch) {
-            Variant v = new Variant();
-            v.putObject((Dispatch) o);
-            return v;
-        }
+        if (objectToBeMadeIntoVariant instanceof Variant)
+        	// if a variant was passed in then be a slacker and just return it
+            return (Variant) objectToBeMadeIntoVariant;
+        if (   objectToBeMadeIntoVariant instanceof Integer 
+    		|| objectToBeMadeIntoVariant instanceof Short
+        	|| objectToBeMadeIntoVariant instanceof String
+	        || objectToBeMadeIntoVariant instanceof Boolean
+	        || objectToBeMadeIntoVariant instanceof Double
+	        || objectToBeMadeIntoVariant instanceof Float
+	        || objectToBeMadeIntoVariant instanceof SafeArray
+	        || objectToBeMadeIntoVariant instanceof Dispatch)
+            return new Variant(objectToBeMadeIntoVariant);
+
         // automatically convert arrays using reflection
-        Class c1 = o.getClass();
+        Class c1 = objectToBeMadeIntoVariant.getClass();
         SafeArray sa = null;
         if (c1.isArray()) {
-            int len1 = Array.getLength(o);
-            Object first = Array.get(o, 0);
+            int len1 = Array.getLength(objectToBeMadeIntoVariant);
+            Object first = Array.get(objectToBeMadeIntoVariant, 0);
             if (first.getClass().isArray()) {
                 int max = 0;
                 for (int i = 0; i < len1; i++) {
-                    Object e1 = Array.get(o, i);
+                    Object e1 = Array.get(objectToBeMadeIntoVariant, i);
                     int len2 = Array.getLength(e1);
                     if (max < len2) {
                         max = len2;
@@ -355,7 +348,7 @@ public class Dispatch extends JacobObject
                 }
                 sa = new SafeArray(Variant.VariantVariant, len1, max);
                 for (int i = 0; i < len1; i++) {
-                    Object e1 = Array.get(o, i);
+                    Object e1 = Array.get(objectToBeMadeIntoVariant, i);
                     for (int j = 0; j < Array.getLength(e1); j++) {
                         sa.setVariant(i, j, obj2variant(Array.get(e1, j)));
                     }
@@ -363,7 +356,7 @@ public class Dispatch extends JacobObject
             } else {
                 sa = new SafeArray(Variant.VariantVariant, len1);
                 for (int i = 0; i < len1; i++) {
-                    sa.setVariant(i, obj2variant(Array.get(o, i)));
+                    sa.setVariant(i, obj2variant(Array.get(objectToBeMadeIntoVariant, i)));
                 }
             }
             return new Variant(sa);
@@ -372,14 +365,15 @@ public class Dispatch extends JacobObject
     }
 
     /**
-     * same as above, for an array
-     * @param o
+     * converts an array of objects into an array of Variants by
+     * repeatedly calling obj2Variant(Object)
+     * @param arrayOfObjectsToBeConverted
      * @return Variant[] 
      */
-    protected static Variant[] obj2variant(Object[] o) {
-        Variant vArg[] = new Variant[o.length];
-        for (int i = 0; i < o.length; i++) {
-            vArg[i] = obj2variant(o[i]);
+    protected static Variant[] obj2variant(Object[] arrayOfObjectsToBeConverted) {
+        Variant vArg[] = new Variant[arrayOfObjectsToBeConverted.length];
+        for (int i = 0; i < arrayOfObjectsToBeConverted.length; i++) {
+            vArg[i] = obj2variant(arrayOfObjectsToBeConverted[i]);
         }
         return vArg;
     }
@@ -463,7 +457,7 @@ public class Dispatch extends JacobObject
     /**
      * @param dispatchTarget
      * @param name
-     * @param args
+     * @param args an array of argument objects
      */
     public static void callSubN(Dispatch dispatchTarget, String name, Object[] args) {
         invokeSubv(dispatchTarget, name, Dispatch.Method | Dispatch.Get, obj2variant(args),
@@ -473,7 +467,7 @@ public class Dispatch extends JacobObject
     /**
      * @param dispatchTarget
      * @param dispID
-     * @param args
+     * @param args an array of argument objects
      */
     public static void callSubN(Dispatch dispatchTarget, int dispID, Object[] args) {
         invokeSubv(dispatchTarget, dispID, Dispatch.Method | Dispatch.Get, obj2variant(args),
