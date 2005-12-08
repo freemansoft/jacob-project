@@ -204,6 +204,13 @@ public class Variant extends JacobObject {
     }
 
     /**
+     * Exists to support jacobgen.
+     * This would be deprecated if it weren't for jacobgen
+     * @return this same object
+     */
+    public Variant toVariant() { return this; }
+    
+    /**
      * @deprecated superceded by SafeArray
      * @param in doesn't matter because this method does nothing
      * @throws com.jacob.com.NotImplementedException
@@ -455,9 +462,11 @@ public class Variant extends JacobObject {
     public native int toError();
 
     /**
-     * acts a a cover for toDispatch
+     * Acts a a cover for toDispatch.
+     * This primarily exists to support jacobgen.
+     * This should be deprecated.
      * @return Object returned by toDispatch()
-     * @deprecated should use toDispatch() instead
+     * @see Variant#toDispatch() instead
      */
     public Object toObject() {
         return toDispatch();
@@ -491,8 +500,11 @@ public class Variant extends JacobObject {
     public native void putCurrency(long in);
 
     /** 
-     * puts an object into the Variant -- converts to Dispatch
-     * @deprecated use putDispatch() 
+     * Puts an object into the Variant -- converts to Dispatch.
+     * Acts as a cover for putDispatchObject();
+     * This primarily exists to support jacobgen.
+     * This should be deprecated.
+     * @see Variant#putDispatch(Dispatch)  
      * */
     public void putObject(Object in){ 
     	// this should verify in instanceof Dispatch
@@ -523,8 +535,10 @@ public class Variant extends JacobObject {
     public native void putBooleanRef(boolean in);
 
     /**
-     * Just a cover for putObject.
-     * @deprecated we shouldn't accept any old random object
+     * Just a cover for putObject().
+     * We shouldn't accept any old random object.
+     * This has been left in to support jacobgen.
+     * This should be deprecated.
      * @param in
      */
     public void putObjectRef(Object in) {
