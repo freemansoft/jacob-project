@@ -330,7 +330,13 @@ class ClassGenerator extends AbstractGenerator {
 				w.write("\t\tif( "+p.getJavaName()+" == null || "+p.getJavaName()+".length == 0 )\n");
 				w.write("\t\t\t"+p.getVariantName()+".noParam();\n");
 				w.write("\t\telse\n");
-				w.write("\t\t\t" + p.getVariantName() + "." + p.getVariantPutMethod() + "(" + p.getJavaName() + "[0]);\n\n");
+				// 12/2005 hack to get get this to generate compileable code.  
+				// Hopefully someone will look at this later and make sure it is correct
+				if (p.getVariantPutMethod().equals("putVariantRef")){
+					w.write("\t\t\t"+ p.getVariantName() + " = " + p.getJavaName() + "[0];\n\n");
+				} else {
+					w.write("\t\t\t" + p.getVariantName() + "." + p.getVariantPutMethod() + "(" + p.getJavaName() + "[0]);\n\n");
+				}
 			}
 		}
 
@@ -394,7 +400,13 @@ class ClassGenerator extends AbstractGenerator {
 			// this is only necessary if it is an output-parameter
 			if ( p.getDirection() == ParameterItem.DIRECTION_OUT ) {
 				w.write("\t\tif( "+p.getJavaName()+" != null && "+p.getJavaName()+".length > 0 )\n");
-				w.write("\t\t\t" + p.getJavaName() + "[0] = " + p.getVariantName() + "." + p.getVariantGetMethod() + "();\n");
+				if (p.getVariantGetMethod().equals("toVariant")){
+					// 12/2005 hack to get get this to generate compileable code.  
+					// Hopefully someone will look at this later and make sure it is correct
+					w.write("\t\t\t" +p.getJavaName() + "[0] = " +p.getVariantName() + ";\n");
+				} else {
+					w.write("\t\t\t" + p.getJavaName() + "[0] = " + p.getVariantName() + "." + p.getVariantGetMethod() + "();\n");
+				}
 			}
 		}
 
