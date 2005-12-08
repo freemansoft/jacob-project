@@ -1,1 +1,0 @@
-This directory will eventually contain the junit automated tests.
