@@ -104,7 +104,7 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
   //Visual C++ 6.0 recognized this as an unused variable
   //HRESULT     hr;
   
-  const char *eventMethodName;
+  const char *eventMethodName = NULL; //Sourceforge report 1394001 
   JNIEnv      *env = NULL;
 
   // map dispID to jmethodID
