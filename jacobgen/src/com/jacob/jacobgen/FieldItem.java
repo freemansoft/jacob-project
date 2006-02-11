@@ -31,6 +31,7 @@ public class FieldItem {
 	private String name;
 	private String type;
 	private String nativeType;
+	/** note that this field is set but never read.  It looks like an incomplete implementation */
 	private int fieldType;
 	private String defaultValue;
 
@@ -51,6 +52,15 @@ public class FieldItem {
 	
 	public String getDefaultValue() {
 		return defaultValue;
+	}
+	
+	/**
+	 * this was added to remove a compiler warning but it looks like the field type
+	 * was never fully implemented
+	 * @return the field type that was set
+	 */
+	public int getFieldType() {
+		return fieldType;
 	}
 	
 	/**
@@ -83,8 +93,9 @@ public class FieldItem {
 	
 	protected void computeFieldType( String type ) {
 		fieldType = FIELDTYPE_UNKNOWN;
-		if( type.equals( "VAR_CONST" ) )
+		if( type.equals( "VAR_CONST" ) ){
 			fieldType = FIELDTYPE_CONST;
+		}
 	}
 	
 	protected void computeFieldVartype( String fieldVartype ) {
