@@ -37,6 +37,7 @@
 class EventProxy : public IDispatch
 {
 private:
+  int     connected;
   LONG    m_cRef;		// a reference counter
   CComPtr<IConnectionPoint> pCP; // the connection point
   DWORD   dwEventCookie; // connection point cookie
@@ -47,6 +48,9 @@ private:
   CComBSTR *MethName;   // Array of method names
   DISPID   *MethID;     // Array of method ids, used to match invokations to method names
   JavaVM   *jvm;        // The java vm we are running
+  void convertJavaVariant(VARIANT *java, VARIANT *com);
+  void Connect(JNIEnv *env);
+  void Disconnect();
 public:
   // constuct with a global JNI ref to a sink object
   // to which we will delegate event callbacks
@@ -62,7 +66,8 @@ public:
   // IUnknown methods
   STDMETHODIMP_(ULONG) AddRef(void) 
   {
-    return InterlockedIncrement(&m_cRef);
+    LONG res = InterlockedIncrement(&m_cRef);
+    return res;
   }
 
   STDMETHODIMP_(ULONG) Release(void)

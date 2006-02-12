@@ -74,10 +74,11 @@ public class ExcelEventTest extends InvocationProxy {
 	}
 
 	/**
-	 * override the invoke method to loga ll the events
+	 * override the invoke method to log all the events
 	 */
-	public void invoke(String methodName, Variant targetParameter[]) {
+	public Variant invoke(String methodName, Variant targetParameter[]) {
 		System.out.println("Received event from Windows program" + methodName);
+		return null;
 	}
 
 }

@@ -28,12 +28,17 @@ import java.lang.reflect.Method;
  * 
  * DispatchProxy wraps this class around any event handlers
  * before making the JNI call that sets up the link with EventProxy.
- * This means that EventProxy just calls invoke(String,Variant[])
+ * This means that EventProxy.cpp just calls invoke(String,Variant[])
  * against the instance of this class.  Then this class does 
  * reflection against the event listener to call the actual event methods.
  * All Event methods have the signature
  *  
  * 		<code> void eventMethodName(Variant[])</code>
+ * or
+ * 		<code> Variant eventMethodName(Variant[])</code>
+ *  The void returning signature is the standard legacy signature.
+ *  The Variant returning signature was added in 1.10 to support event handlers
+ *  returning values.  
  *  
  */
 public class InvocationProxy {
@@ -69,7 +74,7 @@ public class InvocationProxy {
 		}
 		// JNI code apparently bypasses this check and could operate against
 		// protected classes.  This seems like a security issue...
-		// mayb eit was because JNI code isn't in a package?
+		// maybe it was because JNI code isn't in a package?
 		if (!java.lang.reflect.Modifier.isPublic(
 				pTargetObject.getClass().getModifiers())){
 			throw new IllegalArgumentException(
@@ -78,17 +83,24 @@ public class InvocationProxy {
 	}
 	
 	/**
-	 * the method actually invoked by EventProxy.cpp
+	 * The method actually invoked by EventProxy.cpp.
+	 * The method name is calculated by the underlying JNI code from the MS windows
+	 * Callback function name.  The method is assumed to take an array of Variant
+	 * objects.  The method may return a Variant or be a void. Those are the only
+	 * two options that will not blow up. 
+	 * 
 	 * @param methodName name of method in mTargetObject we will invoke
 	 * @param targetParameter Variant[] that is the single parameter to the method
 	 */
-	public void invoke(String methodName, Variant targetParameter[]){
+	public Variant invoke(String methodName, Variant targetParameter[]){
+        Variant mVariantToBeReturned = null;
 		if (mTargetObject == null){ 
 			if (JacobObject.isDebugEnabled()){
 				JacobObject.debug(
-						"InvocationProxy: received notification with no target set");
+						"InvocationProxy: received notification ("+methodName+") with no target set");
 			}
-			return;
+			// structured programming guidlines say this return should not be up here
+			return null;
 		}
 		Class targetClass = mTargetObject.getClass();
 		if (methodName == null){
@@ -103,24 +115,39 @@ public class InvocationProxy {
 				JacobObject.debug("InvocationProxy: trying to invoke "+methodName
 						+" on "+mTargetObject);
 			}
-			Method targetMethod = targetClass.getMethod(methodName,
+			Method targetMethod;
+			targetMethod = targetClass.getMethod(methodName,
 					new Class[] {Variant[].class});
 			if (targetMethod != null){
 				// protected classes can't be invoked against even if they
 				// let you grab the method.  you could do targetMethod.setAccessible(true);
 				// but that should be stopped by the security manager
-				targetMethod.invoke(mTargetObject,new Object[] {targetParameter});
+				Object mReturnedByInvocation = null;
+				mReturnedByInvocation = 
+						targetMethod.invoke(mTargetObject,new Object[] {targetParameter});
+				if (mReturnedByInvocation == null){
+					// so we do something in this block
+					mVariantToBeReturned = null;
+				} else if (!(mReturnedByInvocation instanceof Variant)){
+					throw new IllegalArgumentException(
+							"InvocationProxy: invokation of target method returned "
+							+"non-null non-variant object: "+mReturnedByInvocation);
+				} else {
+					mVariantToBeReturned = (Variant) mReturnedByInvocation;
+				}
 			}
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
 			// this happens whenever the listener doesn't implement all the methods
 			if (JacobObject.isDebugEnabled()){
-				JacobObject.debug("InvocationProxy: listener doesn't implement "
+				JacobObject.debug("InvocationProxy: listener ("+mTargetObject+") doesn't implement "
 						+ methodName);
 			}
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
+			// we can throw these inside the catch block so need to  re-throw it
+			throw e;
 		} catch (IllegalAccessException e) {
 			if (JacobObject.isDebugEnabled()){
 				JacobObject.debug("InvocationProxy: probably tried to access public method on non public class"
@@ -130,6 +157,7 @@ public class InvocationProxy {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
+		return mVariantToBeReturned;
 	}
 	
     /**

@@ -30,6 +30,11 @@
 		has been added to the DispatchEvents constructors that lets a user provide
 		the location of the OLB or EXE that contains the information required to 
 		retrieve the events.
+	<li>Event handlers can now return a value to calling MS Windows program.  
+		The event handlers must return an objec of type Variant if they wish to return
+		a value.  All 
+		previous event handlers still work with a void return. (This change should be
+		backwards compatible)
 	</ul>
 </li>
 
@@ -53,7 +58,11 @@
   </tr>
   <tr>
     <td width="100%" colspan="2"><b>Patches</b></td>
-  </tr>1394001 
+  </tr> 
+  <tr>
+    <td width="13%">1386454</td>
+    <td width="87%">Return values from event callbacks (pre4)</td>
+  </tr>
   <tr>
     <td width="13%">1394001</td>
     <td width="87%">Missing variable initialization (pre3)</td>

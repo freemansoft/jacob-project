@@ -42,9 +42,15 @@ EventProxy::EventProxy(JNIEnv *env,
   env->GetJavaVM(&jvm);
 	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
   AddRef();
+    Connect(env);
+}
+
+void EventProxy::Connect(JNIEnv *env) {
   HRESULT hr = pCP->Advise(this, &dwEventCookie);
   if (SUCCEEDED(hr)) {
+        connected = 1;
   } else {
+        connected = 0;
     ThrowComFail(env, "Advise failed", hr);
   }
 }
@@ -52,8 +58,8 @@ EventProxy::EventProxy(JNIEnv *env,
 // unhook myself up as a listener and get rid of delegate
 EventProxy::~EventProxy()
 {
-  pCP->Unadvise(dwEventCookie);
 	JNIEnv *env;
+    Disconnect();
   // attach to the current running thread
   #ifdef JNI_VERSION_1_2
   	printf("using version 1.2 API\n");
@@ -72,6 +78,12 @@ EventProxy::~EventProxy()
   }
 	// detach from thread
   jvm->DetachCurrentThread();
+}
+
+void EventProxy::Disconnect() {
+    if (connected) {
+        pCP->Unadvise(dwEventCookie);
+    }
 }
 
 // I only support the eventIID interface which was passed in
@@ -106,6 +118,7 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
   
   const char *eventMethodName = NULL; //Sourceforge report 1394001 
   JNIEnv      *env = NULL;
+    jobject retObj;
 
   // map dispID to jmethodID
   for(int i=0;i<MethNum;i++) 
@@ -135,13 +148,12 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 	// find the class of the InvocationHandler
    	jclass javaSinkClass = env->GetObjectClass(javaSinkObj);
 			if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
-    jmethodID invokeMethod = env->GetMethodID(javaSinkClass, "invoke", 
-    		"(Ljava/lang/String;[Lcom/jacob/com/Variant;)V");
+        jmethodID invokeMethod;
+        invokeMethod = env->GetMethodID(javaSinkClass, "invoke", "(Ljava/lang/String;[Lcom/jacob/com/Variant;)Lcom/jacob/com/Variant;");
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     jstring eventMethodNameAsString = env->NewStringUTF(eventMethodName);
 	// now do what we need for the variant
-    jmethodID getVariantMethod = 
-    	env->GetMethodID(javaSinkClass, "getVariant", "()Lcom/jacob/com/Variant;");
+        jmethodID getVariantMethod = env->GetMethodID(javaSinkClass, "getVariant", "()Lcom/jacob/com/Variant;");
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     jobject aVariantObj = env->CallObjectMethod(javaSinkObj, getVariantMethod); 
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
@@ -169,8 +181,14 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 			env->DeleteLocalRef(arg);
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     }
-    env->CallVoidMethod(javaSinkObj, invokeMethod, 
-    		eventMethodNameAsString, varr); 
+        // Set up the return value
+        jobject ret;
+
+        ret = env->CallObjectMethod(javaSinkObj, invokeMethod, 
+			eventMethodNameAsString, varr); 
+        if (!env->ExceptionOccurred() && ret != NULL) {
+            VariantCopy(pVarResult, extractVariant(env,ret));
+        }
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 	// don't need the first variant we created to get the class
 	env->DeleteLocalRef(aVariantObj);
@@ -182,6 +200,19 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 	  jobject arg = env->GetObjectArrayElement(varr, j);
       VARIANT *java = extractVariant(env, arg);
 	  VARIANT *com = &pDispParams->rgvarg[i];
+            convertJavaVariant(java, com);
+            zeroVariant(env, arg);
+            env->DeleteLocalRef(arg);
+        }
+        // End code from Jiffie team that copies parameters back from java to COM
+        // detach from thread
+        jvm->DetachCurrentThread();
+        return S_OK;
+    }
+    return E_NOINTERFACE;
+}
+
+void EventProxy::convertJavaVariant(VARIANT *java, VARIANT *com) {
 
 	  switch (com->vt)
 	  {	  
@@ -795,15 +826,6 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 		}
 
 
-	  }
-      zeroVariant(env, arg);
-      env->DeleteLocalRef(arg);
     }
-    // End code from Jiffie team that copies parameters back from java to COM
-
-	// detach from thread
-    jvm->DetachCurrentThread();
-    return S_OK;
-  }
-  return E_NOINTERFACE;
 }
+
