@@ -81,16 +81,21 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_init3
   
   BSTR typeLib = NULL;
   if (_typelib != NULL){
+  	  // why is this UTF instead of unicode? Then we could probably drop the A2W
 	  const char *typelib = env->GetStringUTFChars(_typelib, NULL);
 	  typeLib = A2W(typelib);
+	  // should we call env->ReleaseStringUTFChars(,) to free the memory like we do everywhere lese?
+	  
 	  //printf("we have a type lib %ls\n",typeLib);
   }
 
   // find progid if any
   LPOLESTR bsProgId = NULL;
-    if (_progid!=NULL) {
-    const char *progid = env->GetStringUTFChars(_progid, NULL);
+  if (_progid!=NULL) {
+    	// why is this UTF instead of unicode?  Then we could probably drop the A2W
+    	const char *progid = env->GetStringUTFChars(_progid, NULL);
 		bsProgId = A2W(progid);
+	  // should we call env->ReleaseStringUTFChars(,) to free the memory like we do everywhere lese?
 		//printf("we have an applicaton %ls\n",bsProgId);
   }
   

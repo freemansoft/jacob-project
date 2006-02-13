@@ -558,24 +558,26 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromStringArray
     V_VT(&v) = VT_BSTR;
     for(int i=0;i<len;i++) {
       jstring s = (jstring)env->GetObjectArrayElement(a, i);
-      const char *str = env->GetStringUTFChars(s, NULL);
+      // jacob report 1224219 should use unicode and not UTF-8 (Variant modified in previous report
+      const jchar *str = env->GetStringChars(s, NULL); 
       CComBSTR bs(str);
       V_VT(&v) = VT_BSTR;
       V_BSTR(&v) = bs.Copy();
       long x = i;
       SafeArrayPutElement(psa,&x,&v);
-      env->ReleaseStringUTFChars(s, str);
+      env->ReleaseStringChars(s, str);
       VariantClear(&v);
     }
   } else if (vt == VT_BSTR) {
     for(int i=0;i<len;i++) {
       jstring s = (jstring)env->GetObjectArrayElement(a, i);
-      const char *str = env->GetStringUTFChars(s, NULL);
+      // jacob report 1224219 should use unicode and not UTF-8 (Variant modified in previous report
+      const jchar *str = env->GetStringChars(s, NULL);
       CComBSTR bs(str);
       BSTR bstr = bs.Detach();
       long x = i;
       SafeArrayPutElement(psa,&x,bstr);
-      env->ReleaseStringUTFChars(s, str);
+      env->ReleaseStringChars(s, str);
     }
   } else {
     ThrowComFail(env, "safearray cannot be assigned from string\n", 0);
@@ -1613,11 +1615,17 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString__I
     }
     BSTR bs = V_BSTR(&v);
     jstring js = env->NewString(bs, SysStringLen(bs));
+    // jacob report 1224219 
+	// SafeArrayGetElement memory must be freed http://www.canaimasoft.com/f90VB/OnlineManuals/Reference/TH_31.htm
+    VariantClear(&v);
     return js;
   } else if (vt == VT_BSTR) {
     BSTR bs = NULL;
     SafeArrayGetElement(psa, &idx, &bs);
     jstring js = env->NewString(bs, SysStringLen(bs));
+    // jacob report 1224219 
+	// SafeArrayGetElement memory must be freed http://www.canaimasoft.com/f90VB/OnlineManuals/Reference/TH_31.htm
+    if (bs) free(bs);
     return js;
   }
   ThrowComFail(env, "safearray cannot get string", 0);

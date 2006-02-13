@@ -55,6 +55,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
   // get the current IDispatch
   IDispatch *pIDispatch = extractDispatch(env, _this);
   if (!pIDispatch) return NULL;
+  // if we used env->GetStringChars() would that let us drop the conversion?
   const char *siid = env->GetStringUTFChars(_iid, NULL);
   USES_CONVERSION;
   LPOLESTR bsIID = A2W(siid);
@@ -95,6 +96,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_createInstanceNative
   jclass clazz = env->GetObjectClass(_this);
   jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "I");
 
+  // if we used env->GetStringChars() would that let us drop the conversion?
   const char *progid = env->GetStringUTFChars(_progid, NULL);
   CLSID clsid;
   HRESULT hr;
@@ -161,6 +163,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstanceNative
   jclass clazz = env->GetObjectClass(_this);
   jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "I");
 
+  // if we used env->GetStringChars() would that let us drop the conversion?
   const char *progid = env->GetStringUTFChars(_progid, NULL);
   CLSID clsid;
   HRESULT hr;
@@ -203,6 +206,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_coCreateInstanceNative
   jclass clazz = env->GetObjectClass(_this);
   jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "I");
 
+  // if we used env->GetStringChars() would that let us drop the conversion?
   const char *progid = env->GetStringUTFChars(_progid, NULL);
   CLSID clsid;
   HRESULT hr;
@@ -275,6 +279,7 @@ JNIEXPORT jintArray JNICALL Java_com_jacob_com_Dispatch_getIDsOfNames
   {
     USES_CONVERSION;
     jstring s = (jstring)env->GetObjectArrayElement(names, i);
+	// if we used env->GetStringChars() would that let us drop the conversion?
     const char *nm = env->GetStringUTFChars(s, NULL);
     LPOLESTR nmos = A2W(nm);
     env->ReleaseStringUTFChars(s, nm);
