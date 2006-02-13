@@ -266,6 +266,7 @@ class test
    printArray(bback);
 
    try {
+	 System.out.println("Should see a com exception right after this line...");
      // this should throw ComException
      bba2.fromCharArray(new char[] {'a'});
    } catch (Exception e) {
