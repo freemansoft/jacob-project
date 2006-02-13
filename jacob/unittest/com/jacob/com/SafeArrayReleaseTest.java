@@ -1,6 +1,7 @@
 package com.jacob.com;
 
 /**
+ * run with -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=false
  * SF 1085370
 	In my understatnding, an instance of SafeArray java
 	class has a
