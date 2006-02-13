@@ -47,6 +47,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_jacob_jacobgen_TypeLibInspector_queryInter
 	LPCSTR sname;
 
 	buffer = NULL;
+	// could we just get the unicode characters to bein with?
 	sname = env->GetStringUTFChars( name, &iscopy );
 	cchWideChar = strlen( sname ) * 2;
 	wname = (LPWSTR)malloc( cchWideChar );
