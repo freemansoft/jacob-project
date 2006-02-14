@@ -30,11 +30,10 @@
 		has been added to the DispatchEvents constructors that lets a user provide
 		the location of the OLB or EXE that contains the information required to 
 		retrieve the events.
-	<li>Event handlers can now return a value to calling MS Windows program.  
-		The event handlers must return an objec of type Variant if they wish to return
-		a value.  All 
-		previous event handlers still work with a void return. (This change should be
-		backwards compatible)
+	<li>Event handlers can now return a Variant to calling MS Windows program.  
+		Event handlers that do not return an object should still be defined
+		as being of type "void".  This means that support for event handler's returning 
+		values should be backwards compatible with previous releases.
 	</ul>
 </li>
 
