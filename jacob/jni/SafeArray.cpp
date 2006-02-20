@@ -558,7 +558,9 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromStringArray
     V_VT(&v) = VT_BSTR;
     for(int i=0;i<len;i++) {
       jstring s = (jstring)env->GetObjectArrayElement(a, i);
-      // jacob report 1224219 should use unicode and not UTF-8 (Variant modified in previous report
+      // jacob report 1224219 should use unicode and not UTF-8 
+      // GetStringUTFChars() replaced with GetStringChars()
+      // (Variant modified in previous report)
       const jchar *str = env->GetStringChars(s, NULL); 
       CComBSTR bs(str);
       V_VT(&v) = VT_BSTR;
@@ -571,7 +573,9 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromStringArray
   } else if (vt == VT_BSTR) {
     for(int i=0;i<len;i++) {
       jstring s = (jstring)env->GetObjectArrayElement(a, i);
-      // jacob report 1224219 should use unicode and not UTF-8 (Variant modified in previous report
+      // jacob report 1224219 should use unicode and not UTF-8 
+      // GetStringUTFChars() replaced with GetStringChars()
+      // (Variant modified in previous report)
       const jchar *str = env->GetStringChars(s, NULL);
       CComBSTR bs(str);
       BSTR bstr = bs.Detach();
@@ -1625,7 +1629,7 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString__I
     jstring js = env->NewString(bs, SysStringLen(bs));
     // jacob report 1224219 
 	// SafeArrayGetElement memory must be freed http://www.canaimasoft.com/f90VB/OnlineManuals/Reference/TH_31.htm
-    if (bs) free(bs);
+	if (bs) SysFreeString(bs);
     return js;
   }
   ThrowComFail(env, "safearray cannot get string", 0);
