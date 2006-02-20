@@ -651,7 +651,7 @@ public class Variant extends JacobObject {
     /**
      * I don't know what this is.  Is it some legacy (pre 1.8) thing?
      * @deprecated
-     * @return
+     * @return this object as a dispatch object by calling toDispatch()
      */
     public Object toScriptObject() {
         return toDispatch();
