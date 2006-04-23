@@ -13,7 +13,7 @@ class VariantTest {
 		testJig.testSafeReleaseBoolean();
 		testJig.testSafeReleaseConstant();
 		testJig.testSafeReleaseString();
-		
+		testJig.testObjectIsAConstant();
 		System.out.println("Testing Complete");
 		
 	}
@@ -91,7 +91,35 @@ class VariantTest {
 					+"has survived SafeRelease()");
 		}
     }
-		
+	
+    /**
+     * verifies objectIsAConstant works as expected
+     *
+     */
+    public void testObjectIsAConstant(){
+    	Variant v = new Variant("d");
+    	if (!v.objectIsAConstant(Variant.VT_FALSE)){
+    		System.out.println("did not recognize VT_FALSE");
+    	}
+    	if (!v.objectIsAConstant(Variant.VT_TRUE)){
+    		System.out.println("did not recognize VT_TRUE");
+    	}
+    	if (!v.objectIsAConstant(Variant.VT_MISSING)){
+    		System.out.println("did not recognize VT_MISSING");
+    	}
+    	if (!v.objectIsAConstant(Variant.DEFAULT)){
+    		System.out.println("did not recognize DEFAULT");
+    	}
+    	if (v.objectIsAConstant(new Variant(true))){
+    		System.out.println("confused a boolean with VT_TRUE");
+    	}
+    	if (v.objectIsAConstant(new Variant(false))){
+    		System.out.println("confused a boolean with VT_FALSE");
+    	}
+    	    	
+    	
+    }
+    
 	/**
 	 * tests put and get methods looking for obvious defects
 	 *
