@@ -20,6 +20,8 @@
 package com.jacob.com;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The multi-format data type used for all call backs and most communications
@@ -31,7 +33,13 @@ import java.util.Date;
  * marshalling/unmarshalling code is broken in the JNI layer.
  */
 public class Variant extends JacobObject {
-    /**
+
+	/**
+	 * holds the list Variants that should never be freed
+	 */
+    private static Map VARIANTS_THAT_ARE_CONSTANTS = new HashMap();
+    
+	/**
      * Use this constant for optional parameters
      */
     public final static com.jacob.com.Variant DEFAULT;
@@ -40,13 +48,7 @@ public class Variant extends JacobObject {
      * Same than {@link #DEFAULT}
      */
     public final static com.jacob.com.Variant VT_MISSING;
-    static {
-        com.jacob.com.Variant vtMissing = new com.jacob.com.Variant();
-        vtMissing.noParam();
-        DEFAULT = vtMissing;
-        VT_MISSING = vtMissing;
-    }
-
+    
     /**
      * Use for true/false variant parameters
      */
@@ -58,6 +60,26 @@ public class Variant extends JacobObject {
      */
     public final static com.jacob.com.Variant VT_FALSE = new com.jacob.com.Variant(
             false);
+
+    /*
+     * do the run time definition of DEFAULT and MISSING
+     */
+    static {
+        com.jacob.com.Variant vtMissing = new com.jacob.com.Variant();
+        vtMissing.noParam();
+        DEFAULT = vtMissing;
+        VT_MISSING = vtMissing;
+    }
+    
+    /*
+     * adds all the constants to the list of those that should not be released
+     */
+    static {
+        VARIANTS_THAT_ARE_CONSTANTS.put(VT_TRUE,VT_TRUE);
+        VARIANTS_THAT_ARE_CONSTANTS.put(VT_MISSING,VT_MISSING);
+        VARIANTS_THAT_ARE_CONSTANTS.put(VT_FALSE,VT_FALSE);
+        VARIANTS_THAT_ARE_CONSTANTS.put(DEFAULT,DEFAULT);
+    }
 
     /**
      * Pointer to MS struct.
@@ -800,31 +822,50 @@ public class Variant extends JacobObject {
      * @see java.lang.Object#finalize()
      */
     protected void finalize() {
-        super.safeRelease();
-        safeRelease();
+    		safeRelease();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * This will release the "C" memory for the Variant 
+     * unless this Variant is one of the constants in which case
+     * we don't want to release the memory.
+     * <p>
      * @see com.jacob.com.JacobObject#safeRelease()
      */
     public void safeRelease() {
-        super.safeRelease();
-        if (m_pVariant != 0) {
-            release();
-            m_pVariant = 0;
-        } else {
-            // looks like a double release
-            // this should almost always happen due to gc
-            // after someone has called ComThread.Release
+        // The well known constants should not be released.
+        // Unfortunately this doesn't fix any other classes that are
+        // keeping constants around in their static ivars.
+        // those will still be busted.
+    	//
+		// The only inconcistency here is that we leak
+		// when this class is unloaded because we won't
+		// free the memory even if the constants are being
+		// finalized.  this is not a big deal at all.
+		// another way around this would be to create the constants
+		// in their own thread so that they would never be released
+    	if (!Variant.VARIANTS_THAT_ARE_CONSTANTS.containsValue(this)){
+	        super.safeRelease();
+	        if (m_pVariant != 0) {
+	            release();
+	            m_pVariant = 0;
+	        } else {
+	            // looks like a double release
+	            // this should almost always happen due to gc
+	            // after someone has called ComThread.Release
+	            if (isDebugEnabled()) {
+	                debug("Variant: " + this.hashCode()
+	                        + " double release");
+	                //Throwable x = new Throwable();
+	                //x.printStackTrace();
+	            }
+	        }
+    	} else {
             if (isDebugEnabled()) {
                 debug("Variant: " + this.hashCode()
-                        + " double release");
-                //Throwable x = new Throwable();
-                //x.printStackTrace();
+                        + " don't want to release a constant");
             }
-        }
+    	}
     }
 
     /**
