@@ -50,6 +50,9 @@ EventProxy *extractProxy(JNIEnv *env, jobject arg)
   return v;
 }
 
+/*
+ * pushes the EventProxy (*ep) into tje jobject in the PROXY_FLD location
+ */
 void putProxy(JNIEnv *env, jobject arg, EventProxy *ep)
 {
   jclass argClass = env->GetObjectClass(arg);
