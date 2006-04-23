@@ -131,7 +131,8 @@ public abstract class ROT {
                     		// which causes a concurrent modification exception in HashMap
                     		JacobObject.debug("ROT: removing "+o.getClass().getName());
                     	} else {
-                    		JacobObject.debug("ROT: removing "+o+"->"+o.getClass().getName());
+                    		// Variant toString() is probably always bad in here
+                    		JacobObject.debug("ROT: removing "+o.hashCode()+"->"+o.getClass().getName());
                     	}
                 	}
                     o.safeRelease();

@@ -38,7 +38,7 @@ class VariantTest {
 			System.out.println("Variant value ("+v.getBoolean()+") "
 					+"has survived SafeRelease()");
 		}
-		for ( int i = 0 ; i < 20000; i ++){
+		for ( int i = 0 ; i < 10; i ++){
 			new Variant ("xxx"+i);
 			new Variant(i);
 			new Variant ("yyy"+i);
@@ -61,12 +61,14 @@ class VariantTest {
 		} else {
 			System.out.println("VT_TRUE survived SafeRelease()");
 		}
-		for ( int i = 0 ; i < 20000; i ++){
+		
+		for ( int i = 0 ; i < 10; i ++){
 			new Variant ("xxx"+i);
 			new Variant(i);
 			new Variant ("yyy"+i);
 		}
 		ComThread.Release();
+		
 		if (Variant.VT_TRUE.getBoolean() != true){
 			System.out.println("VT_TRUE has been broken by ComThread.Release()");
 		} else {

@@ -20,8 +20,6 @@
 package com.jacob.com;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The multi-format data type used for all call backs and most communications
@@ -34,11 +32,6 @@ import java.util.Map;
  */
 public class Variant extends JacobObject {
 
-	/**
-	 * holds the list Variants that should never be freed
-	 */
-    private static Map VARIANTS_THAT_ARE_CONSTANTS = new HashMap();
-    
 	/**
      * Use this constant for optional parameters
      */
@@ -71,16 +64,6 @@ public class Variant extends JacobObject {
         VT_MISSING = vtMissing;
     }
     
-    /*
-     * adds all the constants to the list of those that should not be released
-     */
-    static {
-        VARIANTS_THAT_ARE_CONSTANTS.put(VT_TRUE,VT_TRUE);
-        VARIANTS_THAT_ARE_CONSTANTS.put(VT_MISSING,VT_MISSING);
-        VARIANTS_THAT_ARE_CONSTANTS.put(VT_FALSE,VT_FALSE);
-        VARIANTS_THAT_ARE_CONSTANTS.put(DEFAULT,DEFAULT);
-    }
-
     /**
      * Pointer to MS struct.
      */
@@ -825,6 +808,23 @@ public class Variant extends JacobObject {
     		safeRelease();
     }
 
+    /** 
+     * returns true if the passed in Variant is a constant that should not be freed
+     * @param pVariant
+     * @return
+     */
+    private boolean objectIsAConstant(Variant pVariant){
+    	if (pVariant == VT_FALSE ||
+    			pVariant == VT_TRUE ||
+    			pVariant == VT_MISSING ||
+    			pVariant == DEFAULT){
+    		return true;
+    	} else {
+    		return false;
+    	}
+    		
+    }
+    
     /**
      * This will release the "C" memory for the Variant 
      * unless this Variant is one of the constants in which case
@@ -844,7 +844,7 @@ public class Variant extends JacobObject {
 		// finalized.  this is not a big deal at all.
 		// another way around this would be to create the constants
 		// in their own thread so that they would never be released
-    	if (!Variant.VARIANTS_THAT_ARE_CONSTANTS.containsValue(this)){
+    	if (!objectIsAConstant(this)){
 	        super.safeRelease();
 	        if (m_pVariant != 0) {
 	            release();
