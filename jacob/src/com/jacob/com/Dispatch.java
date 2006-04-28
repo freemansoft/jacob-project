@@ -20,6 +20,7 @@
 package com.jacob.com;
 
 import java.lang.reflect.Array;
+import java.util.Date;
 
 /**
  * Object represents MS level dispatch object. 
@@ -328,6 +329,7 @@ public class Dispatch extends JacobObject
 	        || objectToBeMadeIntoVariant instanceof Double
 	        || objectToBeMadeIntoVariant instanceof Float
 	        || objectToBeMadeIntoVariant instanceof SafeArray
+	        || objectToBeMadeIntoVariant instanceof Date
 	        || objectToBeMadeIntoVariant instanceof Dispatch)
             return new Variant(objectToBeMadeIntoVariant);
 
