@@ -3,7 +3,8 @@ package com.jacob.test.events;
 import com.jacob.com.*;
 import com.jacob.activeX.*;
 /**
- * It looks like this test is broken again on the cleanup
+ * This test runs fine against jdk.1.5.0_05 and kills the VM 
+ * under any variant of 1.4.
  * 
  * This demonstrates the new event handling code in jacob 1.7
  * This example will open up IE and print out some of the events
@@ -51,7 +52,7 @@ class IETestThread extends Thread
     public void run()
     {
     	// this used to be 5 seconds but sourceforge is slow
-    	int delay = 10000; // msec
+    	int delay = 5000; // msec
         // paired with statement below that blows up
         ComThread.InitMTA();
         ActiveXComponent ie = new ActiveXComponent("InternetExplorer.Application");

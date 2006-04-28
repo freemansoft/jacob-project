@@ -153,6 +153,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_release
 {
   EventProxy *ep = extractProxy(env, _this);
   if (ep) {
+  	// this is the line that blows up in IETest
     ep->Release();
     putProxy(env, _this, NULL);
   }
