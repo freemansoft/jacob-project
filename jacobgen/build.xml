@@ -106,7 +106,7 @@
 		<echo>Building java classes...</echo>
 		<javac srcdir="${java.src}" 
 			destdir="${java.bin}" 
-			classpath="${basedir}/lib/samskivert.jar"
+			classpath="${basedir}/lib/viztool.jar"
 			listfiles="true" debug="on" fork="yes" />
 		<echo>Building java sample classes...</echo>
 		<javac srcdir="${java.samples}" 

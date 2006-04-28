@@ -14,7 +14,7 @@ set JAVA_HOME=D:\j2sdk1.4.2_09
 set JRE=%JAVA_HOME%\bin\java
 
 set JACOBGEN_HOME=.
-set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\dt.jar;%JACOBGEN_HOME%\release\jacobgen.jar;%JACOBGEN_HOME%\lib\samskivert.jar
+set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\dt.jar;%JACOBGEN_HOME%\release\jacobgen.jar;%JACOBGEN_HOME%\lib\viztool.jar
 REM put the dll in the path where we can find it
 set PATH=%PATH%;%JACOBGEN_HOME%\release
 

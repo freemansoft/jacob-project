@@ -290,7 +290,7 @@ public class MethodItem {
 		else if( nativeReturnType.equals("VT_CY") )		//Currency
 			result = ".toCurrency()";
 		else if( nativeReturnType.equals("VT_DATE") )	// this should use the new toJavaDate() so we could remove the conversion code
-			result = ".toDate()";
+			result = ".toJavaDate()";
 		else if( nativeReturnType.equals("VT_BSTR") )
 			result = ".toString()";
 		else if( nativeReturnType.equals("VT_DISPATCH") )	//??? probably not needed because he does .toDispatch() no matter what

@@ -94,7 +94,11 @@ public class ParameterItem {
    * @return a String which is the name of the put*Ref-method of this parameter
    */
   public String getVariantPutMethod() {
-    return "put" + getObjectType() + "Ref";
+	  if (getObjectType().equals("java.util.Date")) {
+		  return "putDateRef";
+	  } else {
+		  return "put" + getObjectType() + "Ref";
+	  }
   }
 
   /**
@@ -103,7 +107,11 @@ public class ParameterItem {
    * @return a String which is the name of the to*-method of this parameter
    */
   public String getVariantGetMethod() {
-    return "to" + getObjectType();
+	  if (getObjectType().equals("java.util.Date")) {
+		  return "toJavaDate";
+	  } else {
+		  return "to" + getObjectType();
+	  }
   }
 
   /**

@@ -263,18 +263,11 @@ class ClassGenerator extends AbstractGenerator {
 					if( mi.isCustomReturnType() )
 						w.write("new " + mi.getReturnType() + "(");
 
-					if( mi.getReturnType().equals("java.util.Date") ) {
-						w.write("comDateToJavaDate(");
-						containsDate = true;
-					}
-
 					w.write( "Dispatch.get(this, \"" + mi.getName() + "\")" +
 					 mi.getReturnConversionMethodCode() );
 
 					if( mi.isCustomReturnType() )
 						w.write(".toDispatch())");
-					if( mi.getReturnType().equals("java.util.Date") )
-						w.write(")");
 
 					w.write(";\n");
 				} else {
@@ -334,6 +327,8 @@ class ClassGenerator extends AbstractGenerator {
 				// Hopefully someone will look at this later and make sure it is correct
 				if (p.getVariantPutMethod().equals("putVariantRef")){
 					w.write("\t\t\t"+ p.getVariantName() + " = " + p.getJavaName() + "[0];\n\n");
+				} else if (p.getVariantPutMethod().equals("java.util.Date")) {
+					w.write("\t\t\t" + p.getVariantName() + ".putDate(" + p.getJavaName() + "[0]);\n\n");
 				} else {
 					w.write("\t\t\t" + p.getVariantName() + "." + p.getVariantPutMethod() + "(" + p.getJavaName() + "[0]);\n\n");
 				}
@@ -424,11 +419,6 @@ class ClassGenerator extends AbstractGenerator {
 
 			if( mi.isCustomReturnType() )
 				w.write("new " + mi.getReturnType() + "(");
-
-			if( mi.getReturnType().equals("java.util.Date") ) {
-				w.write("javaDateToComDate(");
-				containsDate = true;
-			}
 		}
 
 		w.write("Dispatch.call");
@@ -459,30 +449,27 @@ class ClassGenerator extends AbstractGenerator {
 
 		if( mi.isCustomReturnType() )
 			w.write( ".toDispatch())" );
-
-		if( mi.getReturnType().equals("java.util.Date") )
-			w.write( ")" );
-
+		
 		w.write( ";\n" );
 	}
 
 	protected void writeDateConversionCode() throws IOException {
 		w.write( "\tstatic long zoneOffset" );
 		w.write( "\t= java.util.Calendar.getInstance().get(java.util.Calendar.ZONE_OFFSET);\n\n" );
-
+/*
   		w.write( "\tstatic java.util.Date comDateToJavaDate(double comDate) {\n");
 		w.write( "\t\tcomDate = comDate - 25569D;\n");
 		w.write( "\t\tlong millis = Math.round(86400000L * comDate) - zoneOffset;\n\n");
 		w.write( "\t\tjava.util.Calendar cal = java.util.Calendar.getInstance();\n");
 		w.write( "\t\tcal.setTime(new java.util.Date(millis));\n");
-		w.write( "\t\tmillis -= cal.get(cal.DST_OFFSET);\n\n");
+		w.write( "\t\tmillis -= cal.get(java.util.Calendar.DST_OFFSET);\n\n");
 		w.write( "\t\treturn new java.util.Date(millis);\n");
 		w.write( "\t}\n\n");
-
+*/
 		w.write( "\tstatic double javaDateToComDate(java.util.Date javaDate) {\n\n");
 		w.write( "\t\tjava.util.Calendar cal = java.util.Calendar.getInstance();\n");
 		w.write( "\t\tcal.setTime(javaDate);\n");
-		w.write( "\t\tlong gmtOffset = (cal.get(cal.ZONE_OFFSET) + cal.get(cal.DST_OFFSET));\n\n");
+		w.write( "\t\tlong gmtOffset = (cal.get(java.util.Calendar.ZONE_OFFSET) + cal.get(java.util.Calendar.DST_OFFSET));\n\n");
 		w.write( "\t\tlong millis = javaDate.getTime() + gmtOffset;\n");
 		w.write( "\t\treturn 25569D+millis/86400000D;\n");
 		w.write( "\t}\n\n");

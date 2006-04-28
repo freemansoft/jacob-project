@@ -21,7 +21,7 @@ package com.jacob.jacobgen;
 import java.io.*;
 import java.util.*;
 
-import com.samskivert.viztool.enum.*;
+import com.samskivert.viztool.clenum.*;
 
 /**
  * This is the root class for Jacobgen.  It generates 
