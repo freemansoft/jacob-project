@@ -218,6 +218,7 @@
 		<javadoc
 				packagenames="${java.src.mainpackage}/**"
 				sourcepath="${java.src}"
+				classpath="${basedir}/lib/viztool.jar"
 				destdir="${java.bin}/docs/api"
 				author="true"
 				version="true"
