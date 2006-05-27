@@ -18,10 +18,19 @@
  */
 package com.jacob.jacobgen;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.StringReader;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
-import com.samskivert.viztool.clenum.*;
+import com.samskivert.viztool.clenum.ClassEnumerator;
 
 /**
  * This is the root class for Jacobgen.  It generates 
