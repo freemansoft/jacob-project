@@ -66,6 +66,7 @@
 		      Writes out a version file to be included in the jar        
 		 ================================================================== -->
 	<target name="IncrementBuildNumber">
+		<property name="version" value="version not set in compilation_tools properties file"/>
 		<propertyfile file="version.properties">
 			<entry key="version" type="string" value="${version}" />
 			<entry key="build.iteration" type="int" operation="+" value="1" pattern="00" />
