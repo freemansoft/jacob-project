@@ -26,7 +26,4 @@ package com.jacob.com;
  * threading model for the java side of the app.
  */
 public class MainSTA extends STA {
-    static {
-        System.loadLibrary("jacob");
-    }
 }

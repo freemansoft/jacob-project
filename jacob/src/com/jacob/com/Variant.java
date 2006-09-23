@@ -114,7 +114,7 @@ public class Variant extends JacobObject {
     /** variant's type is byte */
     public static final short VariantByte = 17;
 
-    /** @todo */
+    /** what is this? */
     public static final short VariantTypeMask = 4095;
 
     /** variant's type is array */
@@ -821,7 +821,8 @@ public class Variant extends JacobObject {
     /** 
      * returns true if the passed in Variant is a constant that should not be freed
      * @param pVariant
-     * @return
+     * @return boolian that is true if Variant is a type of constant,
+     * 		VT_FALSE, VT_TRUE, VT_MISSING, DEFAULT
      */
     protected boolean objectIsAConstant(Variant pVariant){
     	if (pVariant == VT_FALSE ||
@@ -894,10 +895,6 @@ public class Variant extends JacobObject {
      */
     public Object toByteArray() {
         throw new NotImplementedException("Not implemented");
-    }
-
-    static {
-        System.loadLibrary("jacob");
     }
 
     /**

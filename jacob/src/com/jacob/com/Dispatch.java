@@ -32,10 +32,6 @@ import java.util.Date;
  */
 public class Dispatch extends JacobObject
 {
-    static {
-        System.loadLibrary("jacob");
-    }
-
     public static final int LOCALE_SYSTEM_DEFAULT = 2048;
     public static final int Method = 1;
     public static final int Get = 2;

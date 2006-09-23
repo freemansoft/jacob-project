@@ -147,11 +147,6 @@ public class ActiveXComponent extends Dispatch {
         super.finalize();
     }
 
-    static {
-        System.loadLibrary("jacob");
-    }
-    
-    
     
     /*============================================================
      * 

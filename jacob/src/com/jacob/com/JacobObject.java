@@ -28,12 +28,16 @@ import java.util.Properties;
  * create a standard API framework and to facillitate memory management
  * for Java and COM memory elements.
  * <p>
+ * All instances of this class and subclasses are automatically manged
+ * by the ROT. This means the ROT cannot be a subclass of JacobObject.
+ * <p>
  * All COM object created by JACOB extend this class so that we can
  * automatically release them when the thread is detached from COM - if we leave
  * it to the finalizer it will call the release from another thread, which may
  * result in a segmentation violation.
  */
 public class JacobObject {
+
 	/**
 	 * holds the build version as retrieved from the version.properties
 	 * file that exists in the JAR.
@@ -55,6 +59,16 @@ public class JacobObject {
      */
     public JacobObject() {
         ROT.addObject(this);
+    }
+
+    
+    /**
+     * 
+     * loads the jacob library dll
+     *
+     */
+    protected static void loadJacobLibrary(){
+        System.loadLibrary("jacob");
     }
 
     /**
@@ -137,5 +151,13 @@ public class JacobObject {
             		+ " in thread "+ Thread.currentThread().getName());
         }
     }
+
+    /**
+     * force the jacob DLL to be loaded whenever this class is referenced
+     */
+    static {
+    	JacobObject.loadJacobLibrary();
+    }
+    
     
 }

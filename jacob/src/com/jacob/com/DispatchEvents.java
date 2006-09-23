@@ -168,7 +168,4 @@ public class DispatchEvents extends JacobObject {
         }
     }
 
-    static {
-        System.loadLibrary("jacob");
-    }
 }

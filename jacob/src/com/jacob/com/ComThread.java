@@ -144,7 +144,11 @@ public abstract class ComThread {
      */
     public static native void doCoUninitialize();
 
+    /**
+     * load the Jacob DLL.  We do this in case COMThread is called before
+     * any other reference to one of the JacboObject subclasses is made.
+     */
     static {
-        System.loadLibrary("jacob");
+    	JacobObject.loadJacobLibrary();
     }
 }

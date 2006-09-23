@@ -55,10 +55,12 @@ public class ExcelEventTest extends InvocationProxy {
 					new Object[] { "A1" }, new int[1]).toDispatch();
 			Dispatch a2 = Dispatch.invoke(sheet, "Range", Dispatch.Get,
 					new Object[] { "A2" }, new int[1]).toDispatch();
+			System.out.println("Inserting value into A1");
+			System.out.println("Inserting calculation 2xA1 into A2");
 			Dispatch.put(a1, "Value", "123.456");
 			Dispatch.put(a2, "Formula", "=A1*2");
 			System.out.println("Retrieved a1 from excel:" + Dispatch.get(a1, "Value"));
-			System.out.println("REtrieved a2 from excel:" + Dispatch.get(a2, "Value"));
+			System.out.println("Retrieved a2 from excel:" + Dispatch.get(a2, "Value"));
 			Variant f = new Variant(false);
 			Dispatch.call(workbook, "Close", f);
 			axc.invoke("Quit", new Variant[] {});

@@ -88,7 +88,11 @@ public class STA extends Thread {
      */
     public native void quitMessagePump();
 
+    /**
+     * STA isn't a subclass of JacobObject so a reference to it doesn't load
+     * the DLL without this
+     */
     static {
-        System.loadLibrary("jacob");
+    	JacobObject.loadJacobLibrary();
     }
 }

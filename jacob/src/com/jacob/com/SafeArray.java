@@ -875,8 +875,4 @@ public class SafeArray extends JacobObject {
      */
     public native void setBoolean(int indices[], boolean c);
     
-    static {
-        System.loadLibrary("jacob");
-    }
-
 }
