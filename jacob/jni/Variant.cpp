@@ -520,10 +520,12 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_toString
          return env->NewStringUTF("null");
     }
     HRESULT hr;
+    // this actually changes the type of the variant to a String!
     if (FAILED(hr = VariantChangeType(v, v, 0, VT_BSTR))) {
       // cannot change type to a string
       return env->NewStringUTF("???");
     }
+    // create a returnable string from the converted variant
     BSTR bs = V_BSTR(v);
     jstring js = env->NewString(bs, SysStringLen(bs));
     return js;
@@ -1114,6 +1116,9 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putFloat
   }
 }
 
+/**
+ * changes the type of the underlying variant data
+ * */
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_changeType
   (JNIEnv *env, jobject _this, jshort t)
 {

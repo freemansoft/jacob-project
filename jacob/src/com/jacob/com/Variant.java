@@ -358,7 +358,8 @@ public class Variant extends JacobObject {
     public native Object clone();
 
     /**
-     * attempts to return the content of this variant as a string
+     * Attempts to return the content of this variant as a string
+     * Will convert the underlying data type to a string(!)
      * @return String
      */
     public native String toString();
@@ -647,8 +648,17 @@ public class Variant extends JacobObject {
         throw new NotImplementedException("Not implemented");
     }
 
+    /**
+     * Convertes variant to the passed in type by converting the underlying 
+     * windows variant structure
+     * @param in the desired resulting type
+     */
     public native void changeType(short in);
 
+    /**
+     * cover for changeType(short)
+     * @param in type to convert this variant too
+     */
     public void changeType(int in) {
         changeType((short) in);
     }
@@ -784,7 +794,7 @@ public class Variant extends JacobObject {
     public native short getvt();
 
     /**
-     * attempts tor return the contents of this Variant as a short
+     * attempts to return the contents of this Variant as a short
      * (after possible conversion)
      * @return short
      */
