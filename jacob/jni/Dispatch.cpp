@@ -305,7 +305,8 @@ JNIEXPORT jintArray JNICALL Java_com_jacob_com_Dispatch_getIDsOfNames
     return NULL;
   }
   jintArray iarr = env->NewIntArray(l);
-  env->SetIntArrayRegion(iarr, i, l, dispid);
+  // SF 1511033 -- the 2nd parameter should be 0 and not i!
+  env->SetIntArrayRegion(iarr, 0, l, dispid);
   CoTaskMemFree(lps);
   CoTaskMemFree(dispid);
   return iarr;
