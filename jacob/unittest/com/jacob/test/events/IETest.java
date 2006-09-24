@@ -13,7 +13,7 @@ import com.jacob.activeX.*;
  * and Henning Jae jehoej@daimi.au.dk
  * <P>
  * You can run this in eclipse with the command line options
- * <code> -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false </code>
+ * <code> -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -DXcheck:jni</code>
  */
 
 class IETest
