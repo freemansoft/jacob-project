@@ -107,15 +107,15 @@
 		<echo>Building java classes in ${java.bin}...</echo>
 		<javac srcdir="${java.src}" 
 			destdir="${java.bin}" 
-			listfiles="true" debug="on" fork="yes" />
+			listfiles="true" debug="on" source="1.4" />
 		<echo>Building java sample classes ...</echo>
 		<javac srcdir="${java.samples}" 
 			destdir="${java.bin}" 
-			listfiles="true" debug="on" fork="yes" />
+			listfiles="true" debug="on" source="1.4" />
 		<echo>Building java test classes...</echo>
 		<javac srcdir="${java.unittest}" 
 			destdir="${java.bin}" 
-			listfiles="true" debug="on" fork="yes" />
+			listfiles="true" debug="on" source="1.4" />
 	</target>
 	<!-- ======================================================================
 	      Package the classes into a JAR.    

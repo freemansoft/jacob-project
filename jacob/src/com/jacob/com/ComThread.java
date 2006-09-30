@@ -149,6 +149,6 @@ public abstract class ComThread {
      * any other reference to one of the JacboObject subclasses is made.
      */
     static {
-    	JacobObject.loadJacobLibrary();
+    	LibraryLoader.loadJacobLibrary();
     }
 }

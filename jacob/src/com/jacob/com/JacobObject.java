@@ -63,15 +63,6 @@ public class JacobObject {
 
     
     /**
-     * 
-     * loads the jacob library dll
-     *
-     */
-    protected static void loadJacobLibrary(){
-        System.loadLibrary("jacob");
-    }
-
-    /**
      * Loads version information from version.properties that was 
      * built as part of this release.
      *
@@ -156,7 +147,7 @@ public class JacobObject {
      * force the jacob DLL to be loaded whenever this class is referenced
      */
     static {
-    	JacobObject.loadJacobLibrary();
+    	LibraryLoader.loadJacobLibrary();
     }
     
     
