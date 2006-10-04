@@ -489,7 +489,7 @@ public class Variant extends JacobObject {
     
     /**
      * gets the content of the veriant as a string ref
-     * @return
+     * @return String retrieved from the COM area.
      */
     public String getStringRef(){
     	if ((this.getvt() & VariantString) == VariantString &&
@@ -542,7 +542,7 @@ public class Variant extends JacobObject {
      * <li>"null" if VariantError
      * <li>"null" if VariantNull
      * <li>the value if we know how to describe one of that type
-     * <li>"???" if can't convert
+     * <li>three question marks if can't convert
      * @return String value conversion, 
      */
     public String toString(){
@@ -854,7 +854,7 @@ public class Variant extends JacobObject {
     private native void putVariantError(int in);
     
     /**
-     * puts an error code (?) into the variant and sets the type
+     * puts an error code (I think) into the variant and sets the type
      * @param in
      */
     public void putError(int in){
@@ -1140,8 +1140,7 @@ public class Variant extends JacobObject {
     /**
      * By default toSafeArray makes a deep copy due to the fact that this
      * Variant owns the embedded SafeArray and will destroy it when it gc's
-     * <P>
-     * calls toSafeArray(true)
+     * calls toSafeArray(true).
      */
     public SafeArray toSafeArray() {
     	// verify we haven't been released yet
@@ -1153,7 +1152,7 @@ public class Variant extends JacobObject {
      * This lets folk turn into a safe array without a deep copy.
      * Shoudl this API be public?
      * @param deepCopy
-     * @return
+     * @return SafeArray constructed
      */
     public SafeArray toSafeArray(boolean deepCopy){
     	// verify we haven't been released yet
