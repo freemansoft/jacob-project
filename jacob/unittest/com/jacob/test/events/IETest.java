@@ -34,10 +34,12 @@ class IETest
             //e.printStackTrace();
         }
       }
-      System.out.println("Thread quit, about to quit main sta");
+      System.out.println("Main: Thread quit, about to quit main sta in thread "
+    		  +Thread.currentThread().getName());
       // this line only does someting if startMainSTA() was called
       ComThread.quitMainSTA();
-      System.out.println("did quit main sta");
+      System.out.println("Main: did quit main sta in thread "
+    		  +Thread.currentThread().getName());
     }
 }
 
@@ -59,22 +61,33 @@ class IETestThread extends Thread
         try {
           Dispatch.put(ie, "Visible", new Variant(true));
           Dispatch.put(ie, "AddressBar", new Variant(true));
-          System.out.println(Dispatch.get(ie, "Path"));
+          System.out.println("IETestThread: " + Dispatch.get(ie, "Path"));
           Dispatch.put(ie, "StatusText", new Variant("My Status Text"));
     
+          System.out.println("IETestThread: About to hookup event listener");
           IEEvents ieE = new IEEvents();
           new DispatchEvents((Dispatch) ie, ieE,"InternetExplorer.Application.1");
+          System.out.println("IETestThread: Did hookup event listener");
+          /// why is this here?  Was there some other code here in the past?
           Variant optional = new Variant();
-          optional.noParam();
+          optional.putNoParam();
     
+          System.out.println("IETestThread: About to call navigate to sourceforge");
           Dispatch.call(ie, "Navigate", new Variant("http://sourceforge.net/projects/jacob-project"));
+          System.out.println("IETestThread: Did call navigate to sourceforge");
           try { Thread.sleep(delay); } catch (Exception e) {}
+          System.out.println("IETestThread: About to call navigate to yahoo");
           Dispatch.call(ie, "Navigate", new Variant("http://groups.yahoo.com/group/jacob-project"));
+          System.out.println("IETestThread: Did call navigate to yahoo");
           try { Thread.sleep(delay); } catch (Exception e) {}
         } catch (Exception e) {
           e.printStackTrace();
+        } catch (Throwable re){
+        	re.printStackTrace();
         } finally {
-          ie.invoke("Quit", new Variant[] {});
+        	System.out.println("IETestThread: About to send Quit");
+        	ie.invoke("Quit", new Variant[] {});
+          	System.out.println("IETestThread: Did send Quit");
         }
         // this blows up when it tries to release a DispatchEvents object
         // I think this is because there is still one event we should get back
@@ -83,13 +96,14 @@ class IETestThread extends Thread
         // freed before the callback
         // commenting out ie.invoke(quit...) causes this to work without error
         // this code tries to wait until the quit has been handled but that doesn't work
-        System.out.println("IETest: Waiting until we've received the quit callback");
+        System.out.println("IETestThread: Waiting until we've received the quit callback");
         while (!quitHandled){
           try { Thread.sleep(delay/5);} catch (InterruptedException e) {}
         }
+        System.out.println("IETestThread: Received the quit callback");
         // wait a little while for it to end
-        try {Thread.sleep(delay); } catch (InterruptedException e) {}
-        System.out.println("IETest: about to call release in thread " +
+        //try {Thread.sleep(delay); } catch (InterruptedException e) {}
+        System.out.println("IETestThread: about to call ComThread.Release in thread " +
         			Thread.currentThread().getName());
 
         ComThread.Release();
@@ -101,76 +115,76 @@ class IETestThread extends Thread
 public class IEEvents 
 {
     public void BeforeNavigate2(Variant[] args) {
-      System.out.println("IEEvents: BeforeNavigate2");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): BeforeNavigate2 "+args.length);
     }
 
     public void CommandStateChange(Variant[] args) {
-      System.out.println("IEEvents: CommandStateChange");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): CommandStateChange "+args.length);
     }
 
     public void DocumentComplete(Variant[] args) {
-      System.out.println("IEEvents: DocumentComplete");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): DocumentComplete "+args.length);
     }
 
     public void DownloadBegin(Variant[] args) {
-      System.out.println("IEEvents: DownloadBegin");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): DownloadBegin "+args.length);
     }
 
     public void DownloadComplete(Variant[] args) {
-      System.out.println("IEEvents: DownloadComplete");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): DownloadComplete "+args.length);
     }
 
     public void NavigateComplete2(Variant[] args) {
-      System.out.println("IEEvents: NavigateComplete2");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): NavigateComplete "+args.length);
     }
 
     public void NewWindow2(Variant[] args) {
-      System.out.println("IEEvents: NewWindow2");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): NewWindow2 "+args.length);
     }
 
     public void OnFullScreen(Variant[] args) {
-      System.out.println("IEEvents: OnFullScreen");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): OnFullScreen "+args.length);
     }
 
     public void OnMenuBar(Variant[] args) {
-      System.out.println("IEEvents: OnMenuBar");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): OnMenuBar "+args.length);
     }
 
     public void OnQuit(Variant[] args) {
-      System.out.println("IEEvents: OnQuit");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): OnQuit "+args.length);
       IETestThread.quitHandled = true;
     }
 
     public void OnStatusBar(Variant[] args) {
-      System.out.println("IEEvents: OnStatusBar");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): OnStatusBar "+args.length);
     }
 
     public void OnTheaterMode(Variant[] args) {
-      System.out.println("IEEvents: OnTheaterMode");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): OnTheaterMode "+args.length);
     }
 
     public void OnToolBar(Variant[] args) {
-      System.out.println("IEEvents: OnToolBar");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): OnToolBar "+args.length);
     }
 
     public void OnVisible(Variant[] args) {
-      System.out.println("IEEvents: OnVisible");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): OnVisible "+args.length);
     }
 
     public void ProgressChange(Variant[] args) {
-      System.out.println("IEEvents: ProgressChange");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): ProgressChange "+args.length);
     }
 
     public void PropertyChange(Variant[] args) {
-      System.out.println("IEEvents: PropertyChange");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): PropertyChange "+args.length);
     }
 
     public void StatusTextChange(Variant[] args) {
-      System.out.println("IEEvents: StatusTextChange");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): StatusTextChange "+args.length);
     }
 
     public void TitleChange(Variant[] args) {
-      System.out.println("IEEvents: TitleChange");
+      System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): TitleChange "+args.length);
     }
 }
 

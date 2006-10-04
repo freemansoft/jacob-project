@@ -33,15 +33,14 @@ EventProxy::EventProxy(JNIEnv *env,
    eventIID(eid), MethNum(mNum), MethName(mName), 
    MethID(mID)
 {
-	// don't really need the variant object but we keep a reference 
-	// anyway
-  javaSinkObj = env->NewGlobalRef(aSinkObj);
-	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+	// keep a pointer to the sink
+	javaSinkObj = env->NewGlobalRef(aSinkObj);
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 
 	// we need this to attach to the event invocation thread
-  env->GetJavaVM(&jvm);
-	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
-  AddRef();
+	env->GetJavaVM(&jvm);
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+	AddRef();
     Connect(env);
 }
 
@@ -60,24 +59,36 @@ EventProxy::~EventProxy()
 {
 	JNIEnv *env;
     Disconnect();
-  // attach to the current running thread
-  #ifdef JNI_VERSION_1_2
-  	printf("using version 1.2 API\n");
-     jvm->AttachCurrentThread((void **)&env, jvm);
-  #else
-  	printf("not using version 1.2 API\n");
-     jvm->AttachCurrentThread((void**)&env, NULL);
-  #endif
+    jint vmConnectionStatus = JNI_EVERSION ;
+        
+	// attach to the current running thread -- JDK 1.4 jni.h has two param cover for 3 param call
+    vmConnectionStatus = jvm->GetEnv((void **)&env, JNI_VERSION_1_2);
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+   	if (vmConnectionStatus == JNI_EDETACHED){
+		//printf("Unhook: Attaching to current thread using JNI Version 1.2 (%d)\n",vmConnectionStatus);
+		jvm->AttachCurrentThread((void **)&env, jvm);
+			if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+   	} else {
+   		// should really look for JNI_OK versus an error
+   		// started method hooked so no need to attach again
+   		//printf("Unhook:  No need to attach because already attached %d\n",vmConnectionStatus);
+   	}
 
 
-  env->DeleteGlobalRef(javaSinkObj);
-	if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
-  if (MethNum) {
-    delete [] MethName;
-    delete [] MethID;
-  }
+	env->DeleteGlobalRef(javaSinkObj);
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+	if (MethNum) {
+	    delete [] MethName;
+	    delete [] MethID;
+	}
 	// detach from thread
-  jvm->DetachCurrentThread();
+	if (vmConnectionStatus == JNI_EDETACHED){
+		jvm->DetachCurrentThread();
+		//printf("Unhook: Detached\n");
+	} else {
+		//printf("Unhook: No need to detatch because attached prior to method\n");
+	}
+  	//fflush(stdout);
 }
 
 void EventProxy::Disconnect() {
@@ -113,12 +124,9 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
     LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams,
     VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr)
 {
-  //Visual C++ 6.0 recognized this as an unused variable
-  //HRESULT     hr;
-  
-  const char *eventMethodName = NULL; //Sourceforge report 1394001 
-  JNIEnv      *env = NULL;
-    jobject retObj;
+  	const char 	*eventMethodName = NULL; //Sourceforge report 1394001 
+  	JNIEnv      *env = NULL;
+	jobject 	retObj;
 
   // map dispID to jmethodID
   for(int i=0;i<MethNum;i++) 
@@ -130,33 +138,39 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
   }
   if (DISPATCH_METHOD & wFlags) 
   {
+        
     // attach to the current running thread
-    #ifdef JNI_VERSION_1_2
-     jvm->AttachCurrentThread((void **)&env, jvm);
-  	#else
-     jvm->AttachCurrentThread((void**)&env, NULL);
-  	#endif
+	//printf("Invoke: Attaching to current thread using JNI Version 1.2\n");
+	jvm->AttachCurrentThread((void **)&env, jvm);
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 
 	if (!eventMethodName) 
   	{
-  		ThrowComFail(env, "Event method received was not defined as part of callback interface", -1);
 	    // user did not implement this method
+  		printf("Invoke: didn't find method name\n");
+  		ThrowComFail(env, "Event method received was not defined as part of callback interface", -1);
+  		
+  		// should we detatch before returning?? The old code didn't but I don't see why not.
+	    // jvm->DetachCurrentThread();
     	return S_OK;
 	  }
 
-
 	// find the class of the InvocationHandler
    	jclass javaSinkClass = env->GetObjectClass(javaSinkObj);
-			if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
-        jmethodID invokeMethod;
-        invokeMethod = env->GetMethodID(javaSinkClass, "invoke", "(Ljava/lang/String;[Lcom/jacob/com/Variant;)Lcom/jacob/com/Variant;");
+		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+	//printf("Invoke: Got sink class\n");
+    jmethodID invokeMethod;
+    invokeMethod = env->GetMethodID(javaSinkClass, "invoke", "(Ljava/lang/String;[Lcom/jacob/com/Variant;)Lcom/jacob/com/Variant;");
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     jstring eventMethodNameAsString = env->NewStringUTF(eventMethodName);
+	//printf("Invoke: Got method name\n");
 	// now do what we need for the variant
-        jmethodID getVariantMethod = env->GetMethodID(javaSinkClass, "getVariant", "()Lcom/jacob/com/Variant;");
+    jmethodID getVariantMethod = env->GetMethodID(javaSinkClass, "getVariant", "()Lcom/jacob/com/Variant;");
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+	//printf("Invoke: Found way too getVariant\n");
     jobject aVariantObj = env->CallObjectMethod(javaSinkObj, getVariantMethod); 
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+	//printf("Invoke: Made Variant\n");
    	jclass variantClass = env->GetObjectClass(aVariantObj);
 			if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 
@@ -166,6 +180,7 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
     // make an array of them
     jobjectArray varr = env->NewObjectArray(numVariantParams, variantClass, 0);
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+	//printf("Invoke: Created Array\n");
     int i,j;
     for(i=numVariantParams-1,j=0;i>=0;i--,j++) 
     {
@@ -181,14 +196,16 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 			env->DeleteLocalRef(arg);
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
     }
-        // Set up the return value
-        jobject ret;
+	//printf("Invoke: Filled Array\n");
+    // Set up the return value
+    jobject ret;
 
-        ret = env->CallObjectMethod(javaSinkObj, invokeMethod, 
-			eventMethodNameAsString, varr); 
-        if (!env->ExceptionOccurred() && ret != NULL) {
-            VariantCopy(pVarResult, extractVariant(env,ret));
-        }
+    ret = env->CallObjectMethod(javaSinkObj, invokeMethod, 
+		eventMethodNameAsString, varr); 
+	//printf("Invoke: Invoked callback\n");
+    if (!env->ExceptionOccurred() && ret != NULL) {
+        VariantCopy(pVarResult, extractVariant(env,ret));
+    }
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 	// don't need the first variant we created to get the class
 	env->DeleteLocalRef(aVariantObj);
@@ -197,17 +214,19 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
     // Begin code from Jiffie team that copies parameters back from java to COM
     for(i=numVariantParams-1,j=0;i>=0;i--,j++) 
     {
-	  jobject arg = env->GetObjectArrayElement(varr, j);
-      VARIANT *java = extractVariant(env, arg);
-	  VARIANT *com = &pDispParams->rgvarg[i];
-            convertJavaVariant(java, com);
-            zeroVariant(env, arg);
-            env->DeleteLocalRef(arg);
-        }
-        // End code from Jiffie team that copies parameters back from java to COM
-        // detach from thread
-        jvm->DetachCurrentThread();
-        return S_OK;
+		jobject arg = env->GetObjectArrayElement(varr, j);
+		VARIANT *java = extractVariant(env, arg);
+		VARIANT *com = &pDispParams->rgvarg[i];
+		convertJavaVariant(java, com);
+		zeroVariant(env, arg);
+		env->DeleteLocalRef(arg);
+    }
+    // End code from Jiffie team that copies parameters back from java to COM
+    // detach from thread
+	//printf("Invoke: Detatching\n");
+   	jvm->DetachCurrentThread();
+  	//fflush(stdout);
+    return S_OK;
     }
     return E_NOINTERFACE;
 }

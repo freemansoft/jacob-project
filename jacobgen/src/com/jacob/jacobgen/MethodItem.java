@@ -278,28 +278,28 @@ public class MethodItem {
 		if( nativeReturnType.equals("VT_EMPTY") )		//Pending
 			result = "";
 		else if( nativeReturnType.equals("VT_NULL") )	//is there some better method?  this calls toDispatch() which results in what ?
-			result = ".toObject()";
+			result = ".getObject()";
 		else if( nativeReturnType.equals("VT_I2") )
-			result = ".toShort()";
+			result = ".getShort()";
 		else if( nativeReturnType.equals("VT_I4") || nativeReturnType.equals("VT_INT") )
-			result = ".toInt()";
+			result = ".getInt()";
 		else if( nativeReturnType.equals("VT_R4") )
-			result = ".toFloat()";
+			result = ".getFloat()";
 		else if( nativeReturnType.equals("VT_R8") )
-			result = ".toDouble()";
+			result = ".getDouble()";
 		else if( nativeReturnType.equals("VT_CY") )		//Currency
-			result = ".toCurrency()";
+			result = ".getCurrency()";
 		else if( nativeReturnType.equals("VT_DATE") )	// this should use the new toJavaDate() so we could remove the conversion code
-			result = ".toJavaDate()";
+			result = ".getJavaDate()";
 		else if( nativeReturnType.equals("VT_BSTR") )
-			result = ".toString()";
+			result = ".getString()";
 		else if( nativeReturnType.equals("VT_DISPATCH") )	//??? probably not needed because he does .toDispatch() no matter what
 			//result = ".toDispatch()";
 			result = "";
 		else if( nativeReturnType.equals("VT_ERROR") )		//Pending
-			result = ".toError()";
+			result = ".getError()";
 		else if( nativeReturnType.equals("VT_BOOL") )
-			result = ".toBoolean()";
+			result = ".getBoolean()";
 		else if( nativeReturnType.equals("VT_VARIANT") )
 			result = "";
 		//ADO.Field.getDataFormat() maps UNKNOWN as Variant. I hope it is
@@ -307,20 +307,20 @@ public class MethodItem {
 		else if( nativeReturnType.equals("VT_UNKNOWN") )
 			result = "";
 		else if( nativeReturnType.equals("VT_UI1") )
-			result = ".toByte()";
+			result = ".getByte()";
 		//Simple HRESULT managment
 		else if( nativeReturnType.equals("VT_HRESULT") )
-			result = ".toInt()";
+			result = ".getInt()";
 		else if( nativeReturnType.equals("VT_SAFEARRAY") )
 			result = ".toSafeArray()";
 			
 		//Simple enumeration
 		if( Jacobgen.getInstance().isEnum(nativeReturnType) )
-			result = ".toInt()";
+			result = ".getInt()";
 			
 		//RGB VB Internal type
 		if( nativeReturnType.equals( "MsoRGBType" ) )
-			result = ".toInt()";
+			result = ".getInt()";
 		
 		return result;
 	}

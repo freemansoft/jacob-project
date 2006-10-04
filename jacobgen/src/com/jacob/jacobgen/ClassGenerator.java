@@ -389,7 +389,7 @@ class ClassGenerator extends AbstractGenerator {
 
 		// If we are using paramters with return values we have to retrieve this
 		// values from the Varaints with to*(). This has to be done after the call.
-		// It should look like the following: lastParam[0] = param1.toInt();
+		// It should look like the following: lastParam[0] = param1.getInt();
 		for( int i = 0; i < paramNum; i++ ) {
 			ParameterItem p = parameters[i];
 			// this is only necessary if it is an output-parameter

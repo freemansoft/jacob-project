@@ -25,29 +25,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Class:     com_jacob_com_Variant
- * Method:    toInt
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toInt
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    toDate
- * Signature: ()D
- */
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_toDate
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    toBoolean
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_toBoolean
-  (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
@@ -59,10 +36,10 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toEnumVariant
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putNull
+ * Method:    putVariantNull
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putNull
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantNull
   (JNIEnv *, jobject);
 
 /*
@@ -75,106 +52,90 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_cloneIndirect
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    toDouble
- * Signature: ()D
- */
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_toDouble
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    toCurrency
- * Signature: ()J
- */
-JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_toCurrency
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    putShortRef
+ * Method:    putVariantShortRef
  * Signature: (S)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putShortRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantShortRef
   (JNIEnv *, jobject, jshort);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putIntRef
+ * Method:    putVariantIntRef
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putIntRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantIntRef
   (JNIEnv *, jobject, jint);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putDoubleRef
+ * Method:    putVariantDoubleRef
  * Signature: (D)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDoubleRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDoubleRef
   (JNIEnv *, jobject, jdouble);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putDateRef
+ * Method:    putVariantDateRef
  * Signature: (D)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDateRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDateRef
   (JNIEnv *, jobject, jdouble);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putStringRef
+ * Method:    putVariantStringRef
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putStringRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantStringRef
   (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getShortRef
+ * Method:    getVariantShortRef
  * Signature: ()S
  */
-JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getShortRef
+JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getVariantShortRef
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getIntRef
+ * Method:    getVariantIntRef
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getIntRef
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantIntRef
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putShort
+ * Method:    putVariantShort
  * Signature: (S)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putShort
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantShort
   (JNIEnv *, jobject, jshort);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getShort
+ * Method:    getVariantShort
  * Signature: ()S
  */
-JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getShort
+JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getVariantShort
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getDoubleRef
+ * Method:    getVariantDoubleRef
  * Signature: ()D
  */
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDoubleRef
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getVariantDoubleRef
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getDateRef
+ * Method:    getVariantDateRef
  * Signature: ()D
  */
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDateRef
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getVariantDateRef
   (JNIEnv *, jobject);
 
 /*
@@ -182,7 +143,7 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDateRef
  * Method:    getStringRef
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getStringRef
+JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getVariantStringRef
   (JNIEnv *, jobject);
 
 /*
@@ -198,7 +159,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_com_jacob_com_VariantClear
  * Method:    toDispatch
  * Signature: ()LDispatch;
  */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toDispatchObject
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toVariantDispatch
   (JNIEnv *, jobject);
 
 /*
@@ -211,194 +172,170 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_clone
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    toString
- * Signature: ()Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_toString
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    getInt
+ * Method:    getVariantInt
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getInt
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantInt
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getDate
+ * Method:    getVariantDate
  * Signature: ()D
  */
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDate
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getVariantDate
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putInt
+ * Method:    putVariantInt
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putInt
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantInt
   (JNIEnv *, jobject, jint);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putDate
+ * Method:    putVariantDate
  * Signature: (D)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDate
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDate
   (JNIEnv *, jobject, jdouble);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    toByte
- * Signature: ()B
- */
-JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_toByte
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    getBoolean
+ * Method:    getVariantBoolean
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBoolean
+JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getVariantBoolean
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getByte
+ * Method:    getVariantByte
  * Signature: ()B
  */
-JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getByte
+JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getVariantByte
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putBoolean
+ * Method:    putVariantBoolean
  * Signature: (Z)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putBoolean
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantBoolean
   (JNIEnv *, jobject, jboolean);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putByte
+ * Method:    putVariantByte
  * Signature: (B)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putByte
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantByte
   (JNIEnv *, jobject, jbyte);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    toError
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toError
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    putEmpty
+ * Method:    putVariantEmpty
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putEmpty
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantEmpty
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putEmpty
+ * Method:    putVariantNothing
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putNothing
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantNothing
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getError
+ * Method:    getVariantError
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getError
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantError
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putError
+ * Method:    putVariantError
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putError
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantError
   (JNIEnv *, jobject, jint);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getDouble
+ * Method:    getVariantDouble
  * Signature: ()D
  */
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDouble
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getVariantDouble
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putCurrency
+ * Method:    putVariantCurrency
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrency
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrency
   (JNIEnv *, jobject, jlong);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putObject
+ * Method:    putVariantDispatch
  * Signature: (Ljava/lang/Object;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDispatchObject
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDispatch
   (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putDouble
+ * Method:    putVariantDouble
  * Signature: (D)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDouble
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDouble
   (JNIEnv *, jobject, jdouble);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getCurrency
+ * Method:    getVariantCurrency
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getCurrency
+JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrency
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putFloatRef
+ * Method:    putVariantFloatRef
  * Signature: (F)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putFloatRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantFloatRef
   (JNIEnv *, jobject, jfloat);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putCurrencyRef
+ * Method:    putVariantCurrencyRef
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrencyRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrencyRef
   (JNIEnv *, jobject, jlong);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putErrorRef
+ * Method:    putVariantErrorRef
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putErrorRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantErrorRef
   (JNIEnv *, jobject, jint);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putBooleanRef
+ * Method:    putVariantBooleanRef
  * Signature: (Z)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putBooleanRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantBooleanRef
   (JNIEnv *, jobject, jboolean);
 
 /*
@@ -411,10 +348,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putObjectRef
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putByteRef
+ * Method:    putVariantByteRef
  * Signature: (B)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putByteRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantByteRef
   (JNIEnv *, jobject, jbyte);
 
 /*
@@ -422,135 +359,119 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putByteRef
  * Method:    getString
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getString
+JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getVariantString
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putString
+ * Method:    putVariantString
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putString
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantString
   (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getFloatRef
+ * Method:    getVariantFloatRef
  * Signature: ()F
  */
-JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getFloatRef
+JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getVariantFloatRef
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getCurrencyRef
+ * Method:    getVariantCurrencyRef
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getCurrencyRef
+JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrencyRef
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getErrorRef
+ * Method:    getVariantErrorRef
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getErrorRef
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantErrorRef
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getBooleanRef
+ * Method:    getVariantBooleanRef
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBooleanRef
+JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getVariantBooleanRef
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getByteRef
+ * Method:    getVariantByteRef
  * Signature: ()B
  */
-JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getByteRef
+JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getVariantByteRef
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    toFloat
- * Signature: ()F
- */
-JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_toFloat
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    toSafeArray
+ * Method:    toVariantSafeArray
  * Signature: (Z)Lcom/jacob/com/SafeArray;
  */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toSafeArray
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toVariantSafeArray
   (JNIEnv *, jobject, jboolean);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putSafeArrayRef
+ * Method:    putVariantSafeArrayRef
  * Signature: (LSafeArray;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArrayRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantSafeArrayRef
   (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putSafeArray
+ * Method:    putVariantSafeArray
  * Signature: (LSafeArray;)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArray
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantSafeArray
   (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    noParam
+ * Method:    putVariantNoParam
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_noParam
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantNoParam
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getFloat
+ * Method:    getVariantFloat
  * Signature: ()F
  */
-JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getFloat
+JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getVariantFloat
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    putFloat
+ * Method:    putVariantFloat
  * Signature: (F)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putFloat
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantFloat
   (JNIEnv *, jobject, jfloat);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    changeType
+ * Method:    changeVariantType
  * Signature: (S)V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_changeType
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_changeVariantType
   (JNIEnv *, jobject, jshort);
 
 /*
  * Class:     com_jacob_com_Variant
- * Method:    getvt
+ * Method:    getVariantType
  * Signature: ()S
  */
-JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getvt
-  (JNIEnv *, jobject);
-
-/*
- * Class:     com_jacob_com_Variant
- * Method:    toShort
- * Signature: ()S
- */
-JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_toShort
+JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getVariantType
   (JNIEnv *, jobject);
 
 /*
@@ -577,10 +498,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_SerializationReadFromBytes
   
 /*
  * Class:     com_jacob_com_Variant
- * Method:    isNull
+ * Method:    isVariantConsideredNull
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_isNull
+JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_isVariantConsideredNull
   (JNIEnv *, jobject);
 
 /*

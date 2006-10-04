@@ -180,7 +180,7 @@ public class ActiveXComponent extends Dispatch {
      * @return boolean value of property
      */
     public boolean getPropertyAsBoolean(String propertyName){
-        return Dispatch.get(this, propertyName).toBoolean();
+        return Dispatch.get(this, propertyName).getBoolean();
     }
 
     /**
@@ -189,7 +189,7 @@ public class ActiveXComponent extends Dispatch {
      * @return byte value of property
      */
     public byte getPropertyAsByte(String propertyName){
-        return Dispatch.get(this, propertyName).toByte();
+        return Dispatch.get(this, propertyName).getByte();
     }
 
     /**
@@ -208,7 +208,7 @@ public class ActiveXComponent extends Dispatch {
      * @return the property value as an int
      */
     public int getPropertyAsInt(String propertyName){
-        return Dispatch.get(this,propertyName).toInt();
+        return Dispatch.get(this,propertyName).getInt();
     }
 
     /**

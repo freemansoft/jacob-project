@@ -38,7 +38,7 @@ public class Connection extends Dispatch
 
   public int getCommandTimeout()
   {
-    return Dispatch.get(this, "CommandTimeout").toInt();
+    return Dispatch.get(this, "CommandTimeout").getInt();
   }
 
   public void setCommandTimeout(int plTimeout)
@@ -48,7 +48,7 @@ public class Connection extends Dispatch
 
   public int getConnectionTimeout()
   {
-    return Dispatch.get(this, "ConnectionTimeout").toInt();
+    return Dispatch.get(this, "ConnectionTimeout").getInt();
   }
 
   public void setConnectionTimeout(int plTimeout)
@@ -74,7 +74,7 @@ public class Connection extends Dispatch
 
   public int BeginTrans()
   {
-    return Dispatch.call(this, "BeginTrans").toInt();
+    return Dispatch.call(this, "BeginTrans").getInt();
   }
 
   public void CommitTrans()
@@ -114,7 +114,7 @@ public class Connection extends Dispatch
 
   public int getIsolationLevel()
   {
-    return Dispatch.get(this, "IsolationLevel").toInt();
+    return Dispatch.get(this, "IsolationLevel").getInt();
   }
 
   public void setIsolationLevel(int Level)
@@ -124,7 +124,7 @@ public class Connection extends Dispatch
 
   public int getAttributes()
   {
-    return Dispatch.get(this, "Attributes").toInt();
+    return Dispatch.get(this, "Attributes").getInt();
   }
 
   public void setAttributes(int plAttr)
@@ -134,7 +134,7 @@ public class Connection extends Dispatch
 
   public int getCursorLocation()
   {
-    return Dispatch.get(this, "CursorLocation").toInt();
+    return Dispatch.get(this, "CursorLocation").getInt();
   }
 
   public void setCursorLocation(int plCursorLoc)
@@ -144,7 +144,7 @@ public class Connection extends Dispatch
 
   public int getMode()
   {
-    return Dispatch.get(this, "Mode").toInt();
+    return Dispatch.get(this, "Mode").getInt();
   }
 
   public void setMode(int plMode)
@@ -164,7 +164,7 @@ public class Connection extends Dispatch
 
   public int getState()
   {
-    return Dispatch.get(this, "State").toInt();
+    return Dispatch.get(this, "State").getInt();
   }
 
   public Variant OpenSchema(int Schema, Variant Restrictions, Variant SchemaID)

@@ -9,6 +9,18 @@
 	<li>Build process now notifies developer if version property missing
 	</ul>
 </li>
+<li>
+	<b>API Changes</b>
+	<ul>
+	<li>Variant.noParam() changed to Variant.putNoParam()
+	<li>Variant.toString() now follows normal java semantics.  
+		This conflicted with the jacob toXXX() standard.  
+	<li>Many Variant.toXXX() methods deprecated because folks didn't realize they were doing type conversion
+			Most calls to toXXX() methods should actually be getXXX() calls.
+			This also allowed toString() to follow Java conventions
+	<li>Variant native methods wrapped with java methods to better armor the Variant
+	</ul>
+</li>
 </ul>
 
 <h3>Tracked Changes</h3>
@@ -18,11 +30,31 @@
   </tr>
   <tr>
     <td width="13%">1550604</td>
-    <td width="87%">Build process died with confusing error if version not set in properties file</td>
+    <td width="87%">Build process died with confusing error if version not set in properties file(pre1)</td>
   </tr>
   <tr>
     <td width="13%">SF1511033</td>
-    <td width="87%">Fix array index out of bounds problem due to coding error</td>
+    <td width="87%">Fix array index out of bounds problem due to coding error (pre1)</td>
+  </tr>
+  <tr>
+    <td width="13%">1570270 </td>
+    <td width="87%">~Event method in EventProxy may unhook java thread from VM. 
+    	Can get JNI error because unhooking listner detatched Java VM thread (pre1)</td>
+  </tr>
+  <tr>
+    <td width="13%">1538011 </td>
+    <td width="87%">toString() non compliant with java standards.  The toString() method 
+    	converted the underlying data to a string and it shouldn't.  This caused
+    	a rethinking of all toXXX() methods other than toDispatch().  Most of the
+    	toXXX() methods have now been deprecated and should be replaced with getXXX() methods.
+    	(pre1)</td>
+  </tr>
+  <tr>
+    <td width="13%">1478162</td>
+    <td width="87%">Variant does not warn user if methods called after released.
+    	All putXXX() and getXXX() methods now check to see if they've been released
+    	prior to calling the JNI code.  toXXX() methods are deprecated but protected 
+    	in the same way.(pre1)</td>
   </tr>
   <tr>
     <td width="13%">&nbsp;</td>
@@ -36,7 +68,7 @@
     <td width="87%">Support command line parameter dll location specification.  
     		Applets and other tools can now specificy the dll location that 
     		is fed to a System.load() rather than System.loadLibrary for the 
-    		situation where the app can't write the dll to a library path directory.</td>
+    		situation where the app can't write the dll to a library path directory.(pre1)</td>
   </tr>
   <tr>
     <td width="13%">&nbsp;</td>
@@ -49,7 +81,7 @@
     <td width="13%">1550628</td>
     <td width="87%">Moved all LoadLibrary requests into JacobObject.  Classes not subclassed
     	off of JacobObject make calls to a static method on JacobObject to make sure
-    	DLL is loaded</td>
+    	DLL is loaded(pre1)</td>
   </tr>
 </table>
 

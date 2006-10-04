@@ -26,7 +26,7 @@ public class Recordset extends Dispatch
 
   public int getAbsolutePosition()
 	{
-    return Dispatch.get(this, "AbsolutePosition").toInt();
+    return Dispatch.get(this, "AbsolutePosition").getInt();
 	}
 
   public void setAbsolutePosition(int pl)
@@ -51,7 +51,7 @@ public class Recordset extends Dispatch
 
   public boolean getBOF()
 	{
-	  return Dispatch.get(this, "BOF").toBoolean();
+	  return Dispatch.get(this, "BOF").getBoolean();
 	}
 
   public Variant getBookmark()
@@ -66,7 +66,7 @@ public class Recordset extends Dispatch
 
   public int getCacheSize()
 	{
-	  return Dispatch.get(this, "CacheSize").toInt();
+	  return Dispatch.get(this, "CacheSize").getInt();
 	}
 
   public void setCacheSize(int pl)
@@ -76,7 +76,7 @@ public class Recordset extends Dispatch
 
   public int getCursorType()
 	{
-	  return Dispatch.get(this, "CursorType").toInt();
+	  return Dispatch.get(this, "CursorType").getInt();
 	}
 
   public void setCursorType(int pl)
@@ -86,7 +86,7 @@ public class Recordset extends Dispatch
 
   public boolean getEOF()
 	{
-	  return Dispatch.get(this, "EOF").toBoolean();
+	  return Dispatch.get(this, "EOF").getBoolean();
   }
 
   public Fields getFields()
@@ -96,7 +96,7 @@ public class Recordset extends Dispatch
 
   public int getLockType()
 	{
-	  return Dispatch.get(this, "LockType").toInt();
+	  return Dispatch.get(this, "LockType").getInt();
 	}
 
   public void setLockType(int plLockType)
@@ -106,7 +106,7 @@ public class Recordset extends Dispatch
 
   public int getMaxRecords()
 	{
-	  return Dispatch.get(this, "MaxRecords").toInt();
+	  return Dispatch.get(this, "MaxRecords").getInt();
 	}
 
   public void setMaxRecords(int pl)
@@ -116,7 +116,7 @@ public class Recordset extends Dispatch
 
   public int getRecordCount()
 	{
-	  return Dispatch.get(this, "RecordCount").toInt();
+	  return Dispatch.get(this, "RecordCount").getInt();
 	}
 
   public void setSource(Object pvSource)
@@ -212,7 +212,7 @@ public class Recordset extends Dispatch
 
   public int getAbsolutePage()
 	{
-	  return Dispatch.get(this, "AbsolutePage").toInt();
+	  return Dispatch.get(this, "AbsolutePage").getInt();
 	}
 
   public void setAbsolutePage(int pl)
@@ -222,7 +222,7 @@ public class Recordset extends Dispatch
 
   public int getEditMode()
 	{
-	  return Dispatch.get(this, "EditMode").toInt();
+	  return Dispatch.get(this, "EditMode").getInt();
 	}
 
   public Variant getFilter()
@@ -237,12 +237,12 @@ public class Recordset extends Dispatch
 
   public int getPageCount()
 	{
-	  return Dispatch.get(this, "PageCount").toInt();
+	  return Dispatch.get(this, "PageCount").getInt();
 	}
 
   public int getPageSize()
 	{
-	  return Dispatch.get(this, "PageSize").toInt();
+	  return Dispatch.get(this, "PageSize").getInt();
 	}
 
   public void setPageSize(int pl)
@@ -262,12 +262,12 @@ public class Recordset extends Dispatch
 
   public int getStatus()
 	{
-	  return Dispatch.get(this, "Status").toInt();
+	  return Dispatch.get(this, "Status").getInt();
 	}
 
   public int getState()
 	{
-	  return Dispatch.get(this, "State").toInt();
+	  return Dispatch.get(this, "State").getInt();
 	}
 
   public void UpdateBatch(int AffectRecords)
@@ -282,7 +282,7 @@ public class Recordset extends Dispatch
 
   public int getCursorLocation()
 	{
-	  return Dispatch.get(this, "CursorLocation").toInt();
+	  return Dispatch.get(this, "CursorLocation").getInt();
 	}
 
   public void setCursorLocation(int pl)
@@ -297,7 +297,7 @@ public class Recordset extends Dispatch
 
   public boolean Supports(int CursorOptions)
 	{
-	  return Dispatch.call(this, "Supports", new Variant(CursorOptions)).toBoolean();
+	  return Dispatch.call(this, "Supports", new Variant(CursorOptions)).getBoolean();
 	}
 
   public Variant getCollect(Variant Index)
@@ -312,7 +312,7 @@ public class Recordset extends Dispatch
 
   public int getMarshalOptions()
 	{
-	  return Dispatch.get(this, "MarshalOptions").toInt();
+	  return Dispatch.get(this, "MarshalOptions").getInt();
 	}
 
   public void setMarshalOptions(int pl)
@@ -357,7 +357,7 @@ public class Recordset extends Dispatch
 
   public boolean getStayInSync()
 	{
-	  return Dispatch.get(this, "StayInSync").toBoolean();
+	  return Dispatch.get(this, "StayInSync").getBoolean();
 	}
 
   public String GetString(int StringFormat, int NumRows, String ColumnDelimeter, String RowDelimeter, String NullExpr)
@@ -378,7 +378,7 @@ public class Recordset extends Dispatch
 
   public int CompareBookmarks(Variant Bookmark1, Variant Bookmark2)
 	{
-	  return Dispatch.call(this, "CompareBookmarks", Bookmark1, Bookmark2).toInt();
+	  return Dispatch.call(this, "CompareBookmarks", Bookmark1, Bookmark2).getInt();
 	}
 
   public Recordset Clone(int LockType)

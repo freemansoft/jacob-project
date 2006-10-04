@@ -48,7 +48,7 @@ public class Command extends Dispatch
 
   public int getCommandTimeout()
   {
-    return Dispatch.get(this, "CommandTimeout").toInt();
+    return Dispatch.get(this, "CommandTimeout").getInt();
   }
 
   public void setCommandTimeout(int plTimeout)
@@ -58,7 +58,7 @@ public class Command extends Dispatch
 
   public boolean getPrepared()
   {
-     return Dispatch.get(this, "Prepared").toBoolean();
+     return Dispatch.get(this, "Prepared").getBoolean();
   }
 
   public void setPrepared(boolean pfPrepared)
@@ -95,7 +95,7 @@ public class Command extends Dispatch
 
   public int getCommandType()
   {
-    return Dispatch.get(this, "CommandType").toInt();
+    return Dispatch.get(this, "CommandType").getInt();
   }
 
   public String getName()
@@ -110,7 +110,7 @@ public class Command extends Dispatch
 
   public int getState()
   {
-    return Dispatch.get(this, "State").toInt();
+    return Dispatch.get(this, "State").getInt();
   }
 
   public void Cancel()

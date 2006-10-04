@@ -21,17 +21,17 @@ public class Field extends Dispatch
 
   public int getActualSize()
 	{
-	  return Dispatch.get(this, "ActualSize").toInt();
+	  return Dispatch.get(this, "ActualSize").getInt();
 	}
 
   public int getAttributes()
 	{
-	  return Dispatch.get(this, "Attributes").toInt();
+	  return Dispatch.get(this, "Attributes").getInt();
 	}
 
   public int getDefinedSize()
 	{
-	  return Dispatch.get(this, "DefinedSize").toInt();
+	  return Dispatch.get(this, "DefinedSize").getInt();
 	}
 
   public String getName()
@@ -41,7 +41,7 @@ public class Field extends Dispatch
 
   public int getType()
 	{
-	  return Dispatch.get(this, "Type").toInt();
+	  return Dispatch.get(this, "Type").getInt();
 	}
 
   public Variant getValue()
@@ -56,12 +56,12 @@ public class Field extends Dispatch
 
   public byte getPrecision()
 	{
-	  return Dispatch.get(this, "Precision").toByte();
+	  return Dispatch.get(this, "Precision").getByte();
 	}
 
   public byte getNumericScale()
 	{
-	  return Dispatch.get(this, "NumericScale").toByte();
+	  return Dispatch.get(this, "NumericScale").getByte();
 	}
 
   public void AppendChunk(Variant Data)

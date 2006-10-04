@@ -1,5 +1,7 @@
 package com.jacob.com;
 
+import java.util.Date;
+
 /**
  * runs through some of the get and set methods on Variant
  * 
@@ -9,6 +11,8 @@ class VariantTest {
 	public static void main(String[] args) {
 		System.out.println("Testing Started");
 		VariantTest testJig = new VariantTest();
+		testJig.testUninitializedVariant();
+		testJig.testToStringDoesNotConvert();
 		testJig.testPutsAndGets();
 		testJig.testSafeReleaseBoolean();
 		testJig.testSafeReleaseConstant();
@@ -26,40 +30,103 @@ class VariantTest {
 		
 	}
 	
-	private void testSafeReleaseBoolean(){
-		Variant v = new Variant(true);
-		System.out.println("Newly created Variant ("+ v.getBoolean()+") "+
-				"trying to create access violation but it doesn't seem to be easy");
-		v.safeRelease();
-		if (v.getBoolean() != true){
-			System.out.println("Variant value ("+v.getBoolean()+") "
-					+"has been broken by SafeRelease()");
-		} else {
-			System.out.println("Variant value ("+v.getBoolean()+") "
-					+"has survived SafeRelease()");
+	/**
+	 * make sure variant with no backing store works.
+	 *
+	 */
+	private void testUninitializedVariant(){
+		Variant v;
+		// Variants created without parameters are auto set to VariantEmpty
+		v = new Variant();
+		try {
+			if (v.getvt() == Variant.VariantEmpty){
+				// successful
+				// System.out.println("Variant initialized without parameters correctly set to empty");
+			} else {
+				throw new RuntimeException("getvt() on uninitialized variant shoud have returned VariantEmpty, instead returned "+v.getvt());
+			}
+		} catch (IllegalStateException ise){
+			throw new RuntimeException("getvt() on uninitialized variant shoud have succeeded, but instead threw exception");
 		}
+		try {
+			v.toString();
+		} catch (IllegalStateException ise){
+			System.out.println("toString() should never throw a runtime exception");
+			throw new RuntimeException("toString() should not blow up even with uninitialized Variant");
+		}
+		
+	}
+	
+	
+	/**
+	 * 
+	 * verify the toString() method does not do type conversion
+	 */
+	private void testToStringDoesNotConvert(){
+		Variant v;
+		v = new Variant(true);
+		v.toString();
+		if (v.getvt() != Variant.VariantBoolean){
+			throw new RuntimeException("toString() converted boolean to something else");
+		} else {
+			//System.out.println("toString() correctly does not convert type");
+		}
+		if (v.getBoolean() != true){
+			System.out.println("toString() converted boolean true to "+ v.getBoolean());
+		}
+		v = new Variant(false);
+		v.toString();
+		if (v.getvt() != Variant.VariantBoolean){
+			throw new RuntimeException("toString() converted boolean to something else");
+		} else {
+			//System.out.println("toString() correctly does not convert type");
+		}
+		if (v.getBoolean() != false){
+			System.out.println("toString() converted boolean false to "+ v.getBoolean());
+		}
+	}
+	
+	private void testSafeReleaseBoolean(){
+		Variant v;
+		v = new Variant(true);
+		//System.out.println("Newly created Variant ("+ v.getBoolean()+") "+
+		//		"trying to create access violation but it doesn't seem to be easy");
+		v.safeRelease();
+		try {
+			v.getBoolean();
+			System.out.println("IllegalStateException should have been thrown when querying safeReleased object");
+			throw new RuntimeException("test failed");
+		} catch (IllegalStateException ise){
+			//System.out.println("IllegalStateException correctly thrown after safeRelease");
+		}
+		v = new Variant(true);
 		for ( int i = 0 ; i < 10; i ++){
 			new Variant ("xxx"+i);
 			new Variant(i);
 			new Variant ("yyy"+i);
 		}
 		ComThread.Release();
-		if (v.getBoolean() != true){
-			System.out.println("Variant value ("+v.getBoolean()+") "
-					+"has been broken by ComThread.Release()");
-		} else {
-			System.out.println("Variant value ("+v.getBoolean()+") "
-					+"has been survived by ComThread.Release()");
+		try {
+			v.getBoolean();
+			System.out.println("IllegalStateException should have been thrown when querying ComThread.Release");
+			throw new RuntimeException("test failed");
+		} catch (IllegalStateException ise){
+			//System.out.println("IllegalStateException correctly thrown after ComThread.Release");
 		}
 	}
 	
+	/**
+	 * verify the constant values aren't released with safeRelease
+	 *
+	 */
 	private void testSafeReleaseConstant(){
 		System.out.println("Using Static constant Variant - should never throw access violation");
 		Variant.VT_TRUE.safeRelease();
 		if (Variant.VT_TRUE.getBoolean() != true){
 			System.out.println("VT_TRUE has been broken by SafeRelease()");
+			throw new RuntimeException("test failed");
 		} else {
-			System.out.println("VT_TRUE survived SafeRelease()");
+			//System.out.println("VT_TRUE survived SafeRelease()");
 		}
 		
 		for ( int i = 0 ; i < 10; i ++){
@@ -71,24 +138,31 @@ class VariantTest {
 		
 		if (Variant.VT_TRUE.getBoolean() != true){
 			System.out.println("VT_TRUE has been broken by ComThread.Release()");
+			throw new RuntimeException("test failed");
 		} else {
-			System.out.println("VT_TRUE survived ComThread.Release()");
+			//System.out.println("VT_TRUE survived ComThread.Release()");
 		}
 		
 	}
 	
+	/**
+	 * this used to try and and create an access violation but that
+	 * didn't work and now the methods on the Variant are smarter about
+	 * working after a release
+	 *
+	 */
     private void testSafeReleaseString(){
     	String mTestString = "Guitar Hero";
 		Variant v = new Variant(mTestString);
-		System.out.println("Newly created Variant ("+ v.getString()+") "+
-				"trying to create access violation but it doesn't seem to be easy");
+		//System.out.println("Newly created Variant ("+ v.getString()+") "+
+		//		"about to safe release and then access");
 		v.safeRelease();
-		if (v.getString() == null || !v.getString().equals(mTestString)){
-			System.out.println("Variant value ("+v.getString()+") "
-					+"has been broken by SafeRelease()");
-		} else {
-			System.out.println("Variant value ("+v.getString()+") "
-					+"has survived SafeRelease()");
+		try {
+			v.getString();
+			System.out.println("IllegalStateException should have been thrown when querying safeReleased object");
+			throw new RuntimeException("test failed");
+		} catch (IllegalStateException ise){
+			//System.out.println("IllegalStateException correctly thrown after safeRelease");
 		}
     }
 	
@@ -127,28 +201,47 @@ class VariantTest {
 	private void testPutsAndGets(){
 		Variant v = new Variant();
 		v.putInt(10);
-		if (v.toInt() != 10){
+		if (v.getInt() != 10){
 			System.out.println("int test failed");
 		}
-		v.putInt(10);
-		if (v.toDouble() != 10.0){
+		v.putShort((short)10);
+		if (v.getShort() != 10){
+			System.out.println("short test failed");
+		}
+		v.putByte((byte)10);
+		if (v.getByte() != 10){
+			System.out.println("int test failed");
+		}
+		v.putFloat(10);
+		if (v.getFloat() != 10.0){
+			System.out.println("float test failed");
+		}
+		v.putDouble(10);
+		if (v.getDouble() != 10.0){
 			System.out.println("double test failed");
 		}
 		v.putString("1234.567");
-		if (!"1234.567".equals(v.toString())){
+		if (!"1234.567".equals(v.getString())){
 			System.out.println("string test failed");
 		}
 		v.putBoolean(true);
-		if (v.toBoolean() != true){
+		if (v.getBoolean() != true){
 			System.out.println("failed boolean test(true)");
 		}
 		v.putBoolean(false);
-		if (v.toBoolean() != false){
+		if (v.getBoolean() != false){
 			System.out.println("failed boolean test(false)");
 		}
 		v.putCurrency(123456789123456789L);
-		if (v.toCurrency()!=123456789123456789L){
-			System.out.println("failed long test");
+		if (v.getCurrency()!=123456789123456789L){
+			System.out.println("failed currency test");
+		}
+		
+		Date ourDate = new Date();
+		v.putDate(ourDate);
+		Date retrievedDate = v.getJavaDate();
+		if (!retrievedDate.equals(ourDate)){
+			System.out.println("failed java date load and unload");
 		}
 		
 		v.putNull();

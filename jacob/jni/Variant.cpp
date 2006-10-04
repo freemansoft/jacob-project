@@ -156,61 +156,6 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_SerializationReadFromBytes
   }
 
 /**
- * Converts the data to a Int object and then returns it as a Dispatch
- */
-
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toInt
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    HRESULT hr;
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_I4))) {
-      ThrowComFail(env, "VariantChangeType failed", hr);
-      return NULL;
-    }
-    return (jint)V_I4(v);
-  }
-  return NULL;
-}
-
-/**
- * Converts the data to a Date object and then returns it as a Dispatch
- */
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_toDate
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    HRESULT hr;
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_DATE))) {
-      ThrowComFail(env, "VariantChangeType failed", hr);
-      return NULL;
-    }
-    return (jdouble)V_DATE(v);
-  }
-  return NULL;
-}
-
-/**
- * Converts the data to a Boolean object and then returns it as a Dispatch
- */
-JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_toBoolean
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    HRESULT hr;
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_BOOL))) {
-      ThrowComFail(env, "VariantChangeType failed", hr);
-      return NULL;
-    }
-    return (jboolean)V_BOOL(v);
-  }
-  return NULL;
-}
-
-/**
  * Converts the data to a Enum Variant object and then returns it as a Dispatch
  */
 JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toEnumVariant
@@ -243,7 +188,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toEnumVariant
   return NULL;
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putNull
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantNull
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -259,44 +204,8 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_cloneIndirect
   return NULL;
 }
 
-/**
- * Converts the data to a Double object and then returns it as a Dispatch
- */
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_toDouble
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    HRESULT hr;
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_R8))) {
-      ThrowComFail(env, "VariantChangeType failed", hr);
-      return NULL;
-    }
-    return (jdouble)V_R8(v);
-  }
-  return NULL;
-}
 
-/**
- * Converts the data to a Long object and then returns it as a Dispatch
- */
-JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_toCurrency
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    HRESULT hr;
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_CY))) {
-      ThrowComFail(env, "VariantChangeType failed", hr);
-      return NULL;
-    }
-    CY cy = V_CY(v);
-    return (jlong)cy.int64;
-  }
-  return NULL;
-}
-
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putShortRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantShortRef
   (JNIEnv *env, jobject _this, jshort s)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -309,7 +218,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putShortRef
   }
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putIntRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantIntRef
   (JNIEnv *env, jobject _this, jint s)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -322,7 +231,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putIntRef
   }
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDoubleRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDoubleRef
   (JNIEnv *env, jobject _this, jdouble s)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -334,7 +243,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDoubleRef
   }
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDateRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDateRef
   (JNIEnv *env, jobject _this, jdouble s)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -348,7 +257,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDateRef
 }
 
 // SF 1065533  added unicode support
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putStringRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantStringRef
   (JNIEnv *env, jobject _this, jstring s)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -371,7 +280,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putStringRef
     env->ReleaseStringChars(s,cStr);  }
 }
 
-JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getShortRef
+JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getVariantShortRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -384,7 +293,7 @@ JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getShortRef
   return NULL;
 }
 
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getIntRef
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantIntRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -397,7 +306,7 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getIntRef
   return NULL;
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putShort
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantShort
   (JNIEnv *env, jobject _this, jshort s)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -408,7 +317,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putShort
   }
 }
 
-JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getShort
+JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getVariantShort
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -421,7 +330,7 @@ JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getShort
   return NULL;
 }
 
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDoubleRef
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getVariantDoubleRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -434,7 +343,7 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDoubleRef
   return NULL;
 }
 
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDateRef
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getVariantDateRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -447,7 +356,7 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDateRef
   return NULL;
 }
 
-JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getStringRef
+JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getVariantStringRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -462,6 +371,9 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getStringRef
   return NULL;
 }
 
+/**
+ * cover for underlying C VariantClear function
+ */
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_VariantClear
   (JNIEnv *env, jobject _this)
 {
@@ -474,7 +386,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_VariantClear
 /**
  * Converts the data to a Dispatch object and then returns it as a Dispatch
  */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toDispatchObject
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toVariantDispatch
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -504,41 +416,11 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_clone
 }
 
 /**
- * Converts the data to a String object and then returns it as a Dispatch
- */
-JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_toString
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    switch (V_VT(v))
-    {
-      case VT_EMPTY:
-      case VT_NULL:
-      case VT_ERROR:
-         // causes VariantChangeType to bomb
-         return env->NewStringUTF("null");
-    }
-    HRESULT hr;
-    // this actually changes the type of the variant to a String!
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_BSTR))) {
-      // cannot change type to a string
-      return env->NewStringUTF("???");
-    }
-    // create a returnable string from the converted variant
-    BSTR bs = V_BSTR(v);
-    jstring js = env->NewString(bs, SysStringLen(bs));
-    return js;
-  }
-  return NULL;
-}
-
-/**
  * Returns the value of this int as a Boolea if it is of that type.
  * Otherwise it will return null (no conversion done)
  */
 
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getInt
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantInt
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -556,7 +438,7 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getInt
  * Otherwise it will return null (no conversion done)
  */
 
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDate
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getVariantDate
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -569,7 +451,7 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDate
   return NULL;
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putInt
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantInt
   (JNIEnv *env, jobject _this, jint i)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -580,7 +462,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putInt
   }
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDate
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDate
   (JNIEnv *env, jobject _this, jdouble date)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -592,28 +474,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDate
 }
 
 /**
- * Converts the data to a Byte object and then returns it as a Dispatch
- */
-JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_toByte
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    HRESULT hr;
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_UI1))) {
-      ThrowComFail(env, "VariantChangeType failed", hr);
-      return NULL;
-    }
-    return (jbyte)V_UI1(v);
-  }
-  return NULL;
-}
-
-/**
  * Returns the value of this Variant as a Boolea if it is of that type.
  * Otherwise it will return null (no conversion done)
  */
-JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBoolean
+JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getVariantBoolean
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -630,7 +494,7 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBoolean
  * Returns the value of this Variant as a Byte if it is of that type.
  * Otherwise it will return null (no conversion done)
  */
-JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getByte
+JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getVariantByte
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -643,7 +507,7 @@ JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getByte
   return NULL;
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putBoolean
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantBoolean
   (JNIEnv *env, jobject _this, jboolean b)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -652,10 +516,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putBoolean
     V_VT(v) = VT_BOOL;
     V_BOOL(v) = b == JNI_TRUE ? VARIANT_TRUE : VARIANT_FALSE;
   }
-  else ThrowComFail(env, "putBoolean failed", -1);
+  else ThrowComFail(env, "putVariantBoolean failed", -1);
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putByte
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantByte
   (JNIEnv *env, jobject _this, jbyte b)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -664,25 +528,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putByte
     V_VT(v) = VT_UI1;
     V_UI1(v) = b;
   }
-  else ThrowComFail(env, "putByte failed", -1);
+  else ThrowComFail(env, "putVariantByte failed", -1);
 }
 
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_toError
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    HRESULT hr;
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_ERROR))) {
-      ThrowComFail(env, "VariantChangeType failed", hr);
-      return NULL;
-    }
-    return (jint)V_ERROR(v);
-  }
-  return NULL;
-}
-
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putEmpty
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantEmpty
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -695,7 +544,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putEmpty
 /**
  * Sets the variant type to dispatch with no value object
  **/
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putNothing
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantNothing
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -705,7 +554,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putNothing
   }
 }
 
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getError
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantError
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -718,7 +567,7 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getError
   return NULL;
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putError
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantError
   (JNIEnv *env, jobject _this, jint i)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -734,7 +583,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putError
  * Returns the value of this Variant as a double if it is of that type.
  * Otherwise it will return null (no conversion done)
  */
-JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDouble
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getVariantDouble
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -747,7 +596,7 @@ JNIEXPORT jdouble JNICALL Java_com_jacob_com_Variant_getDouble
   return NULL;
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrency
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrency
   (JNIEnv *env, jobject _this, jlong cur)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -757,7 +606,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrency
     pf.int64 = (LONGLONG)cur;
     V_VT(v) = VT_CY;
     V_CY(v) = pf;
-  } else ThrowComFail(env, "putCurrency failed", -1);
+  } else ThrowComFail(env, "putVariantCurrency failed", -1);
 }
 
 /**
@@ -765,7 +614,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrency
  * There is currently no way to pass NULL into this method 
  * to create something like "NOTHING" from VB
  * */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDispatchObject
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDispatch
   (JNIEnv *env, jobject _this, jobject _that)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -779,7 +628,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDispatchObject
   } else ThrowComFail(env, "putObject failed", -1);
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDouble
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDouble
   (JNIEnv *env, jobject _this, jdouble d)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -794,7 +643,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putDouble
  * Returns the value of this Variant as a long if it is of that type.
  * Otherwise it will return null (no conversion done)
  */
-JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getCurrency
+JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrency
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -812,7 +661,7 @@ JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getCurrency
 }
 
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putFloatRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantFloatRef
   (JNIEnv *env, jobject _this, jfloat val)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -825,7 +674,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putFloatRef
   }
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrencyRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrencyRef
   (JNIEnv *env, jobject _this, jlong cur)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -838,7 +687,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putCurrencyRef
   }
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putErrorRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantErrorRef
   (JNIEnv *env, jobject _this, jint i)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -849,7 +698,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putErrorRef
   }
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putBooleanRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantBooleanRef
   (JNIEnv *env, jobject _this, jboolean b)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -862,7 +711,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putBooleanRef
   }
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putByteRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantByteRef
   (JNIEnv *env, jobject _this, jbyte b)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -879,7 +728,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putByteRef
  * Returns the value of this Variant as a String if it is of that type.
  * Otherwise it will return null (no conversion done)
  */
-JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getString
+JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getVariantString
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -894,8 +743,10 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getString
   return NULL;
 }
 
-// SF 1065533  added unicode support
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putString
+/**
+ * SF 1065533  added unicode support
+ * */
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantString
   (JNIEnv *env, jobject _this, jstring s)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -918,7 +769,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putString
   }
 }
 
-JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getFloatRef
+JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getVariantFloatRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -931,7 +782,7 @@ JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getFloatRef
   return NULL;
 }
 
-JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getCurrencyRef
+JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrencyRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -948,7 +799,7 @@ JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getCurrencyRef
   return NULL;
 }
 
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getErrorRef
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantErrorRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -961,7 +812,7 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getErrorRef
   return NULL;
 }
 
-JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBooleanRef
+JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getVariantBooleanRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -975,7 +826,7 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_getBooleanRef
 }
 
 
-JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getByteRef
+JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getVariantByteRef
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -989,27 +840,9 @@ JNIEXPORT jbyte JNICALL Java_com_jacob_com_Variant_getByteRef
 }
 
 /**
- * Converts the data to a Float object and then returns it as a Dispatch
- */
-JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_toFloat
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    HRESULT hr;
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_R4))) {
-      ThrowComFail(env, "VariantChangeType failed", hr);
-      return NULL;
-    }
-    return (jfloat)V_R4(v);
-  }
-  return NULL;
-}
-
-/**
  * Converts the data to a Safe Array object and then returns it as a Dispatch
  */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toSafeArray
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toVariantSafeArray
   (JNIEnv *env, jobject _this, jboolean deepCopy)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -1031,7 +864,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toSafeArray
   return NULL;
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArrayRef
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantSafeArrayRef
   (JNIEnv *env, jobject _this, jobject sa)
 {
   SAFEARRAY *psa = extractSA(env, sa);
@@ -1054,7 +887,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArrayRef
   return;
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArray
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantSafeArray
   (JNIEnv *env, jobject _this, jobject sa)
 {
   SAFEARRAY *psa = extractSA(env, sa);
@@ -1078,7 +911,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArray
 /**
  * sets the type to VT_ERROR and the error message to DISP_E_PARAMNOTFOIUND
  * */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_noParam
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantNoParam
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -1092,7 +925,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_noParam
  * Returns the value of this Variant as a Float if it is of that type.
  * Otherwise it will return null (no conversion done)
  */
-JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getFloat
+JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getVariantFloat
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -1105,7 +938,7 @@ JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getFloat
   return NULL;
 }
 
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putFloat
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantFloat
   (JNIEnv *env, jobject _this, jfloat val)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -1119,7 +952,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putFloat
 /**
  * changes the type of the underlying variant data
  * */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_changeType
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_changeVariantType
   (JNIEnv *env, jobject _this, jshort t)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -1132,7 +965,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_changeType
  * returns the variant type if it is set, otherwise 
  * returns null
  * */
-JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getvt
+JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getVariantType
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);
@@ -1142,39 +975,14 @@ JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_getvt
   return NULL;
 }
 
-/**
- * Converts the data to a short object and then returns it as a Dispatch
- */
-JNIEXPORT jshort JNICALL Java_com_jacob_com_Variant_toShort
-  (JNIEnv *env, jobject _this)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    HRESULT hr;
-    if (FAILED(hr = VariantChangeType(v, v, 0, VT_I2))) {
-      ThrowComFail(env, "VariantChangeType failed", hr);
-      return NULL;
-    }
-    return (jshort)V_I2(v);
-  }
-  return NULL;
-}
-
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putSafeArrayRefHelper
-  (JNIEnv *env, jobject _this, jint pSA)
-{
-  VARIANT *v = extractVariant(env, _this);
-  if (v) {
-    VariantClear(v); // whatever was there before
-  }
-}
+// removed Java_com_jacob_com_Variant_putSafeArrayRefHelper
 
 /**
  * this is a big cover method that returns TRUE if 
  * the variant type is 
  * 	VT_EMPTY, VT_NULL, VT_ERROR or VT_DISPATCH with no dispatch object
  * */
-JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_isNull
+JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_isVariantConsideredNull
   (JNIEnv *env, jobject _this)
 {
   VARIANT *v = extractVariant(env, _this);

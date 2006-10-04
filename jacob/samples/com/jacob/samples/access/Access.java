@@ -23,7 +23,8 @@ import com.jacob.com.*;
 import com.jacob.activeX.*;
 
 /**
- * this 
+ * May need to run with some command line options.  If so, then try these
+ * 	-Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=true -Xcheck:jni
  * @author joe
  *
  */
@@ -124,7 +125,7 @@ class Access
   public static String[] getColumns(Dispatch recset)
   {
     Dispatch flds = Dispatch.get(recset, "Fields").toDispatch();
-    int n_flds = Dispatch.get(flds, "Count").toInt();
+    int n_flds = Dispatch.get(flds, "Count").getInt();
     String[] s = new String[n_flds];
     Variant vi = new Variant();
     for (int i=0;i<n_flds;i++) {

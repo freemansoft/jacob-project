@@ -16,7 +16,7 @@ public class Fields extends Dispatch
 
   public int getCount()
 	{
-	  return Dispatch.get(this, "Count").toInt();
+	  return Dispatch.get(this, "Count").getInt();
 	}
 
   public Variant _NewEnum()
