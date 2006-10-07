@@ -359,6 +359,7 @@ public class Variant extends JacobObject {
     /**
      * get the content of this variant as an int
      * @return int
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public short getShortRef(){
     	if ((this.getvt() & VariantShort) == VariantShort &&
@@ -379,6 +380,7 @@ public class Variant extends JacobObject {
     /**
      * get the content of this variant as an int
      * @return int
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public int getIntRef(){
     	if ((this.getvt() & VariantInt) == VariantInt &&
@@ -414,6 +416,7 @@ public class Variant extends JacobObject {
     /**
      * return the int value held in this variant (fails on other types?)
      * @return int
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public short getShort(){
     	if (this.getvt() == VariantShort){
@@ -434,8 +437,9 @@ public class Variant extends JacobObject {
     /**
      * 
      * @return returns the double value, throws exception if not a currency type
+     * @throws IllegalStateException if variant is not of the requested type
      */
-    public double getDobuleRef(){
+    public double getDoubleRef(){
     	if ((this.getvt() & VariantDouble) == VariantDouble &&
         		(this.getvt() & VariantByref) == VariantByref) {
         		return getVariantDoubleRef();
@@ -455,6 +459,7 @@ public class Variant extends JacobObject {
     /**
      * 
      * @return returns the date value as a double, throws exception if not a currency type
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public double getDateRef(){
     	if ((this.getvt() & VariantDate) == VariantDate &&
@@ -490,6 +495,7 @@ public class Variant extends JacobObject {
     /**
      * gets the content of the veriant as a string ref
      * @return String retrieved from the COM area.
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public String getStringRef(){
     	if ((this.getvt() & VariantString) == VariantString &&
@@ -544,6 +550,7 @@ public class Variant extends JacobObject {
      * <li>the value if we know how to describe one of that type
      * <li>three question marks if can't convert
      * @return String value conversion, 
+     * @throws IllegalStateException if there is no underlying windows data structure
      */
     public String toString(){
     	try {
@@ -578,6 +585,7 @@ public class Variant extends JacobObject {
      * return the int value held in this variant if it is an int or a short.
      * Throws for other types.
      * @return int contents of the windows membory
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public int getInt(){
     	if (this.getvt() == VariantInt){
@@ -597,6 +605,7 @@ public class Variant extends JacobObject {
 
     /**
      * @return double return the date (as a double) value held in this variant (fails on other types?)
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public double getDate(){
     	if (this.getvt() == VariantDate){
@@ -615,6 +624,7 @@ public class Variant extends JacobObject {
      * @return java.util.Date returns the date if this is a VariantDate != 0,
      * 	null if it is a VariantDate == 0 and throws an IllegalStateException if this isn't 
      *  a date.
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public Date getJavaDate(){
     	Date returnDate = null;
@@ -719,6 +729,7 @@ public class Variant extends JacobObject {
     /**
      * 
      * @return returns the value as a boolean, throws an exception if its not.
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public boolean getBoolean(){
     	if (this.getvt() == VariantBoolean){
@@ -738,6 +749,7 @@ public class Variant extends JacobObject {
     /**
      * 
      * @return returns the value as a boolean, throws an exception if its not.
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public byte getByte(){
     	if (this.getvt() == VariantByte){
@@ -840,6 +852,7 @@ public class Variant extends JacobObject {
 
     /**
      * @return double return the error value held in this variant (fails on other types?)
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public int getError(){
     	if (this.getvt() == VariantError){
@@ -867,6 +880,7 @@ public class Variant extends JacobObject {
 
     /**
      * @return double return the double value held in this variant (fails on other types?)
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public double getDouble(){
     	if (this.getvt() == VariantDouble){
@@ -927,6 +941,7 @@ public class Variant extends JacobObject {
     /**
      * 
      * @return returns the currency value as a long, throws exception if not a currency type
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public long getCurrency(){
     	if (this.getvt() == VariantCurrency){
@@ -1045,6 +1060,7 @@ public class Variant extends JacobObject {
     /**
      * 
      * @return returns the float value, throws exception if not a currency type
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public float getFloatRef(){
     	if ((this.getvt() & VariantFloat) == VariantFloat &&
@@ -1062,6 +1078,7 @@ public class Variant extends JacobObject {
     /**
      * 
      * @return returns the currency value as a long, throws exception if not a currency type
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public long getCurrencyRef(){
     	if ((this.getvt() & VariantCurrency) == VariantCurrency &&
@@ -1079,6 +1096,7 @@ public class Variant extends JacobObject {
     /**
      * 
      * @return returns the error value as an int, throws exception if not a currency type
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public int getErrorRef(){
     	if ((this.getvt() & VariantError) == VariantError &&
@@ -1096,6 +1114,7 @@ public class Variant extends JacobObject {
     /**
      * public cover for native method
      * @return the boolean from a booleanRef
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public boolean getBooleanRef(){
     	if ((this.getvt() & VariantBoolean) == VariantBoolean &&
@@ -1112,6 +1131,7 @@ public class Variant extends JacobObject {
     /**
      * public cover for native method
      * @return the byte from a booleanRef
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public byte getByteRef(){
     	if ((this.getvt() & VariantByte) == VariantByte &&
@@ -1222,6 +1242,7 @@ public class Variant extends JacobObject {
 
     /**
      * @return returns the value as a float if the type is of type float
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public float getFloat(){
     	if (this.getvt() == VariantFloat){
@@ -1263,6 +1284,7 @@ public class Variant extends JacobObject {
      * Dispatch and dispatchRef are treated the same
      * This is just a cover for getDispatch() with a flag check
      * @return the results of getDispatch()
+     * @throws IllegalStateException if variant is not of the requested type
      */
     public Dispatch getDispatchRef() {
     	if ((this.getvt() & VariantDispatch) == VariantDispatch &&
@@ -1445,6 +1467,7 @@ public class Variant extends JacobObject {
      * Reports the type of the underlying Variant object
      * @return returns the variant type as a short, one of the Variantxxx 
      * values defined as statics in this class. returns VariantNull if not initialized
+     * @throws IllegalStateException if there is no underlying windows data structure
      */
     public short getvt(){
     	if (m_pVariant != 0){
@@ -1646,7 +1669,8 @@ public class Variant extends JacobObject {
      * except for special data types (it shouldn't do any!)
 	 *
 	 * @return Corresponding Java object of the type matching the Variant type.
-	 * @throws Exception if conversion failed.
+	 * @throws IllegalStateException if no underlying windows data structure
+	 * @throws NotImplementedException if unsupported conversion is requested
 	 */
 	protected Object toJavaObject() throws JacobException {
 	    Object result = null;
@@ -1689,32 +1713,32 @@ public class Variant extends JacobObject {
 		    result = this.getDispatchRef();
 		    break;
 		    case Variant.VariantError : //10
-		    result = new IllegalStateException("toJavaObject() Not implemented for VariantError");
+		    result = new NotImplementedException("toJavaObject() Not implemented for VariantError");
 		    break;
 		    case Variant.VariantBoolean : //11
 		    result = new Boolean(this.getBoolean());
 		    break;
 		    case Variant.VariantVariant : //12
-		    result = new IllegalStateException("toJavaObject() Not implemented for VariantVariant");
+		    result = new NotImplementedException("toJavaObject() Not implemented for VariantVariant");
 		    break;
 		    case Variant.VariantObject : //13
-		    result = new IllegalStateException("toJavaObject() Not implemented for VariantObject");
+		    result = new NotImplementedException("toJavaObject() Not implemented for VariantObject");
 		    break;
 		    case Variant.VariantByte : //17
 		    result = new Byte(this.getByte());
 		    //result = new IllegalStateException("toJavaObject() Not implemented for VariantByte");
 		    break;
 		    case Variant.VariantTypeMask : //4095
-		    result = new IllegalStateException("toJavaObject() Not implemented for VariantTypeMask");
+		    result = new NotImplementedException("toJavaObject() Not implemented for VariantTypeMask");
 		    break;
 		    case Variant.VariantArray : //8192
-		    result = new IllegalStateException("toJavaObject() Not implemented for VariantArray");
+		    result = new NotImplementedException("toJavaObject() Not implemented for VariantArray");
 		    break;
 		    case Variant.VariantByref : //16384
-		    result = new IllegalStateException("toJavaObject() Not implemented for VariantByref");
+		    result = new NotImplementedException("toJavaObject() Not implemented for VariantByref");
 		    break;
 		    default :
-		    result = new IllegalStateException("Unknown return type: " + type);
+		    result = new NotImplementedException("Unknown return type: " + type);
 		    result = this;
 		    break;
 	    }//switch (type)
