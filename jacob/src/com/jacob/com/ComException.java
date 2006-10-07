@@ -29,11 +29,11 @@ public abstract class ComException extends JacobException
      * that was returned by the underlying com code 
      **/
     protected int hr;
-    /** TODO: what is this field */
+    /** No documentation is available at this time.  Someone should document this field */
     protected int m_helpContext;
-    /** TODO: what is this field */
+    /** No documentation is available at this time.  Someone should document this field */
     protected String m_helpFile;
-    /** TODO: what is this field */
+    /** No documentation is available at this time.  Someone should document this field */
     protected String m_source;
 
     /**

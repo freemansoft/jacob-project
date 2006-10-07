@@ -36,8 +36,8 @@ import java.util.WeakHashMap;
  * Prior to 1.9, manual garbage collection was the only option in Jacob, but
  * from 1.9 onward, setting the com.jacob.autogc system property
  * allows the objects referenced by the ROT to be automatically GCed.
+ * Automatic GC may be preferable in systems with heavy event callbacks.
  * <p>
- * TODO : explain when automatic GC is preferable, and when it isn't. 
  * Is [ 1116101 ] jacob-msg 0284 relevant???
  */
 public abstract class ROT {
