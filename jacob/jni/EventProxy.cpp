@@ -126,7 +126,6 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 {
   	const char 	*eventMethodName = NULL; //Sourceforge report 1394001 
   	JNIEnv      *env = NULL;
-	jobject 	retObj;
 
   // map dispID to jmethodID
   for(int i=0;i<MethNum;i++) 
