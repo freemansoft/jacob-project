@@ -3,30 +3,32 @@ To build and run:
 Unpack the source archive or check the files out of CVS into d:\jacob 
 
 Install the following tools
-	Microsoft Visual Studio, a stripped down version is available from the MS web site.
+	Microsoft Visual C++ 2005 Express Edition, free from Microsoft on their web site.
 	Eclipse from www.eclipse.org.
-	Java jdk 1.4 (this was built using 1.4.2.09)
-	
-The following configuration was used by most of the development team:
-	JDK = d:\j2sdk1.4.2_09
-	DEST_DIR = d:\jacob
-	MSDEVDIR = d:\apps\\"Microsoft Visual Studio"\VC98
+	Java JDK 1.4 (this was built using 1.4.2.09)
 
-This project has been converted completely over to ANT.  You can
+	
+This project has been converted completely from MAKE to ANT.  You can
 run ANT from inside of eclipse or from the command line.
-The ant process is driven off of a configuration file
-compilation_tools.properties.  Instructions on the information required
+The ant process is driven off of a configuration file named
+compilation_tools.properties that describes the locations of the JDK and Microsoft
+C++ tools.  Instructions on the information required
 in that file are contained in build.xml in the root directory.
 
-Ant, via build.xml will do the following with teh default target.
+The following configuration used by the development team 
+using VC++ 6.0 installed in D:\apps:
+		JDK=d:/j2sdk1.4.2_09
+		MSDEVDIR=d:\\apps\\Microsoft Visual Studio\\VC98
+		version=1.11-pre1
+
+Running ANT via build.xml will do the following with the default target.
 	Build the Java code
 	Build the jni code
 	create the dll
 	create jar file
 
-The package target creates the 
-	javadoc and 
-	zip files
+Running the "package" ANT target runs the above listed steps and then
+builds the javadoc and then the zip files.
 
 ECLIPSE
 
