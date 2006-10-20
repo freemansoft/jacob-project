@@ -5,7 +5,9 @@ import java.io.*;
 /**
  * Verifies serialization works for variants.
  * Variant serialization is BROKEN and has been since 1.7
- * <pre>-Djava.library.path=d:/jacob/release</pre>
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 class VariantSerializationTest {
 

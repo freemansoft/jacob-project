@@ -11,9 +11,9 @@ import com.jacob.com.Variant;
  * This test was lifted from a forum posting and shows how you can't listen to
  * Excel events (added post 1.9.1 Eclipse Settings.)  This also uses the 1.9.1 
  * InvocationProxy to receive the events.
- * <p> supported command line options with default values are 
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
- * -Dcom.jacob.debug=false
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 public class ExcelEventTest extends InvocationProxy {
 

@@ -23,9 +23,8 @@ import com.jacob.com.*;
 import com.jacob.activeX.*;
 
 /**
- * May need to run with some command line options.  If so, then try these
- * 	-Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=true -Xcheck:jni
- * @author joe
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  *
  */
 class Access 

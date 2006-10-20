@@ -4,9 +4,9 @@ package com.jacob.test.windowsmedia;
  * partial test program from the sourceforge bug report 1453161
  * that says you get a  random "can't map name to dispid" when
  * getting the URL from the player
- * 
- * I run with options
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=true
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 import com.jacob.activeX.*;
 

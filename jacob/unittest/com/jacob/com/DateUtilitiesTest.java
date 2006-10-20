@@ -8,10 +8,9 @@ import com.jacob.com.DateUtilities;
 
 /**
  * test cases that should exercise the new date conversion code
- * run this test with options
- * <code>-Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=true -Dcom.jacob.debug=false</code>
- * @author joe
- *
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 
 public class DateUtilitiesTest {

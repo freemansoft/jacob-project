@@ -5,11 +5,9 @@ import com.jacob.activeX.ActiveXComponent;
 /**
  * This exercises the two Dispatch factor methods that let you 
  * control whether you create a new running COM object or connect to an existing one
- * 
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=true
- *
- * @author joe
- *
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 public class ActiveXComponentFactoryTest {
 	public static void main(String args[]) throws Exception {

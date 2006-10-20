@@ -11,9 +11,9 @@ import com.jacob.activeX.*;
  * it listens to as it havigates to web sites.
  * contributed by Niels Olof Bouvin mailto:n.o.bouvin@daimi.au.dk
  * and Henning Jae jehoej@daimi.au.dk
- * <P>
- * You can run this in eclipse with the command line options
- * <code> -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -DXcheck:jni</code>
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 
 class IETest

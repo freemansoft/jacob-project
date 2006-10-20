@@ -5,7 +5,9 @@ import java.util.Date;
 /**
  * runs through some of the get and set methods on Variant
  * 
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.debug=false
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 class VariantTest {
 	public static void main(String[] args) {

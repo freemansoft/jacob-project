@@ -5,10 +5,9 @@ import com.jacob.activeX.*;
 
 /**
  * Sample test program snagged out of a question on the sun discussion area.
- * Run options...
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=true
- * @author joe
- *
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 public class ExcelDispatchTest {
 	 

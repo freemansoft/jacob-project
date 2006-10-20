@@ -5,7 +5,10 @@ import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
 
 /**
- * run with -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=false
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
+ *  <p>
  * SF 1085370
 	In my understatnding, an instance of SafeArray java
 	class has a

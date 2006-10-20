@@ -7,8 +7,9 @@ package com.jacob.com;
  * 
  * This will eventually be changed to a unit test.
  * 
- * Run in Eclipse with command line arguments
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 public class ROT3Test
 {

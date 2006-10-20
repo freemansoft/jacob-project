@@ -4,11 +4,14 @@ import java.util.Date;
 
 /**
  * Test some of the Dispatch utility methods 
- * <code>-Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=true -Dcom.jacob.debug=false</code>
- * @author joe
-
- * @author joe
- *
+ * May need to run with some command line options (including from inside Eclipse).  
+ * If so, then try these
+ * <pre>
+ *      -Djava.library.path=d:/jacob/release/x86 
+ *      -Dcom.jacob.autogc=false 
+ *      -Dcom.jacob.debug=false 
+ *      -Xcheck:jni
+ *  </pre>
  */
 public class DispatchTest {
 

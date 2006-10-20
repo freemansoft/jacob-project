@@ -6,9 +6,9 @@ import com.jacob.com.*;
 /**
  * This example uses the MathTest sample VB COM DLL under
  * the MathProj directory
- * <pre>
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=true
- * </pre>
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 class MathTest {
 	public static void main(String[] args) {

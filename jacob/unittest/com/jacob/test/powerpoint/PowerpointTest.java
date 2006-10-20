@@ -4,9 +4,9 @@ package com.jacob.test.powerpoint;
   * $Id$ 
   * 
   * This is really more of a multi threaded tester 
-  * 
-  * run with
-  * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false -Dcom.jacob.debug=false
+  * <p>
+  * May need to run with some command line options (including from inside Eclipse).  
+  * Look in the docs area at the Jacob usage document for command line options.
   */ 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;

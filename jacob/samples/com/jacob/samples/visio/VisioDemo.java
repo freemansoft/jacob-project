@@ -11,14 +11,10 @@ import java.awt.event.*;
 /**
  * Created as part of sourceforge 1386454 to demonstrate returning values in event handlers
  * @author miles@rowansoftware.net
- *
+ * <p>
  * This file contains the main() that runs the demo
- * 
- * This can be run in Eclipse with options 
- * <pre>
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
- * -Dcom.jacob.debug=false
- * </pre>
+ * <p>
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 public class VisioDemo extends JFrame implements ActionListener, WindowListener {
 

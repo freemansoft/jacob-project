@@ -1,0 +1,45 @@
+<HTML>
+<BODY>
+<h1> Determining the API of the target application </h1>
+<p>
+Section not yet written.
+<p>
+<hr>
+<h1> Determining the API of the target application </h1>
+<p>
+Section not yet written.
+<p>
+<hr>
+<h1>Jacob Command Line Settings</h1>
+This library supports several different :
+	<h3>java.library.path</h3>
+	Used to add the location of the jacob dll to the JVM's library path.
+	<p>
+	Example: -Djava.library.path=d:/jacob/release/x86 
+
+	<h3>com.jacob.autogc </h3>
+	Determines if automatic garbage collection is enabled.  This is the
+	only way to free up objects created in event callbacks.  This
+	feature is not fully debugged.  
+	<p>
+	The default value is <strong>false</strong>
+	<p>
+	Example: -Dcom.jacob.autogc=false 
+	
+	<h3>com.jacob.debug</h3>
+	Determines if debug output is enabled to standard out.
+	The default value is <strong>false</strong>
+	<p>
+	Example: -Dcom.jacob.debug=false
+	
+	<h3>-XCheck:jni</h3>
+	This turns on additional JVM checking for JNI issues.  This is
+	not strictly a JACOB system property.
+	<p>
+	The default is "no additional checking"
+	Example: -XCheck:jni
+
+Last Modified 10/2005
+
+</BODY>
+</HTML>

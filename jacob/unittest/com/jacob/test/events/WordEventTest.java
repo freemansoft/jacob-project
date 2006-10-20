@@ -13,9 +13,9 @@ import com.jacob.com.Variant;
  * that the InvocationProxy code works with MS Word Events   
  * This also uses the 1.10
  * InvocationProxy to receive the events.
- * <p> supported command line options with default values are 
- * -Djava.library.path=d:/jacob/release -Dcom.jacob.autogc=false
- * -Dcom.jacob.debug=false
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 public class WordEventTest extends InvocationProxy {
 
