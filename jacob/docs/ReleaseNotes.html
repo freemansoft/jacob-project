@@ -6,7 +6,9 @@
 <li>
 	<b>Build</b>
 	<ul>
-	<li>Build process now notifies developer if version property missing
+	<li>Build process now notifies developer if version property missing</li>
+	<li>Build process now compiles 32 bit and/or 64 bit DLLs as appropriate
+		for the build environment.</li>
 	</ul>
 </li>
 <li>
@@ -15,10 +17,13 @@
 	<li>Variant.noParam() changed to Variant.putNoParam()
 	<li>Variant.toString() now follows normal java semantics.  
 		This conflicted with the jacob toXXX() standard.  
-	<li>Many Variant.toXXX() methods deprecated because folks didn't realize they were doing type conversion
+	<li>Many Variant.toXXX() did type conversion in addition to a get.  The
+			methods have deprecated because folks didn't realize 
+			they were doing type conversion.
 			Most calls to toXXX() methods should actually be getXXX() calls.
 			This also allowed toString() to follow Java conventions
-	<li>Variant native methods wrapped with java methods to better armor the Variant
+	<li>Variant native methods are wrapped with java methods that do parameter and 
+			state checking to better armor the Variant
 	</ul>
 </li>
 </ul>
@@ -83,15 +88,14 @@
   </tr>
   <tr>
     <td width="13%">1550628</td>
-    <td width="87%">Moved all LoadLibrary requests into JacobObject.  Classes not subclassed
-    	off of JacobObject make calls to a static method on JacobObject to make sure
+    <td width="87%">Moved all LoadLibrary requests into LibraryLoader.  Classes not subclassed
+    	off of JacobObject make calls to a static method on LibraryLoader to make sure
     	DLL is loaded(pre1)</td>
   </tr>
 </table>
 
-</ul>
+<!--  ---------  -->
 
-<!---------------------------------------/>
 <h2>JACOB 1.10.1</h2>
 <h3>What's New</h3>
 <ul>
@@ -133,9 +137,8 @@
   </tr>
 </table>
 
-</ul>
+<!-- ++++++++++++++++++++++++++++++ -->
 
-<!---------------------------------------/>
 <h2>JACOB 1.10</h2>
 <h3>What's New</h3>
 <ul>
@@ -251,10 +254,7 @@
   </tr>
 </table>
 
-</ul>
-
-<!---------------------------------------/>
-
+<!-- ++++++++++++++++++++++++++++++ -->
 
 <h2>JACOB 1.9.1</h2>
 <h3>What's New</h3>
@@ -330,9 +330,8 @@
   </tr>
 </table>
 
-</ul>
 
-<!---------------------------------------/>
+<!-- ++++++++++++++++++++++++++++++ -->
 
 <h2>JACOB 1.9</h2>
 <h3>What's New</h3>

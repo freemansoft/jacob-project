@@ -125,8 +125,10 @@
 
 	<!-- ======================================================================
 			32 bit x86 can only be built on 32 bit because of a JDK library issue.
-			true if on x86, unset in all other cases.
+			arch=x86 true if on 32 bit, unset in all other cases.
 			Assume 64 bit builds are ok if MSDEVDIR and MSSDKDIR are different
+			because they are always that way on 64 bit and are that 
+			way on 32 bit if using VC++ 6 with platform libraries
 	 ================================================================== -->
 	<condition property="canBuildX86">
 		<os arch="x86"/>
