@@ -482,7 +482,7 @@ public class Variant extends JacobObject {
     	if (windowsDate == 0){
     		return null;
     	} else {
-    		return DateUtilities.convertWindowsTimeToDate(getDate());
+    		return DateUtilities.convertWindowsTimeToDate(windowsDate);
     	}
     }
     
@@ -1320,7 +1320,10 @@ public class Variant extends JacobObject {
     private native void changeVariantType(short in);
 
     /**
-     * cover for native method so we can cover it.
+     * Cover for native method so we can cover it.
+     * <p>
+     * This cannot convert an object to a byRef.
+     * It can convert from byref to not byref
      * @param in type to convert this variant too
      * @return Variant returns this same object so folks can change when replacing calls
      * 	toXXX() with changeType().getXXX()
@@ -1664,7 +1667,8 @@ public class Variant extends JacobObject {
 	 * Convert a JACOB Variant value to a Java object 
 	 * (type conversions).
      * provided in Sourceforge feature request 959381.
-     * 
+     * A fix was done to handle byRef bug report 1607878.
+     * <p>
      * Unlike other toXXX() methods, it does not do a type conversion
      * except for special data types (it shouldn't do any!)
 	 *
@@ -1677,7 +1681,7 @@ public class Variant extends JacobObject {
 	
 	    short type = this.getvt(); //variant type
 	
-	    if (type >= Variant.VariantArray) { //array returned?
+	    if ((type & Variant.VariantArray) == VariantArray) { //array returned?
 		    SafeArray array = null;
 		    type = (short) (type - Variant.VariantArray);
 		    array = this.toSafeArray(false);
@@ -1689,58 +1693,84 @@ public class Variant extends JacobObject {
 		    case Variant.VariantNull : //1
 		    break;
 		    case Variant.VariantShort : //2
-		    result = new Short(this.getShort());
-		    break;
+			    result = new Short(this.getShort());
+			    break;
+		    case Variant.VariantShort | Variant.VariantByref : //2
+			    result = new Short(this.getShortRef());
+			    break;
 		    case Variant.VariantInt : //3
-		    result = new Integer(this.getInt());
-		    break;
+			    result = new Integer(this.getInt());
+			    break;
+		    case Variant.VariantInt | Variant.VariantByref: //3
+			    result = new Integer(this.getIntRef());
+			    break;
 		    case Variant.VariantFloat : //4
-		    result = new Float(this.getFloat());
-		    break;
+			    result = new Float(this.getFloat());
+			    break;
+		    case Variant.VariantFloat | Variant.VariantByref: //4
+			    result = new Float(this.getFloatRef());
+			    break;
 		    case Variant.VariantDouble : //5
-		    result = new Double(this.getDouble());
-		    break;
+			    result = new Double(this.getDouble());
+			    break;
+		    case Variant.VariantDouble | Variant.VariantByref: //5
+			    result = new Double(this.getDoubleRef());
+			    break;
 		    case Variant.VariantCurrency : //6
-		    result = new Long(this.getCurrency());
-		    break;
+			    result = new Long(this.getCurrency());
+			    break;
+		    case Variant.VariantCurrency | Variant.VariantByref: //6
+			    result = new Long(this.getCurrencyRef());
+			    break;
 		    case Variant.VariantDate : //7
-		    result = this.getJavaDate();
-		    break;
+			    result = this.getJavaDate();
+			    break;
+		    case Variant.VariantDate | Variant.VariantByref : //7
+			    result = this.getJavaDateRef();
+			    break;
 		    case Variant.VariantString : //8
-		    result = this.getString();
-		    break;
+			    result = this.getString();
+			    break;
+		    case Variant.VariantString | Variant.VariantByref: //8
+			    result = this.getStringRef();
+			    break;
 		    case Variant.VariantDispatch : //9
-		    result = this.getDispatchRef();
-		    break;
+			    result = this.getDispatchRef();
+			    break;
 		    case Variant.VariantError : //10
-		    result = new NotImplementedException("toJavaObject() Not implemented for VariantError");
-		    break;
+			    result = new NotImplementedException("toJavaObject() Not implemented for VariantError");
+			    break;
 		    case Variant.VariantBoolean : //11
-		    result = new Boolean(this.getBoolean());
-		    break;
+			    result = new Boolean(this.getBoolean());
+			    break;
+		    case Variant.VariantBoolean | Variant.VariantByref: //11
+			    result = new Boolean(this.getBooleanRef());
+			    break;
 		    case Variant.VariantVariant : //12
-		    result = new NotImplementedException("toJavaObject() Not implemented for VariantVariant");
-		    break;
+			    result = new NotImplementedException("toJavaObject() Not implemented for VariantVariant");
+			    break;
 		    case Variant.VariantObject : //13
-		    result = new NotImplementedException("toJavaObject() Not implemented for VariantObject");
-		    break;
+			    result = new NotImplementedException("toJavaObject() Not implemented for VariantObject");
+			    break;
 		    case Variant.VariantByte : //17
-		    result = new Byte(this.getByte());
-		    //result = new IllegalStateException("toJavaObject() Not implemented for VariantByte");
-		    break;
+			    result = new Byte(this.getByte());
+			    break;
+		    case Variant.VariantByte | Variant.VariantByref: //17
+			    result = new Byte(this.getByteRef());
+			    break;
 		    case Variant.VariantTypeMask : //4095
-		    result = new NotImplementedException("toJavaObject() Not implemented for VariantTypeMask");
-		    break;
+			    result = new NotImplementedException("toJavaObject() Not implemented for VariantTypeMask");
+			    break;
 		    case Variant.VariantArray : //8192
-		    result = new NotImplementedException("toJavaObject() Not implemented for VariantArray");
-		    break;
+			    result = new NotImplementedException("toJavaObject() Not implemented for VariantArray");
+			    break;
 		    case Variant.VariantByref : //16384
-		    result = new NotImplementedException("toJavaObject() Not implemented for VariantByref");
-		    break;
+			    result = new NotImplementedException("toJavaObject() Not implemented for VariantByref");
+			    break;
 		    default :
-		    result = new NotImplementedException("Unknown return type: " + type);
-		    result = this;
-		    break;
+			    result = new NotImplementedException("Unknown return type: " + type);
+		    	// there was a "return result" here that caused defect 1602118 so it was removed  
+		    	break;
 	    }//switch (type)
 	
 	    if (result instanceof JacobException) {

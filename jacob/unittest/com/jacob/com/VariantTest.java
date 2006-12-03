@@ -20,6 +20,8 @@ class VariantTest {
 		testJig.testSafeReleaseConstant();
 		testJig.testSafeReleaseString();
 		testJig.testObjectIsAConstant();
+		testJig.testSomeChangeVT();
+		testJig.testByRefToJavaObject();
 		System.out.println("Testing Complete");
 		
 	}
@@ -30,6 +32,118 @@ class VariantTest {
 	 */
 	public VariantTest(){
 		
+	}
+	
+	/**
+	 * This verifies that toJavaObject() works for all of the
+	 * main data types when they exist as a byRef version.
+	 * <p>
+	 * It compares the toJavaObject() for a byref against the
+	 * toJavaObject() for the regular.
+	 *
+	 */
+	private void testByRefToJavaObject(){
+		Variant v = null;
+		Variant vByRef = null;
+		
+		v = new Variant(new Float(53.3),false);
+		vByRef = new Variant(new Float(53.3),true);
+		if (!v.toJavaObject().equals(vByRef.toJavaObject())){
+			System.out.println(v.toString() + " could not make type "
+					+ v.getvt() +" and "+ vByRef.getvt() 
+					+" java objects come out the same");
+		}
+		v = new Variant(new Double(53.3),false);
+		vByRef = new Variant(new Double(53.3),true);
+		if (!v.toJavaObject().equals(vByRef.toJavaObject())){
+			System.out.println(v.toString() + " could not make type "
+					+ v.getvt() +" and "+ vByRef.getvt() 
+					+" java objects come out the same");
+		}
+		
+		v = new Variant(new Boolean(true),false);
+		vByRef = new Variant(new Boolean(true),true);
+		if (!v.toJavaObject().equals(vByRef.toJavaObject())){
+			System.out.println(v.toString() + " could not make type "
+					+ v.getvt() +" and "+ vByRef.getvt() 
+					+" java objects come out the same");
+		}
+		
+		v = new Variant(new Integer(53),false);
+		vByRef = new Variant(new Integer(53),true);
+		if (!v.toJavaObject().equals(vByRef.toJavaObject())){
+			System.out.println(v.toString() + " could not make type "
+					+ v.getvt() +" and "+ vByRef.getvt() 
+					+" java objects come out the same");
+		}
+		
+		v = new Variant(new Short((short)53),false);
+		vByRef = new Variant(new Short((short)53),true);
+		if (!v.toJavaObject().equals(vByRef.toJavaObject())){
+			System.out.println(v.toString() + " could not make type "
+					+ v.getvt() +" and "+ vByRef.getvt() 
+					+" java objects come out the same");
+		}
+
+		v = new Variant("53.33",false);
+		vByRef = new Variant("53.33",true);
+		if (!v.toJavaObject().equals(vByRef.toJavaObject())){
+			System.out.println(v.toString() + " could not make type "
+					+ v.getvt() +" and "+ vByRef.getvt() 
+					+" java objects come out the same");
+		}
+		
+		Date now = new Date();
+		v = new Variant(now,false);
+		vByRef = new Variant(now,true);
+		if (!v.toJavaObject().equals(vByRef.toJavaObject())){
+			System.out.println(v.toString() + " could not make type "
+					+ v.getvt() +" and "+ vByRef.getvt() 
+					+" java objects come out the same");
+		}
+		
+		// need to do currency also
+	}
+	
+	/**
+	 * see what happens when we conver to by ref
+	 *
+	 */
+	private void testSomeChangeVT(){
+		Variant v;
+		// the code shows e shouldn't need to use a returned Variant but the test says we do
+		Variant vConverted;
+		v = new Variant(53.3);
+		short originalVT = v.getvt();
+		short modifier;
+		
+		modifier = Variant.VariantShort;
+		vConverted = v.changeType(modifier);
+		if (vConverted.getvt() != modifier){
+			System.out.println("Failed to change Variant "+originalVT
+				+ " using mask "+modifier
+				+ " resulted in "+vConverted.getvt()
+				);
+		}
+
+		modifier = Variant.VariantString;
+		vConverted = v.changeType(modifier);
+		if (vConverted.getvt() != modifier){
+			System.out.println("Failed to change Variant "+originalVT
+				+ " using mask "+modifier
+				+ " resulted in "+vConverted.getvt()
+				);
+		}
+
+		// can't convert to byref!
+		modifier = Variant.VariantByref | Variant.VariantShort; 
+		vConverted = v.changeType(modifier);
+		if (vConverted.getvt() == modifier){
+			System.out.println("Should not have been able to change Variant "+originalVT
+				+ " using mask "+modifier
+				+ " resulted in "+vConverted.getvt()
+				);
+		}
 	}
 	
 	/**
