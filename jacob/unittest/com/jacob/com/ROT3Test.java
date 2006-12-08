@@ -34,7 +34,7 @@ public class ROT3Test
 
 class ROT3TestThread extends Thread
 {
-    private java.util.List ThreadObjects;
+    private java.util.List variansCreatedInThisThread;
 
     private int initialRunSize = 0;
     /**
@@ -59,34 +59,35 @@ class ROT3TestThread extends Thread
         // something that keeps object references around
         // so the gc can't collect them
         // we need to create these in the thread so they end up in the right ROT table
-        ThreadObjects = new java.util.ArrayList(initialRunSize);
+        variansCreatedInThisThread = new java.util.ArrayList(initialRunSize);
         for (int i = 0; i < initialRunSize; i++)
         {
             // create the object
             Variant aNewVariant = new Variant(getName() + "_" + i);
             // create a hard reference to it
-            ThreadObjects.add(aNewVariant);
+            variansCreatedInThisThread.add(aNewVariant);
         }
 
-        while (ThreadObjects.size() > 1)
+        while (variansCreatedInThisThread.size() > 1)
         {
             String message = "";
-            message = getName()+" Workingset=" +ThreadObjects.size()
-            	+" ROT: "+ROT.getThreadObjects(true).hashCode();
-			message += " before mods and gc "+ROT.getThreadObjects(true).size()+")";
-            // if there is an odd number of objects greater than 2
-            if (ThreadObjects.size() > 10)
+            message = getName()+" Workingset=" +variansCreatedInThisThread.size()
+            	+" ROT threadObject hashCode: "+ROT.getThreadObjects(true).hashCode();
+			message += " size before mods and gc "+ROT.getThreadObjects(true).size()+")";
+            // If there are more than 10 objects in our cache then add 1/4 of that again
+            if (variansCreatedInThisThread.size() > 10)
             {
-                message+= " ++ ";
-                for ( int i = 0 ; i < ThreadObjects.size()/4 ; i++){
+                message+= " (adding) ";
+                // add an additional 1/4 of our current number
+                for ( int i = 0 ; i < variansCreatedInThisThread.size()/4 ; i++){
 	                // add a new object
-	                Variant aNewVariant = new Variant(getName() + "_*" + ThreadObjects.size());
-	                ThreadObjects.add(aNewVariant);
+	                Variant aNewVariant = new Variant(getName() + "_*" + variansCreatedInThisThread.size());
+	                variansCreatedInThisThread.add(aNewVariant);
                 }
             }
-            // now iterate across all the objects in our list
-            message += " --  ";
-            for (int i = ThreadObjects.size(); i > 0; i--)
+            // now iterate across 1/2 the objects in our list
+            message += " (removing)  ";
+            for (int i = variansCreatedInThisThread.size(); i > 0; i--)
             {
                 // removing every other one?
                 if (i % 2 == 0)
@@ -95,9 +96,9 @@ class ROT3TestThread extends Thread
                     if (!ROT.USE_AUTOMATIC_GARBAGE_COLLECTION){
                     	// uses deprecated API to set up a special situation
                     	// because this is an ROT test
-                        ROT.removeObject((JacobObject)ThreadObjects.get(i-1));
+                        ROT.removeObject((JacobObject)variansCreatedInThisThread.get(i-1));
                     }
-                    ThreadObjects.remove(i-1);
+                    variansCreatedInThisThread.remove(i-1);
                 }
 
             }
@@ -109,7 +110,8 @@ class ROT3TestThread extends Thread
 			}
 			System.gc();
 			try {
-			Thread.sleep(2000);
+			// vain attempt at letting the gc run
+			Thread.sleep(200);
 			} catch (InterruptedException ie){
 			    
 			}
