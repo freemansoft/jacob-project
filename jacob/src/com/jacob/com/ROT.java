@@ -41,188 +41,192 @@ import java.util.WeakHashMap;
  * Is [ 1116101 ] jacob-msg 0284 relevant???
  */
 public abstract class ROT {
-    /**
-     * Manual garbage collection was the only option pre 1.9
-     */
-    protected static final boolean USE_AUTOMATIC_GARBAGE_COLLECTION = 
-        "true".equalsIgnoreCase(System.getProperty("com.jacob.autogc"));
+	/**
+	 * Manual garbage collection was the only option pre 1.9
+	 */
+	protected static final boolean USE_AUTOMATIC_GARBAGE_COLLECTION = 
+		"true".equalsIgnoreCase( System.getProperty( "com.jacob.autogc" ) );
 
-    /**
-     * A hash table where each element is another 
-     * HashMap that represents a thread.  
-     * Each thread HashMap contains the com objects created
-     * in that thread
-     */
-    private static HashMap rot = new HashMap();
+	/**
+	 * A hash table where each element is another 
+	 * HashMap that represents a thread.  
+	 * Each thread HashMap contains the com objects created
+	 * in that thread
+	 */
+	private static HashMap rot = new HashMap();
 
-    /**
-     * adds a new thread storage area to rot
-     * @return Map corresponding to the thread that this call was made in
-     */
-    protected static Map addThread() {
-        String t_name = Thread.currentThread().getName();
-        if (rot.containsKey(t_name)){
-            // nothing to do
-        } else {
-            Map tab = null;
-            if (JacobObject.isDebugEnabled()){ 
-            	JacobObject.debug("ROT: Automatic GC flag == "+ USE_AUTOMATIC_GARBAGE_COLLECTION 
-            			);}
-            if (!USE_AUTOMATIC_GARBAGE_COLLECTION){
-                tab = new HashMap();
-            } else {
-                tab = new WeakHashMap();
-            }
-            rot.put(t_name,tab);
-        }
-        return getThreadObjects(false);
-    }
+	/**
+	 * adds a new thread storage area to rot
+	 * @return Map corresponding to the thread that this call was made in
+	 */
+	protected synchronized static Map addThread() {
+		// should use the id here instead of the name because the name can be changed
+		String t_name = Thread.currentThread().getName();
+		if ( rot.containsKey( t_name ) ) {
+			// nothing to do
+		} else {
+			Map tab = null;
+			if ( JacobObject.isDebugEnabled() ) {
+				JacobObject.debug( "ROT: Automatic GC flag == " + USE_AUTOMATIC_GARBAGE_COLLECTION );
+			}
+			if ( !USE_AUTOMATIC_GARBAGE_COLLECTION ) {
+				tab = new HashMap();
+			} else {
+				tab = new WeakHashMap();
+			}
+			rot.put( t_name, tab );
+		}
+		return getThreadObjects( false );
+	}
 
-    
-    /**
-     * returns the pool for this thread if it exists.  can create a new
-     * one if you wish by passing in TRUE
-     * @param createIfDoesNotExist
-     * @return Map the collection that holds the objects created in the current thread
-     */
-    protected static Map getThreadObjects(boolean createIfDoesNotExist) {
-        String t_name = Thread.currentThread().getName();
-        if (!rot.containsKey(t_name) && createIfDoesNotExist){
-            addThread();
-        }
-        return (Map)rot.get(t_name);
-    }
-    
-    /**
-     * Iterates across all of the entries in the Hashmap in the rot
-     * that corresponds to this thread.  
-     * This calls safeRelease() on  each entry and then 
-     * clears the map when done and removes it from the rot.
-     * All traces of this thread's objects will disapear.
-     * This is called by COMThread in the tear down and provides a 
-     * synchronous way of releasing memory
-     */
-    protected static void clearObjects() {
-        Map tab = getThreadObjects(false);
-        if (JacobObject.isDebugEnabled()){ 
-        	JacobObject.debug("ROT: "+rot.keySet().size()+" thread tables exist");
-        }
-        if (tab != null){
-            if (JacobObject.isDebugEnabled()){ 
-            	JacobObject.debug("ROT: "+tab.keySet().size()+ " objects to clear in this thread " );
-            }
-            // walk the values
-            Iterator it;
-            if (USE_AUTOMATIC_GARBAGE_COLLECTION){
-                it = tab.keySet().iterator();
-            } else {
-                it = tab.values().iterator();
-            }
-            while (it.hasNext()) {
-                JacobObject o = (JacobObject) it.next();
-                if (o != null  
-                    // can't use this cause creates a Variant if calling SafeAray 
-                    // and we get an exceptin modifying the collection while iterating
-                    // && o.toString() != null
-                ){
-                    if (JacobObject.isDebugEnabled()){ 
-                    	if (o instanceof SafeArray){
-                    		// SafeArray create more objects when calling toString() 
-                    		// which causes a concurrent modification exception in HashMap
-                    		JacobObject.debug("ROT: removing "+o.getClass().getName());
-                    	} else {
-                    		// Variant toString() is probably always bad in here
-                    		JacobObject.debug("ROT: removing "+o.hashCode()+"->"+o.getClass().getName());
-                    	}
-                	}
-                    o.safeRelease();
-                }
-                // used to be an iterator.remove() but why bother when we're nuking them all anyway?
-            }
-            // empty the collection
-            tab.clear();
-            // remove the collection from rot
-            rot.remove(Thread.currentThread().getName());
-            if (JacobObject.isDebugEnabled()){ 
-            	JacobObject.debug("ROT: thread table cleared and removed");
-        	}
-        } else {
-            if (JacobObject.isDebugEnabled()){ JacobObject.debug("ROT: nothing to clear!");}
-        }
-    }
+	/**
+	 * returns the pool for this thread if it exists.  can create a new
+	 * one if you wish by passing in TRUE
+	 * @param createIfDoesNotExist
+	 * @return Map the collection that holds the objects created in the current thread
+	 */
+	protected synchronized static Map getThreadObjects( boolean createIfDoesNotExist ) {
+		String t_name = Thread.currentThread().getName();
+		if ( !rot.containsKey( t_name ) && createIfDoesNotExist ) {
+			addThread();
+		}
+		return (Map) rot.get( t_name );
+	}
 
-    /**
-     * generates the key used to insert object into the thread's list of objects.
-     * @param targetMap the map we need the key for.  Used to make sure we create a compatabile key
-     * @param o JacobObject we need key for
-     * @return some key compatabile with hashmaps
-     */
-    protected static Object getMapKey(Map targetMap, JacobObject o){
-        if (targetMap instanceof WeakHashMap){
-            return o;
-        } else {
-            return new Integer(o.hashCode());
-        }
-    }
-    
-    /**
-     * generates the object used to insert object into the thread's list of objects.
-     * @param targetMap the map we need the key for.  Used to make sure we create a compatabile key
-     * @param o JacobObject we need key for
-     * @return some compatabile with hashmaps (null for weak has map)
-     */
-    protected static Object getMapValue(Map targetMap, JacobObject o){
-        if (targetMap instanceof WeakHashMap){
-            return null;
-        } else {
-            return o;
-        }
-    }
-    
-    /**
-    * @deprecated the java model leave the responsibility of clearing up objects 
-    * to the Garbage Collector. Our programming model should not require that the
-    * user specifically remove object from the thread.
-    * 
-    * This will remove an object from the ROT
-    * @param o
-    */
-    protected static void removeObject(JacobObject o) {
-        String t_name = Thread.currentThread().getName();
-        Map tab = (Map) rot.get(t_name);
-        if (tab != null) {
-            tab.remove(getMapKey(tab,o));
-        }
-        o.safeRelease();
-    }
-    
-    /**
-     * adds an object to the HashMap for the current thread
-     * @param o
-     */
-    protected static void addObject(JacobObject o) {
-        Map tab = getThreadObjects(false);
-        if (tab == null) {
-            // this thread has not been initialized as a COM thread
-            // so make it part of MTA for backwards compatibility
-            ComThread.InitMTA(false);
-            tab = getThreadObjects(true);
-        }
-        if (JacobObject.isDebugEnabled()){ 
-        	JacobObject.debug(
-        			"ROT: adding "+o+"->"+o.getClass().getName() +
-        			" table size prior to addition:" +tab.size());}
-        if (tab != null) {
-            tab.put(getMapKey(tab,o),getMapValue(tab,o));
-        }
-    }
+	/**
+	 * Iterates across all of the entries in the Hashmap in the rot
+	 * that corresponds to this thread.  
+	 * This calls safeRelease() on  each entry and then 
+	 * clears the map when done and removes it from the rot.
+	 * All traces of this thread's objects will disapear.
+	 * This is called by COMThread in the tear down and provides a 
+	 * synchronous way of releasing memory
+	 */
+	protected synchronized static void clearObjects() {
+		Map tab = getThreadObjects( false );
+		if ( JacobObject.isDebugEnabled() ) {
+			JacobObject.debug( "ROT: " + rot.keySet().size() + " thread tables exist" );
+		}
+		if ( tab != null ) {
+			if ( JacobObject.isDebugEnabled() ) {
+				JacobObject.debug( "ROT: " + tab.keySet().size() + " objects to clear in this thread " );
+			}
+			// walk the values
+			Iterator it;
+			if ( USE_AUTOMATIC_GARBAGE_COLLECTION ) {
+				it = tab.keySet().iterator();
+			} else {
+				it = tab.values().iterator();
+			}
+			while ( it.hasNext() ) {
+				JacobObject o = (JacobObject) it.next();
+				if ( o != null
+				// can't use this cause creates a Variant if calling SafeAray 
+				// and we get an exceptin modifying the collection while iterating
+				// && o.toString() != null
+				) {
+					if ( JacobObject.isDebugEnabled() ) {
+						if ( o instanceof SafeArray ) {
+							// SafeArray create more objects when calling toString() 
+							// which causes a concurrent modification exception in HashMap
+							JacobObject.debug( "ROT: removing " + o.getClass().getName() );
+						} else {
+							// Variant toString() is probably always bad in here
+							JacobObject.debug( "ROT: removing " + o.hashCode() + "->" + o.getClass().getName() );
+						}
+					}
+					o.safeRelease();
+				}
+				// used to be an iterator.remove() but why bother when we're nuking them all anyway?
+			}
+			// empty the collection
+			tab.clear();
+			// remove the collection from rot
+			rot.remove( Thread.currentThread().getName() );
+			if ( JacobObject.isDebugEnabled() ) {
+				JacobObject.debug( "ROT: thread table cleared and removed" );
+			}
+		} else {
+			if ( JacobObject.isDebugEnabled() ) {
+				JacobObject.debug( "ROT: nothing to clear!" );
+			}
+		}
+	}
 
-    /**
-     * ROT can't be a subclass of JacobObject because of the way ROT pools are managed
-     * so we force a DLL load here by referncing JacobObject
-     */
-    static {
-    	LibraryLoader.loadJacobLibrary();
-    }
-    
+	/**
+	 * generates the key used to insert object into the thread's list of objects.
+	 * @param targetMap the map we need the key for.  Used to make sure we create a compatabile key
+	 * @param o JacobObject we need key for
+	 * @return some key compatabile with hashmaps
+	 */
+	protected static Object getMapKey( Map targetMap, JacobObject o ) {
+		if ( targetMap instanceof WeakHashMap ) {
+			return o;
+		} else {
+			return new Integer( o.hashCode() );
+		}
+	}
+
+	/**
+	 * generates the object used to insert object into the thread's list of objects.
+	 * @param targetMap the map we need the key for.  Used to make sure we create a compatabile key
+	 * @param o JacobObject we need key for
+	 * @return some compatabile with hashmaps (null for weak has map)
+	 */
+	protected static Object getMapValue( Map targetMap, JacobObject o ) {
+		if ( targetMap instanceof WeakHashMap ) {
+			return null;
+		} else {
+			return o;
+		}
+	}
+
+	/**
+	 * @deprecated the java model leave the responsibility of clearing up objects 
+	 * to the Garbage Collector. Our programming model should not require that the
+	 * user specifically remove object from the thread.
+	 * 
+	 * This will remove an object from the ROT
+	 * @param o
+	 */
+	protected synchronized static void removeObject( JacobObject o ) {
+		String t_name = Thread.currentThread().getName();
+		Map tab = (Map) rot.get( t_name );
+		if ( tab != null ) {
+			tab.remove( getMapKey( tab, o ) );
+		}
+		o.safeRelease();
+	}
+
+	/**
+	 * adds an object to the HashMap for the current thread
+	 * @param o
+	 */
+	protected synchronized static void addObject( JacobObject o ) {
+		Map tab = getThreadObjects( false );
+		if ( tab == null ) {
+			// this thread has not been initialized as a COM thread
+			// so make it part of MTA for backwards compatibility
+			ComThread.InitMTA( false );
+			tab = getThreadObjects( true );
+		}
+		if ( JacobObject.isDebugEnabled() ) {
+			JacobObject.debug( 
+				"ROT: adding " + o + "->" + o.getClass().getName() + 
+				" table size prior to addition:" + tab.size() );
+		}
+		if ( tab != null ) {
+			tab.put( getMapKey( tab, o ), getMapValue( tab, o ) );
+		}
+	}
+
+	/**
+	 * ROT can't be a subclass of JacobObject because of the way ROT pools are managed
+	 * so we force a DLL load here by referncing JacobObject
+	 */
+	static {
+		LibraryLoader.loadJacobLibrary();
+	}
+
 }
+ 	  	 
