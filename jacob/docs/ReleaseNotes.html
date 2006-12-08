@@ -11,11 +11,17 @@ Bug fix release
   <tr>
     <td width="13%">1602188</td>
     <td width="87%">Variant toString() causes stack overflow for byRef() Variants
-    	(This defect forced the 1.11.1 release)</td>
+    	(This show stopper defect forced the 1.11.1 release)</td>
   </tr>
   <tr>
+    <td width="13%">1611487</td>
+    <td width="87%">Variant toJavaObject() doesn't work for byRef Variables and
+    	returned the wrong value for unrecognized Variant types.</td>
+  </tr>
+   
+  <tr>
     <td width="13%">1607878</td>
-    <td width="87%">Variant getJavaDateRef() fails</td>
+    <td width="87%">Variant getJavaDateRef() fails.</td>
   </tr>
   <tr>
     <td width="13%">&nbsp;</td>
@@ -26,7 +32,8 @@ Bug fix release
   </tr> 
   <tr>
     <td width="13%">SF1603631</td>
-    <td width="87%">Concurrent modification of ROT causes VM crashes. </td>
+    <td width="87%">Concurrent modification of ROT causes VM crashes. Access
+    	to the ROT has been sychronized.  No performance impact analysis has been done</td>
   </tr>
   <tr>
     <td width="13%">&nbsp;</td>
