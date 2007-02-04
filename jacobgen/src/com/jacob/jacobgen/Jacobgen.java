@@ -383,10 +383,31 @@ public class Jacobgen {
 			else if( args[i].startsWith("-listfile") )
 				tempFileName = args[i].substring(10);
 			else
-				typelibFilename = args[i];
+				typelibFilename = resolveFileName(args[i]);
 		}
 	}
 	
+	/**
+     * This was added sourceforge 1651565 to support
+     * the searching for the files by name on the path
+     * in addition to supporting absolute paths for file
+     * names
+     */
+	private String resolveFileName(String fileName)
+	{
+		File file = new File(fileName);
+		if (file!=null){
+			return file.getAbsolutePath();
+		} else {
+			// this essentially fails over to the old (absolute path only) behavior
+			return fileName;
+		}
+	}
+	
+	/**
+	 * the main program for JacobGen that executes from the command line
+	 * @param args options are listed when the user runs this without arguments
+	 */
 	public static void main(String[] args) {
 		if( args.length == 0 ) {
 			System.out.println("JacobGen [options] typelibfile\n");
@@ -411,3 +432,5 @@ public class Jacobgen {
 		}
 	}
 }
+
+ 	  	 
