@@ -5,9 +5,19 @@
 Section not yet written.
 <p>
 <hr>
-<h1> Determining the API of the target application </h1>
+<h1> The Jacob DLL </h1>
 <p>
-Section not yet written.
+Jacob.jar relies on a DLL file that it loads off of the library path or classpath.  
+The code is written so that the jacob.dll is only loaded one time per classloader.
+This works fine in the standard application but can cause problems if jacob.jar
+is loaded from more than one class loader as in the situation where multiple
+jacob dependent web applications run in the same web server.
+Jacob is put in the WEB-INF/lib directory of each application's war file.
+In this situation, the web server uses a different classloader for each applicaiton.
+This means that each application will attempt to load the jacob.dll and errors
+are generated.  The only way around this at this time (1.11) is to put the jacob.jar
+in the common/lib because that classloader is inherited by all of the applicaitons
+so the DLLs will only get loaded once.  (This problem is described in SF 1645463)
 <p>
 <hr>
 <h1>Jacob Command Line Settings</h1>
