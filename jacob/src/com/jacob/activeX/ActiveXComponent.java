@@ -198,7 +198,7 @@ public class ActiveXComponent extends Dispatch {
      * @return String value of property
      */
     public String getPropertyAsString(String propertyName){
-        return Dispatch.get(this, propertyName).toString();
+        return Dispatch.get(this, propertyName).getString();
 
     }
     
