@@ -53,7 +53,17 @@ This library supports several different :
 	<p>
 	The default is "no additional checking"
 	Example: -XCheck:jni
+<p>
+<hr>
+<h1>Finding the DLL version using windows command line</h1>
+The jacob.dll file includes the jacob release number in the version field.  
+Run the following from the command prompt <code>dumpbin /version jacob.dll</code> .
+The dll version number is stored in the "image version" field of the 
+"OPTIONAL HEADER VALUES" section. 
+This information from <a href="http://msdn2.microsoft.com/en-gb/library/h88b7dc8(VS.71).aspx">
+The Microsoft msdn web site</a>
 
+<p>
 Last Modified 2/2007
 
 </BODY>
