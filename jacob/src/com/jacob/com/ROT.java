@@ -112,12 +112,7 @@ public abstract class ROT {
 				JacobObject.debug( "ROT: " + tab.keySet().size() + " objects to clear in this thread " );
 			}
 			// walk the values
-			Iterator it;
-			if ( USE_AUTOMATIC_GARBAGE_COLLECTION ) {
-				it = tab.keySet().iterator();
-			} else {
-				it = tab.values().iterator();
-			}
+			Iterator it = tab.keySet().iterator();
 			while ( it.hasNext() ) {
 				JacobObject o = (JacobObject) it.next();
 				if ( o != null
@@ -154,34 +149,6 @@ public abstract class ROT {
 	}
 
 	/**
-	 * generates the key used to insert object into the thread's list of objects.
-	 * @param targetMap the map we need the key for.  Used to make sure we create a compatabile key
-	 * @param o JacobObject we need key for
-	 * @return some key compatabile with hashmaps
-	 */
-	protected static Object getMapKey( Map targetMap, JacobObject o ) {
-		if ( targetMap instanceof WeakHashMap ) {
-			return o;
-		} else {
-			return new Integer( o.hashCode() );
-		}
-	}
-
-	/**
-	 * generates the object used to insert object into the thread's list of objects.
-	 * @param targetMap the map we need the key for.  Used to make sure we create a compatabile key
-	 * @param o JacobObject we need key for
-	 * @return some compatabile with hashmaps (null for weak has map)
-	 */
-	protected static Object getMapValue( Map targetMap, JacobObject o ) {
-		if ( targetMap instanceof WeakHashMap ) {
-			return null;
-		} else {
-			return o;
-		}
-	}
-
-	/**
 	 * @deprecated the java model leave the responsibility of clearing up objects 
 	 * to the Garbage Collector. Our programming model should not require that the
 	 * user specifically remove object from the thread.
@@ -193,7 +160,7 @@ public abstract class ROT {
 		String t_name = Thread.currentThread().getName();
 		Map tab = (Map) rot.get( t_name );
 		if ( tab != null ) {
-			tab.remove( getMapKey( tab, o ) );
+			tab.remove( o );
 		}
 		o.safeRelease();
 	}
@@ -216,7 +183,7 @@ public abstract class ROT {
 				" table size prior to addition:" + tab.size() );
 		}
 		if ( tab != null ) {
-			tab.put( getMapKey( tab, o ), getMapValue( tab, o ) );
+			tab.put( o, null );
 		}
 	}
 
