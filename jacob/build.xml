@@ -19,7 +19,7 @@
 	  The file for MS Visual C++ 6.0 building only the 32 bit version
 	  (the only version available through 1.11) looks something like:
 	  
-		JDK=d:/j2sdk1.4.2_09
+		JDK=d:/j2sdk1.4.2_13
 		MSDEVDIR=d:\\apps\\Microsoft Visual Studio\\VC98
 		version=1.11-pre2
       
@@ -27,7 +27,7 @@
       compilation_tools.properties in this situation should look
       something like:
       
-		JDK=d:/j2sdk1.4.2_09
+		JDK=d:/j2sdk1.4.2_13
 		MSDEVDIR=d:\\apps\\Microsoft Visual Studio\\VC98
 		MSSDKDIR=D:\\Apps\\Microsoft Platform SDK for Windows Server 2003 R2
 		version=1.11-pre2

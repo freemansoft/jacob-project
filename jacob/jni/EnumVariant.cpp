@@ -81,6 +81,10 @@ Java_com_jacob_com_EnumVariant_Next(JNIEnv* env, jobject _this, jobjectArray var
     VariantCopy(v, sink + idx);
     env->SetObjectArrayElement(vars, idx, newVariant);
     env->DeleteLocalRef(newVariant);
+    //Sourceforge-1674179 fix memory leak
+    // Variants received while iterating IEnumVARIANT must be cleared when no longer needed
+    // The variant has been copied so no longer needed
+    VariantClear(sink);
   }
   CoTaskMemFree(sink);
   return (jint)fetchCount;

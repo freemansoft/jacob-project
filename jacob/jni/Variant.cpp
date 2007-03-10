@@ -181,7 +181,9 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toEnumVariant
       return NULL;
     }
     // I am copying the pointer to java
-    if (ie) ie->AddRef();
+    // SF-1674179 fix EnumVariants memory leak
+    // AJ: yes, but the QueryInterface call above already incremented the reference
+    //if (ie) ie->AddRef();
     jobject newAuto = env->NewObject(autoClass, autoCons, ie);
     return newAuto;
   }

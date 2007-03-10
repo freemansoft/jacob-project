@@ -22,10 +22,22 @@
     <td width="87%" valign="top">ActiveXComponent: getPropertyAsString should call getString() instead of toString()</td>
   </tr>
   <tr>
+    <td width="13%" valign="top">1569864 </td>
+    <td width="87%" valign="top">IEnumVariant leak fixed in patch 1674179</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1112667</td>
+    <td width="87%" valign="top">IEnumVariant leak fixed in patch 1674179</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1465539</td>
+    <td width="87%" valign="top">IEnumVariant leak fixed in patch 1674179</td>
+  </tr>
+  <tr>
     <td width="13%" valign="top">1504120 </td>
     <td width="87%" valign="top">Microsoft 2003 Server crashes.  Server crashes on MS 2003 Server have been reported over time.
     	Some users have had say that Jacob must be built on MS2003 Server to run reliably. 
-    	The Jacob distribution on Sourceforge is built on Windows XP SP2 (this item is soley informationional)</td>
+    	The Jacob distribution on Sourceforge is built on Windows XP SP2 (No code change. Just a documentation updat)</td>
   </tr>
   <tr>
     <td width="13%" valign="top">&nbsp;</td>
@@ -39,6 +51,10 @@
     <td width="87%" valign="top">ROT hashmap handling when autogc=no (default) can lead to key collisions
     in hashmap.  This causes objects to be garbage finalized when they shouldn't be resulting in vm failures
     with large (large) numbers of objects. </td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1674179</td>
+    <td width="87%" valign="top">Fixed Enum leaks with EnumVariants in Variant.cpp and EnumVariant.cpp</td>
   </tr>
   <tr>
     <td width="13%" valign="top">&nbsp;</td>
