@@ -5,10 +5,7 @@
 <h3>What's New</h3>
 <ul>
 <li>
-	<b>Data Types</b>
-	<ul>
-	<li></li>
-	</ul>
+	<b>No New Features</b>
 </li>
 </ul>
 
@@ -19,25 +16,19 @@
   </tr>
   <tr>
     <td width="13%" valign="top">1651926 </td>
-    <td width="87%" valign="top">ActiveXComponent: getPropertyAsString should call getString() instead of toString()</td>
+    <td width="87%" valign="top">(prelease 1) ActiveXComponent: getPropertyAsString should call getString() instead of toString()</td>
   </tr>
   <tr>
     <td width="13%" valign="top">1569864 </td>
-    <td width="87%" valign="top">IEnumVariant leak fixed in patch 1674179</td>
+    <td width="87%" valign="top">(prelease 1) IEnumVariant leak fixed in patch 1674179</td>
   </tr>
   <tr>
     <td width="13%" valign="top">1112667</td>
-    <td width="87%" valign="top">IEnumVariant leak fixed in patch 1674179</td>
+    <td width="87%" valign="top">(prelease 1) IEnumVariant leak fixed in patch 1674179</td>
   </tr>
   <tr>
     <td width="13%" valign="top">1465539</td>
-    <td width="87%" valign="top">IEnumVariant leak fixed in patch 1674179</td>
-  </tr>
-  <tr>
-    <td width="13%" valign="top">1504120 </td>
-    <td width="87%" valign="top">Microsoft 2003 Server crashes.  Server crashes on MS 2003 Server have been reported over time.
-    	Some users have had say that Jacob must be built on MS2003 Server to run reliably. 
-    	The Jacob distribution on Sourceforge is built on Windows XP SP2 (No code change. Just a documentation updat)</td>
+    <td width="87%" valign="top">(prelease 1) IEnumVariant leak fixed in patch 1674179</td>
   </tr>
   <tr>
     <td width="13%" valign="top">&nbsp;</td>
@@ -48,13 +39,13 @@
   </tr> 
   <tr>
     <td width="13%" valign="top">1674015</td>
-    <td width="87%" valign="top">ROT hashmap handling when autogc=no (default) can lead to key collisions
+    <td width="87%" valign="top">(prelease 1) ROT hashmap handling when autogc=no (default) can lead to key collisions
     in hashmap.  This causes objects to be garbage finalized when they shouldn't be resulting in vm failures
     with large (large) numbers of objects. </td>
   </tr>
   <tr>
     <td width="13%" valign="top">1674179</td>
-    <td width="87%" valign="top">Fixed Enum leaks with EnumVariants in Variant.cpp and EnumVariant.cpp</td>
+    <td width="87%" valign="top">(prelease 1) Fixed Enum leaks with EnumVariants in Variant.cpp and EnumVariant.cpp</td>
   </tr>
   <tr>
     <td width="13%" valign="top">&nbsp;</td>
@@ -65,12 +56,32 @@
   </tr> 
   <tr>
     <td width="13%" valign="top">1662887</td>
-    <td width="87%" valign="top">Dispatch static methods should throw runtime exceptions when
+    <td width="87%" valign="top">(prelease 1) Dispatch static methods should throw runtime exceptions when
    		null is passed in for the Dispatch object and when the Dispatch object is in an invalid state. </td>
   </tr>
   <tr>
     <td width="13%" valign="top">&nbsp;</td>
     <td width="87%" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="2"><b>Known Issues</b></td>
+  </tr> 
+  <tr>
+    <td width="13%" valign="top">1504120</td>
+    <td width="87%" valign="top"><em>Identified 1.11.1</em> Microsoft 2003 Server crashes.  Server crashes on MS 2003 Server have been reported over time.
+    	Some users have had say that Jacob must be built on MS2003 Server to run reliably. 
+    	The Jacob distribution on Sourceforge is built on Windows XP SP2</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1677933</td>
+    <td width="87%" valign="top"><em>Identified 1.11.1</em> Process affinity may have to be set on
+    dual core machines to avoid com exceptions.</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1504120 </td>
+    <td width="87%" valign="top"><em>Identified 1.11.1</em>Microsoft 2003 Server crashes.  Server crashes on MS 2003 Server have been reported over time.
+    	Some users have had say that Jacob must be built on MS2003 Server to run reliably. 
+    	The Jacob distribution on Sourceforge is built on Windows XP SP2 (No code change. Just a documentation updat)</td>
   </tr>
 </table>
 
