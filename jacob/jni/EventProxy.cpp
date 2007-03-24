@@ -146,7 +146,7 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 	if (!eventMethodName) 
   	{
 	    // user did not implement this method
-  		printf("Invoke: didn't find method name\n");
+  		//printf("Invoke: didn't find method name\n");
   		ThrowComFail(env, "Event method received was not defined as part of callback interface", -1);
   		
   		// should we detatch before returning?? The old code didn't but I don't see why not.
