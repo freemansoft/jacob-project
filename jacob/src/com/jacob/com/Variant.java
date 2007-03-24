@@ -1346,11 +1346,7 @@ public class Variant extends JacobObject {
      * public constructor, initializes and sets type to VariantEmpty
      */
     public Variant() {
-        init();
-        putEmpty();
-        if (isDebugEnabled()) {
-            debug("Variant: " +	"create " + this );
-        }
+    	this(null,false);
     }
 
     /**
@@ -1358,8 +1354,7 @@ public class Variant extends JacobObject {
      * @param in
      */
     public Variant(int in) {
-        init();
-        putInt(in);
+    	this(new Integer(in));
     }
 
     /**
@@ -1367,8 +1362,7 @@ public class Variant extends JacobObject {
      * @param in
      */
     public Variant(double in) {
-        init();
-        putDouble(in);
+    	this(new Double(in));
     }
 
     /**
@@ -1376,8 +1370,7 @@ public class Variant extends JacobObject {
      * @param in
      */
     public Variant(boolean in) {
-        init();
-        putBoolean(in);
+    	this(new Boolean(in));
     }
 
     /** 
@@ -1586,48 +1579,6 @@ public class Variant extends JacobObject {
      */
     public Object toByteArray() {
         throw new NotImplementedException("Not implemented");
-    }
-
-    /**
-     * custom serialization support
-     * @param oos
-     */
-    private void writeObject(java.io.ObjectOutputStream oos) {
-        try {
-        	byte[] ourBytes = SerializationWriteToBytes();
-        	int count = ourBytes.length;
-        	if (JacobObject.isDebugEnabled()){
-        		JacobObject.debug("writing out "+count+" bytes");
-        	}
-        	oos.writeInt(count);
-        	oos.write(ourBytes);
-            //Save(oos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * custom serialization support
-     * @param ois
-     */
-    private void readObject(java.io.ObjectInputStream ois) {
-        try {
-        	// Load will do this if we don't but lets do it
-        	// from here so that the variant is set up exactly
-        	// the same as the ones not created from a stream
-        	init();
-        	int numBytes = ois.readInt();
-        	byte[] ourBytes = new byte[numBytes];
-        	if (JacobObject.isDebugEnabled()){
-        		JacobObject.debug("reading in "+numBytes+" bytes");
-        	}
-        	ois.read(ourBytes);
-        	SerializationReadFromBytes(ourBytes);
-            //Load(ois);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**

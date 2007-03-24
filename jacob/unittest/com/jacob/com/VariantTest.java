@@ -22,6 +22,7 @@ class VariantTest {
 		testJig.testObjectIsAConstant();
 		testJig.testSomeChangeVT();
 		testJig.testByRefToJavaObject();
+		testJig.testManyThreadedInit();
 		System.out.println("Testing Complete");
 		
 	}
@@ -388,5 +389,89 @@ class VariantTest {
 		}
 		
 		
+	}
+
+	/**
+	 * Spin up a lot of threads and have them all create variants
+	 * 3/2007 there have been several reports in multi-threaded servers that show init() failing
+	 *
+	 */
+	public void testManyThreadedInit(){
+        VariantInitTestThread threads[] = new VariantInitTestThread[75];
+        
+		System.out.println("Starting thread test ("+threads.length
+				+ " threads each creating 10000 objects)."
+				+ " This may take 30 seconds or more.");
+        for (int i = 0; i < threads.length; i++)
+        {
+            threads[i] = new VariantInitTestThread("thread-" + i, 10000);
+        }
+        for (int i = 0; i < threads.length; i++)
+        {
+            threads[i].start();
+        }
+        int numComplete = 0;
+        while (numComplete < threads.length){
+        	// give the works time to work
+        	try {
+        		Thread.sleep(333);
+			} catch (InterruptedException ie){
+				// do nothing
+			}
+        	numComplete = 0;
+        	for ( int i = 0; i < threads.length; i++){
+        		if (threads[i].isComplete){
+        			numComplete++;
+        		}
+        	}
+        	//System.out.print("["+numComplete+"/"+threads.length+"]");
+        }
+		System.out.println("Finished thread test");
+	}
+	
+	/**
+	 * a class to create variants in seperate threads
+	 * @author joe
+	 *
+	 */
+	class VariantInitTestThread extends Thread
+	{
+		private boolean isComplete = false;
+		
+	    private int initialRunSize = 0;
+	    /**
+	     * @param arg0
+	     */
+	    public VariantInitTestThread(String newThreadName, int iStartCount)
+	    {
+	        super(newThreadName);
+	        initialRunSize = iStartCount;
+	        
+	    }
+
+	    public boolean isComplete(){
+	    	return isComplete;
+	    }
+	    /**
+	     * Blow out a bunch of Variants
+	     * 
+	     * @see java.lang.Runnable#run()
+	     */
+	    public void run()
+	    {
+	    	for (int variantIndex = 0; variantIndex < initialRunSize; variantIndex ++ ){
+	    		try {
+	    			Thread.yield();
+	    			Thread.sleep(0);
+				} catch (InterruptedException ie){
+					// do nothing
+				}
+				//System.out.println(Thread.currentThread().getName());
+	    		Variant testSubject = new Variant(variantIndex);
+	    		testSubject.getvt();
+	    		testSubject.getInt();
+	    	}
+	    	isComplete = true;
+	    }
 	}
 }
