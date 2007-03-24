@@ -66,7 +66,11 @@ EventProxy::~EventProxy()
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
    	if (vmConnectionStatus == JNI_EDETACHED){
 		//printf("Unhook: Attaching to current thread using JNI Version 1.2 (%d)\n",vmConnectionStatus);
-		jvm->AttachCurrentThread((void **)&env, jvm);
+		JavaVMAttachArgs attachmentArgs;
+			attachmentArgs.version = JNI_VERSION_1_2;	
+			attachmentArgs.name = NULL;
+			attachmentArgs.group = NULL;
+		jvm->AttachCurrentThread((void **)&env, &attachmentArgs);
 			if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
    	} else {
    		// should really look for JNI_OK versus an error
@@ -140,7 +144,11 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
         
     // attach to the current running thread
 	//printf("Invoke: Attaching to current thread using JNI Version 1.2\n");
-	jvm->AttachCurrentThread((void **)&env, jvm);
+	JavaVMAttachArgs attachmentArgs;
+		attachmentArgs.version = JNI_VERSION_1_2;	
+		attachmentArgs.name = NULL;
+		attachmentArgs.group = NULL;
+	jvm->AttachCurrentThread((void **)&env, &attachmentArgs);
 		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
 
 	if (!eventMethodName) 
