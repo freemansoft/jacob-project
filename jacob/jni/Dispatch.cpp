@@ -322,7 +322,7 @@ static char* BasicToCharString(const BSTR inBasicString)
         size_t len = ::wcstombs(charString, inBasicString, charStrSize);
     }
     else
-        charString = ::strdup("");
+        charString = ::_strdup("");
 
     return charString;
 }
@@ -334,7 +334,7 @@ static char* CreateErrorMsgFromResult(HRESULT inResult)
       FORMAT_MESSAGE_FROM_SYSTEM, NULL, inResult,MAKELANGID(LANG_NEUTRAL,
       SUBLANG_DEFAULT), (LPTSTR) &msg, 0, NULL);
   if (msg == NULL)
-  msg = ::strdup("An unknown COM error has occured.");
+  msg = ::_strdup("An unknown COM error has occured.");
 
   return msg;
 }
@@ -473,13 +473,13 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
   {
 	  jint *uAE = env->GetIntArrayElements(uArgErr, NULL);
 	  hr = pIDispatch->Invoke(dispID,IID_NULL,
-		lcid,wFlags,&dispparams,v,&excepInfo,(unsigned int *)uAE);
+		lcid,(WORD)wFlags,&dispparams,v,&excepInfo,(unsigned int *)uAE); // SF 1689061
 	  env->ReleaseIntArrayElements(uArgErr, uAE, 0);
   }
   else
   {
 	  hr = pIDispatch->Invoke(dispID,IID_NULL,
-		lcid,wFlags,&dispparams,v,&excepInfo, NULL);
+		lcid,(WORD)wFlags,&dispparams,v,&excepInfo, NULL); // SF 1689061
   }
   if (num_args) 
   {
@@ -514,7 +514,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
     } else {
 		dispIdAsName = new char[256];
 		// get the id string
-		itoa (dispID,dispIdAsName,10);
+		_itoa (dispID,dispIdAsName,10);
 		//continue on mostly as before
 		buf = CreateErrorMsgFromInfo(hr,&excepInfo,dispIdAsName); 
     }

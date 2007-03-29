@@ -562,7 +562,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromStringArray
       // GetStringUTFChars() replaced with GetStringChars()
       // (Variant modified in previous report)
       const jchar *str = env->GetStringChars(s, NULL); 
-      CComBSTR bs(str);
+	  CComBSTR bs((LPCOLESTR)str); // SR cast SF 1689061
       V_VT(&v) = VT_BSTR;
       V_BSTR(&v) = bs.Copy();
       long x = i;
@@ -577,7 +577,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromStringArray
       // GetStringUTFChars() replaced with GetStringChars()
       // (Variant modified in previous report)
       const jchar *str = env->GetStringChars(s, NULL);
-      CComBSTR bs(str);
+      CComBSTR bs((LPCOLESTR)str); // SR cast SF 1689061
       BSTR bstr = bs.Detach();
       long x = i;
       SafeArrayPutElement(psa,&x,bstr);
@@ -962,7 +962,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toStringArray
         return NULL;
       }
       BSTR bs = V_BSTR(&v);
-      jstring js = env->NewString(bs, SysStringLen(bs));
+      jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061 
       env->SetObjectArrayElement(iarr, i, js);
     }
     return iarr;
@@ -973,7 +973,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toStringArray
       BSTR bs = NULL;
       long ix = i;
       SafeArrayGetElement(sa, &ix, (void*) &bs);
-      jstring js = env->NewString(bs, SysStringLen(bs));
+      jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061 
       env->SetObjectArrayElement(iarr, i, js);
     }
     return iarr;
@@ -1618,7 +1618,7 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString__I
       return NULL;
     }
     BSTR bs = V_BSTR(&v);
-    jstring js = env->NewString(bs, SysStringLen(bs));
+    jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
     // jacob report 1224219 
 	// SafeArrayGetElement memory must be freed http://www.canaimasoft.com/f90VB/OnlineManuals/Reference/TH_31.htm
     VariantClear(&v);
@@ -1626,7 +1626,7 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString__I
   } else if (vt == VT_BSTR) {
     BSTR bs = NULL;
     SafeArrayGetElement(psa, &idx, &bs);
-    jstring js = env->NewString(bs, SysStringLen(bs));
+    jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
     // jacob report 1224219 
 	// SafeArrayGetElement memory must be freed http://www.canaimasoft.com/f90VB/OnlineManuals/Reference/TH_31.htm
 	if (bs) SysFreeString(bs);
@@ -1660,13 +1660,13 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString__II
       return NULL;
     }
     BSTR bs = V_BSTR(&v);
-    jstring js = env->NewString(bs, SysStringLen(bs));
+    jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
     return js;
   } else if (vt == VT_BSTR) {
     long idx[2] = {i, j};
     BSTR bs = NULL;
     SafeArrayGetElement(psa, idx, &bs);
-    jstring js = env->NewString(bs, SysStringLen(bs));
+    jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
     return js;
   }
   ThrowComFail(env, "safearray cannot get string", 0);
@@ -1783,7 +1783,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getStrings
         return;
       }
       BSTR bs = V_BSTR(&v);
-      jstring js = env->NewString(bs, SysStringLen(bs));
+      jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
       env->SetObjectArrayElement(ja, j, js);
       VariantClear(&v);
     } 
@@ -1795,7 +1795,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getStrings
     {
       long ix = i;
       SafeArrayGetElement(sa, &ix, (void*) &bs);
-      jstring js = env->NewString(bs, SysStringLen(bs));
+      jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
       env->SetObjectArrayElement(ja, j, js);
     } 
   } else {
@@ -2751,12 +2751,12 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString___3I
       return NULL;
     }
     BSTR bs = V_BSTR(&v);
-    jstring js = env->NewString(bs, SysStringLen(bs));
+    jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
     return js;
   } else if (vt == VT_BSTR) {
     BSTR bs = NULL;
     SafeArrayGetElement(psa, jIndices, &bs);
-    jstring js = env->NewString(bs, SysStringLen(bs));
+    jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
     return js;
   }
   ThrowComFail(env, "safearray cannot get string", 0);

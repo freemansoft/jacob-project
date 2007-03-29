@@ -87,7 +87,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_init
  * Method:    zeroVariant
  * Signature: ()V
  *
- * This should only be used on variant objects created by teh
+ * This should only be used on variant objects created by the
  * com layer as part of a call through EventProxy.
  * This zeros out the variant pointer in the Variant object
  * so that the calling COM program can free the memory.
@@ -272,7 +272,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantStringRef
 	//	Unicode string (no terminating NULL) provided by GetStringChars
 	const jsize numChars = env->GetStringLength(s);
     //CComBSTR bs(cStr);
-	CComBSTR bs( numChars, cStr );
+	CComBSTR bs( numChars, (LPCOLESTR)cStr ); // SR cast SF 1689061
 
     BSTR *pbs = (BSTR *)CoTaskMemAlloc(sizeof(BSTR));
     bs.CopyTo(pbs);
@@ -367,7 +367,7 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getVariantStringRef
       return NULL;
     }
     BSTR *bs = V_BSTRREF(v);
-    jstring js = env->NewString(*bs, SysStringLen(*bs));
+    jstring js = env->NewString((jchar*)*bs, SysStringLen(*bs)); // SR cast SF 1689061
     return js;
   }
   return NULL;
@@ -656,7 +656,7 @@ JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrency
     CY cy;
     cy = V_CY(v);
     jlong jl;
-    memcpy(&jl, &cy, 64);
+    memcpy(&jl, &cy, 8); // was 64. should be sizeof(x) SF 1689061
     return jl;
   }
   return NULL;
@@ -683,7 +683,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrencyRef
   if (v) {
     VariantClear(v); // whatever was there before
     CY *pf = (CY *)CoTaskMemAlloc(sizeof(CY));
-    memcpy(pf, &cur, 64);
+    memcpy(pf, &cur, 8); // was 64. should be sizeof(x) SF 1689061
     V_VT(v) = VT_BYREF|VT_CY;
     V_CYREF(v) = pf;
   }
@@ -739,7 +739,7 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getVariantString
       return NULL;
     }
     BSTR bs = V_BSTR(v);
-    jstring js = env->NewString(bs, SysStringLen(bs));
+    jstring js = env->NewString((jchar*)bs, SysStringLen(bs));// SR cast SF 1689061
     return js;
   }
   return NULL;
@@ -762,7 +762,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantString
 	//	Unicode string (no terminating NULL) provided by GetStringChars
 	const jsize numChars = env->GetStringLength(s);
     //CComBSTR bs(cStr);
-	CComBSTR bs( numChars, cStr );
+	CComBSTR bs( numChars, (LPCOLESTR)cStr ); // SR cast SF 1689061
 
     V_VT(v) = VT_BSTR;
     V_BSTR(v) = bs.Copy();
@@ -795,7 +795,7 @@ JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrencyRef
     CY *cy;
     cy = V_CYREF(v);
     jlong jl;
-    memcpy(&jl, cy, 64);
+    memcpy(&jl, cy, 8); // was 64. should be sizeof(x) SF 1689061
     return jl;
   }
   return NULL;
