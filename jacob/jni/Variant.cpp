@@ -656,7 +656,7 @@ JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrency
     CY cy;
     cy = V_CY(v);
     jlong jl;
-    memcpy(&jl, &cy, 8); // was 64. should be sizeof(x) SF 1689061
+    memcpy(&jl, &cy, sizeof(jl)); // was 64. should be sizeof(x) SF 1690420
     return jl;
   }
   return NULL;
@@ -683,7 +683,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrencyRef
   if (v) {
     VariantClear(v); // whatever was there before
     CY *pf = (CY *)CoTaskMemAlloc(sizeof(CY));
-    memcpy(pf, &cur, 8); // was 64. should be sizeof(x) SF 1689061
+    memcpy(pf, &cur, sizeof(*pf)); // was 64. should be sizeof(x) SF 1690420
     V_VT(v) = VT_BYREF|VT_CY;
     V_CYREF(v) = pf;
   }
@@ -795,7 +795,7 @@ JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrencyRef
     CY *cy;
     cy = V_CYREF(v);
     jlong jl;
-    memcpy(&jl, cy, 8); // was 64. should be sizeof(x) SF 1689061
+    memcpy(&jl, cy, sizeof(jl)); // was 64. should be sizeof(x) SF 1690420
     return jl;
   }
   return NULL;
