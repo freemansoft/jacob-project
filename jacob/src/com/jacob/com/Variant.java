@@ -525,7 +525,10 @@ public class Variant extends JacobObject {
     /**
      * @return the content of this variant as a Dispatch object (after possible conversion)
      */
-    public Dispatch toDispatch(){ return toVariantDispatch(); }
+    public Dispatch toDispatch(){
+    	// now make the native call
+    	return toVariantDispatch(); 
+    }
     
     /**
      * native method used by toDispatch()
@@ -698,16 +701,20 @@ public class Variant extends JacobObject {
     }
 
     /** 
-     * same as {@link #toDispatch()}
-     * This is different than the other get methods.
-     * It calls toDispatch which will do type conversion.
-     * Most getXXX() methods will return null if the data is not of 
-     * the requested type
-     * @return this object as a dispatch (Why isn't this typed as type Dispatch?)
+     * cover for {@link #toDispatch()}
+     * This method now matches other getXXX() methods.  It throws an IllegalStateException
+     * if the object is not of type VariantDispatch
+     * @return this object as a dispatch 
+     * @throws IllegalStateException if wrong variant type
      */
     public Dispatch getDispatch() {
-        return toDispatch();
-    }
+    	if ((this.getvt() & VariantDispatch) == VariantDispatch) {
+        		return toDispatch();
+		} else {
+			throw new IllegalStateException(
+					"getDispatch() only legal on Variants of type VariantDispatch, not "+this.getvt());
+		}
+   	}
 
     /** 
      * This acts a cover for 
@@ -1282,14 +1289,14 @@ public class Variant extends JacobObject {
 
     /**
      * Dispatch and dispatchRef are treated the same
-     * This is just a cover for getDispatch() with a flag check
-     * @return the results of getDispatch()
+     * This is just a cover for toDispatch() with a flag check
+     * @return the results of toDispatch()
      * @throws IllegalStateException if variant is not of the requested type
      */
     public Dispatch getDispatchRef() {
     	if ((this.getvt() & VariantDispatch) == VariantDispatch &&
         		(this.getvt() & VariantByref) == VariantByref) {
-        		return getDispatch();
+        		return toDispatch();
 		} else {
 			throw new IllegalStateException(
 					"getDispatchRef() only legal on byRef Variants of type VariantDispatch, not "+this.getvt());
@@ -1686,7 +1693,10 @@ public class Variant extends JacobObject {
 			    result = this.getStringRef();
 			    break;
 		    case Variant.VariantDispatch : //9
-			    result = this.getDispatchRef();
+			    result = this.getDispatch();
+			    break;
+		    case Variant.VariantDispatch | Variant.VariantByref: //9
+			    result = this.getDispatchRef(); // Can dispatches even be byRef?
 			    break;
 		    case Variant.VariantError : //10
 			    result = new NotImplementedException("toJavaObject() Not implemented for VariantError");

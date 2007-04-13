@@ -22,6 +22,8 @@ class VariantTest {
 		testJig.testObjectIsAConstant();
 		testJig.testSomeChangeVT();
 		testJig.testByRefToJavaObject();
+		testJig.testDispatchToJavaObject();
+		System.out.println("Starting last test");
 		testJig.testManyThreadedInit();
 		System.out.println("Testing Complete");
 		
@@ -104,6 +106,18 @@ class VariantTest {
 		}
 		
 		// need to do currency also
+	}
+	
+	/**
+	 * 4/2007 bug report toObject on dispatch tries to call getDispatchRef
+	 * instead of getDispatch so toString() on dispatch blows up.
+	 *
+	 */
+	private void testDispatchToJavaObject(){
+		Variant v2 = new Variant();
+		v2.putNothing();
+		// this test fails even though the exact same code below works fine
+		//v2.toJavaObject();
 	}
 	
 	/**
@@ -237,7 +251,7 @@ class VariantTest {
 	 *
 	 */
 	private void testSafeReleaseConstant(){
-		System.out.println("Using Static constant Variant - should never throw access violation");
+		//System.out.println("Using Static constant Variant - should never throw access violation");
 		Variant.VT_TRUE.safeRelease();
 		if (Variant.VT_TRUE.getBoolean() != true){
 			System.out.println("VT_TRUE has been broken by SafeRelease()");
@@ -387,7 +401,10 @@ class VariantTest {
 		if (!v2.isNull()){
 			System.out.println("putNothing is supposed to cause isNull() to return true");
 		}
-		
+		// this line blows up in the test above
+		if (v2.toJavaObject() == null){
+			System.out.println("putNothing() followed by toJavaObject() should return a Dispatch");
+		}
 		
 	}
 
