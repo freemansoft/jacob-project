@@ -139,6 +139,12 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 		eventMethodName = W2A((OLECHAR *)MethName[i]);
     	}
   }
+  // added 1.12
+  if (!eventMethodName) {
+  	// just bail if can't find signature.  no need to attach
+	// printf("Invoke: didn't find method name for dispatch id %d\n",dispID);
+   	return S_OK;
+  }
   if (DISPATCH_METHOD & wFlags) 
   {
         
@@ -153,11 +159,12 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 
 	if (!eventMethodName) 
   	{
-	    // user did not implement this method
-  		// printf("Invoke: didn't find method name\n");
+	    // could not find this signature in list
+  		// printf("Invoke: didn't find method name for dispatch id %d\n",dispID);
+  		// this probably leaves a native thread attached to the vm when we don't want it
   		ThrowComFail(env, "Event method received was not defined as part of callback interface", -1);
   		
-  		// should we detatch before returning?? The old code didn't but I don't see why not.
+  		// should we detatch before returning?? We probably never get here if we ThrowComFail()
 	    // jvm->DetachCurrentThread();
     	return S_OK;
 	  }
