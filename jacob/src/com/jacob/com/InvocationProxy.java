@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
  * @version $Id$
  * @author joe
  * 
- * DispatchProxy wraps this class around any event handlers
+ * DispatchEvents wraps this class around any event handlers
  * before making the JNI call that sets up the link with EventProxy.
  * This means that EventProxy.cpp just calls invoke(String,Variant[])
  * against the instance of this class.  Then this class does 
@@ -110,7 +110,6 @@ public class InvocationProxy {
 			throw new IllegalArgumentException("InvocationProxy: missing Variant parameters");
 		}
 		try {
-			// should wrap in debug flag
 			if (JacobObject.isDebugEnabled()){
 				JacobObject.debug("InvocationProxy: trying to invoke "+methodName
 						+" on "+mTargetObject);
@@ -137,6 +136,7 @@ public class InvocationProxy {
 				}
 			}
 		} catch (SecurityException e) {
+			// what causes this exception?
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
 			// this happens whenever the listener doesn't implement all the methods
@@ -149,12 +149,14 @@ public class InvocationProxy {
 			// we can throw these inside the catch block so need to  re-throw it
 			throw e;
 		} catch (IllegalAccessException e) {
+			// can't access the method on the target instance for some reason
 			if (JacobObject.isDebugEnabled()){
 				JacobObject.debug("InvocationProxy: probably tried to access public method on non public class"
 						+ methodName);
 			}
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			// invocation of target method failed
 			e.printStackTrace();
 		}
 		return mVariantToBeReturned;
