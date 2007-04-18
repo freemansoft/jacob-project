@@ -361,12 +361,18 @@ public class Variant extends JacobObject {
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if inVariant = null
-	 * @param inVariant A variant that is to be referenced by this variant
+	 * @param objectToBeWrapped A object that is to be referenced by this variant.
+	 * 		If objectToBeWrapped is already of type Variant, then it is used.
+	 * 		If objectToBeWrapped is not Variant then <code>new Variant(objectToBeWrapped)</code>
+	 * 		is called and the result is passed into the com layer
 	 */
-	public void putVariant(Variant inVariant) {
-		if (inVariant == null) {
+	public void putVariant(Object objectToBeWrapped) {
+		if (objectToBeWrapped == null) {
 			throw new IllegalArgumentException("Cannot put null in as a variant");
+		} else if (objectToBeWrapped instanceof Variant){
+			putVariantVariant((Variant)objectToBeWrapped);
 		} else {
+			Variant inVariant = new Variant(objectToBeWrapped);
 			putVariantVariant(inVariant);
 		}
 	}
