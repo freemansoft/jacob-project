@@ -26,6 +26,10 @@ import java.util.Date;
  * between Java and COM. It provides a single class that can handle all data
  * types.
  * <p>
+ * PROPVARIANT introduces new types so eventually Variant will need to be 
+ * upgraded to support PropVariant types.
+ * http://blogs.msdn.com/benkaras/archive/2006/09/13/749962.aspx
+ * <p>
  * This object no longer implements Serializable because serialization is broken 
  * (and has been since 2000/xp).  The underlying
  * marshalling/unmarshalling code is broken in the JNI layer.
@@ -78,7 +82,7 @@ public class Variant extends JacobObject {
     /** variant's type is short VT_I2*/
     public static final short VariantShort = 2;
 
-    /** variant's type is int VT_I4*/
+    /** variant's type is int VT_I4, a Long in VC*/
     public static final short VariantInt = 3;
 
     /** variant's type is float VT_R4*/
@@ -350,6 +354,72 @@ public class Variant extends JacobObject {
     	getvt();
     	putVariantStringRef(in);
     }
+    
+	/**
+	 * Puts a variant into this variant making it type VT_VARIANT.
+	 * Added 1.12 pre 6
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if inVariant = null
+	 * @param in
+	 *            a variant that is to be referenced by this variant
+	 */
+	public void putVariant(Variant inVariant) {
+		if (inVariant == null) {
+			throw new IllegalArgumentException("Cannot put null in as a variant");
+		} else {
+			putVariantVariant(inVariant);
+		}
+	}
+
+	/**
+	 * All VariantVariant type variants are BYREF.
+	 * 
+	 * Set the content of this variant to a string (VT_VARIANT|VT_BYREF).
+	 * 
+	 * Added 1.12 pre 6 - VT_VARIANT support is at an alpha level
+	 * @param in variant to be wrapped 
+	 * 
+	 */
+	private native void putVariantVariant(Variant in);
+
+	/**
+	 * Used to get the value from a windows type of VT_VARIANT
+	 * or a jacob Variant type of VariantVariant.
+	 * Added 1.12 pre 6 - VT_VARIANT support is at an alpha level
+	 * @returns Object a java Object that represents the content of the enclosed Variant
+	 */
+	public Object getVariant() {
+		if ((this.getvt() & VariantVariant) == VariantVariant
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			if (JacobObject.isDebugEnabled()){
+				JacobObject.debug("About to call getVariantVariant()");
+			}
+			Variant enclosedVariant = getVariantVariant();
+			Object  enclosedVariantAsJava = enclosedVariant.toJavaObject();
+			// zero out the reference to the underlying windows memory so that
+			// it is still only owned in one place by one java object 
+			// (this object of type VariantVariant)
+			//enclosedVariant.putEmpty(); // don't know if this would have had side effects
+			if (JacobObject.isDebugEnabled()){
+				JacobObject.debug("Zeroing out enclosed Variant's ref to windows memory");
+			}
+			enclosedVariant.m_pVariant = 0;
+			return enclosedVariantAsJava;
+		} else {
+			throw new IllegalStateException(
+					"getVariant() only legal on Variants of type VariantVariant, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * Returns the variant type via a native method call.
+	 * Added 1.12 pre 6 - VT_VARIANT support is at an alpha level
+	 * @return Variant one of the VT_Variant types
+	 */
+	private native Variant getVariantVariant();
+    
     /**
      * get the content of this variant as a short
      * @return short
@@ -1451,6 +1521,9 @@ public class Variant extends JacobObject {
         		putDispatchRef((Dispatch)pValueObject);
         	else
         		putDispatch((Dispatch)pValueObject);
+        } else if (pValueObject instanceof Variant){
+        	// newly added 1.12-pre6
+        	putVariant((Variant)pValueObject);
         } else {
         	// should really throw an illegal argument exception if its an invalid type
             if (fByRef)
@@ -1629,12 +1702,13 @@ public class Variant extends JacobObject {
      * <p>
      * Unlike other toXXX() methods, it does not do a type conversion
      * except for special data types (it shouldn't do any!)
-	 *
+	 * <p>
+	 * Converts Variant.VariantArray types to SafeArrays
 	 * @return Corresponding Java object of the type matching the Variant type.
 	 * @throws IllegalStateException if no underlying windows data structure
 	 * @throws NotImplementedException if unsupported conversion is requested
 	 */
-	protected Object toJavaObject() throws JacobException {
+	public Object toJavaObject() throws JacobException {
 	    Object result = null;
 	
 	    short type = this.getvt(); //variant type
@@ -1707,8 +1781,11 @@ public class Variant extends JacobObject {
 		    case Variant.VariantBoolean | Variant.VariantByref: //11
 			    result = new Boolean(this.getBooleanRef());
 			    break;
-		    case Variant.VariantVariant : //12
-			    result = new NotImplementedException("toJavaObject() Not implemented for VariantVariant");
+		    case Variant.VariantVariant : //12 they are always by ref
+			    result = new NotImplementedException("toJavaObject() Not implemented for VariantVariant without ByRef");
+			    break;
+		    case Variant.VariantVariant | Variant.VariantByref: //12
+			    result = getVariant();
 			    break;
 		    case Variant.VariantObject : //13
 			    result = new NotImplementedException("toJavaObject() Not implemented for VariantObject");

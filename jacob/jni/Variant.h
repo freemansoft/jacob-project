@@ -498,6 +498,23 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_SerializationReadFromBytes
   
 /*
  * Class:     com_jacob_com_Variant
+ * Method:    putVariantVariant
+ * Signature: (Lcom/jacob/com/Variant;)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantVariant
+  (JNIEnv *, jobject, jobject);
+
+
+/*
+ * Class:     com_jacob_com_Variant
+ * Method:    getVariantVariant
+ * Signature: ()Lcom/jacob/com/Variant;
+ */
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getVariantVariant
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jacob_com_Variant
  * Method:    isVariantConsideredNull
  * Signature: ()Z
  */

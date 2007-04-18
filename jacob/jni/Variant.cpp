@@ -1013,4 +1013,67 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_Variant_isVariantConsideredNull
   return JNI_FALSE;
 }
 
+/**
+ * Puts a variant into a the Variant as its data and sets the type 
+ * to VT_VARIANT|VT_BYREF.
+ * Added 1.12 pre 6
+ * 
+ * */
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantVariant
+  (JNIEnv *env, jobject _this, jobject var)
+{
+
+  VARIANT *vVar = extractVariant(env, var);
+  VARIANT *v = extractVariant(env, _this);
+
+  if (v) {
+    VariantClear(v); // whatever was there before
+
+    V_VT(v) = VT_VARIANT|VT_BYREF;
+    V_VARIANTREF(v) = vVar;
+  }
+
+}
+
+/**
+ * retrieves the enclosed variant when they are of type VT_VARIANT
+ * Added 1.12 pre 6
+ * 
+ * */
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getVariantVariant
+(JNIEnv *env, jobject _this) 
+{
+
+  VARIANT *v = extractVariant(env, _this);
+  if (v) {
+
+    if (V_VT(v) != (VT_VARIANT|VT_BYREF)) {
+      return NULL;
+    }
+
+    //Construct a new Variant
+    jclass variantClass = env->FindClass("com/jacob/com/Variant");
+    jmethodID defaultCon = env->GetMethodID(variantClass, "<init>", "()V");
+    jobject newVariant = env->NewObject(variantClass, defaultCon);
+	
+	VARIANT *refVar = V_VARIANTREF(v);
+	VARIANT *newV = extractVariant(env, newVariant);
+
+	// we could have made a copy of refV here but we aren't every going to free 
+	// it outside of the scope of the enclosing context so we will just used the
+	// enclosed.  This relies on the java layer to zero out its ref to this
+	// enclosed variant before the gc can come along and free the memory out from
+	// under this enclosing variant.
+
+    jfieldID jf = env->GetFieldID( variantClass, VARIANT_FLD, "I");
+    env->SetIntField(newVariant, jf, (unsigned int)refVar);
+
+    return newVariant;
+  }
+
+  return NULL;
+
+}
+
+
 }
