@@ -361,8 +361,7 @@ public class Variant extends JacobObject {
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if inVariant = null
-	 * @param in
-	 *            a variant that is to be referenced by this variant
+	 * @param inVariant A variant that is to be referenced by this variant
 	 */
 	public void putVariant(Variant inVariant) {
 		if (inVariant == null) {
@@ -387,7 +386,7 @@ public class Variant extends JacobObject {
 	 * Used to get the value from a windows type of VT_VARIANT
 	 * or a jacob Variant type of VariantVariant.
 	 * Added 1.12 pre 6 - VT_VARIANT support is at an alpha level
-	 * @returns Object a java Object that represents the content of the enclosed Variant
+	 * @return Object a java Object that represents the content of the enclosed Variant
 	 */
 	public Object getVariant() {
 		if ((this.getvt() & VariantVariant) == VariantVariant

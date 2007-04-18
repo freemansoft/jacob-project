@@ -19,9 +19,6 @@
  */
 package com.jacob.com;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 /**
  * @version $Id$
  * @author joe
@@ -31,136 +28,44 @@ import java.lang.reflect.Method;
  * This means that EventProxy.cpp just calls invoke(String,Variant[])
  * against the instance of this class.  Then this class does 
  * reflection against the event listener to call the actual event methods.
- * All Event methods have the signature
- *  
- * 		<code> void eventMethodName(Variant[])</code>
- * or
- * 		<code> Variant eventMethodName(Variant[])</code>
+ * The event methods can return void or return a Variant.  Any
+ * value returned will be passed back to the calling windows module
+ * by the Jacob JNI layer.
+ * <p>
+ * 
  *  The void returning signature is the standard legacy signature.
  *  The Variant returning signature was added in 1.10 to support event handlers
  *  returning values.  
  *  
  */
-public class InvocationProxy {
+public abstract class InvocationProxy {
 
 	/**
 	 * the object we will try and forward to.
 	 */
-	Object mTargetObject = null;
+	protected Object mTargetObject = null;
 	
 	/**
 	 * dummy constructor for subclasses that don't actually wrap
 	 * anything and just want to override the invoke() method 
 	 */
 	protected InvocationProxy(){
-		
-	}
-	
-	/**
-	 * Constructs an invocation proxy that fronts for an event listener.
-	 * The InvocationProxy will wrap the target object and forward
-	 * any received messages to the wrapped object 
-	 * @param pTargetObject
-	 */
-	protected InvocationProxy(Object pTargetObject){
 		super();
-		if (JacobObject.isDebugEnabled()){
-			JacobObject.debug(
-					"InvocationProxy: created for object "+pTargetObject);
-		}
-		mTargetObject = pTargetObject;
-		if (mTargetObject == null){
-			throw new IllegalArgumentException("InvocationProxy requires a target");
-		}
-		// JNI code apparently bypasses this check and could operate against
-		// protected classes.  This seems like a security issue...
-		// maybe it was because JNI code isn't in a package?
-		if (!java.lang.reflect.Modifier.isPublic(
-				pTargetObject.getClass().getModifiers())){
-			throw new IllegalArgumentException(
-				"InvocationProxy only public classes can receive event notifications");
-		}
 	}
 	
 	/**
 	 * The method actually invoked by EventProxy.cpp.
 	 * The method name is calculated by the underlying JNI code from the MS windows
-	 * Callback function name.  The method is assumed to take an array of Variant
+	 * Callback function name. The method is assumed to take an array of Variant
 	 * objects.  The method may return a Variant or be a void. Those are the only
 	 * two options that will not blow up. 
+	 * <p>
+	 * Subclasses that override this should make sure mTargetObject is not null before processing.
 	 * 
 	 * @param methodName name of method in mTargetObject we will invoke
-	 * @param targetParameter Variant[] that is the single parameter to the method
+	 * @param targetParameters Variant[] that is the single parameter to the method
 	 */
-	public Variant invoke(String methodName, Variant targetParameter[]){
-        Variant mVariantToBeReturned = null;
-		if (mTargetObject == null){ 
-			if (JacobObject.isDebugEnabled()){
-				JacobObject.debug(
-						"InvocationProxy: received notification ("+methodName+") with no target set");
-			}
-			// structured programming guidlines say this return should not be up here
-			return null;
-		}
-		Class targetClass = mTargetObject.getClass();
-		if (methodName == null){
-			throw new IllegalArgumentException("InvocationProxy: missing method name");
-		}
-		if (targetParameter == null){
-			throw new IllegalArgumentException("InvocationProxy: missing Variant parameters");
-		}
-		try {
-			if (JacobObject.isDebugEnabled()){
-				JacobObject.debug("InvocationProxy: trying to invoke "+methodName
-						+" on "+mTargetObject);
-			}
-			Method targetMethod;
-			targetMethod = targetClass.getMethod(methodName,
-					new Class[] {Variant[].class});
-			if (targetMethod != null){
-				// protected classes can't be invoked against even if they
-				// let you grab the method.  you could do targetMethod.setAccessible(true);
-				// but that should be stopped by the security manager
-				Object mReturnedByInvocation = null;
-				mReturnedByInvocation = 
-						targetMethod.invoke(mTargetObject,new Object[] {targetParameter});
-				if (mReturnedByInvocation == null){
-					// so we do something in this block
-					mVariantToBeReturned = null;
-				} else if (!(mReturnedByInvocation instanceof Variant)){
-					throw new IllegalArgumentException(
-							"InvocationProxy: invokation of target method returned "
-							+"non-null non-variant object: "+mReturnedByInvocation);
-				} else {
-					mVariantToBeReturned = (Variant) mReturnedByInvocation;
-				}
-			}
-		} catch (SecurityException e) {
-			// what causes this exception?
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// this happens whenever the listener doesn't implement all the methods
-			if (JacobObject.isDebugEnabled()){
-				JacobObject.debug("InvocationProxy: listener ("+mTargetObject+") doesn't implement "
-						+ methodName);
-			}
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-			// we can throw these inside the catch block so need to  re-throw it
-			throw e;
-		} catch (IllegalAccessException e) {
-			// can't access the method on the target instance for some reason
-			if (JacobObject.isDebugEnabled()){
-				JacobObject.debug("InvocationProxy: probably tried to access public method on non public class"
-						+ methodName);
-			}
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// invocation of target method failed
-			e.printStackTrace();
-		}
-		return mVariantToBeReturned;
-	}
+	public abstract Variant invoke(String methodName, Variant targetParameters[]);
 	
     /**
      * used by EventProxy.cpp to create variant objects in the right thread
@@ -171,10 +76,26 @@ public class InvocationProxy {
     }
 
     /**
-	 * helper method used by DispatchEvents to help clean up and reduce references
-	 *
-	 */
-	protected void clearTarget(){
-		mTargetObject = null;
-	}
+     * Sets the target for this InvocationProxy.     
+     * @param pTargetObject
+     * @throws IllegalArgumentException if target is not publicly accessable
+     */
+    public void setTarget(Object pTargetObject){
+		if (JacobObject.isDebugEnabled()){
+			JacobObject.debug(
+					"InvocationProxy: setting target "+pTargetObject);
+		}
+		if (pTargetObject != null){
+			// JNI code apparently bypasses this check and could operate against
+			// protected classes.  This seems like a security issue...
+			// maybe it was because JNI code isn't in a package?
+			if (!java.lang.reflect.Modifier.isPublic(
+					pTargetObject.getClass().getModifiers())){
+				throw new IllegalArgumentException(
+					"InvocationProxy only public classes can receive event notifications");
+			}
+		}
+		mTargetObject = pTargetObject;
+    }
+    
 }

@@ -3,8 +3,7 @@ package com.jacob.test.events;
 import com.jacob.com.*;
 import com.jacob.activeX.*;
 /**
- * This test runs fine against jdk.1.5.0_05 and kills the VM 
- * under any variant of 1.4.
+ * This test runs fine against jdk 1.4 and 1.5
  * 
  * This demonstrates the new event handling code in jacob 1.7
  * This example will open up IE and print out some of the events
@@ -66,7 +65,7 @@ class IETestThread extends Thread
     
           System.out.println("IETestThread: About to hookup event listener");
           IEEvents ieE = new IEEvents();
-          new DispatchEvents((Dispatch) ie, ieE,"InternetExplorer.Application.1");
+          new DispatchEvents(ie, ieE,"InternetExplorer.Application.1");
           System.out.println("IETestThread: Did hookup event listener");
           /// why is this here?  Was there some other code here in the past?
           Variant optional = new Variant();
@@ -110,7 +109,8 @@ class IETestThread extends Thread
     }    
 
 /**
- * the events class must be publicly accessable for reflection to work
+ * The events class must be publicly accessable for reflection to work.
+ * The list of available events is located at http://msdn2.microsoft.com/en-us/library/aa768280.aspx
  */
 public class IEEvents 
 {
@@ -133,6 +133,10 @@ public class IEEvents
     public void DownloadComplete(Variant[] args) {
       System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): DownloadComplete "+args.length);
     }
+
+    public void NavigateError(Variant[] args) {
+        System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): NavigateError "+args.length);
+      }
 
     public void NavigateComplete2(Variant[] args) {
       System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): NavigateComplete "+args.length);
@@ -179,6 +183,10 @@ public class IEEvents
       System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): PropertyChange "+args.length);
     }
 
+    public void SetSecureLockIcon(Variant[] args) {
+        System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): setSecureLockIcon "+args.length);
+      }
+
     public void StatusTextChange(Variant[] args) {
       System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): StatusTextChange "+args.length);
     }
@@ -186,6 +194,10 @@ public class IEEvents
     public void TitleChange(Variant[] args) {
       System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): TitleChange "+args.length);
     }
+
+    public void WindowClosing(Variant[] args) {
+        System.out.println("IEEvents Received ("+Thread.currentThread().getName()+"): WindowClosing "+args.length);
+      }
 }
 
 }

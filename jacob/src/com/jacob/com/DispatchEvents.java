@@ -108,7 +108,7 @@ public class DispatchEvents extends JacobObject {
 		if (eventSink instanceof InvocationProxy) {
 			mInvocationProxy = (InvocationProxy) eventSink;
 		} else {
-			mInvocationProxy = new InvocationProxy(eventSink);
+			mInvocationProxy = getInvocationProxy(eventSink);
 		}
     	if (mInvocationProxy != null) {
 	        init3(sourceOfEvent, mInvocationProxy, progId, typeLib);
@@ -121,6 +121,17 @@ public class DispatchEvents extends JacobObject {
     }
 
     /**
+     * returns an instance of the proxy configured with pTargetObject as its target
+     * @param pTargetObject
+     * @return InvocationProxy an instance of the proxy this DispatchEvents will send to the COM layer
+     */
+	protected InvocationProxy getInvocationProxy(Object pTargetObject){
+		InvocationProxy newProxy = new InvocationProxyAllVariants();
+		newProxy.setTarget(pTargetObject);
+		return newProxy;
+	}
+
+	/**
      * hooks up a connection point proxy by progId
      * event methods on the sink object will be called
      * by name with a signature of <name>(Variant[] args)
@@ -155,7 +166,7 @@ public class DispatchEvents extends JacobObject {
      */
     public void safeRelease(){
     	if (mInvocationProxy!=null){
-    		mInvocationProxy.clearTarget();
+    		mInvocationProxy.setTarget(null);
     	}
         mInvocationProxy = null;
         super.safeRelease();

@@ -69,13 +69,13 @@ public class WordEventTest extends InvocationProxy {
 	}
 
 	/**
-	 * dummy consturctor to create an InvocationProxy that wraps nothing
+	 * Constructor so we can create an instance that implements invoke()
 	 */
 	public WordEventTest() {
 	}
 
 	/**
-	 * override the invoke method to loga ll the events
+	 * override the invoke() method to log all the events without writing a bunch of code
 	 */
 	public Variant invoke(String methodName, Variant targetParameter[]) {
 		System.out.println("Received event from Windows program" + methodName);
