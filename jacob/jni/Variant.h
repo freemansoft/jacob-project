@@ -508,9 +508,9 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantVariant
 /*
  * Class:     com_jacob_com_Variant
  * Method:    getVariantVariant
- * Signature: ()Lcom/jacob/com/Variant;
+ * Signature: ()I
  */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getVariantVariant
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
   (JNIEnv *, jobject);
 
 /*

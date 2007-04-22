@@ -360,7 +360,7 @@ public class Variant extends JacobObject {
 	 * Added 1.12 pre 6
 	 * 
 	 * @throws IllegalArgumentException
-	 *             if inVariant = null
+	 *             if inVariant = null or if inVariant is a Varint
 	 * @param objectToBeWrapped A object that is to be referenced by this variant.
 	 * 		If objectToBeWrapped is already of type Variant, then it is used.
 	 * 		If objectToBeWrapped is not Variant then <code>new Variant(objectToBeWrapped)</code>
@@ -370,10 +370,15 @@ public class Variant extends JacobObject {
 		if (objectToBeWrapped == null) {
 			throw new IllegalArgumentException("Cannot put null in as a variant");
 		} else if (objectToBeWrapped instanceof Variant){
-			putVariantVariant((Variant)objectToBeWrapped);
+			throw new IllegalArgumentException("Cannot putVariant() only accepts non jacob objects.");
 		} else {
 			Variant inVariant = new Variant(objectToBeWrapped);
 			putVariantVariant(inVariant);
+			// This could be done in Variant.cpp
+			if (JacobObject.isDebugEnabled()){
+				JacobObject.debug("Zeroing out enclosed Variant's ref to windows memory");
+			}
+			inVariant.m_pVariant = 0;
 		}
 	}
 
@@ -400,7 +405,9 @@ public class Variant extends JacobObject {
 			if (JacobObject.isDebugEnabled()){
 				JacobObject.debug("About to call getVariantVariant()");
 			}
-			Variant enclosedVariant = getVariantVariant();
+			Variant enclosedVariant = new Variant();
+			int enclosedVariantMemory = getVariantVariant();
+			enclosedVariant.m_pVariant = enclosedVariantMemory;
 			Object  enclosedVariantAsJava = enclosedVariant.toJavaObject();
 			// zero out the reference to the underlying windows memory so that
 			// it is still only owned in one place by one java object 
@@ -423,7 +430,7 @@ public class Variant extends JacobObject {
 	 * Added 1.12 pre 6 - VT_VARIANT support is at an alpha level
 	 * @return Variant one of the VT_Variant types
 	 */
-	private native Variant getVariantVariant();
+	private native int getVariantVariant();
     
     /**
      * get the content of this variant as a short

@@ -1040,7 +1040,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantVariant
  * Added 1.12 pre 6
  * 
  * */
-JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getVariantVariant
+JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
 (JNIEnv *env, jobject _this) 
 {
 
@@ -1051,24 +1051,14 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getVariantVariant
       return NULL;
     }
 
-    //Construct a new Variant
-    jclass variantClass = env->FindClass("com/jacob/com/Variant");
-    jmethodID defaultCon = env->GetMethodID(variantClass, "<init>", "()V");
-    jobject newVariant = env->NewObject(variantClass, defaultCon);
-	
 	VARIANT *refVar = V_VARIANTREF(v);
-	VARIANT *newV = extractVariant(env, newVariant);
 
 	// we could have made a copy of refV here but we aren't every going to free 
 	// it outside of the scope of the enclosing context so we will just used the
 	// enclosed.  This relies on the java layer to zero out its ref to this
 	// enclosed variant before the gc can come along and free the memory out from
 	// under this enclosing variant.
-
-    jfieldID jf = env->GetFieldID( variantClass, VARIANT_FLD, "I");
-    env->SetIntField(newVariant, jf, (unsigned int)refVar);
-
-    return newVariant;
+	return (unsigned int)refVar;
   }
 
   return NULL;
