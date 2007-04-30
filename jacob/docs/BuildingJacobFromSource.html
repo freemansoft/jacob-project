@@ -25,39 +25,28 @@ The Servlet examples that required j2ee libraries to compile have temporarily
 been removed.
 <p>
 <H1>Development Environment</h1>
-The simplest build environment involves MS Visual C++ 6.0, Eclipse 3.2 and JDK 1.4.
+The simplest build environment includes MS Visual C++ 8.0 (Studio 2005), 
+Eclipse 3.2 with the C/C++ module and JDK 1.4.
 In that situation, you would just create the <i>compilation_tools.properties</i>
 using the example build.xml as a template.  All of the releases, up through 1.12, 
-were built using Visual C++ 6.0.
+were built using Visual C++ 6.0. 64 bit builds are supported starting with release 1.11.  
+Microsoft Visual C++ 8.0 supports 64 bit builds. so no additional tools are required.
+
 <UL>
-<li>	Microsoft Visual C++ 6.0 and it's included library. (to D:\apps in my case)
-<li>	Eclipse 3.1 or later from www.eclipse.org.
-<li>	Java JDK 1.4 (this was built using 1.4.2.13)
+<li>	Microsoft Visual C++ 8.0 and it's included library. (to D:\apps in my case)
+<li>	Eclipse 3.2 or later from www.eclipse.org.  I use the C/C++ plugin for 
+		eclipse rather than MS Visual Studio
+<li>	Java JDK 1.4 (1.12 was built using 1.4.2.13) Compilation using JDK 1.5 has not been tested
 </ul>
 <p>
-64 bit builds are supported with release 1.11.  Tools required for 64 bit builds
-include:
-<UL>
-<li>	Microsoft Visual C++ 6.0 and it's included library. (installed in D:\apps in my case)
-<li>	Microsoft SDK 2005R2 with the following components (installed in D:\apps in my case)
-	<ul>
-	<li>Windows Core SDK
-	<li>Microsoft Web Workshop (IE) SDK is required because it is referenced in atlbase.h
-	<li>(optional) Some folks also install the Debugging tools.
-	</ul>
-
-<li>	Eclipse 3.1 or later from www.eclipse.org.
-<li>	Java JDK 1.4 (this was built using 1.4.2.13)
-</ul>
-
-Compilation using JDK 1.5 has not been tested
+<p>
 
 <H1>Build Process</H1>
-The build process is based on ANT.  It cannot be built using MAKE.
+The build process is based on ANT.  
 You can run ANT from inside of eclipse or from the command line.
 The ant process is driven off of a configuration file named
-<i>compilation_tools.properties</i> that describes the locations of the JDK and Microsoft
-C++ tools.  The build.xml file in the root directory contains examples of the contents
+<code>compilation_tools.properties</code> that describes the locations of the JDK and Microsoft
+C++ tools.  The <code>build.xml</code> file in the root directory contains examples of the contents
 of this file.
 
 <p>
@@ -107,7 +96,7 @@ path variable must be set to include the directory the jacob.dll is in.  The
 simplest way to do that is to add it as a command line option. 
 
 
-Last Modified 10/2005
+Last Modified 4/2007
 
 </BODY>
 </HTML>

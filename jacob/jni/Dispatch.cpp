@@ -291,13 +291,13 @@ JNIEXPORT jintArray JNICALL Java_com_jacob_com_Dispatch_getIDsOfNames
     CoTaskMemFree(lps);
     CoTaskMemFree(dispid);
     char buf[1024];
-    strcpy(buf, "Can't map names to dispid:");
+    strcpy_s(buf, "Can't map names to dispid:");
     for(i=0;i<l;i++) 
     {
       USES_CONVERSION;
       jstring s = (jstring)env->GetObjectArrayElement(names, i);
       const char *nm = env->GetStringUTFChars(s, NULL);
-      strcat(buf, nm);
+      strcat_s(buf, nm);
       env->ReleaseStringUTFChars(s, nm);
       env->DeleteLocalRef(s);
     }
@@ -359,13 +359,13 @@ static char* CreateErrorMsgFromInfo(HRESULT inResult, EXCEPINFO* ioInfo,
     char* desc = ::BasicToCharString(ioInfo->bstrDescription);
     const size_t MSG_LEN = ::strlen(methName) + ::strlen(source) + ::strlen(desc) + 128;
     msg = new char[MSG_LEN];
-    ::strncpy(msg, "Invoke of: ", MSG_LEN);
-    ::strncat(msg, methName, MSG_LEN);
-    ::strncat(msg, "\nSource: ", MSG_LEN);
-    ::strncat(msg, source, MSG_LEN);
-    ::strncat(msg, "\nDescription: ", MSG_LEN);
-    ::strncat(msg, desc, MSG_LEN);
-    ::strncat(msg, "\n", MSG_LEN);
+    ::strncpy_s(msg, MSG_LEN, "Invoke of: ", strlen("Invoke of: "));
+    ::strncat_s(msg, MSG_LEN, methName, strlen(methName));
+    ::strncat_s(msg, MSG_LEN, "\nSource: ", strlen("\nSource: "));
+    ::strncat_s(msg, MSG_LEN, source, strlen(source));
+    ::strncat_s(msg, MSG_LEN, "\nDescription: ", strlen("\nDescription: "));
+    ::strncat_s(msg, MSG_LEN, desc, strlen(desc));
+    ::strncat_s(msg, MSG_LEN, "\n", strlen("\n"));
     delete source;
     delete desc;
   }
@@ -374,11 +374,12 @@ static char* CreateErrorMsgFromInfo(HRESULT inResult, EXCEPINFO* ioInfo,
     char* msg2 = CreateErrorMsgFromResult(inResult);
     const size_t MSG_LEN = ::strlen(methName) + ::strlen(msg2) + 128;
     msg = new char[MSG_LEN];
-    ::strncpy(msg, "A COM exception has been encountered:\n"
-        "At Invoke of: ", MSG_LEN);
-    ::strncat(msg, methName, MSG_LEN);
-    ::strncat(msg, "\nDescription: ", MSG_LEN);
-    ::strncat(msg, msg2, MSG_LEN);
+    ::strncpy_s(msg, MSG_LEN, 
+		"A COM exception has been encountered:\nAt Invoke of: ", 
+		strlen("A COM exception has been encountered:\nAt Invoke of: "));
+    ::strncat_s(msg, MSG_LEN, methName, strlen(methName));
+    ::strncat_s(msg, MSG_LEN, "\nDescription: ", strlen("\nDescription: "));
+    ::strncat_s(msg, MSG_LEN, msg2, strlen(msg2));
     // jacob-msg 1075 - SF 1053872 : Documentation says "use LocalFree"!! 
     //delete msg2;
 	LocalFree(msg2); 
@@ -415,7 +416,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
     HRESULT hr;
     if (FAILED(hr = name2ID(pIDispatch, nm, (long *)&dispID, lcid))) {
       char buf[1024];
-      sprintf(buf, "Can't map name to dispid: %s", nm);
+      sprintf_s(buf, 1024, "Can't map name to dispid: %s", nm);
       ThrowComFail(env, buf, -1);
       return NULL;
     }
@@ -514,7 +515,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
     } else {
 		dispIdAsName = new char[256];
 		// get the id string
-		_itoa (dispID,dispIdAsName,10);
+		_itoa_s (dispID, dispIdAsName, 256,10);
 		//continue on mostly as before
 		buf = CreateErrorMsgFromInfo(hr,&excepInfo,dispIdAsName); 
     }
