@@ -30,6 +30,9 @@ extern "C"
 {
 LPTSTR buffer;
 LPTSTR current_position;
+// SF 1515405 added floting point reference to force load of floting point library
+// the append2 down below uses floating point but the compiler doesn't recognize that
+float f=1.0f; 
 
 
 /**
