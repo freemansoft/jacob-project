@@ -52,13 +52,13 @@ public class JacobObject {
 	 * @see getBuildDate()
 	 */
     private static String buildDate = "";
-
+    
     /**
      *  Standard constructor that adds this JacobObject
      * to the memory management pool.
      */
     public JacobObject() {
-        ROT.addObject(this);
+    		ROT.addObject(this);
     }
 
     

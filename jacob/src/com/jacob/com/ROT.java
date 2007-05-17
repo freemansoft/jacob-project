@@ -43,9 +43,21 @@ import java.util.WeakHashMap;
 public abstract class ROT {
 	/**
 	 * Manual garbage collection was the only option pre 1.9
+	 * Can staticly cache the results because only one value
+	 * and we don't let it change during a run
 	 */
 	protected static final boolean USE_AUTOMATIC_GARBAGE_COLLECTION = 
 		"true".equalsIgnoreCase( System.getProperty( "com.jacob.autogc" ) );
+
+	/**
+	 * Suffix added to class name to make up property name that determines if this 
+	 * object should be stored in the ROT.  This 1.13 "feature" makes it possible
+	 * to cause VariantViaEvent objects to not be added to the ROT in event callbacks.
+	 * <p>
+	 * We don't have a static for the actual property because there is a different property
+	 * for each class that may make use of this feature.
+	 */
+    protected static String PUT_IN_ROT_SUFFIX = ".PutInROT";
 
 	/**
 	 * A hash table where each element is another 
@@ -170,21 +182,31 @@ public abstract class ROT {
 	 * @param o
 	 */
 	protected synchronized static void addObject( JacobObject o ) {
-		Map tab = getThreadObjects( false );
-		if ( tab == null ) {
-			// this thread has not been initialized as a COM thread
-			// so make it part of MTA for backwards compatibility
-			ComThread.InitMTA( false );
-			tab = getThreadObjects( true );
-		}
-		if ( JacobObject.isDebugEnabled() ) {
-			JacobObject.debug( 
-				"ROT: adding " + o + "->" + o.getClass().getName() + 
-				" table size prior to addition:" + tab.size() );
-		}
-		if ( tab != null ) {
-			tab.put( o, null );
-		}
+		// check the system property to see if this class is put in the ROT
+		// the default value is "true" which simulates the old behavior
+    	String shouldIncludeClassInROT = 
+    		System.getProperty(o.getClass().getName() + PUT_IN_ROT_SUFFIX,"true");
+    	if (shouldIncludeClassInROT.equalsIgnoreCase("false")){
+    		if (JacobObject.isDebugEnabled()){
+    			JacobObject.debug("JacobObject: New instance of "+o.getClass().getName()+" not added to ROT");
+    		}
+    	} else {
+			Map tab = getThreadObjects( false );
+			if ( tab == null ) {
+				// this thread has not been initialized as a COM thread
+				// so make it part of MTA for backwards compatibility
+				ComThread.InitMTA( false );
+				tab = getThreadObjects( true );
+			}
+			if ( JacobObject.isDebugEnabled() ) {
+				JacobObject.debug( 
+					"ROT: adding " + o + "->" + o.getClass().getName() + 
+					" table size prior to addition:" + tab.size() );
+			}
+			if ( tab != null ) {
+				tab.put( o, null );
+			}
+    	}
 	}
 
 	/**

@@ -26,6 +26,8 @@ import java.util.Date;
  * between Java and COM. It provides a single class that can handle all data
  * types.
  * <p>
+ * Just loading this class creates 3 variants that get added to the ROT
+ * <p>
  * PROPVARIANT introduces new types so eventually Variant will need to be 
  * upgraded to support PropVariant types.
  * http://blogs.msdn.com/benkaras/archive/2006/09/13/749962.aspx
@@ -59,7 +61,8 @@ public class Variant extends JacobObject {
             false);
 
     /*
-     * do the run time definition of DEFAULT and MISSING
+     * do the run time definition of DEFAULT and MISSING 
+     * Have to use static block because of the way the initialization si done
      */
     static {
         com.jacob.com.Variant vtMissing = new com.jacob.com.Variant();

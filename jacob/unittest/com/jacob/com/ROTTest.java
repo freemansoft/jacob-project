@@ -6,33 +6,92 @@ import com.jacob.com.ROT;
  * This will eventually be changed to a unit test.
  * <p>
  * May need to run with some command line options (including from inside Eclipse).  
- * Look in the docs area at the Jacob usage document for command line options.
+ * If so, then try these
+ * <pre>
+ *      -Djava.library.path=d:/jacob/release/x86 
+ *      -Dcom.jacob.autogc=false 
+ *      -Dcom.jacob.debug=false 
+ *      -Xcheck:jni
+ *  </pre>
  */
 public class ROTTest {
 
     public static void main(String args[]) throws Exception
     {
-        int sizeAfterBuild = 0;
+    	ROTTest testJig = new ROTTest();
+    	testJig.testDontFillROTSystemProperty();
+    	testJig.testGCBehavior();
+    }
+    
+    /**
+     * verify the SystemProperty (classname).PutInROT functions as expected.
+     * A value of false means instances of the class are not put in the ROT
+     * Any o ther value means they are
+     */
+    public void testDontFillROTSystemProperty(){
+    	debug("testDontFillROTSystemProperty: started");
+    	// Make sure the class is loaded before running any of the tests 
+    	// class to load and any pre-defined Variants (FALSE and TRUE) to be created immediately
+    	VariantViaEvent.class.getName();
+    	if (ROT.getThreadObjects(true).entrySet().size() < 1){
+    		debug("Failure: ROT should have objects in it as soon as Variant class loaded.");
+    	}
+
+    	System.setProperty(VariantViaEvent.class.getName()+ROT.PUT_IN_ROT_SUFFIX,"false");
+    	int countPriorToTest = ROT.getThreadObjects(true).entrySet().size();
+    	new VariantViaEvent();
+    	int countAfterAddWithoutROT = ROT.getThreadObjects(true).entrySet().size();
+    	if (countAfterAddWithoutROT != countPriorToTest){
+    		debug("Failure: count prior: "+countPriorToTest+
+    				" and count after without ROT was: "+countAfterAddWithoutROT);
+    	}
+    	
+    	System.setProperty(VariantViaEvent.class.getName()+ROT.PUT_IN_ROT_SUFFIX,"true");
+    	new VariantViaEvent();
+    	int countAfterAddWithROT = ROT.getThreadObjects(true).entrySet().size();    	
+    	if (countAfterAddWithROT != (countPriorToTest+1)){
+    		debug("Failure: count prior: "+countPriorToTest+
+    				" and count after with ROT was: "+countAfterAddWithROT);
+    	}
+    	debug("testDontFillROTSystemProperty: completed");
+    }
+
+    /**
+     * Needs documentation.  This test looks broken
+     *
+     */
+    public void testGCBehavior(){
+        int sizeBeforeBuild = 0;
+    	int sizeAfterBuild = 0;
         int sizeBeforeGC = 0;
         int sizeAfterGC = 0;
+        int loopSize = 10000;
+        int sizeExpectedAfterBuild = 0;
 
+        
+        debug("testGCBehavior: started");
         debug("creating 10,000 object sets");
-        for ( int i = 0 ; i <= 10000; i++){
+        // cause classes to get loaded and any static instances to be created
+        SafeArray.class.getName();
+        Variant.class.getName();
+        sizeBeforeBuild = ROT.getThreadObjects(false).size();
+        sizeExpectedAfterBuild = ((loopSize*3)+sizeBeforeBuild);
+        for ( int i = 0 ; i < loopSize; i++){
             SafeArray a1 = new SafeArray(Variant.VariantVariant, 2);
             a1.setVariant(0, new Variant("foo"));
             a1.setVariant(1, new Variant("bar"));
         }
         sizeAfterBuild = ROT.getThreadObjects(false).size();
-        if (sizeAfterBuild < 10000){
+        if (sizeAfterBuild < sizeExpectedAfterBuild){
             debug("Something got GC'd: "+sizeAfterBuild);
-        } else if (sizeAfterBuild > 10000){
-            debug("More than expected: "+sizeAfterBuild);
+        } else if (sizeAfterBuild > sizeExpectedAfterBuild){
+            debug("More: "+sizeAfterBuild+" than expected: "+sizeExpectedAfterBuild);
         } else {
             debug("They're all there");
         }
         // add more to the VM
         debug("Flooding Memory to force GC");
-        for ( int i = 0 ; i <= 10000; i++){
+        for ( int i = 0 ; i <= loopSize*2; i++){
             new String("this is just some text to see if we can force gc "+i);
         }
         // storage will hold weak references until the next JacobObject is created
@@ -65,6 +124,7 @@ public class ROTTest {
         ROT.clearObjects();
         // now force the gc to go collect them, running safeRelease again
         System.gc();
+        debug("testGCBehavior: finished");
     }
     
     private static void debug(String message){
