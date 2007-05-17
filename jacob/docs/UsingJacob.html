@@ -34,8 +34,20 @@ This library supports several different :
 
 	<h3>com.jacob.autogc </h3>
 	Determines if automatic garbage collection is enabled.  This is the
-	only way to free up objects created in event callbacks.  This
-	feature is not fully debugged.  
+	only way to free up objects created in event callbacks.  	Automatic garbage collection , based on Java gc rules, garbage collection can be enabled via the 
+	<code>com.java.autogc</code> command line option. 
+	<em>This feature was added in release 1.9 is not fully debugged.  </em>
+	<p>
+	There are real reasons for managing the 
+	lifetime of JacobObjects on a per thread basis.
+	Jacob normally manages the the com/Java object lifetime as described in the
+	<a href="JacobComLifetime.html">JacobComLifetime.html</a> document.  
+	Some users have run into situations where they wish to try and let the Java 
+	GC lifetime manage the lifetime of objects.  This seems to usually be tied
+	to long running threads or to objects created as part of event callbacks.
+	Code was added to let users try and let the JVM manage the object life cycles
+	even though the <a href="JacobComLifetime.html">JacobComLifetime.html</a> document 
+	says this is a bad idea.
 	<p>
 	The default value is <strong>false</strong>
 	<p>
@@ -49,7 +61,7 @@ This library supports several different :
 	
 	<h3>-XCheck:jni</h3>
 	This turns on additional JVM checking for JNI issues.  This is
-	not strictly a JACOB system property.
+	not an actual JACOB system property but a property used by the JVM.
 	<p>
 	The default is "no additional checking"
 	Example: -XCheck:jni
