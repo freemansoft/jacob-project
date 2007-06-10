@@ -54,6 +54,9 @@ static SAFEARRAY *makeArray(int vt, int nDims, long *lb, long *cel)
   }
 }
 
+/**
+ * extracts the Variant from the int pointer in the java object
+ */
 VARIANT *extractWrapper(JNIEnv *env, jobject arg)
 {
   jclass argClass = env->GetObjectClass(arg);
@@ -1156,6 +1159,8 @@ JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toVariantArray
 
 // this is an ugly way to avoid copy/pasting the same code
 
+// returns a value extracted from a 1 dimensional SafeArray
+// uses the idx variable in the object this macro is included in 
 #define GET1DCODE(varType, varAccess, jtyp) \
   SAFEARRAY *sa = extractSA(env, _this); \
   if (!sa) { \
@@ -1185,6 +1190,8 @@ JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toVariantArray
     return NULL; \
   }
 
+// returns a value extracted from a 2 dimensional SafeArray
+// uses i and j from the method that this macro is included in as indexes
 #define GET2DCODE(varType, varAccess, jtyp) \
   SAFEARRAY *sa = extractSA(env, _this); \
   if (!sa) { \
@@ -1216,6 +1223,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toVariantArray
   }
 
 
+// sets the values on a one dimensional array 
 #define SET1DCODE(varType, varAccess) \
   SAFEARRAY *sa = extractSA(env, _this); \
   if (!sa) { \
@@ -1240,6 +1248,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toVariantArray
     ThrowComFail(env, "safearray type mismatch", -1); \
   } \
 
+// sets the values into a 2 dimensional array
 #define SET2DCODE(varType, varAccess) \
   SAFEARRAY *sa = extractSA(env, _this); \
   if (!sa) { \

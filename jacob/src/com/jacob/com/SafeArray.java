@@ -319,50 +319,51 @@ public class SafeArray extends JacobObject {
     public native void setChars(int sa_idx, int nelems, char ja[], int ja_start);
 
     /**
-     * int access
-     * @param sa_idx
+     * get int from an single dimensional array
+     * @param sa_idx array index
      * @return int stored in array
      */
     public native int getInt(int sa_idx);
 
     /**
-     * int access
-     * @param sa_idx1
-     * @param sa_idx2
+     * get int from 2 dimensional array
+     * @param sa_idx1 array index first dimension
+     * @param sa_idx2 array index of second dimension
      * @return int stored in array
      */
     public native int getInt(int sa_idx1, int sa_idx2);
 
     /**
-     * int access
-     * @param sa_idx
-     * @param c
+     * sets the int value of an element in a single dimensional array
+     * @param sa_idx index into the array
+     * @param c the value to be set
      */
     public native void setInt(int sa_idx, int c);
 
     /**
-     * int access
-     * @param sa_idx1
-     * @param sa_idx2
-     * @param c
+     * sets the int value of a 2 dimensional array
+     * @param sa_idx1 index on the first dimension
+     * @param sa_idx2 index on the second dimension
+     * @param c the value to be set
      */
     public native void setInt(int sa_idx1, int sa_idx2, int c);
 
     /**
-     * int access
-     * @param sa_idx
-     * @param nelems
-     * @param ja
-     * @param ja_start
+     * retrieves a group of ints from a single dimensional array
+     * 
+     * @param sa_idx the index in the array to start the get
+     * @param nelems number of elements to retrieve
+     * @param ja the structure to be filled with the ints
+     * @param ja_start the start point in the java int array to start filling
      */
     public native void getInts(int sa_idx, int nelems, int ja[], int ja_start);
 
     /**
-     * int access
-     * @param sa_idx
-     * @param nelems
-     * @param ja
-     * @param ja_start
+     * sets a group of ints into a single dimensional array
+     * @param sa_idx the index of the start of the array to put into
+     * @param nelems number of elements to be copied
+     * @param ja the new int values to be put into the array
+     * @param ja_start the start index in the array that we are copying into SafeArray
      */
     public native void setInts(int sa_idx, int nelems, int ja[], int ja_start);
 
