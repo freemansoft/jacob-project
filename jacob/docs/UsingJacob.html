@@ -25,6 +25,21 @@ so the DLLs will only get loaded once.  This problem is described in SF 1645463 
 should be fixed in some future release, fix method and time not yet determined.
 <p>
 <hr>
+<h1>Microsoft Visual C++ library dependencies.</h1>
+	Jacob 1.3 is built with VC++ 2005 that creates a dependency on msvcr80.dll.  
+	Windows XP and later seem to already include the necessary components.  
+	NT/2000 and Server/2003 require that you download vcredist_x86.exe 
+	from the microsoft web site. 
+	Microsoft has a download available that supplies the necessary components.
+	It is distributed as a redistributable package.
+	See the following links.
+<pre>
+http://www.microsoft.com/downloads/details.aspx?familyid=32bc1bee-a3f9-4c13-9c99-220b62a191ee&displaylang=en
+http://www.microsoft.com/downloads/details.aspx?FamilyID=200b2fd9-ae1a-4a14-984d-389c36f85647&displaylang=en
+</pre>
+
+<p>
+<hr>
 <h1>Jacob Command Line Settings</h1>
 This library supports several different :
 	<h3>java.library.path</h3>
