@@ -1,13 +1,40 @@
 <HTML>
 <BODY>
-<h1> Determining the API of the target application </h1>
+Jacob is a Java library that lets Java applications communicate with Microsoft Windows 
+DLLs or COM libraries. It does this through the use of a custom DLL that the Jacob 
+Java classes communicate with via JNI.  The library and dll isolate the Java developer
+from the underlying windows libraries so that the Java developer does not have to write
+custom JNI code.  
+<p>
+Jacob is not used for creating ActiveX plugins or other moduless that
+live inside of Microsoft Windows applications. 
+<hr>
+
+<h2> The Jacob Packages </h2>
+<p>
+The JACOB jar contains two main packages: the <code>com.jacob.com.*</code>> package and 
+the <code>com.jacob.activeX</code> package.  The <code>com.jacob.com.*</code> package contains classes 
+map very closely to the com dispatch model with the <code>com.jacob.com.Dispatch</code>
+acting as the primary communication class.  Dispatch operate as a function library with 
+a set of static methods that map very closely to the C++ Dispatch APIs provided
+to the COM layer.
+<p><code>com.jacob.activex.ActiveXComponent</code> can be used in place of Dispatch
+to provide a more object like API.  
+The only exception to this guideline is that the <code>ActiveXComponent</code> class is always
+used to make the initial connection to the target dll/COM component.
+
+<hr>
+<H2> Determining the API of the target application </h2>
 <p>
 Section not yet written.
 <p>
 <hr>
-<h1> The Jacob DLL </h1>
+<h2> The Jacob DLL </h2>
 <p>
 Jacob.jar relies on a DLL file that it loads off of the library path or classpath.  
+This means that you must either copy jacob.dll into your path or use VM options to 
+add jacob.dll directory to the path.  
+<p>
 The code is written so that the jacob.dll is only loaded one time per classloader.
 This works fine in the standard application but can cause problems if jacob.jar
 is loaded from more than one class loader.  This can happen in the situation where multiple
@@ -25,7 +52,7 @@ so the DLLs will only get loaded once.  This problem is described in SF 1645463 
 should be fixed in some future release, fix method and time not yet determined.
 <p>
 <hr>
-<h1>Microsoft Visual C++ library dependencies.</h1>
+<h2>Microsoft Visual C++ library dependencies.</h2>
 	Jacob 1.3 is built with VC++ 2005 that creates a dependency on msvcr80.dll.  
 	Windows XP and later seem to already include the necessary components.  
 	NT/2000 and Server/2003 require that you download vcredist_x86.exe 
@@ -40,7 +67,7 @@ http://www.microsoft.com/downloads/details.aspx?FamilyID=200b2fd9-ae1a-4a14-984d
 
 <p>
 <hr>
-<h1>Jacob Command Line Settings</h1>
+<h2>Jacob Command Line Settings</h2>
 This library supports several different :
 	<h3>java.library.path</h3>
 	Used to add the location of the jacob dll to the JVM's library path.
@@ -112,7 +139,7 @@ This library supports several different :
 	Example: -XCheck:jni
 <p>
 <hr>
-<h1>Finding the DLL version using windows command line</h1>
+<h2>Finding the DLL version using windows command line</h2>
 The jacob.dll file includes the jacob release number in the version field.  
 Run the following from the command prompt <code>dumpbin /version jacob.dll</code> .
 The dll version number is stored in the "image version" field of the 
@@ -121,7 +148,7 @@ This information from <a href="http://msdn2.microsoft.com/en-gb/library/h88b7dc8
 The Microsoft msdn web site</a>
 
 <p>
-Last Modified 2/2007
+Last Modified 7/2007
 
 </BODY>
 </HTML>
