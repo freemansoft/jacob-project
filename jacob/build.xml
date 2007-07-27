@@ -5,7 +5,7 @@
     Created Feb 4, 2005 1:23:05 PM as part of migration from ANT
     Last Modified March 24, 2007                                                  
      
-    Tested on Eclipse 3.2 with the Callisto plugis, Ant 1.6.1 and MS Visual C++ 8 (2005)
+    Tested on Eclipse 3.3 with the Europa C++ plugins, Ant 1.7 and MS Visual C++ 8 (2005)
     Eclipse users are pretty lucky because the whole project 
     can be built inside eclipse due to their built in ANT support.
      
@@ -55,6 +55,8 @@
 	<property name="generated.filename.jar" value="jacob.jar" />
 	<property name="generated.filename.zip" value="jacob_${version}" />
 	
+	<property name="junit.jar"         value="${basedir}\lib\junit3.8.1\junit.jar" />
+		
 	<property name="src.java.jacob"    value="${basedir}/src" />
 	<property name="src.java.samples"  value="${basedir}/samples" />
 	<property name="src.java.unittest" value="${basedir}/unittest" />
@@ -206,11 +208,23 @@
 	<!-- ======================================================================
 		      Compile the java files and copy version.properties to be jar'd up
 		      Relies on ant recognizing when a file needs to be compiled
+		      
+		      Unit tests compiled seperately because of junit dependency
 		 ================================================================== -->
 	<target name="javaCompile" >
-		<echo>Building Jacob , sample and, test classes in ${release.dir.java}</echo>
-		<javac srcdir="${src.java.jacob}:${src.java.samples}:${src.java.unittest}" 
+		<echo>Building Jacob classes in ${release.dir.java}</echo>
+		<javac srcdir="${src.java.jacob}" 
 			destdir="${release.dir.java}" 
+			listfiles="true" debug="on" source="1.4" />
+		<echo>Building sample classes in ${release.dir.java}</echo>
+		<javac srcdir="${src.java.samples}" 
+			destdir="${release.dir.java}" 
+			classpath="${release.dir.java}"
+			listfiles="true" debug="on" source="1.4" />
+		<echo>Building Jacob test classes in ${release.dir.java} using junit jar ${junit.jar}</echo>
+		<javac srcdir="${src.java.unittest}" 
+			destdir="${release.dir.java}" 
+			classpath="${release.dir.java}:${junit.jar}"
 			listfiles="true" debug="on" source="1.4" />
 		<copy file="version.properties" todir="${release.dir.java}"/>
 	</target>
@@ -228,7 +242,7 @@
 			<exclude name="**/CVS" />
 			<!-- exclude all unit tests (ending in Test) 
 				and everything in the samples and test packages -->
-			<exclude name="com/**/*Test.class"/>
+			<exclude name="com/**/*Test*.class"/>
 			<exclude name="com/jacob/samples/**"/>
 			<exclude name="com/jacob/test/**"/>
 			<include name="com/**/*.class" />
@@ -435,6 +449,35 @@
 			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="build.xml, README.txt" />
 			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="LICENSE.* version.properties" />
 		</zip>
+	</target>
+	
+	<!-- ======================================================================
+		       JUnit testing
+		       This should probably be dependent on dll also
+		       This assumes we are always testing on x86
+		       This assumes that ant-junit is available 
+		 ================================================================== -->
+	<target name='test' depends='javaCompile' >
+		<junit 	printsummary="yes" 
+				haltonfailure="yes"  
+				fork="true" 
+				dir="${release.dir.java}"
+			>
+			<sysproperty key="java.library.path" value="${release.dir.x86}" />
+			<classpath>
+				<pathelement location="${junit.jar}"/>
+				<pathelement location="${release.dir.java}"/>
+				<pathelement path="${src.java.unittest}"/>
+			</classpath>
+			<formatter type="brief" usefile="false"/>
+			<batchtest>
+				<!-- use the source directory because it tries to run inner classes
+					if we use the release directory -->
+				<fileset dir="${src.java.unittest}">
+					<include name="**/*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
 	</target>
 </project>
 

@@ -5,6 +5,7 @@ import com.jacob.com.ComException;
 import com.jacob.com.DispatchEvents;
 import com.jacob.com.InvocationProxy;
 import com.jacob.com.Variant;
+import com.jacob.test.BaseTestCase;
 
 /**
  * This test was lifted from a forum posting and shows how you can't listen to
@@ -17,13 +18,13 @@ import com.jacob.com.Variant;
  * May need to run with some command line options (including from inside Eclipse).  
  * Look in the docs area at the Jacob usage document for command line options.
  */
-public class WordEventTest extends InvocationProxy {
+public class WordEventTest extends BaseTestCase {
 
 	/**
 	 * load up word, register for events and make stuff happen
 	 * @param args
 	 */
-	public static void main(String args[]) {
+	public void testCaptureWordEvents() {
 		String pid = "Word.Application";
 		String typeLibLocation = null;
 
@@ -39,8 +40,7 @@ public class WordEventTest extends InvocationProxy {
 						typeLibLocation);
 			}
 			if (de == null) {
-				System.out
-						.println("No exception thrown but no dispatch returned for Word events");
+				fail("No exception thrown but no dispatch returned for Word events");
 			} else {
 				// Yea!
 				System.out.println("Successfully attached to " + pid);
@@ -52,14 +52,13 @@ public class WordEventTest extends InvocationProxy {
 			axc.setProperty("Visible",true);
 			ActiveXComponent documents = axc.getPropertyAsComponent("Documents");
 			if (documents == null){
-				System.out.println("unable to get documents");
+				fail("unable to get documents");
 			}
 			axc.invoke("Quit", new Variant[] {});
 
 		} catch (ComException cfe) {
 			cfe.printStackTrace();
-			System.out.println("Failed to attach to " + pid + ": "
-					+ cfe.getMessage());
+			fail("Failed to attach to " + pid + ": "	+ cfe.getMessage());
 
 		}
 		System.out.println(
@@ -68,10 +67,11 @@ public class WordEventTest extends InvocationProxy {
 				"thinks we tested something");
 	}
 
+public class WordEvents extends InvocationProxy {
 	/**
 	 * Constructor so we can create an instance that implements invoke()
 	 */
-	public WordEventTest() {
+	public WordEvents() {
 	}
 
 	/**
@@ -82,4 +82,5 @@ public class WordEventTest extends InvocationProxy {
 		return null;
 	}
 
+}
 }

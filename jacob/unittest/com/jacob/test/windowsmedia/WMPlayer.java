@@ -9,20 +9,22 @@ package com.jacob.test.windowsmedia;
  * Look in the docs area at the Jacob usage document for command line options.
  */
 import com.jacob.activeX.*;
+import com.jacob.test.BaseTestCase;
 
-public class WMPlayer {
+public class WMPlayer extends BaseTestCase {
 
-    public static void main(String[] args){
+	public void testOpenWMPlayer() {
 		ActiveXComponent wmp = null;
 		wmp = new ActiveXComponent("WMPlayer.OCX");
-		
-		// the sourceforge posting didn't post all the code so this is all we have
-		// we need some other information on how to set the document
+
+		// the sourceforge posting didn't post all the code so this is all we
+		// have we need some other information on how to set the document
 		// so that we have a url to open
-		for ( int i= 0 ; i < 1000 ; i++){
-		System.out.println("the wmp url is "+ wmp.getProperty("URL").toString());
+		for (int i = 0; i < 1000; i++) {
+			System.out.println("the wmp url is "
+					+ wmp.getProperty("URL").toString());
 		}
-    		
-    }
-    
+
+	}
+
 }

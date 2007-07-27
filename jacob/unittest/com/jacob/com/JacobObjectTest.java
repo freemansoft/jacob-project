@@ -1,24 +1,15 @@
 package com.jacob.com;
 
+import com.jacob.test.BaseTestCase;
+
 /**
  * This will eventually be changed to a unit test.
  * <p>
  * May need to run with some command line options (including from inside Eclipse).  
- * If so, then try these
- * <pre>
- *      -Djava.library.path=d:/jacob/release/x86 
- *      -Dcom.jacob.autogc=false 
- *      -Dcom.jacob.debug=false 
- *      -Xcheck:jni
- *  </pre>
+ * Look in the docs area at the Jacob usage document for command line options.
  */
-public class JacobObjectTest {
+public class JacobObjectTest extends BaseTestCase {
 
-    public static void main(String args[]) throws Exception
-    {
-    	JacobObjectTest testJig = new JacobObjectTest();
-    	testJig.testBuildVersion();
-    }
     
     public void testBuildVersion(){
         System.out.println("build version is "+JacobObject.getBuildVersion());

@@ -1,4 +1,4 @@
-package com.jacob.test.MathProj;
+package com.jacob.samples.MathProj;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.*;

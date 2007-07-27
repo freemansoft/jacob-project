@@ -1,50 +1,63 @@
 package com.jacob.test.vbscript;
 
 import com.jacob.com.*;
+import com.jacob.test.BaseTestCase;
 import com.jacob.activeX.*;
 
 /**
- * In this case the component is created and used in the same thread
- * and it's an Apartment Threaded component, so we call InitSTA.
+ * In this case the component is created and used in the same thread and it's an
+ * Apartment Threaded component, so we call InitSTA.
+ * <p>
+ * May need to run with some command line options (including from inside
+ * Eclipse). Look in the docs area at the Jacob usage document for command line
+ * options.
  */
-class ScriptTest
-{
-  public static void main(String args[]) throws Exception
-  {
-		ComThread.InitSTA(true);
-    DispatchEvents de = null;
-    Dispatch sControl = null;
+public class ScriptTest extends BaseTestCase {
 
-    try {
-      String lang = "VBScript";
-      ActiveXComponent sC = new ActiveXComponent("ScriptControl");
-      sControl = (Dispatch)sC.getObject();
-      Dispatch.put(sControl, "Language", lang);
-      ScriptTestErrEvents te = new ScriptTestErrEvents();
-      de = new DispatchEvents(sControl, te);
-      if (de == null){
-    	  System.out.println("Received null when trying to create new DispatchEvents");
-      }
-      Variant result = Dispatch.call(sControl, "Eval", args[0]);
-      // call it twice to see the objects reused
-      result = Dispatch.call(sControl, "Eval", args[0]);
-      // call it 3 times to see the objects reused
-      result = Dispatch.call(sControl, "Eval", args[0]);
-      System.out.println("eval("+args[0]+") = "+ result);
-    } catch (ComException e) {
-      e.printStackTrace();
-    }
-    finally
-    {
-      Integer I = null;
-      for(int i=1;i<1000000;i++)
-      {
-        I = new Integer(i);
-      }
-      System.out.println(I);
+	public void testStupidSpeedTest() {
+		String lang = "VBScript";
+		ActiveXComponent sC = new ActiveXComponent("ScriptControl");
+		Dispatch sControl = sC.getObject();
+		Dispatch.put(sControl, "Language", lang);
+		for (int i = 0; i < 10000; i++) {
+			Dispatch.call(sControl, "Eval", "1+1");
+		}
+	}
+
+	public void testCreatingDispatchEvents() {
+		ComThread.InitSTA(true);
+		DispatchEvents de = null;
+		Dispatch sControl = null;
+
+		try {
+			String scriptCommand = getSampleVPScriptForEval();
+			String lang = "VBScript";
+			ActiveXComponent sC = new ActiveXComponent("ScriptControl");
+			sControl = (Dispatch) sC.getObject();
+			Dispatch.put(sControl, "Language", lang);
+			ScriptTestErrEvents te = new ScriptTestErrEvents();
+			de = new DispatchEvents(sControl, te);
+			if (de == null) {
+				System.out
+						.println("Received null when trying to create new DispatchEvents");
+			}
+			Variant result = Dispatch.call(sControl, "Eval", scriptCommand);
+			// call it twice to see the objects reused
+			result = Dispatch.call(sControl, "Eval", scriptCommand);
+			// call it 3 times to see the objects reused
+			result = Dispatch.call(sControl, "Eval", scriptCommand);
+			System.out.println("eval(" + scriptCommand + ") = " + result);
+		} catch (ComException e) {
+			e.printStackTrace();
+			fail("Caught Exception " + e);
+		} finally {
+			Integer I = null;
+			for (int i = 1; i < 1000000; i++) {
+				I = new Integer(i);
+			}
+			System.out.println(I);
 			ComThread.Release();
 			ComThread.quitMainSTA();
-    }
-  }
+		}
+	}
 }
-

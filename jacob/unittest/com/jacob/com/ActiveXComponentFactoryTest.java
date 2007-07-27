@@ -1,6 +1,7 @@
 package com.jacob.com;
 
 import com.jacob.activeX.ActiveXComponent;
+import com.jacob.test.BaseTestCase;
 
 /**
  * This exercises the two Dispatch factor methods that let you 
@@ -9,8 +10,9 @@ import com.jacob.activeX.ActiveXComponent;
  * May need to run with some command line options (including from inside Eclipse).  
  * Look in the docs area at the Jacob usage document for command line options.
  */
-public class ActiveXComponentFactoryTest {
-	public static void main(String args[]) throws Exception {
+public class ActiveXComponentFactoryTest extends BaseTestCase {
+	
+	public void testActiveXComponentFactory(){
 		ComThread.InitSTA(true);
 		try {
 			System.out.println("This test only works if MS Word is NOT already running");
@@ -31,26 +33,27 @@ public class ActiveXComponentFactoryTest {
 			}
 			ActiveXComponent mTryConnectingThird = ActiveXComponent.connectToActiveInstance(mApplicationId);
 			if (mTryConnectingThird == null ){
-				System.out.println("was unable able to connect to MSWord after previous startup");
+				fail("Was unable able to connect to MSWord after previous startup");
 			} else {
-				System.out.println("Correctly could connect to running MSWord");
+				System.out.println("Stopping MSWord");
 				// stop it so we can fail trying to connect to a running
 				mTryConnectingThird.invoke("Quit",new Variant[] {});
-				System.out.println("    Word stopped");
 			}
 			Thread.sleep(2000);
 			ActiveXComponent mTryConnectingFourth = ActiveXComponent.connectToActiveInstance(mApplicationId);
 			if (mTryConnectingFourth != null ){
-				System.out.println("Was able to connect to MSWord that was stopped");
 				mTryConnectingFourth.invoke("Quit",new Variant[] {});
+				fail("Was able to connect to MSWord that was stopped");
 			} else {
 				System.out.println("Correctly could not connect to running MSWord");
 			}
+		} catch (InterruptedException ie){
 		} catch (ComException e) {
 			e.printStackTrace();
+			fail("Caught COM exception");
 		} finally {
-			System.out.println("About to sleep for 2 seconds so we can bask in the glory of this success");
-			Thread.sleep(2000);
+			//System.out.println("About to sleep for 2 seconds so we can bask in the glory of this success");
+			//Thread.sleep(2000);
 			ComThread.Release();
 			ComThread.quitMainSTA();
 		}

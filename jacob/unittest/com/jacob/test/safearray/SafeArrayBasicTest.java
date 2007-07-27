@@ -1,16 +1,21 @@
 package com.jacob.test.safearray;
 
-import com.jacob.com.*;
+import com.jacob.com.SafeArray;
+import com.jacob.com.Variant;
+import com.jacob.test.BaseTestCase;
 
 /**
  * SafeArrayTest Program
  *
  * This is more of an exerciser.  It doesn't verify that it gets back 
  * what it expects like a junit test would
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  *
  */
-class sa_test {
-	public static void main(String[] args) {
+public class SafeArrayBasicTest extends BaseTestCase {
+	public void testBasicSafeArray(){
 		//System.runFinalizersOnExit(true);
 		SafeArray sa = new SafeArray(Variant.VariantVariant, 3);
 
@@ -60,11 +65,9 @@ class sa_test {
 			new Variant(1), new Variant(2.3), new Variant("hi") });
 		System.out.println("sa variant=" + sa);
 
-		sa_ND_test();
-
 	}
 
-	public static void sa_ND_test() {
+	public void testSafeArrayNumDimensions() {
 		int[] lowerBounds = new int[] { 0, 0, 0 };
 		int[] dimensionSizes = new int[] { 3, 3, 3 };
 

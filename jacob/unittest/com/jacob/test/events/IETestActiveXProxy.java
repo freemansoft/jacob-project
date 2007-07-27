@@ -5,6 +5,7 @@ import com.jacob.activeX.ActiveXDispatchEvents;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
+import com.jacob.test.BaseTestCase;
 /**
  * This test runs fine against jdk 1.4 and 1.5
  * 
@@ -18,10 +19,10 @@ import com.jacob.com.Variant;
  * Look in the docs area at the Jacob usage document for command line options.
  */
 
-class IETestActiveXProxy
-{
-    public static void main(String[] args)
-    {
+public class IETestActiveXProxy extends BaseTestCase {
+	
+
+    public void testIEActiveProxyCallback() {
       // this line starts the pump but it runs fine without it
       ComThread.startMainSTA();
       // remove this line and it dies
@@ -42,12 +43,20 @@ class IETestActiveXProxy
       ComThread.quitMainSTA();
       System.out.println("Main: did quit main sta in thread "
     		  +Thread.currentThread().getName());
+      if (aThread.threadFailedWithException != null){
+      	  fail("caught an unexpected exception "+aThread.threadFailedWithException);
+        }
     }
 }
 
 class IETestActiveProxyThread extends Thread
 {
 	public static boolean quitHandled = false;
+	
+	/**
+	 * holds any caught exception so the main/test case can see them
+	 */
+	public Throwable threadFailedWithException = null;
 	
     public IETestActiveProxyThread(){
         super();
@@ -83,8 +92,10 @@ class IETestActiveProxyThread extends Thread
           System.out.println("IETestActiveProxyThread: Did call navigate to yahoo");
           try { Thread.sleep(delay); } catch (Exception e) {}
         } catch (Exception e) {
-          e.printStackTrace();
+        	threadFailedWithException = e;
+        	e.printStackTrace();
         } catch (Throwable re){
+        	threadFailedWithException = re;
         	re.printStackTrace();
         } finally {
         	System.out.println("IETestActiveProxyThread: About to send Quit");

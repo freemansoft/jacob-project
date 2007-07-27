@@ -2,7 +2,7 @@ package com.jacob.com;
 
 import java.util.Date;
 
-import com.jacob.com.Variant;
+import com.jacob.test.BaseTestCase;
 
 /**
  * test cases that should exercise the new date conversion code
@@ -10,32 +10,37 @@ import com.jacob.com.Variant;
  * May need to run with some command line options (including from inside Eclipse).  
  * Look in the docs area at the Jacob usage document for command line options.
  */
-public class VariantDateTest {
+public class VariantDateTest extends BaseTestCase {
 
-    public static void main(String[] args) 
-    {
+    public void testVariantDate() {
     	Date now = new Date();
     	Variant holder = new Variant();
     	holder.putDate(now);
     	Date retrievedNow = holder.getJavaDate();
     	if (!now.equals(retrievedNow)){
-    		System.out.println("Variant Date Test failed " +now+ " != " +retrievedNow );
+    		fail("Variant Date Test failed " +now+ " != " +retrievedNow );
     	} else {
-    		//System.out.println("Variant Date Test passed");
+    		System.out.println("Variant Date Test passed");
     	}
     	
+    }
+    
+    public void testVariantDateToJavaObject(){
+    	Date now = new Date();
+    	Variant holder = new Variant(now);
     	for ( int i = 0; i < 30000; i++){
 	    	Variant dateVariant = new Variant(now);
+	    	Date retrievedNow = holder.getJavaDate();
 	    	retrievedNow = dateVariant.getJavaDate();
 	    	if (!now.equals(retrievedNow)){
-	    		System.out.println("Variant Date Test (1) failed " +now+ " != " +retrievedNow );
+	    		fail("Variant Date Test (1) failed " +now+ " != " +retrievedNow );
 	    	} else {
 	    		//System.out.println("Variant Date Test (1) passed");
 	    	}
 	    	// verify auto typecasting works
 	    	retrievedNow = (Date)dateVariant.toJavaObject();
 	    	if (!now.equals(retrievedNow)){
-	    		System.out.println("Variant Date Test (2) failed " +now+ " != " +retrievedNow );
+	    		fail("Variant Date Test (2) failed " +now+ " != " +retrievedNow );
 	    	} else {
 	    		//System.out.println("Variant Date Test (2) passed "+retrievedNow);
 	    	}
@@ -47,7 +52,7 @@ public class VariantDateTest {
 	    		System.out.println("int variant returned date");
 	    	}
     	}
-    	System.out.print("Test finished.  All tests passed if no errors before this line");
+    	System.out.print("Test finished.  All tests passed.");
 		
     }
     

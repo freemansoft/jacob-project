@@ -6,6 +6,7 @@ import com.jacob.com.Dispatch;
 import com.jacob.com.DispatchEvents;
 import com.jacob.com.InvocationProxy;
 import com.jacob.com.Variant;
+import com.jacob.test.BaseTestCase;
 
 /**
  * This test was lifted from a forum posting and shows how you can't listen to
@@ -15,13 +16,13 @@ import com.jacob.com.Variant;
  * May need to run with some command line options (including from inside Eclipse).  
  * Look in the docs area at the Jacob usage document for command line options.
  */
-public class ExcelEventTest extends InvocationProxy {
+public class ExcelEventTest extends BaseTestCase {
 
 	/**
 	 * load up excel, register for events and make stuff happen
 	 * @param args
 	 */
-	public static void main(String args[]) {
+	public void testExcelWithInvocationProxy() {
 		String pid = "Excel.Application";
 		String typeLibLocation = "C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE";
 
@@ -31,9 +32,9 @@ public class ExcelEventTest extends InvocationProxy {
 			// Add a listener (doesn't matter what it is).
 			DispatchEvents de;
 			if (typeLibLocation == null) {
-				de = new DispatchEvents(axc, new ExcelEventTest());
+				de = new DispatchEvents(axc, new ExcelEvents());
 			} else {
-				de = new DispatchEvents(axc, new ExcelEventTest(), pid,
+				de = new DispatchEvents(axc, new ExcelEvents(), pid,
 						typeLibLocation);
 			}
 			if (de == null) {
@@ -67,16 +68,18 @@ public class ExcelEventTest extends InvocationProxy {
 
 		} catch (ComException cfe) {
 			cfe.printStackTrace();
-			System.out.println("Failed to attach to " + pid + ": "
+			fail("Failed to attach to " + pid + ": "
 					+ cfe.getMessage());
 
 		}
 	}
 
+
+public class ExcelEvents extends InvocationProxy {
 	/**
 	 * Constructor so we can create an instance that implements invoke()
 	 */
-	public ExcelEventTest() {
+	public ExcelEvents() {
 	}
 
 	/**
@@ -88,4 +91,5 @@ public class ExcelEventTest extends InvocationProxy {
 		return null;
 	}
 
+}
 }

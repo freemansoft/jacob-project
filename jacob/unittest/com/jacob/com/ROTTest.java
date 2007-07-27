@@ -1,28 +1,16 @@
 package com.jacob.com;
-import com.jacob.com.ROT;
+import com.jacob.test.BaseTestCase;
 /**
- * This trys to exercise ROT's garbage collecion
+ * This tries to exercise ROT's garbage collection
  * 
  * This will eventually be changed to a unit test.
  * <p>
  * May need to run with some command line options (including from inside Eclipse).  
- * If so, then try these
- * <pre>
- *      -Djava.library.path=d:/jacob/release/x86 
- *      -Dcom.jacob.autogc=false 
- *      -Dcom.jacob.debug=false 
- *      -Xcheck:jni
- *  </pre>
+ * Look in the docs area at the Jacob usage document for command line options.
  */
-public class ROTTest {
+public class ROTTest extends BaseTestCase {
 
-    public static void main(String args[]) throws Exception
-    {
-    	ROTTest testJig = new ROTTest();
-    	testJig.testDontFillROTSystemProperty();
-    	testJig.testGCBehavior();
-    }
-    
+   
     /**
      * verify the SystemProperty (classname).PutInROT functions as expected.
      * A value of false means instances of the class are not put in the ROT

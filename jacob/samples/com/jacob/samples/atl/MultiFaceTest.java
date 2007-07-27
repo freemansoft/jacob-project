@@ -1,4 +1,4 @@
-package com.jacob.test.atl;
+package com.jacob.samples.atl;
 
 import com.jacob.com.*;
 import com.jacob.activeX.*;

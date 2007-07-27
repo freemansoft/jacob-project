@@ -3,6 +3,7 @@ package com.jacob.test.safearray;
 import com.jacob.com.ComThread;
 import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
+import com.jacob.test.BaseTestCase;
 
 /**
  * <p>
@@ -73,13 +74,15 @@ import com.jacob.com.Variant;
 	+-----------+ | VT_ARRAY| +---------+
 	| parray---->SAFEARRAY|
 	+------------+ +---------+
+ *
+ * <p>
+ * May need to run with some command line options (including from inside Eclipse).  
+ * Look in the docs area at the Jacob usage document for command line options.
  */
 
-public class SafeArrayReleaseTest 
-{
+public class SafeArrayReleaseTest extends BaseTestCase {
     final static int MAX = 300; 
-    public static void main(String[] args) 
-    {
+    public void testSaveArrayRelease() {
         int count;
         System.out.println("Starting test for max = "+MAX);
         for(count = 1; count<MAX; count++)
@@ -105,9 +108,7 @@ public class SafeArrayReleaseTest
             } 
             catch (Exception e) 
             {
-                System.out.println("\nTest fails with i = " + i + " (max = "+MAX+")");
-                e.printStackTrace();
-                break;
+                fail("Test fails with i = " + i + " (max = "+MAX+")");
             }
         }
         System.gc();
