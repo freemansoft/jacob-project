@@ -1,5 +1,0 @@
-Upgrade javadoc comments generation
-Events
-Structures
-Better Array support
-VT_PTR support
