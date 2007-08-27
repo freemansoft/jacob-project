@@ -92,7 +92,7 @@ SAFEARRAY *copySA(SAFEARRAY *psa)
     VARIANT v1, v2;
 
     VariantInit(&v1);
-	VariantInit(&v2);
+    VariantInit(&v2);
     V_VT(&v1) = VT_ARRAY | vt;
     V_ARRAY(&v1) = psa;
     VariantCopy(&v2, &v1);
@@ -142,11 +142,11 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_init
   // build the sa according to params
   if ( nDims > 0 )
   {
-	  SAFEARRAY *sa = makeArray(vt, nDims, lbounds, celems);
-	  env->ReleaseIntArrayElements(lb, lbounds, 0);
-	  env->ReleaseIntArrayElements(cel, celems, 0);
-	  jclass clazz = env->GetObjectClass(_this);
-	  setSA(env, _this, sa, 0);
+      SAFEARRAY *sa = makeArray(vt, nDims, lbounds, celems);
+      env->ReleaseIntArrayElements(lb, lbounds, 0);
+      env->ReleaseIntArrayElements(cel, celems, 0);
+      jclass clazz = env->GetObjectClass(_this);
+      setSA(env, _this, sa, 0);
   }
 }
 
@@ -565,7 +565,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromStringArray
       // GetStringUTFChars() replaced with GetStringChars()
       // (Variant modified in previous report)
       const jchar *str = env->GetStringChars(s, NULL); 
-	  CComBSTR bs((LPCOLESTR)str); // SR cast SF 1689061
+      CComBSTR bs((LPCOLESTR)str); // SR cast SF 1689061
       V_VT(&v) = VT_BSTR;
       V_BSTR(&v) = bs.Copy();
       long x = i;
@@ -1629,7 +1629,7 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString__I
     BSTR bs = V_BSTR(&v);
     jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
     // jacob report 1224219 
-	// SafeArrayGetElement memory must be freed http://www.canaimasoft.com/f90VB/OnlineManuals/Reference/TH_31.htm
+    // SafeArrayGetElement memory must be freed http://www.canaimasoft.com/f90VB/OnlineManuals/Reference/TH_31.htm
     VariantClear(&v);
     return js;
   } else if (vt == VT_BSTR) {
@@ -1637,8 +1637,8 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString__I
     SafeArrayGetElement(psa, &idx, &bs);
     jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
     // jacob report 1224219 
-	// SafeArrayGetElement memory must be freed http://www.canaimasoft.com/f90VB/OnlineManuals/Reference/TH_31.htm
-	if (bs) SysFreeString(bs);
+    // SafeArrayGetElement memory must be freed http://www.canaimasoft.com/f90VB/OnlineManuals/Reference/TH_31.htm
+    if (bs) SysFreeString(bs);
     return js;
   }
   ThrowComFail(env, "safearray cannot get string", 0);
@@ -2456,10 +2456,12 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setVariants
 }
 
 /* PLEASE NOTE THE LINE: 
-jint *jIndices = env->GetIntArrayElements(indices, NULL);
-which I added to replace "long idx[2] = {i,j};" from the 2D case.
-Not sure if this is correct. Also, check that I am doing the null test and
-dimension test correctly.
+	jint *jIndices = env->GetIntArrayElements(indices, NULL);
+	which I added to replace "long idx[2] = {i,j};" from the 2D case.
+	Not sure if this is correct. Also, check that I am doing the null test and
+	dimension test correctly.
+	Would really like to call     env->ReleaseIntArrayElements(indices, jIndices, NULL);    
+	in here but I can't get it to work
 */
 
 #define GETNDCODE(varType, varAccess, jtyp) \
@@ -2500,10 +2502,12 @@ dimension test correctly.
 //---------------------------------
 
 /* PLEASE NOTE THE LINE: 
-jint *jIndices = env->GetIntArrayElements(indices, NULL);
-which I added to replace "long idx[2] = {i,j};" from the 2D case.
-Not sure if this is correct. Also, check that I am doing the null test and
-dimension test correctly.
+	jint *jIndices = env->GetIntArrayElements(indices, NULL);
+	which I added to replace "long idx[2] = {i,j};" from the 2D case.
+	Not sure if this is correct. Also, check that I am doing the null test and
+	dimension test correctly.
+	Would really like to call     env->ReleaseIntArrayElements(indices, jIndices, NULL);    
+	in here but I can't get it to work
  */
 
 #define SETNDCODE(varType, varAccess) \
@@ -2586,6 +2590,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_SafeArray_getVariant___3I
   } else {
     ThrowComFail(env, "safearray type is not variant/dispatch", -1);
   }
+  env->ReleaseIntArrayElements(indices, jIndices, NULL);    
   return newVariant;
 }
 
@@ -2633,6 +2638,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setVariant___3ILcom_jacob_co
   } else {
     ThrowComFail(env, "safearray type is not variant/dispatch", -1);
   }
+  env->ReleaseIntArrayElements(indices, jIndices, NULL);    
 }
 
 /*
@@ -2756,6 +2762,7 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString___3I
     VARIANT v;
     VariantInit(&v);
     SafeArrayGetElement(psa, jIndices, &v);
+    env->ReleaseIntArrayElements(indices, jIndices, NULL);    
     if (FAILED(VariantChangeType(&v, &v, 0, VT_BSTR))) {
       return NULL;
     }
@@ -2765,18 +2772,22 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_SafeArray_getString___3I
   } else if (vt == VT_BSTR) {
     BSTR bs = NULL;
     SafeArrayGetElement(psa, jIndices, &bs);
+    env->ReleaseIntArrayElements(indices, jIndices, NULL);    
     jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061
     return js;
+  } else {
+    ThrowComFail(env, "safearray cannot get string", 0);
+    env->ReleaseIntArrayElements(indices, jIndices, NULL);    
+    return NULL;
   }
-  ThrowComFail(env, "safearray cannot get string", 0);
-  return NULL;
 }
 
 
 /*
  * Class:     com_jacob_com_SafeArray
- * Method:    setString
- * Signature: ([ILjava/lang/String;)V
+ * Method:    setStringjIndices, NULL);ILjava/lang/String;)V
+ * 
+ * This method has a leak in it somewhere.
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString___3ILjava_lang_String_2
   (JNIEnv *env, jobject _this, jintArray indices, jstring s)
@@ -2788,6 +2799,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString___3ILjava_lang_Str
   } 
 
   // ??? Not sure if this is correct type for call to SafeArrayGetElement()
+  // could have individually retrieved the indicies 
   jint *jIndices = env->GetIntArrayElements(indices, NULL);
 
   if (!jIndices) {
@@ -2819,6 +2831,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString___3ILjava_lang_Str
   } else {
     ThrowComFail(env, "safearray cannot set string", 0);
   }
+  // need to unpin the copied array SF: 1775889 
+  env->ReleaseIntArrayElements(indices, jIndices, NULL);
 }
 
 /*
@@ -2898,6 +2912,7 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_SafeArray_getBoolean___3I
     VARIANT v;
     VariantInit(&v);
     SafeArrayGetElement(sa, jIndices, (void*) &v);
+    env->ReleaseIntArrayElements(indices, jIndices, NULL);
     if (FAILED(VariantChangeType(&v, &v, 0, VT_BOOL))) {
       ThrowComFail(env, "safearray change type failed", -1);
       return NULL;
@@ -2907,9 +2922,11 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_SafeArray_getBoolean___3I
   } else if (vt == VT_BOOL) {
     VARIANT_BOOL vb;
     SafeArrayGetElement(sa, jIndices, (void*) &vb);
+    env->ReleaseIntArrayElements(indices, jIndices, NULL);
     jboolean jb = vb == VARIANT_TRUE ? JNI_TRUE: JNI_FALSE;
     return jb;
   } else {
+    env->ReleaseIntArrayElements(indices, jIndices, NULL);
     return NULL;
   }
 }
@@ -2954,6 +2971,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBoolean___3IZ
   } else {
     ThrowComFail(env, "safearray type mismatch", -1);
   }
+  env->ReleaseIntArrayElements(indices, jIndices, NULL);
 }
 
 

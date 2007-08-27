@@ -70,19 +70,20 @@ public class BaseTestCase extends TestCase {
 
 		// change all "." to ^ for later conversion to "/" so we can append resource names with "."
 		classPackageName = classPackageName.replace('.', '^');
-		System.out.println("classPackageName:" + classPackageName);
-		
-		String fullPathToResource = (classPackageName.length() > 0 ? classPackageName
-				+ "^"
-				: "")
-				+ resourceName;
+		System.out.println("classPackageName: " + classPackageName);
+		String fullPathToResource;
+		if (classPackageName.length()> 0){
+			fullPathToResource = classPackageName + "^" + resourceName;
+		} else {
+			fullPathToResource = resourceName;
+		}
 
 		fullPathToResource = fullPathToResource.replace('^', '/');
-		System.out.println("fullPathToResource:" + fullPathToResource);
+		System.out.println("fullPathToResource: " + fullPathToResource);
 
 		URL urlToLibrary = 
 			classInSamePackageAsResource.getClassLoader().getResource(fullPathToResource);
-		assertNotNull(urlToLibrary);
+		assertNotNull("URL to resource "+resourceName+" should not be null",urlToLibrary);
 		String fullPathToResourceAsFile = urlToLibrary.getFile();
 		System.out.println("url to library: "+urlToLibrary);
 		System.out.println("fullPathToResourceAsFile: "+fullPathToResourceAsFile);

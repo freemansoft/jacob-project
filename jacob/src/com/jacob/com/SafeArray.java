@@ -484,14 +484,14 @@ public class SafeArray extends JacobObject {
     public native String getString(int sa_idx1, int sa_idx2);
 
     /**
-     * string access
+     * puts a string into an element in a single dimensional safe array
      * @param sa_idx
      * @param c
      */
     public native void setString(int sa_idx, String c);
 
     /**
-     * string access
+     * puts a string into an element in a two dimensional array.
      * @param sa_idx1
      * @param sa_idx2
      * @param c
