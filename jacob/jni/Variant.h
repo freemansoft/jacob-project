@@ -151,7 +151,7 @@ JNIEXPORT jstring JNICALL Java_com_jacob_com_Variant_getVariantStringRef
  * Method:    com_jacob_com_VariantClear
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jacob_com_Variant_com_jacob_com_VariantClear
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_VariantClear
   (JNIEnv *, jobject);
 
 /*
