@@ -20,6 +20,8 @@
 package com.jacob.com;
 
 import java.util.Date;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * The multi-format data type used for all call backs and most communications
@@ -117,6 +119,9 @@ public class Variant extends JacobObject {
 
     /** variant's type is object VT_UNKNOWN*/
     public static final short VariantObject = 13;
+
+    /** variant's type is object VT_DECIMAL*/
+    public static final short VariantDecimal = 14;
 
     /** variant's type is byte VT_UI1 */
     public static final short VariantByte = 17;
@@ -294,6 +299,40 @@ public class Variant extends JacobObject {
     	getvt();
     	putVariantIntRef(in);
     }
+
+    /**
+     * private JNI method called by putDecimalRef
+     * @param signum sign
+     * @param scale BigDecimal's scale
+     * @param lo low 32 bits
+     * @param mid middle 32 bits
+     * @param hi high 32 bits
+     */
+    private native void putVariantDecRef(int signum, int scale, int lo, int mid, int hi);
+    
+    /**
+     * Set the content of this variant to an int (VT_DECIMAL|VT_BYREF)
+     * This may throw exceptions more often than the caller expects because 
+     * most callers don't manage the scale of their BigDecimal objects. 
+     * @param in the BigDecimal that will be converted to VT_DECIMAL
+     * @throws IllegalArgumentException if the scale is > 28, the maximum for VT_DECIMAL
+     */
+    public void putDecimalRef(BigDecimal in){
+    	// verify we aren't released
+    	getvt();
+      int scale = in.scale();
+      if (scale > 28) {
+    	 // should this really cast to a string and call putStringRef()?
+     	 throw new IllegalArgumentException("VT_DECIMAL only supports a scale of 28 and the passed"+
+    			 " in value has a scale of "+scale);
+      }
+      else {
+         BigInteger unscaled = in.unscaledValue();   
+         BigInteger shifted = unscaled.shiftRight(32);
+         putVariantDecRef(in.signum(), scale, unscaled.intValue(), shifted.intValue(), shifted.shiftRight(32).intValue());
+      }
+    }
+
 
     /**
      * set the content of this variant to a double (VT_R8|VT_BYREF)
@@ -742,6 +781,81 @@ public class Variant extends JacobObject {
     	// verify we aren't released yet
     	getvt();
     	putVariantInt(in);
+    }
+
+
+    /** 
+     * @return the value in this Variant as a decimal, null if not a decimal
+     */
+    private native Object getVariantDec();
+
+
+    /** 
+     * @return the value in this Variant (byref) as a decimal, null if not a decimal
+     */
+    private native Object getVariantDecRef();
+
+
+    /**
+     * return the BigDecimal value held in this variant (fails on other types)
+     * @return BigDecimal
+     * @throws IllegalStateException if variant is not of the requested type
+     */
+    public BigDecimal getDecimal(){
+    	if (this.getvt() == VariantDecimal){         
+    		return (BigDecimal)(getVariantDec());
+    	} else {
+    		throw new IllegalStateException(
+    				"getDecimal() only legal on Variants of type VariantDecimal, not "+this.getvt());
+    	}
+    }
+
+    /**
+     * return the BigDecimal value held in this variant (fails on other types)
+     * @return BigDecimal
+     * @throws IllegalStateException if variant is not of the requested type
+     */
+    public BigDecimal getDecimalRef(){
+    	if ((this.getvt() & VariantDecimal) == VariantDecimal &&
+        		(this.getvt() & VariantByref) == VariantByref) {
+    		return (BigDecimal)(getVariantDecRef());
+		} else {
+			throw new IllegalStateException(
+					"getDecimalRef() only legal on byRef Variants of type VariantDecimal, not "+this.getvt());
+		}
+	}
+
+    /**
+     * private JNI method called by putDecimal
+     * @param signum sign
+     * @param scale BigDecimal's scale
+     * @param lo low 32 bits
+     * @param mid middle 32 bits
+     * @param hi high 32 bits
+     */
+    private native void putVariantDec(int signum, int scale, int lo, int mid, int hi);
+    
+    /** 
+     * Set the value of this variant and set the type.
+     * This may throw exceptions more often than the caller expects because 
+     * most callers don't manage the scale of their BigDecimal objects. 
+     * @param in the big decimal that will convert to the VT_DECIMAL type
+     * @throws IllegalArgumentException if the scale is > 28, the maximum for VT_DECIMAL
+     */
+    public void putDecimal(BigDecimal in){
+    	// verify we aren't released yet
+    	getvt();   
+      int scale = in.scale();
+      if (scale > 28) {
+     	 // should this really cast to a string and call putStringRef()?
+    	 throw new IllegalArgumentException("VT_DECIMAL only supports a scale of 28 and the passed"+
+    			 " in value has a scale of "+scale);
+      }
+      else {     
+         BigInteger unscaled = in.unscaledValue();   
+         BigInteger shifted = unscaled.shiftRight(32);
+         putVariantDec(in.signum(), in.scale(), unscaled.intValue(), shifted.intValue(), shifted.shiftRight(32).intValue());
+      }
     }
 
     /** 
@@ -1514,6 +1628,11 @@ public class Variant extends JacobObject {
                 putFloatRef(((Float) pValueObject).floatValue());
             else
                 putFloat(((Float) pValueObject).floatValue());
+        } else if (pValueObject instanceof BigDecimal) {
+            if (fByRef)
+                putDecimalRef(((BigDecimal) pValueObject));
+            else
+                putDecimal(((BigDecimal) pValueObject));
         }  else if (pValueObject instanceof Byte){
         	if (fByRef){
         		putByteRef(((Byte)pValueObject).byteValue());
@@ -1804,6 +1923,12 @@ public class Variant extends JacobObject {
 			    break;
 		    case Variant.VariantObject : //13
 			    result = new NotImplementedException("toJavaObject() Not implemented for VariantObject");
+			    break;
+		    case Variant.VariantDecimal : //14
+		    	result = getDecimal();
+			    break;
+		    case Variant.VariantDecimal | Variant.VariantByref: //14
+			    result = getDecimalRef();
 			    break;
 		    case Variant.VariantByte : //17
 			    result = new Byte(this.getByte());

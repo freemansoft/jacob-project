@@ -1,5 +1,6 @@
 package com.jacob.com;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.jacob.test.BaseTestCase;
@@ -72,6 +73,17 @@ public class VariantTest extends BaseTestCase {
 					+" java objects come out the same");
 		}
 		
+		// Ugh, you have to pick a magic number whose scale is less than 28
+		// 53.53 had a scale of 64 and 53.52 had a scale of 47
+		BigDecimal testDecimal = new BigDecimal(53.50);
+		v = new Variant(testDecimal,false);
+		vByRef = new Variant(testDecimal,true);
+		if (!v.toJavaObject().equals(vByRef.toJavaObject())){
+			fail(v.toString() + " could not make type "
+					+ v.getvt() +" and "+ vByRef.getvt() 
+					+" java objects come out the same");
+		}
+
 		Date now = new Date();
 		v = new Variant(now,false);
 		vByRef = new Variant(now,true);
@@ -307,42 +319,42 @@ public class VariantTest extends BaseTestCase {
 	 */
 	public void testPutsAndGets(){
 		Variant v = new Variant();
-		v.putInt(10);
-		if (v.getInt() != 10){
-			fail("int test failed");
-		}
-		v.putShort((short)10);
-		if (v.getShort() != 10){
-			fail("short test failed");
-		}
-		v.putByte((byte)10);
-		if (v.getByte() != 10){
-			fail("int test failed");
-		}
-		v.putFloat(10);
-		if (v.getFloat() != 10.0){
+
+		v.putInt((int)10);
+		assertEquals("int test failed", (int)10, v.getInt());
+
+		v.putShort((short)20);
+		assertEquals("short test failed", (short)20, v.getShort());
+		
+		v.putByte((byte)30);
+		assertEquals("byte test failed", (byte)30, v.getByte());
+
+		v.putFloat(40);
+		if (v.getFloat() != 40.0){
 			fail("float test failed");
 		}
-		v.putDouble(10);
-		if (v.getDouble() != 10.0){
+
+		v.putDouble(50);
+		if (v.getDouble() != 50.0){
 			fail("double test failed");
 		}
+		
 		v.putString("1234.567");
-		if (!"1234.567".equals(v.getString())){
-			fail("string test failed");
-		}
+		assertEquals("string test failed","1234.567", v.getString());
+
 		v.putBoolean(true);
-		if (v.getBoolean() != true){
-			fail("failed boolean test(true)");
-		}
+		assertEquals("failed boolean test(true)",true, v.getBoolean());
+
 		v.putBoolean(false);
-		if (v.getBoolean() != false){
-			fail("failed boolean test(false)");
-		}
+		assertEquals("failed boolean test(false)",false,v.getBoolean());
+
 		v.putCurrency(123456789123456789L);
-		if (v.getCurrency()!=123456789123456789L){
-			fail("failed currency test");
-		}
+		assertEquals("failed currency test",123456789123456789L, v.getCurrency());
+		
+		BigDecimal testDecimal = new BigDecimal("22.222");
+		v.putDecimal(testDecimal);
+		assertEquals("failed BigDecimal test", testDecimal,v.getDecimal());
+		
 		
 		Date ourDate = new Date();
 		v.putDate(ourDate);

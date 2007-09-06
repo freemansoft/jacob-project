@@ -1062,8 +1062,156 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
   }
 
   return NULL;
-
 }
 
+ /** 
+  * puts a VT_DECIMAL by reference
+  * Added 1.13M4
+  * */
+ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDecRef
+    (JNIEnv *env, jobject _this, jint signum, jint scale, jint lo, jint mid, jint hi)
+  {
+    VARIANT *v = extractVariant(env, _this);
+    if (v) {
+      VariantClear(v); // whatever was there before
+      DECIMAL *pd = (DECIMAL *)CoTaskMemAlloc(sizeof(DECIMAL));
+      pd->scale = scale;
+      pd->sign = signum == 1?0:0x80;
+      pd->Hi32 = hi;
+      pd->Mid32 = mid;
+      pd->Lo32 = lo;
+      V_VT(v) = VT_DECIMAL | VT_BYREF;
+      V_DECIMALREF(v) = pd;
+    }
+  }
+
+
+ /**
+  * puts a VT_DECIMAL
+  * Added 1.13M4
+  * */
+ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDec
+    (JNIEnv *env, jobject _this, jint signum, jint scale, jint lo, jint mid, jint hi)
+  {
+    VARIANT *v = extractVariant(env, _this);
+    DECIMAL *d;
+    if (v) {
+      VariantClear(v); // whatever was there before
+      d = (DECIMAL*)v;
+      d->scale = scale;
+      d->sign = signum == 1?0:0x80;
+      d->Hi32 = hi;
+      d->Mid32 = mid;
+      d->Lo32 = lo;
+      V_VT(v) = VT_DECIMAL;
+    }
+  }
+
+/**
+ * utility method used by the getVariantXXX() methods to convert VT_DECIMAL to BigDecimal
+ * */
+jobject extractDecimal
+     (JNIEnv *env, DECIMAL* d)
+  {
+     jclass bigIntegerClass;
+     jclass bigDecimalClass;
+     jobject integer;
+     jmethodID bigIntegerConstructor;
+     jmethodID bigDecimalConstructor;
+     jbyteArray bArray;
+     jobject result = NULL;
+     jbyte* buffer; 
+
+     bigIntegerClass = env->FindClass("java/math/BigInteger");
+     if (bigIntegerClass == NULL)
+         return NULL;    
+      bigDecimalClass = env->FindClass("java/math/BigDecimal");
+      if (bigDecimalClass == NULL) {
+         env->DeleteLocalRef(bigIntegerClass);
+         return NULL;
+      }
+          
+      bigIntegerConstructor = env->GetMethodID(bigIntegerClass, "<init>", "(I[B)V");
+      if (bigIntegerConstructor == NULL) {
+         env->DeleteLocalRef(bigIntegerClass);
+         env->DeleteLocalRef(bigDecimalClass);
+         return NULL;
+      }
+      bigDecimalConstructor = env->GetMethodID(bigDecimalClass, "<init>", "(Ljava/math/BigInteger;I)V");
+      if (bigIntegerConstructor == NULL) {
+         env->DeleteLocalRef(bigIntegerClass);
+         env->DeleteLocalRef(bigDecimalClass);
+         return NULL;
+      }
+      bArray = env->NewByteArray(12);
+      if (bArray == NULL) {
+         env->DeleteLocalRef(bigIntegerClass);
+         env->DeleteLocalRef(bigDecimalClass);
+         return NULL;
+      }
+      /* Unfortunately the byte ordering is completely wrong, so we remap it into buffer */
+      buffer = (jbyte*)malloc(12);
+      buffer[11] = d->Lo32 & 255;
+      buffer[10] = (d->Lo32 >> 8) & 255;
+      buffer[9] = (d->Lo32 >> 16) & 255;;
+      buffer[8] = (d->Lo32 >> 24) & 255;;
+      buffer[7] = (d->Mid32) & 255;;
+      buffer[6] = (d->Mid32 >> 8) & 255;
+      buffer[5] = (d->Mid32 >> 16) & 255;
+      buffer[4] = (d->Mid32 >> 24) & 255;
+      buffer[3] = (d->Hi32) & 255;
+      buffer[2] = (d->Hi32 >> 8) & 255;
+      buffer[1] = (d->Hi32 >> 16) & 255;
+      buffer[0] = (d->Hi32 >> 24) & 255;
+      /* Load buffer into the actual array */
+      env->SetByteArrayRegion(bArray, 0, 12, buffer);
+      /* then clean up the C array */
+      free(buffer);
+
+      /* instantiate the BigInteger */
+      integer = env->NewObject(bigIntegerClass, bigIntegerConstructor, d->sign == 0x80?-1:1, bArray);
+
+      result = env->NewObject(bigDecimalClass, bigDecimalConstructor, integer, (jint)(d->scale));    
+      
+      /* Clean up the Java global references */
+      env->DeleteLocalRef(bArray);
+      env->DeleteLocalRef(integer);
+      env->DeleteLocalRef(bigIntegerClass);      
+      return result;
+  }
+
+/**
+  * gets a VT_DECIMAL by ref as a BigDecimal
+  * Added 1.13M4
+  * */
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getVariantDecRef
+    (JNIEnv *env, jobject _this)
+  {
+    VARIANT *v = extractVariant(env, _this);
+    if (v) {
+      if (V_VT(v) !=  (VT_DECIMAL|VT_BYREF)) {
+        return NULL;
+      }
+      return extractDecimal(env, v->pdecVal);
+    }
+    return NULL;
+  }
+
+/**
+  * gets a VT_DECIMAL as a BigDecimal
+  * Added 1.13M4
+  * */
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getVariantDec
+    (JNIEnv *env, jobject _this)
+  {
+    VARIANT *v = extractVariant(env, _this); 
+    if (v) {
+      if (V_VT(v) !=  VT_DECIMAL) {
+        return NULL;
+      }
+      return extractDecimal(env, (DECIMAL*)v);
+    }
+    return NULL;
+  }
 
 }

@@ -515,6 +515,40 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
 
 /*
  * Class:     com_jacob_com_Variant
+ * Method:    putVariantDecRef
+ * Signature: (Ljava.math.BigDecimal;)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDecRef
+  (JNIEnv *env, jobject _this, jint signum, jint scale, jint lo, jint mid, jint hi);
+
+
+/*
+ * Class:     com_jacob_com_Variant
+ * Method:    putVariantDec
+ * Signature: (Ljava.math.BigDecimal;)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDec
+  (JNIEnv *env, jobject _this, jint signum, jint scale, jint lo, jint mid, jint hi);
+
+
+/*
+ * Class:     com_jacob_com_Variant
+ * Method:    getVariantDecRef
+ * Signature: ()Ljava.math.BigDecimal
+ */
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getVariantDecRef
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jacob_com_Variant
+ * Method:    getVariantDec
+ * Signature: ()Ljava.math.BigDecimal
+ */
+JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_getVariantDec
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jacob_com_Variant
  * Method:    isVariantConsideredNull
  * Signature: ()Z
  */
