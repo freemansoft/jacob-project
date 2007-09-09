@@ -1069,7 +1069,7 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
   * Added 1.13M4
   * */
  JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDecRef
-    (JNIEnv *env, jobject _this, jint signum, jint scale, jint lo, jint mid, jint hi)
+    (JNIEnv *env, jobject _this, jint signum, jbyte scale, jint lo, jint mid, jint hi)
   {
     VARIANT *v = extractVariant(env, _this);
     if (v) {
@@ -1091,7 +1091,7 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
   * Added 1.13M4
   * */
  JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDec
-    (JNIEnv *env, jobject _this, jint signum, jint scale, jint lo, jint mid, jint hi)
+    (JNIEnv *env, jobject _this, jint signum, jbyte scale, jint lo, jint mid, jint hi)
   {
     VARIANT *v = extractVariant(env, _this);
     DECIMAL *d;
@@ -1151,18 +1151,18 @@ jobject extractDecimal
       }
       /* Unfortunately the byte ordering is completely wrong, so we remap it into buffer */
       buffer = (jbyte*)malloc(12);
-      buffer[11] = d->Lo32 & 255;
-      buffer[10] = (d->Lo32 >> 8) & 255;
-      buffer[9] = (d->Lo32 >> 16) & 255;;
-      buffer[8] = (d->Lo32 >> 24) & 255;;
-      buffer[7] = (d->Mid32) & 255;;
-      buffer[6] = (d->Mid32 >> 8) & 255;
-      buffer[5] = (d->Mid32 >> 16) & 255;
-      buffer[4] = (d->Mid32 >> 24) & 255;
-      buffer[3] = (d->Hi32) & 255;
-      buffer[2] = (d->Hi32 >> 8) & 255;
-      buffer[1] = (d->Hi32 >> 16) & 255;
-      buffer[0] = (d->Hi32 >> 24) & 255;
+      buffer[11] = (byte)(d->Lo32 & 255);
+      buffer[10] = (byte)((d->Lo32 >> 8) & 255);
+      buffer[9] =  (byte)((d->Lo32 >> 16) & 255);
+      buffer[8] =  (byte)((d->Lo32 >> 24) & 255);
+      buffer[7] =  (byte)((d->Mid32) & 255);
+      buffer[6] =  (byte)((d->Mid32 >> 8) & 255);
+      buffer[5] =  (byte)((d->Mid32 >> 16) & 255);
+      buffer[4] =  (byte)((d->Mid32 >> 24) & 255);
+      buffer[3] =  (byte)((d->Hi32) & 255);
+      buffer[2] =  (byte)((d->Hi32 >> 8) & 255);
+      buffer[1] =  (byte)((d->Hi32 >> 16) & 255);
+      buffer[0] =  (byte)((d->Hi32 >> 24) & 255);
       /* Load buffer into the actual array */
       env->SetByteArrayRegion(bArray, 0, 12, buffer);
       /* then clean up the C array */

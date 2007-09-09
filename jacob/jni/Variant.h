@@ -519,7 +519,7 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
  * Signature: (Ljava.math.BigDecimal;)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDecRef
-  (JNIEnv *env, jobject _this, jint signum, jint scale, jint lo, jint mid, jint hi);
+  (JNIEnv *env, jobject _this, jint signum, jbyte scale, jint lo, jint mid, jint hi);
 
 
 /*
@@ -528,7 +528,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDecRef
  * Signature: (Ljava.math.BigDecimal;)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDec
-  (JNIEnv *env, jobject _this, jint signum, jint scale, jint lo, jint mid, jint hi);
+  (JNIEnv *env, jobject _this, jint signum, jbyte scale, jint lo, jint mid, jint hi);
 
 
 /*

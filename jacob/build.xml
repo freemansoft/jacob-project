@@ -280,7 +280,7 @@
 			<arg value="/MD"/>
 			<!-- raise the warning level from the default -->
 			<!-- <arg value="/Wp64"/> -->
-			<arg value="/W2" />
+			<arg value="/W3" />
 			<!-- sets the exception model -->
 			<arg value="/EHsc" />
 			<!-- /O2 and /RCT1 are incompatible -->
@@ -312,7 +312,7 @@
 			<arg value="/MD"/>
 			<!-- raise the warning level from the default -->
 			<!-- <arg value="/Wp64"/> -->
-			<arg value="/W2" />
+			<arg value="/W3" />
 			<!-- sets the exception model -->
 			<arg value="/EHsc" />
 			<!-- /O2 and /RCT1 are incompatible -->

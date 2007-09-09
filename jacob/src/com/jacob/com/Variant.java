@@ -308,36 +308,38 @@ public class Variant extends JacobObject {
      * @param mid middle 32 bits
      * @param hi high 32 bits
      */
-    private native void putVariantDecRef(int signum, int scale, int lo, int mid, int hi);
+    private native void putVariantDecRef(int signum, byte scale, int lo, int mid, int hi);
     
     /**
-     * Set the content of this variant to an int (VT_DECIMAL|VT_BYREF)
+     * Set the content of this variant to an decimal (VT_DECIMAL|VT_BYREF)
      * This may throw exceptions more often than the caller expects because 
      * most callers don't manage the scale of their BigDecimal objects. 
      * @param in the BigDecimal that will be converted to VT_DECIMAL
      * @throws IllegalArgumentException if the scale is > 28, the maximum for VT_DECIMAL
      */
-    public void putDecimalRef(BigDecimal in){
-    	// verify we aren't released
-    	getvt();
-      int scale = in.scale();
-      if (scale > 28) {
-    	 // should this really cast to a string and call putStringRef()?
-     	 throw new IllegalArgumentException("VT_DECIMAL only supports a scale of 28 and the passed"+
-    			 " in value has a scale of "+scale);
-      }
-      else {
-         BigInteger unscaled = in.unscaledValue();   
-         BigInteger shifted = unscaled.shiftRight(32);
-         putVariantDecRef(in.signum(), scale, unscaled.intValue(), shifted.intValue(), shifted.shiftRight(32).intValue());
-      }
-    }
+    public void putDecimalRef(BigDecimal in) {
+		// verify we aren't released
+		getvt();
+		if (in.scale() > 28) {
+			// should this really cast to a string and call putStringRef()?
+			throw new IllegalArgumentException(
+					"VT_DECIMAL only supports a scale of 28 and the passed"
+							+ " in value has a scale of " + in.scale());
+		} else {
+			byte scale = (byte) in.scale();
+			BigInteger unscaled = in.unscaledValue();
+			BigInteger shifted = unscaled.shiftRight(32);
+			putVariantDecRef(in.signum(), scale, unscaled.intValue(), shifted
+					.intValue(), shifted.shiftRight(32).intValue());
+		}
+	}
 
 
     /**
-     * set the content of this variant to a double (VT_R8|VT_BYREF)
-     * @param in
-     */
+	 * set the content of this variant to a double (VT_R8|VT_BYREF)
+	 * 
+	 * @param in
+	 */
     private native void putVariantDoubleRef(double in);
     
     /**
@@ -801,27 +803,31 @@ public class Variant extends JacobObject {
      * @return BigDecimal
      * @throws IllegalStateException if variant is not of the requested type
      */
-    public BigDecimal getDecimal(){
-    	if (this.getvt() == VariantDecimal){         
-    		return (BigDecimal)(getVariantDec());
-    	} else {
-    		throw new IllegalStateException(
-    				"getDecimal() only legal on Variants of type VariantDecimal, not "+this.getvt());
-    	}
-    }
-
-    /**
-     * return the BigDecimal value held in this variant (fails on other types)
-     * @return BigDecimal
-     * @throws IllegalStateException if variant is not of the requested type
-     */
-    public BigDecimal getDecimalRef(){
-    	if ((this.getvt() & VariantDecimal) == VariantDecimal &&
-        		(this.getvt() & VariantByref) == VariantByref) {
-    		return (BigDecimal)(getVariantDecRef());
+    public BigDecimal getDecimal() {
+		if (this.getvt() == VariantDecimal) {
+			return (BigDecimal) (getVariantDec());
 		} else {
 			throw new IllegalStateException(
-					"getDecimalRef() only legal on byRef Variants of type VariantDecimal, not "+this.getvt());
+					"getDecimal() only legal on Variants of type VariantDecimal, not "
+							+ this.getvt());
+		}
+	}
+
+    /**
+	 * return the BigDecimal value held in this variant (fails on other types)
+	 * 
+	 * @return BigDecimal
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+    public BigDecimal getDecimalRef() {
+		if ((this.getvt() & VariantDecimal) == VariantDecimal
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return (BigDecimal) (getVariantDecRef());
+		} else {
+			throw new IllegalStateException(
+					"getDecimalRef() only legal on byRef Variants of type VariantDecimal, not "
+							+ this.getvt());
 		}
 	}
 
@@ -833,7 +839,7 @@ public class Variant extends JacobObject {
      * @param mid middle 32 bits
      * @param hi high 32 bits
      */
-    private native void putVariantDec(int signum, int scale, int lo, int mid, int hi);
+    private native void putVariantDec(int signum, byte scale, int lo, int mid, int hi);
     
     /** 
      * Set the value of this variant and set the type.
@@ -842,26 +848,28 @@ public class Variant extends JacobObject {
      * @param in the big decimal that will convert to the VT_DECIMAL type
      * @throws IllegalArgumentException if the scale is > 28, the maximum for VT_DECIMAL
      */
-    public void putDecimal(BigDecimal in){
-    	// verify we aren't released yet
-    	getvt();   
-      int scale = in.scale();
-      if (scale > 28) {
-     	 // should this really cast to a string and call putStringRef()?
-    	 throw new IllegalArgumentException("VT_DECIMAL only supports a scale of 28 and the passed"+
-    			 " in value has a scale of "+scale);
-      }
-      else {     
-         BigInteger unscaled = in.unscaledValue();   
-         BigInteger shifted = unscaled.shiftRight(32);
-         putVariantDec(in.signum(), in.scale(), unscaled.intValue(), shifted.intValue(), shifted.shiftRight(32).intValue());
-      }
-    }
+    public void putDecimal(BigDecimal in) {
+		// verify we aren't released yet
+		getvt();
+		if (in.scale() > 28) {
+			// should this really cast to a string and call putStringRef()?
+			throw new IllegalArgumentException(
+					"VT_DECIMAL only supports a scale of 28 and the passed"
+							+ " in value has a scale of " + in.scale());
+		} else {
+			byte scale = (byte) in.scale();
+			BigInteger unscaled = in.unscaledValue();
+			BigInteger shifted = unscaled.shiftRight(32);
+			putVariantDec(   in.signum(), scale, unscaled.intValue(), shifted
+					.intValue(), shifted.shiftRight(32).intValue());
+		}
+	}
 
-    /** 
-     * set the value of this variant 
-     * @param in
-     */
+    /**
+	 * set the value of this variant
+	 * 
+	 * @param in
+	 */
     private native void putVariantDate(double in);
 
     /**
