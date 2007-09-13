@@ -319,7 +319,8 @@ static char* BasicToCharString(const BSTR inBasicString)
     if (charStrSize > 1)
     {
         charString = new char[charStrSize];
-        size_t len = ::wcstombs(charString, inBasicString, charStrSize);
+		size_t convertedSize;
+		::wcstombs_s(&convertedSize, charString, charStrSize, inBasicString, charStrSize);
     }
     else
         charString = ::_strdup("");

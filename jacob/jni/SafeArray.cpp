@@ -1778,7 +1778,6 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getStrings
   long lb, ub;
   SafeArrayGetLBound(sa, 1, &lb); 
   SafeArrayGetUBound(sa, 1, &ub);
-  int num = ub - lb + 1; 
   VARTYPE vt; 
   SafeArrayGetVartype(sa, &vt); 
   if (vt == VT_VARIANT) 
@@ -2162,7 +2161,6 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getBooleans
   long lb, ub;
   SafeArrayGetLBound(sa, 1, &lb);
   SafeArrayGetUBound(sa, 1, &ub);
-  int num = ub - lb + 1;
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
   if (vt == VT_BOOL) {
@@ -2397,7 +2395,6 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getVariants
   long lb, ub;
   SafeArrayGetLBound(sa, 1, &lb); 
   SafeArrayGetUBound(sa, 1, &ub);
-  int num = ub - lb + 1; 
   VARTYPE vt; 
   SafeArrayGetVartype(sa, &vt); 
   if (vt == VT_VARIANT) 
