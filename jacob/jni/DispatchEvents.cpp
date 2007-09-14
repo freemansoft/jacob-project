@@ -306,7 +306,7 @@ BOOL getClassInfoFromProgId(LPOLESTR bsProgId,LPTYPEINFO *pClassInfo)
 				if (lVal==ERROR_SUCCESS) {
 					lVal = RegOpenKeyEx(keyXXXX,_T("TypeLib"),0,KEY_READ,&keyTypeLib);
 					if (lVal==ERROR_SUCCESS) {
-						lVal = RegQueryValueEx(keyTypeLib,NULL,NULL,&dwType,abData,&dwCountData);
+						lVal = RegQueryValueExA(keyTypeLib,NULL,NULL,&dwType,abData,&dwCountData);
 						RegCloseKey(keyTypeLib);
 				  }
 					RegCloseKey(keyXXXX);
