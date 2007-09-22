@@ -1,6 +1,0 @@
-This is the brainchild of Massimiliano Bigatti.  All original work copyright 
-Massimiliano Bigatti and licensed under LGPL by Massimiliano Bigatti
-
-+ Jacobgen out parameters are contrib of Hannes Reisinger
-+ Jacobgen now depends on Sam Skivert library and viztool (only some classes are
-  provided with Jacobgen - license is GPL and LGPL)
