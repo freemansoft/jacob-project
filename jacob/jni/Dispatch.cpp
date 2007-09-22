@@ -322,28 +322,41 @@ static char* BasicToCharString(const BSTR inBasicString)
 		size_t convertedSize;
 		::wcstombs_s(&convertedSize, charString, charStrSize, inBasicString, charStrSize);
     }
-    else
+    else 
+    {
         charString = ::_strdup("");
-
+    }
     return charString;
 }
 
-static char* CreateErrorMsgFromResult(HRESULT inResult)
+static wchar_t* CreateErrorMsgFromResult(HRESULT inResult)
 {
-  char* msg = NULL;
-  ::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+  wchar_t* msg = NULL;
+  ::FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER |
       FORMAT_MESSAGE_FROM_SYSTEM, NULL, inResult,MAKELANGID(LANG_NEUTRAL,
-      SUBLANG_DEFAULT), (LPTSTR) &msg, 0, NULL);
+      SUBLANG_DEFAULT), (LPWSTR) &msg, 0, NULL);
   if (msg == NULL)
-  msg = ::_strdup("An unknown COM error has occured.");
+  {
+    const wchar_t* message_text = L"An unknown COM error has occured.";
+    size_t bufferLength = (wcslen(message_text) + 1) * sizeof(wchar_t);
+    msg = (wchar_t*) ::LocalAlloc(LPTR, bufferLength);
+    wcscpy_s(msg, bufferLength, message_text);
+  }
 
   return msg;
 }
 
-static char* CreateErrorMsgFromInfo(HRESULT inResult, EXCEPINFO* ioInfo,
+static wchar_t* CreateErrorMsgFromInfo(HRESULT inResult, EXCEPINFO* ioInfo,
  const char* methName)
 {
-  char* msg = NULL;
+  wchar_t* msg = NULL;
+  size_t methNameWSize = 0;
+
+  mbstowcs_s(&methNameWSize, NULL, 0, methName, _TRUNCATE);
+
+  wchar_t* methNameW = new wchar_t[methNameWSize];
+
+  mbstowcs_s(NULL, methNameW, methNameWSize, methName, _TRUNCATE);
 
   // If this is a dispatch exception (triggered by an Invoke message),
   // then we have to take some additional steps to process the error
@@ -356,35 +369,34 @@ static char* CreateErrorMsgFromInfo(HRESULT inResult, EXCEPINFO* ioInfo,
         (*(ioInfo->pfnDeferredFillIn))(ioInfo);
 
     // Build the error message from exception information content.
-    char* source = ::BasicToCharString(ioInfo->bstrSource);
-    char* desc = ::BasicToCharString(ioInfo->bstrDescription);
-    const size_t MSG_LEN = ::strlen(methName) + ::strlen(source) + ::strlen(desc) + 128;
-    msg = new char[MSG_LEN];
-    ::strncpy_s(msg, MSG_LEN, "Invoke of: ", strlen("Invoke of: "));
-    ::strncat_s(msg, MSG_LEN, methName, strlen(methName));
-    ::strncat_s(msg, MSG_LEN, "\nSource: ", strlen("\nSource: "));
-    ::strncat_s(msg, MSG_LEN, source, strlen(source));
-    ::strncat_s(msg, MSG_LEN, "\nDescription: ", strlen("\nDescription: "));
-    ::strncat_s(msg, MSG_LEN, desc, strlen(desc));
-    ::strncat_s(msg, MSG_LEN, "\n", strlen("\n"));
-    delete source;
-    delete desc;
+    int sourceLen = SysStringLen(ioInfo->bstrSource);
+    int descLen = SysStringLen(ioInfo->bstrDescription);
+    const size_t MSG_LEN = ::wcslen(methNameW) + sourceLen + descLen + 128;
+    msg = new wchar_t[MSG_LEN];
+    ::wcsncpy_s(msg, MSG_LEN, L"Invoke of: ", wcslen(L"Invoke of: "));
+    ::wcsncat_s(msg, MSG_LEN, methNameW, wcslen(methNameW));
+    ::wcsncat_s(msg, MSG_LEN, L"\nSource: ", wcslen(L"\nSource: "));
+    ::wcsncat_s(msg, MSG_LEN, ioInfo->bstrSource, sourceLen);
+    ::wcsncat_s(msg, MSG_LEN, L"\nDescription: ", wcslen(L"\nDescription: "));
+    ::wcsncat_s(msg, MSG_LEN, ioInfo->bstrDescription, descLen);
+    ::wcsncat_s(msg, MSG_LEN, L"\n", wcslen(L"\n"));
   }
   else
   {
-    char* msg2 = CreateErrorMsgFromResult(inResult);
-    const size_t MSG_LEN = ::strlen(methName) + ::strlen(msg2) + 128;
-    msg = new char[MSG_LEN];
-    ::strncpy_s(msg, MSG_LEN, 
-		"A COM exception has been encountered:\nAt Invoke of: ", 
-		strlen("A COM exception has been encountered:\nAt Invoke of: "));
-    ::strncat_s(msg, MSG_LEN, methName, strlen(methName));
-    ::strncat_s(msg, MSG_LEN, "\nDescription: ", strlen("\nDescription: "));
-    ::strncat_s(msg, MSG_LEN, msg2, strlen(msg2));
+    wchar_t* msg2 = CreateErrorMsgFromResult(inResult);
+    const size_t MSG_LEN = ::wcslen(methNameW) + ::wcslen(msg2) + 256;
+    msg = new wchar_t[MSG_LEN];
+    ::wcsncpy_s(msg, MSG_LEN, 
+		L"A COM exception has been encountered:\nAt Invoke of: ", 
+		wcslen(L"A COM exception has been encountered:\nAt Invoke of: "));
+    ::wcsncat_s(msg, MSG_LEN, methNameW, wcslen(methNameW));
+    ::wcsncat_s(msg, MSG_LEN, L"\nDescription: ", wcslen(L"\nDescription: "));
+    ::wcsncat_s(msg, MSG_LEN, msg2, wcslen(msg2));
     // jacob-msg 1075 - SF 1053872 : Documentation says "use LocalFree"!! 
     //delete msg2;
 	LocalFree(msg2); 
   }
+  delete methNameW;
   return msg;
 }
 
@@ -505,7 +517,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
   // check for error and display a somewhat verbose error message
   if (!SUCCEEDED(hr)) {
     // two buffers that may have to be freed later
-    char *buf = NULL;
+    wchar_t *buf = NULL;
     char *dispIdAsName = NULL;
     // this method can get called with a name or a dispatch id
     // we need to handle both SF 1114159 
@@ -534,7 +546,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
 		}
 	}
 	
-    ThrowComFail(env, buf, hr);
+    ThrowComFailUnicode(env, buf, hr);
     if (buf) delete buf;
     if (dispIdAsName) delete dispIdAsName;
     return NULL;

@@ -21,6 +21,7 @@
 extern "C" {
   VARIANT *extractVariant(JNIEnv *env, jobject arg);
   void ThrowComFail(JNIEnv *env, const char* desc, jint hr);
+  void ThrowComFailUnicode(JNIEnv *env, const wchar_t* desc, jint hr);
   IDispatch *extractDispatch(JNIEnv *env, jobject arg);
   SAFEARRAY *extractSA(JNIEnv *env, jobject arg);
   void setSA(JNIEnv *env, jobject arg, SAFEARRAY *sa, int copy);
