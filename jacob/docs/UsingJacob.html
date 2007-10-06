@@ -55,14 +55,20 @@ should be fixed in some future release, fix method and time not yet determined.
 <h2>Microsoft Visual C++ library dependencies.</h2>
 	Jacob 1.13 is built with VC++ 2005 that creates a dependency on msvcr80.dll.  
 	Windows XP and later seem to already include the necessary components.  
-	NT/2000 and Server/2003 require that you download vcredist_x86.exe 
-	from the microsoft web site. 
+	NT/2000 and Server/2003 require that you download the Visual C redistributable package,
+	vcredist_x86.exe from the microsoft web site. 
 	Microsoft has a download available that supplies the necessary components.
 	It is distributed as a redistributable package.
-	See the following links.
+<p>
+If you see the following message then you probably don't have the right C++ libraries.
 <pre>
-http://www.microsoft.com/downloads/details.aspx?familyid=32bc1bee-a3f9-4c13-9c99-220b62a191ee&displaylang=en
-http://www.microsoft.com/downloads/details.aspx?FamilyID=200b2fd9-ae1a-4a14-984d-389c36f85647&displaylang=en
+Exception in thread "main" java.lang.UnsatisfiedLinkError: C:\apps\...\jacob.dll: This application has fa 
+iled to start because the application configuration is incorrect. Reinstalling the application may fix this pr 
+oblem 
+</pre>	
+<pre>
+<A href="http://www.microsoft.com/downloads/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en">
+Visual C redistributable installer SP1</A>
 </pre>
 
 <p>
