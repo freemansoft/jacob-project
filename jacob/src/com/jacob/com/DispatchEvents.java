@@ -48,6 +48,7 @@ public class DispatchEvents extends JacobObject {
      * memory pointer here.
      */
     int m_pConnPtProxy = 0;
+    
     /**
      * the wrapper for the event sink.
      * This object is the one that will be sent a message when an event
@@ -56,13 +57,15 @@ public class DispatchEvents extends JacobObject {
      */
     InvocationProxy mInvocationProxy = null;
 
-    
     /**
      * This is the most commonly used constructor.
      * <p>
      * Creates the event callback linkage between the the
      * MS program represented by the Dispatch object and the
      * Java object that will receive the callback.
+     * <p>
+     * Can be used on any object that implements IProvideClassInfo.
+     * 
      * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
      * @param eventSink Java object that wants to receive the events
      */
@@ -76,9 +79,16 @@ public class DispatchEvents extends JacobObject {
      * Creates the event callback linkage between the the
      * MS program represented by the Dispatch object and the
      * Java object that will receive the callback.
+     * <p>
+     * Used when the program doesn't implement IProvideClassInfo.  It provides
+     * a way to find the TypeLib in the registry based on the programId. The TypeLib
+     * is looked up in the registry on the path 
+     * HKEY_LOCAL_MACHINE/SOFTWARE/Classes/CLSID/(CLID drived from progid)/ProgID/Typelib
+     * 
      * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
      * @param eventSink Java object that wants to receive the events
-     * @param progId ???
+     * @param progId program id in the registry that has a TypeLib subkey. 
+     * 		The progrId is mapped to a CLSID that is they used to look up the key to the Typelib
      */
     public DispatchEvents(Dispatch sourceOfEvent, Object eventSink, String progId) {
 		this(sourceOfEvent, eventSink, progId, null );
@@ -88,12 +98,16 @@ public class DispatchEvents extends JacobObject {
      * Creates the event callback linkage between the the
      * MS program represented by the Dispatch object and the
      * Java object that will receive the callback.
+     * <p>
+     * This method was added because Excel doesn't implement IProvideClassInfo
+     * and the registry entry for Excel.Application doesn't include a typelib key.
+     *  
      * <pre>
-     * >DispatchEvents de = 
+     * DispatchEvents de = 
      * 			new DispatchEvents(someDispatch,someEventHAndler,
      * 				"Excel.Application",
      * 				"C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE");
-     *
+     * </pre>
      * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
      * @param eventSink Java object that wants to receive the events
      * @param progId , mandatory if the typelib is specified
@@ -121,7 +135,7 @@ public class DispatchEvents extends JacobObject {
     }
 
     /**
-     * returns an instance of the proxy configured with pTargetObject as its target
+     * Returns an instance of the proxy configured with pTargetObject as its target
      * @param pTargetObject
      * @return InvocationProxy an instance of the proxy this DispatchEvents will send to the COM layer
      */
