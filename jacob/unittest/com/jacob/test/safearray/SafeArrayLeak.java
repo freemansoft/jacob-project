@@ -3,7 +3,7 @@ package com.jacob.test.safearray;
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
-import com.jacob.com.JacobObject;
+import com.jacob.com.JacobReleaseInfo;
 import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
 import com.jacob.test.BaseTestCase;
@@ -37,7 +37,7 @@ public class SafeArrayLeak extends BaseTestCase {
 		SafeArray sa = null;
 
 		// -Dcom.jacob.autogc=true
-		System.out.println("Jacob version: " + JacobObject.getBuildVersion());
+		System.out.println("Jacob version: " + JacobReleaseInfo.getBuildVersion());
 
 		for (int t = 0; t < 10; t++) {
 			// look at a large range of cells

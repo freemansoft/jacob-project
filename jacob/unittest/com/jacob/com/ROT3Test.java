@@ -56,6 +56,7 @@ public class ROT3Test extends BaseTestCase {
 		 * 
 		 * @see java.lang.Runnable#run()
 		 */
+		@SuppressWarnings("deprecation")
 		public void run() {
 			// something that keeps object references around
 			// so the gc can't collect them

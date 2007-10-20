@@ -146,6 +146,7 @@ public class Variant extends JacobObject {
 	 * @deprecated should use changeType() followed by getInt()
 	 * @return the value of this variant as an int (after possible conversion)
 	 */
+	@Deprecated
 	public int toInt() {
 		changeType(VariantInt);
 		return getInt();
@@ -155,6 +156,7 @@ public class Variant extends JacobObject {
 	 * @deprecated should use changeType() followed by getDate()
 	 * @return the value of this variant as a date (after possible conversion)
 	 */
+	@Deprecated
 	public double toDate() {
 		changeType(VariantDate);
 		return getDate();
@@ -174,6 +176,7 @@ public class Variant extends JacobObject {
 	 *         null
 	 * 
 	 */
+	@Deprecated
 	public Date toJavaDate() {
 		changeType(Variant.VariantDate);
 		return getJavaDate();
@@ -183,6 +186,7 @@ public class Variant extends JacobObject {
 	 * @deprecated should be replaced by changeType() followed by getBoolean()
 	 * @return the value of this variant as boolean (after possible conversion)
 	 */
+	@Deprecated
 	public boolean toBoolean() {
 		changeType(Variant.VariantBoolean);
 		return getBoolean();
@@ -198,6 +202,7 @@ public class Variant extends JacobObject {
 	 * 
 	 * @deprecated method never did anything
 	 */
+	@Deprecated
 	public void getNull() {
 	};
 
@@ -219,6 +224,7 @@ public class Variant extends JacobObject {
 	 * @deprecated No longer used
 	 * @return null !
 	 */
+	@Deprecated
 	public native Variant cloneIndirect();
 
 	/**
@@ -226,6 +232,7 @@ public class Variant extends JacobObject {
 	 * @return the content of this variant as a double (after possible
 	 *         conversion)
 	 */
+	@Deprecated
 	public double toDouble() {
 		changeType(Variant.VariantDouble);
 		return getDouble();
@@ -236,6 +243,7 @@ public class Variant extends JacobObject {
 	 * @return the content of this variant as a long reprensenting a monetary
 	 *         amount
 	 */
+	@Deprecated
 	public long toCurrency() {
 		changeType(Variant.VariantCurrency);
 		return getCurrency();
@@ -247,6 +255,7 @@ public class Variant extends JacobObject {
 	 *            doesn't matter because this method does nothing
 	 * @throws com.jacob.com.NotImplementedException
 	 */
+	@Deprecated
 	public void putVariantArray(Variant[] in) {
 		throw new NotImplementedException("Not implemented");
 	}
@@ -256,6 +265,7 @@ public class Variant extends JacobObject {
 	 * @return never returns anything
 	 * @throws com.jacob.com.NotImplementedException
 	 */
+	@Deprecated
 	public Variant[] getVariantArray() {
 		throw new NotImplementedException("Not implemented");
 	}
@@ -267,6 +277,7 @@ public class Variant extends JacobObject {
 	 * @deprecated superceded by "this"
 	 * @return this same object
 	 */
+	@Deprecated
 	public Variant toVariant() {
 		return this;
 	}
@@ -277,6 +288,7 @@ public class Variant extends JacobObject {
 	 *            doesn't matter because this method does nothing
 	 * @throws com.jacob.com.NotImplementedException
 	 */
+	@Deprecated
 	public void putByteArray(Object in) {
 		throw new NotImplementedException("Not implemented");
 	}
@@ -709,6 +721,7 @@ public class Variant extends JacobObject {
 	 * @return never returns anything
 	 * @throws com.jacob.com.NotImplementedException
 	 */
+	@Deprecated
 	public Object toCharArray() {
 		throw new NotImplementedException("Not implemented");
 	}
@@ -1006,6 +1019,7 @@ public class Variant extends JacobObject {
 	 * @deprecated should be replaced by changeType() followed by getByte()
 	 * @return byte
 	 */
+	@Deprecated
 	public byte toByte() {
 		changeType(Variant.VariantByte);
 		return getByte();
@@ -1125,6 +1139,7 @@ public class Variant extends JacobObject {
 	 * @deprecated should use changeType() followed by getError()
 	 * @return the error as an int (after conversion)
 	 */
+	@Deprecated
 	public int toError() {
 		changeType(Variant.VariantError);
 		return getError();
@@ -1137,6 +1152,7 @@ public class Variant extends JacobObject {
 	 * @return Object returned by toDispatch()
 	 * @see Variant#toDispatch() instead
 	 */
+	@Deprecated
 	public Object toObject() {
 		return toDispatch();
 	}
@@ -1148,6 +1164,7 @@ public class Variant extends JacobObject {
 	 * 
 	 * @deprecated method never did anything
 	 */
+	@Deprecated
 	public void getEmpty() {
 	};
 
@@ -1257,6 +1274,7 @@ public class Variant extends JacobObject {
 	 * @see Variant#putDispatch(Dispatch)
 	 * @deprecated should use putDispatch()
 	 */
+	@Deprecated
 	public void putObject(Object in) {
 		// this should verify in instanceof Dispatch
 		putVariantDispatch(in);
@@ -1372,6 +1390,7 @@ public class Variant extends JacobObject {
 	 * @param in
 	 * @deprecated
 	 */
+	@Deprecated
 	public void putObjectRef(Object in) {
 		putObject(in);
 	}
@@ -1533,6 +1552,7 @@ public class Variant extends JacobObject {
 	 * @deprecated should use changeType() and getFloat() instead
 	 * @return float
 	 */
+	@Deprecated
 	public float toFloat() {
 		changeType(Variant.VariantFloat);
 		return getFloat();
@@ -1611,6 +1631,7 @@ public class Variant extends JacobObject {
 	 * 
 	 * @deprecated replaced by putNoParam()
 	 */
+	@Deprecated
 	public void noParam() {
 		putNoParam();
 	}
@@ -1622,6 +1643,7 @@ public class Variant extends JacobObject {
 	 * @deprecated superseded by SafeArray
 	 * @throws com.jacob.com.NotImplementedException
 	 */
+	@Deprecated
 	public void putCharArray(Object in) {
 		throw new NotImplementedException("Not implemented");
 	}
@@ -1701,6 +1723,7 @@ public class Variant extends JacobObject {
 	 * @deprecated superseded by SafeArray
 	 * @throws com.jacob.com.NotImplementedException
 	 */
+	@Deprecated
 	public void putVariantArrayRef(Variant[] in) {
 		throw new NotImplementedException("Not implemented");
 	}
@@ -1710,6 +1733,7 @@ public class Variant extends JacobObject {
 	 * @deprecated superseded by SafeArray
 	 * @throws com.jacob.com.NotImplementedException
 	 */
+	@Deprecated
 	public Variant[] getVariantArrayRef() {
 		throw new NotImplementedException("Not implemented");
 	}
@@ -1744,6 +1768,7 @@ public class Variant extends JacobObject {
 	 * @deprecated
 	 * @return this object as a dispatch object by calling toDispatch()
 	 */
+	@Deprecated
 	public Object toScriptObject() {
 		return toDispatch();
 	}
@@ -1916,6 +1941,7 @@ public class Variant extends JacobObject {
 	 * @deprecated callers should use changeType() followed by getShort()
 	 * @return short
 	 */
+	@Deprecated
 	public short toShort() {
 		this.changeType(Variant.VariantShort);
 		return getShort();
@@ -2004,6 +2030,7 @@ public class Variant extends JacobObject {
 	 * @return nothing because this method is not implemented
 	 * @throws com.jacob.com.NotImplementedException
 	 */
+	@Deprecated
 	public Variant[] toVariantArray() {
 		throw new NotImplementedException("Not implemented");
 	}
@@ -2013,6 +2040,7 @@ public class Variant extends JacobObject {
 	 * @return nothing because this method is not implemented
 	 * @throws com.jacob.com.NotImplementedException
 	 */
+	@Deprecated
 	public Object toByteArray() {
 		throw new NotImplementedException("Not implemented");
 	}

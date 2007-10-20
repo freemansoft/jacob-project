@@ -90,6 +90,7 @@ public class EnumVariant extends JacobObject implements
 	 * @return Variant that is next in the collection
 	 * @deprecated use nextElement() instead
 	 */
+	@Deprecated
 	public Variant Next() {
 		if (hasMoreElements())
 			return nextElement();

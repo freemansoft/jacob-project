@@ -15,8 +15,8 @@ public class JacobObjectTest extends BaseTestCase {
 	 * verify the build version and date functions work correctly
 	 */
 	public void testBuildVersion() {
-		System.out.println("build version is " + JacobObject.getBuildVersion());
-		System.out.println("build date is " + JacobObject.getBuildDate());
+		System.out.println("build version is " + JacobReleaseInfo.getBuildVersion());
+		System.out.println("build date is " + JacobReleaseInfo.getBuildDate());
 	}
 
 }

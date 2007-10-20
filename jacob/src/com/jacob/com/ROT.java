@@ -181,6 +181,7 @@ public abstract class ROT {
 	 * This will remove an object from the ROT
 	 * @param o
 	 */
+	@Deprecated
 	protected synchronized static void removeObject(JacobObject o) {
 		String t_name = Thread.currentThread().getName();
 		Map<JacobObject, String> tab = rot.get(t_name);

@@ -144,6 +144,7 @@ public abstract class ComThread {
 	 * This will remove an object from the ROT
 	 * @param o
 	 */
+	@Deprecated
 	public static synchronized void RemoveObject(JacobObject o) {
 		ROT.removeObject(o);
 	}
