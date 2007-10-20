@@ -125,6 +125,13 @@ public class Variant extends JacobObject {
 
     /** variant's type is byte VT_UI1 */
     public static final short VariantByte = 17;
+    
+    /** 
+     * variant's type is 64 bit long integer VT_I8 - 
+     * not yet implemented in Jacob because we have to decide what to do with Currency
+     * and because its only supported on XP and later.  No win2k, NT or 2003 server.
+     **/
+    public static final short VariantLongInt = 20;
 
     /** what is this? */
     public static final short VariantTypeMask = 4095;
@@ -562,7 +569,7 @@ public class Variant extends JacobObject {
 
     /**
      * 
-     * @return returns the double value, throws exception if not a currency type
+     * @return returns the double value, throws exception if not a Double type
      * @throws IllegalStateException if variant is not of the requested type
      */
     public double getDoubleRef(){
@@ -584,7 +591,7 @@ public class Variant extends JacobObject {
 
     /**
      * 
-     * @return returns the date value as a double, throws exception if not a currency type
+     * @return returns the date value as a double, throws exception if not a date type
      * @throws IllegalStateException if variant is not of the requested type
      */
     public double getDateRef(){
@@ -1109,8 +1116,10 @@ public class Variant extends JacobObject {
     private native void putVariantCurrency(long in);
     
     /**
-     * puts a value in as a currency and sets the variant type
-     * @param in
+     * Puts a value in as a currency and sets the variant type.
+     * MS Currency objects are 64 bit fixed point numbers with 15 digits to the left 
+     * and 4 to the right of the decimal place.
+     * @param in the long that will be put into the 64 bit currency object.
      */
     public void putCurrency(long in){
     	// verify we aren't released yet
@@ -1153,8 +1162,9 @@ public class Variant extends JacobObject {
     private native long getVariantCurrency();
     
     /**
-     * 
-     * @return returns the currency value as a long, throws exception if not a currency type
+     * MS Currency objects are 64 bit fixed point numbers with 15 digits to the left 
+     * and 4 to the right of the decimal place.
+     * @return returns the currency value as a long, throws exception if not a currency type..
      * @throws IllegalStateException if variant is not of the requested type
      */
     public long getCurrency(){
@@ -1181,8 +1191,10 @@ public class Variant extends JacobObject {
     private native void putVariantCurrencyRef(long in);
     
     /**
-     * pushes a long into the variant as currency and sets the type
-     * @param in
+     * Pushes a long into the variant as currency and sets the type.
+     * MS Currency objects are 64 bit fixed point numbers with 15 digits to the left 
+     * and 4 to the right of the decimal place.
+     * @param in the long that will be put into the 64 bit currency object
      */
     public void putCurrencyRef(long in){
     	// verify we aren't released yet
@@ -1273,7 +1285,7 @@ public class Variant extends JacobObject {
 
     /**
      * 
-     * @return returns the float value, throws exception if not a currency type
+     * @return returns the float value, throws exception if not a Float type
      * @throws IllegalStateException if variant is not of the requested type
      */
     public float getFloatRef(){
@@ -1290,7 +1302,8 @@ public class Variant extends JacobObject {
     private native long getVariantCurrencyRef();
 
     /**
-     * 
+     * MS Currency objects are 64 bit fixed point numbers with 15 digits to the left 
+     * and 4 to the right of the decimal place.
      * @return returns the currency value as a long, throws exception if not a currency type
      * @throws IllegalStateException if variant is not of the requested type
      */
@@ -1309,7 +1322,7 @@ public class Variant extends JacobObject {
 
     /**
      * 
-     * @return returns the error value as an int, throws exception if not a currency type
+     * @return returns the error value as an int, throws exception if not a Error type
      * @throws IllegalStateException if variant is not of the requested type
      */
     public int getErrorRef(){
