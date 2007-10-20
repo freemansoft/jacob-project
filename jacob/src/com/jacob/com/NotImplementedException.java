@@ -20,24 +20,22 @@
 package com.jacob.com;
 
 /**
- * Thrown by java APIs that are not implemented either because
- * they were never implemented or because they are bieng deprecated
- * This is a subclass of ComException so callers can still just catch 
- * ComException.
+ * Thrown by java APIs that are not implemented either because they were never
+ * implemented or because they are bieng deprecated This is a subclass of
+ * ComException so callers can still just catch ComException.
  */
 public class NotImplementedException extends JacobException {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -9169900832852356445L;
 
 	/**
-     * @param description
-     */
-    public NotImplementedException(String description) {
-        super(description);
-    }
+	 * @param description
+	 */
+	public NotImplementedException(String description) {
+		super(description);
+	}
 
-	
 }

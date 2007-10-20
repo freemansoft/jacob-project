@@ -20,9 +20,9 @@
 package com.jacob.com;
 
 /**
- * The parent class of all Jacob exceptions.
- * They all used to be based off of RuntimeException or ComException
- * but it was decided to base them all off of one owned by this project.
+ * The parent class of all Jacob exceptions. They all used to be based off of
+ * RuntimeException or ComException but it was decided to base them all off of
+ * one owned by this project.
  */
 public class JacobException extends RuntimeException {
 
@@ -32,18 +32,18 @@ public class JacobException extends RuntimeException {
 	private static final long serialVersionUID = -1637125318746002715L;
 
 	/**
-	 * Default constructor.
-	 * Calls super with a "No Message Provided" string
+	 * Default constructor. Calls super with a "No Message Provided" string
 	 */
-	public JacobException(){
+	public JacobException() {
 		super("No Message Provided");
 	}
-	
+
 	/**
 	 * standard constructor
+	 * 
 	 * @param message
 	 */
-	public JacobException(String message){
+	public JacobException(String message) {
 		super(message);
 	}
 }

@@ -25,74 +25,77 @@ package com.jacob.com;
  * component that wants to run in an STA other than the main STA.
  */
 public class STA extends Thread {
-    /**
-     * referenced by STA.cpp
-     */
-    public int threadID;
+	/**
+	 * referenced by STA.cpp
+	 */
+	public int threadID;
 
-    /**
-     * constructor for STA
-     */
-    public STA() {
-        start(); // start the thread
-    }
+	/**
+	 * constructor for STA
+	 */
+	public STA() {
+		start(); // start the thread
+	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Thread#run()
-     */
-    public void run() {
-        // init COM
-        ComThread.InitSTA();
-        if (OnInit()) {
-            // this call blocks in the win32 message loop
-            // until quitMessagePump is called
-            doMessagePump();
-        }
-        OnQuit();
-        // uninit COM
-        ComThread.Release();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
+	public void run() {
+		// init COM
+		ComThread.InitSTA();
+		if (OnInit()) {
+			// this call blocks in the win32 message loop
+			// until quitMessagePump is called
+			doMessagePump();
+		}
+		OnQuit();
+		// uninit COM
+		ComThread.Release();
+	}
 
-    /**
-     * Override this method to create and initialize any COM component that you
-     * want to run in this thread. If anything fails, return false to terminate
-     * the thread.
-     * @return always returns true
-     */
-    public boolean OnInit() {
-        return true;
-    }
+	/**
+	 * Override this method to create and initialize any COM component that you
+	 * want to run in this thread. If anything fails, return false to terminate
+	 * the thread.
+	 * 
+	 * @return always returns true
+	 */
+	public boolean OnInit() {
+		return true;
+	}
 
-    /**
-     * Override this method to destroy any resource before the thread exits and
-     * COM in uninitialized
-     */
-    public void OnQuit() {
-        // there is nothing to see here
-    }
+	/**
+	 * Override this method to destroy any resource before the thread exits and
+	 * COM in uninitialized
+	 */
+	public void OnQuit() {
+		// there is nothing to see here
+	}
 
-    /**
-     * calls quitMessagePump
-     */
-    public void quit() {
-        quitMessagePump();
-    }
+	/**
+	 * calls quitMessagePump
+	 */
+	public void quit() {
+		quitMessagePump();
+	}
 
-    /**
-     * run a message pump for the main STA
-     */
-    public native void doMessagePump();
+	/**
+	 * run a message pump for the main STA
+	 */
+	public native void doMessagePump();
 
-    /**
-     * quit message pump for the main STA
-     */
-    public native void quitMessagePump();
+	/**
+	 * quit message pump for the main STA
+	 */
+	public native void quitMessagePump();
 
-    /**
-     * STA isn't a subclass of JacobObject so a reference to it doesn't load
-     * the DLL without this
-     */
-    static {
-    	LibraryLoader.loadJacobLibrary();
-    }
+	/**
+	 * STA isn't a subclass of JacobObject so a reference to it doesn't load the
+	 * DLL without this
+	 */
+	static {
+		LibraryLoader.loadJacobLibrary();
+	}
 }

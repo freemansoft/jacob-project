@@ -1,21 +1,26 @@
 package com.jacob.test.safearray;
 
-import com.jacob.com.*;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.Dispatch;
+import com.jacob.com.SafeArray;
+import com.jacob.com.Variant;
 import com.jacob.test.BaseTestCase;
-import com.jacob.activeX.*;
 
 /**
  * This does simple tests with SafeArray using Excel as a source
  * <p>
- * May need to run with some command line options (including from inside Eclipse).  
- * Look in the docs area at the Jacob usage document for command line options.
+ * May need to run with some command line options (including from inside
+ * Eclipse). Look in the docs area at the Jacob usage document for command line
+ * options.
  * <p>
  * This relies on BaseTestCase to provide the root path to the file under test
  */
 public class SafeArrayViaExcel extends BaseTestCase {
+
+	/**
+	 * verify safe arrays work with standard applications, Excel in this case
+	 */
 	public void testSafeArrayViaExcel() {
-		// deprecated
-		// System.runFinalizersOnExit(true);
 
 		ActiveXComponent xl = new ActiveXComponent("Excel.Application");
 		try {
@@ -26,8 +31,9 @@ public class SafeArrayViaExcel extends BaseTestCase {
 			Dispatch workbook = Dispatch.call(
 					workbooks,
 					"Open",
-					getWindowsFilePathToPackageResource("SafeArrayViaExcel.xls",this.getClass()))
-							.toDispatch();
+					getWindowsFilePathToPackageResource(
+							"SafeArrayViaExcel.xls", this.getClass()))
+					.toDispatch();
 			System.out.println("Opened File - SafeArrayViaExcel.xls\n");
 			Dispatch sheet = Dispatch.get(workbook, "ActiveSheet").toDispatch();
 			cell = Dispatch.invoke(sheet, "Range", Dispatch.Get,
@@ -61,7 +67,7 @@ public class SafeArrayViaExcel extends BaseTestCase {
 			System.out.println("Closed File\n");
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail("Caught Exception "+e);
+			fail("Caught Exception " + e);
 		} finally {
 			xl.invoke("Quit", new Variant[] {});
 		}

@@ -6,17 +6,18 @@ import com.jacob.test.BaseTestCase;
 
 /**
  * SafeArrayTest Program
- *
- * This is more of an exerciser.  It doesn't verify that it gets back 
- * what it expects like a junit test would
+ * 
+ * This is more of an exerciser. It doesn't verify that it gets back what it
+ * expects like a junit test would
  * <p>
- * May need to run with some command line options (including from inside Eclipse).  
- * Look in the docs area at the Jacob usage document for command line options.
- *
+ * May need to run with some command line options (including from inside
+ * Eclipse). Look in the docs area at the Jacob usage document for command line
+ * options.
+ * 
  */
 public class SafeArrayBasicTest extends BaseTestCase {
-	public void testBasicSafeArray(){
-		//System.runFinalizersOnExit(true);
+	public void testBasicSafeArray() {
+		// System.runFinalizersOnExit(true);
 		SafeArray sa = new SafeArray(Variant.VariantVariant, 3);
 
 		sa.fromShortArray(new short[] { 1, 2, 3 });
@@ -61,12 +62,15 @@ public class SafeArrayBasicTest extends BaseTestCase {
 		for (int i = 0; i < av.length; i++) {
 			System.out.println("toVariant=" + av[i]);
 		}
-		sa.fromVariantArray(new Variant[] { 
-			new Variant(1), new Variant(2.3), new Variant("hi") });
+		sa.fromVariantArray(new Variant[] { new Variant(1), new Variant(2.3),
+				new Variant("hi") });
 		System.out.println("sa variant=" + sa);
 
 	}
 
+	/**
+	 * test method that verifies multi dimensional support
+	 */
 	public void testSafeArrayNumDimensions() {
 		int[] lowerBounds = new int[] { 0, 0, 0 };
 		int[] dimensionSizes = new int[] { 3, 3, 3 };

@@ -8,7 +8,7 @@ package com.jacob.test.windowsmedia;
  * May need to run with some command line options (including from inside Eclipse).  
  * Look in the docs area at the Jacob usage document for command line options.
  */
-import com.jacob.activeX.*;
+import com.jacob.activeX.ActiveXComponent;
 import com.jacob.test.BaseTestCase;
 
 public class WMPlayer extends BaseTestCase {

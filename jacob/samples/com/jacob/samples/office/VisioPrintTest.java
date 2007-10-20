@@ -7,8 +7,7 @@ import com.jacob.com.Dispatch;
 /**
  * Snippet to show Visio print dialog
  * <p>
- * Sample submitted by fatbuttlarry in SourceForge 1803140 
- * as part of bug report
+ * Sample submitted by fatbuttlarry in SourceForge 1803140 as part of bug report
  * <p>
  * Tested with Java 6.0SE and MS Office 2003 ** Note: 1010 = VB's
  * visCmdFilePrint constant
@@ -26,8 +25,7 @@ public class VisioPrintTest {
 		// create a blank document
 		Dispatch.call(oDocuments, "Add", "");
 		try {
-			Dispatch.call(oActiveX, "DoCmd", new Integer(1010))
-					.getInt();
+			Dispatch.call(oActiveX, "DoCmd", new Integer(1010)).getInt();
 			System.out.println("User hit the ok button.");
 		} catch (ComFailException e) {
 			System.out.println("User hit the cancel button: " + e);
@@ -37,7 +35,12 @@ public class VisioPrintTest {
 		return;
 	}
 
-	/** quick main() to test this */
+	/**
+	 * quick main() to test this
+	 * 
+	 * @param args
+	 *            standard command line arguments
+	 */
 	public static void main(String[] args) {
 		VisioPrintTest testObject = new VisioPrintTest();
 		testObject.testPrintDialog();

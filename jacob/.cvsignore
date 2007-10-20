@@ -4,6 +4,7 @@ jacobdll.jar
 *.zip
 RELEASE.txt
 .project
+.cproject
 .classpath
 compilation_tools.properties
 version.properties

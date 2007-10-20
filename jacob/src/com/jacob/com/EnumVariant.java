@@ -23,121 +23,133 @@ package com.jacob.com;
  * An implementation of IEnumVariant based on code submitted by Thomas Hallgren
  * (mailto:Thomas.Hallgren@eoncompany.com)
  */
-public class EnumVariant extends JacobObject implements java.util.Enumeration {
-    private int m_pIEnumVARIANT;
+public class EnumVariant extends JacobObject implements
+		java.util.Enumeration<Variant> {
+	private int m_pIEnumVARIANT;
 
-    private final Variant[] m_recBuf = new Variant[1];
+	private final Variant[] m_recBuf = new Variant[1];
 
-    // this only gets called from JNI
-    //
-    protected EnumVariant(int pIEnumVARIANT) {
-        m_pIEnumVARIANT = pIEnumVARIANT;
-    }
+	// this only gets called from JNI
+	//
+	protected EnumVariant(int pIEnumVARIANT) {
+		m_pIEnumVARIANT = pIEnumVARIANT;
+	}
 
-    /**
-     * @param disp
-     */
-    public EnumVariant(Dispatch disp) {
-        int[] hres = new int[1];
-        Variant evv = Dispatch.invokev(disp, 
-                Dispatch.DISPID_NEWENUM,
-                Dispatch.Get, 
-                new Variant[0], hres);
-        if (evv.getvt() != Variant.VariantObject)
-            //
-            // The DISPID_NEWENUM did not result in a valid object
-            //
-            throw new ComFailException("Can't obtain EnumVARIANT");
+	/**
+	 * @param disp
+	 */
+	public EnumVariant(Dispatch disp) {
+		int[] hres = new int[1];
+		Variant evv = Dispatch.invokev(disp, Dispatch.DISPID_NEWENUM,
+				Dispatch.Get, new Variant[0], hres);
+		if (evv.getvt() != Variant.VariantObject)
+			//
+			// The DISPID_NEWENUM did not result in a valid object
+			//
+			throw new ComFailException("Can't obtain EnumVARIANT");
 
-        EnumVariant tmp = evv.toEnumVariant();
-        m_pIEnumVARIANT = tmp.m_pIEnumVARIANT;
-        tmp.m_pIEnumVARIANT = 0;
-    }
+		EnumVariant tmp = evv.toEnumVariant();
+		m_pIEnumVARIANT = tmp.m_pIEnumVARIANT;
+		tmp.m_pIEnumVARIANT = 0;
+	}
 
-    /**
-     * Implements java.util.Enumeration
-     * @return boolean true if there are more elements in ths enumeration
-     */
-    public boolean hasMoreElements() {
-        {
-            if (m_recBuf[0] == null) {
-                if (this.Next(m_recBuf) <= 0)
-                    return false;
-            }
-            return true;
-        }
-    }
+	/**
+	 * Implements java.util.Enumeration
+	 * 
+	 * @return boolean true if there are more elements in ths enumeration
+	 */
+	public boolean hasMoreElements() {
+		{
+			if (m_recBuf[0] == null) {
+				if (this.Next(m_recBuf) <= 0)
+					return false;
+			}
+			return true;
+		}
+	}
 
-    /**
-     * Implements java.util.Enumeration
-     * @return next element in the enumeration
-     */
-    public Object nextElement() {
-        Object last = m_recBuf[0];
-        if (last == null) {
-            if (this.Next(m_recBuf) <= 0)
-                throw new java.util.NoSuchElementException();
-            last = m_recBuf[0];
-        }
-        m_recBuf[0] = null;
-        return last;
-    }
+	/**
+	 * Implements java.util.Enumeration
+	 * 
+	 * @return next element in the enumeration
+	 */
+	public Variant nextElement() {
+		Variant last = m_recBuf[0];
+		if (last == null) {
+			if (this.Next(m_recBuf) <= 0)
+				throw new java.util.NoSuchElementException();
+			last = m_recBuf[0];
+		}
+		m_recBuf[0] = null;
+		return last;
+	}
 
-    /**
-     * Get next element in collection or null if at end
-     * @return Variant that is next in the collection
-     */
-    public Variant Next() {
-        if (hasMoreElements())
-            return (Variant) nextElement();
-        return null;
-    }
+	/**
+	 * Get next element in collection or null if at end
+	 * 
+	 * @return Variant that is next in the collection
+	 * @deprecated use nextElement() instead
+	 */
+	public Variant Next() {
+		if (hasMoreElements())
+			return nextElement();
+		return null;
+	}
 
-    /**
-     * @param receiverArray
-     * @return don't know what the int is that is returned, help!
-     */
-    public native int Next(Variant[] receiverArray);
+	/**
+	 * This should be private and wrapped to protect JNI layer.
+	 * 
+	 * @param receiverArray
+	 * @return Returns the next variant object pointer as an int from windows
+	 *         layer
+	 */
+	public native int Next(Variant[] receiverArray);
 
-    /**
-     * @param count
-     */
-    public native void Skip(int count);
+	/**
+	 * This should be private and wrapped to protect JNI layer.
+	 * 
+	 * @param count
+	 *            number to skip
+	 */
+	public native void Skip(int count);
 
-    /**
-     * 
-     */
-    public native void Reset();
+	/**
+	 * This should be private and wrapped to protect JNI layer
+	 */
+	public native void Reset();
 
-    /**
-     *  now private so only this object can asccess
-     *  was: call this to explicitly release the com object before gc
-     * 
-     */
-    private native void release();
+	/**
+	 * now private so only this object can access was: call this to explicitly
+	 * release the com object before gc
+	 * 
+	 */
+	private native void release();
 
-    /*
-     *  (non-Javadoc)
-     * @see java.lang.Object#finalize()
-     */
-    protected void finalize() 
-    {
-        safeRelease();
-    }
-    
-    /*
-     *  (non-Javadoc)
-     * @see com.jacob.com.JacobObject#safeRelease()
-     */
-    public void safeRelease()
-    {
-        super.safeRelease();
-        if (m_pIEnumVARIANT != 0){
-            this.release();
-            m_pIEnumVARIANT = 0;
-        } else {
-            // looks like a double release
-            if (isDebugEnabled()){debug(this.getClass().getName()+":"+this.hashCode()+" double release");}
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#finalize()
+	 */
+	protected void finalize() {
+		safeRelease();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jacob.com.JacobObject#safeRelease()
+	 */
+	public void safeRelease() {
+		super.safeRelease();
+		if (m_pIEnumVARIANT != 0) {
+			this.release();
+			m_pIEnumVARIANT = 0;
+		} else {
+			// looks like a double release
+			if (isDebugEnabled()) {
+				debug(this.getClass().getName() + ":" + this.hashCode()
+						+ " double release");
+			}
+		}
+	}
 }

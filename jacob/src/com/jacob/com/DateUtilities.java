@@ -24,29 +24,30 @@ import java.util.Date;
 
 /**
  * java / windows date conversion utilities
+ * 
  * @author joe
- *
+ * 
  */
 public class DateUtilities {
 
 	/**
 	 * converts a windows time to a Java Date Object
+	 * 
 	 * @param comTime
 	 * @return Date object representing the windows time as specified in comTime
 	 */
-	static public Date convertWindowsTimeToDate(double comTime){
-		return new Date(convertWindowsTimeToMilliseconds (comTime));
+	static public Date convertWindowsTimeToDate(double comTime) {
+		return new Date(convertWindowsTimeToMilliseconds(comTime));
 	}
-	
-	 /**
-	 * Convert a COM time from functions Date(), Time(), Now() to a
-	 * Java time (milliseconds). Visual Basic time values are based to
-	 * 30.12.1899, Java time values are based to 1.1.1970 (= 0
-	 * milliseconds). The difference is added to the Visual Basic value to
-	 * get the corresponding Java value. The Visual Basic double value
-	 * reads: <day count delta since 30.12.1899>.<1 day percentage
-	 * fraction>, e.g. "38100.6453" means: 38100 days since 30.12.1899 plus
-	 * (24 hours * 0.6453). Example usage:
+
+	/**
+	 * Convert a COM time from functions Date(), Time(), Now() to a Java time
+	 * (milliseconds). Visual Basic time values are based to 30.12.1899, Java
+	 * time values are based to 1.1.1970 (= 0 milliseconds). The difference is
+	 * added to the Visual Basic value to get the corresponding Java value. The
+	 * Visual Basic double value reads: <day count delta since 30.12.1899>.<1
+	 * day percentage fraction>, e.g. "38100.6453" means: 38100 days since
+	 * 30.12.1899 plus (24 hours * 0.6453). Example usage:
 	 * <code>Date javaDate = new Date(toMilliseconds (vbDate));</code>.
 	 * 
 	 * @param comTime
@@ -68,19 +69,20 @@ public class DateUtilities {
 	}// convertWindowsTimeToMilliseconds()
 
 	/**
-	 * converts a java date to a windows time object
-	 * (is this timezone safe?)
+	 * converts a java date to a windows time object (is this timezone safe?)
 	 * 
-	 * @param javaDate the java date to be converted to windows time
+	 * @param javaDate
+	 *            the java date to be converted to windows time
 	 * @return the double representing the date in a form windows understands
 	 */
-	static public double convertDateToWindowsTime(Date javaDate){
-		if (javaDate == null){
-			throw new IllegalArgumentException("cannot convert null to windows time");
+	static public double convertDateToWindowsTime(Date javaDate) {
+		if (javaDate == null) {
+			throw new IllegalArgumentException(
+					"cannot convert null to windows time");
 		}
 		return convertMillisecondsToWindowsTime(javaDate.getTime());
 	}
-	
+
 	/**
 	 * Convert a Java time to a COM time.
 	 * 
@@ -99,5 +101,5 @@ public class DateUtilities {
 		result = (milliseconds / 86400000D) + 25569D;
 
 		return result;
-	}//convertMillisecondsToWindowsTime()	
+	}// convertMillisecondsToWindowsTime()
 }

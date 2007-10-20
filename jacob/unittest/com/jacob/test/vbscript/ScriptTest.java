@@ -1,8 +1,12 @@
 package com.jacob.test.vbscript;
 
-import com.jacob.com.*;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.ComException;
+import com.jacob.com.ComThread;
+import com.jacob.com.Dispatch;
+import com.jacob.com.DispatchEvents;
+import com.jacob.com.Variant;
 import com.jacob.test.BaseTestCase;
-import com.jacob.activeX.*;
 
 /**
  * In this case the component is created and used in the same thread and it's an
@@ -33,7 +37,7 @@ public class ScriptTest extends BaseTestCase {
 			String scriptCommand = getSampleVPScriptForEval();
 			String lang = "VBScript";
 			ActiveXComponent sC = new ActiveXComponent("ScriptControl");
-			sControl = (Dispatch) sC.getObject();
+			sControl = sC.getObject();
 			Dispatch.put(sControl, "Language", lang);
 			ScriptTestErrEvents te = new ScriptTestErrEvents();
 			de = new DispatchEvents(sControl, te);

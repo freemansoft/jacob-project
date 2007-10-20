@@ -20,10 +20,10 @@
 package com.jacob.com;
 
 /**
- * We provide our own main sta thread to avoid COM tagging a random
- * thread as the main STA - this is the thread in which all Apartment
- * threaded components will be created if the client chooses an MTA
- * threading model for the java side of the app.
+ * We provide our own main sta thread to avoid COM tagging a random thread as
+ * the main STA - this is the thread in which all Apartment threaded components
+ * will be created if the client chooses an MTA threading model for the java
+ * side of the app.
  */
 public class MainSTA extends STA {
 }

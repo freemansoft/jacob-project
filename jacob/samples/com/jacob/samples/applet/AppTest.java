@@ -1,11 +1,15 @@
 package com.jacob.samples.applet;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.applet.*;
+import java.applet.Applet;
+import java.awt.Button;
+import java.awt.FlowLayout;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import com.jacob.com.*;
-import com.jacob.activeX.*;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
 
 /**
  * Applet test case
@@ -38,7 +42,9 @@ public class AppTest extends Applet implements ActionListener {
 
 	/**
 	 * action method that receives button actions
-	 * @param ev the event
+	 * 
+	 * @param ev
+	 *            the event
 	 */
 	public void actionPerformed(ActionEvent ev) {
 		if (sC == null) {

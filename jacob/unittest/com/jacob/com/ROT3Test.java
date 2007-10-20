@@ -3,8 +3,9 @@ package com.jacob.com;
 import com.jacob.test.BaseTestCase;
 
 /**
- * This tries to exercise ROT's garbage collection This is named this way because
- * the build.xml ignores files ending in Test when building the binary zip file
+ * This tries to exercise ROT's garbage collection This is named this way
+ * because the build.xml ignores files ending in Test when building the binary
+ * zip file
  * 
  * This will eventually be changed to a unit test.
  * 
@@ -15,6 +16,9 @@ import com.jacob.test.BaseTestCase;
  */
 public class ROT3Test extends BaseTestCase {
 
+	/**
+	 * runs a multi-threaded test
+	 */
 	public void testROTVersion3() {
 		ROT3TestThread threads[] = new ROT3TestThread[4];
 		for (int i = 0; i < threads.length; i++) {
@@ -30,12 +34,14 @@ public class ROT3Test extends BaseTestCase {
 	 */
 
 	public class ROT3TestThread extends Thread {
-		private java.util.List variansCreatedInThisThread;
+		private java.util.List<Variant> variansCreatedInThisThread;
 
 		private int initialRunSize = 0;
 
 		/**
 		 * @param arg0
+		 * @param iStartCount
+		 *            the number of initial threads
 		 */
 		public ROT3TestThread(String arg0, int iStartCount) {
 			super(arg0);
@@ -44,7 +50,7 @@ public class ROT3Test extends BaseTestCase {
 		}
 
 		/**
-		 * A semi-complexe serie of steps to put the ROT under stress. 1)
+		 * A semi-complex series of steps to put the ROT under stress. 1)
 		 * discard half the objects we've created 2) if size is greater than 1
 		 * but not a even number, add 1 new object 3) stop when size is 1.
 		 * 
@@ -55,7 +61,8 @@ public class ROT3Test extends BaseTestCase {
 			// so the gc can't collect them
 			// we need to create these in the thread so they end up in the right
 			// ROT table
-			variansCreatedInThisThread = new java.util.ArrayList(initialRunSize);
+			variansCreatedInThisThread = new java.util.ArrayList<Variant>(
+					initialRunSize);
 			for (int i = 0; i < initialRunSize; i++) {
 				// create the object
 				Variant aNewVariant = new Variant(getName() + "_" + i);
@@ -92,9 +99,8 @@ public class ROT3Test extends BaseTestCase {
 						if (!ROT.USE_AUTOMATIC_GARBAGE_COLLECTION) {
 							// uses deprecated API to set up a special situation
 							// because this is an ROT test
-							ROT
-									.removeObject((JacobObject) variansCreatedInThisThread
-											.get(i - 1));
+							ROT.removeObject(variansCreatedInThisThread
+									.get(i - 1));
 						}
 						variansCreatedInThisThread.remove(i - 1);
 					}

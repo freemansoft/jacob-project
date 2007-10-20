@@ -10,16 +10,18 @@ import com.jacob.test.BaseTestCase;
 
 /**
  * This test was lifted from a forum posting and shows how you can't listen to
- * Excel events (added post 1.9.1 Eclipse Settings.)  This also uses the 1.9.1 
+ * Excel events (added post 1.9.1 Eclipse Settings.) This also uses the 1.9.1
  * InvocationProxy to receive the events.
  * <p>
- * May need to run with some command line options (including from inside Eclipse).  
- * Look in the docs area at the Jacob usage document for command line options.
+ * May need to run with some command line options (including from inside
+ * Eclipse). Look in the docs area at the Jacob usage document for command line
+ * options.
  */
 public class ExcelEventTest extends BaseTestCase {
 
 	/**
 	 * load up excel, register for events and make stuff happen
+	 * 
 	 * @param args
 	 */
 	public void testExcelWithInvocationProxy() {
@@ -60,36 +62,40 @@ public class ExcelEventTest extends BaseTestCase {
 			System.out.println("Inserting calculation 2xA1 into A2");
 			Dispatch.put(a1, "Value", "123.456");
 			Dispatch.put(a2, "Formula", "=A1*2");
-			System.out.println("Retrieved a1 from excel:" + Dispatch.get(a1, "Value"));
-			System.out.println("Retrieved a2 from excel:" + Dispatch.get(a2, "Value"));
+			System.out.println("Retrieved a1 from excel:"
+					+ Dispatch.get(a1, "Value"));
+			System.out.println("Retrieved a2 from excel:"
+					+ Dispatch.get(a2, "Value"));
 			Variant f = new Variant(false);
 			Dispatch.call(workbook, "Close", f);
 			axc.invoke("Quit", new Variant[] {});
 
 		} catch (ComException cfe) {
 			cfe.printStackTrace();
-			fail("Failed to attach to " + pid + ": "
-					+ cfe.getMessage());
+			fail("Failed to attach to " + pid + ": " + cfe.getMessage());
 
 		}
 	}
 
-
-public class ExcelEvents extends InvocationProxy {
 	/**
-	 * Constructor so we can create an instance that implements invoke()
+	 * Proxy class to verify we receive expected events
 	 */
-	public ExcelEvents() {
-	}
+	public class ExcelEvents extends InvocationProxy {
+		/**
+		 * Constructor so we can create an instance that implements invoke()
+		 */
+		public ExcelEvents() {
+		}
 
-	/**
-	 * Override the invoke method to log all the events so that we don't have to 
-	 * implement all of the specific events.
-	 */
-	public Variant invoke(String methodName, Variant targetParameter[]) {
-		System.out.println("Received event from Windows program" + methodName);
-		return null;
-	}
+		/**
+		 * Override the invoke method to log all the events so that we don't
+		 * have to implement all of the specific events.
+		 */
+		public Variant invoke(String methodName, Variant targetParameter[]) {
+			System.out.println("Received event from Windows program"
+					+ methodName);
+			return null;
+		}
 
-}
+	}
 }

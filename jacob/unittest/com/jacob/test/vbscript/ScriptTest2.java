@@ -1,8 +1,14 @@
 package com.jacob.test.vbscript;
 
-import com.jacob.com.*;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.ComException;
+import com.jacob.com.ComThread;
+import com.jacob.com.Dispatch;
+import com.jacob.com.DispatchEvents;
+import com.jacob.com.DispatchProxy;
+import com.jacob.com.STA;
+import com.jacob.com.Variant;
 import com.jacob.test.BaseTestCase;
-import com.jacob.activeX.*;
 
 /**
  * This example demonstrates how to make calls between two different STA's.
@@ -21,8 +27,9 @@ import com.jacob.activeX.*;
  * multiple threads to access a Dispatch pointer, then create that many
  * DispatchProxy objects.
  * <p>
- * May need to run with some command line options (including from inside Eclipse).  
- * Look in the docs area at the Jacob usage document for command line options.
+ * May need to run with some command line options (including from inside
+ * Eclipse). Look in the docs area at the Jacob usage document for command line
+ * options.
  */
 
 public class ScriptTest2 extends BaseTestCase {
@@ -31,8 +38,8 @@ public class ScriptTest2 extends BaseTestCase {
 			ComThread.InitSTA();
 			ScriptTestSTA script = new ScriptTestSTA();
 			try {
-			Thread.sleep(1000);
-			} catch (InterruptedException ie){
+				Thread.sleep(1000);
+			} catch (InterruptedException ie) {
 				// should we get this?
 			}
 
@@ -50,7 +57,7 @@ public class ScriptTest2 extends BaseTestCase {
 			System.out.println("called quit");
 		} catch (ComException e) {
 			e.printStackTrace();
-			fail("caught exception"+e);
+			fail("caught exception" + e);
 		} finally {
 			Integer I = null;
 			for (int i = 1; i < 1000000; i++) {
@@ -63,11 +70,11 @@ public class ScriptTest2 extends BaseTestCase {
 
 	public class ScriptTestSTA extends STA {
 
-		public  DispatchEvents de = null;
+		public DispatchEvents de = null;
 
-		public  Dispatch sControl = null;
+		public Dispatch sControl = null;
 
-		public  DispatchProxy sCon = null;
+		public DispatchProxy sCon = null;
 
 		public boolean OnInit() {
 			try {

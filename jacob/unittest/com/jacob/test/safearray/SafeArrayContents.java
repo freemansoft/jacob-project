@@ -267,7 +267,7 @@ public class SafeArrayContents extends BaseTestCase {
 			fail("Failed to catch expected exception");
 		} catch (ComFailException cfe) {
 			// do nothing
-			//cfe.printStackTrace();
+			// cfe.printStackTrace();
 		}
 	}
 }
