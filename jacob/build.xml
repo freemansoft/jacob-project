@@ -16,10 +16,10 @@
 	The file for MS Visual C++ 8.0 building 32 and 64 bit
 	(releases up to 1.11 only supported 32 builds) looks something like:
 	  
-		JDK=d:\\j2sdk1.4.2_14
+		JDK=d:\\jdk1.5.0_11
 		MSDEV_DIR=d:\\apps\\Microsoft Visual Studio 8\\VC
 		MSDEV_IDE_DIR=d:\\apps\\Microsoft Visual Studio 8\\Common7\\IDE
-		version=1.13
+		version=1.14-M1
             
 	DO NOT check compilation_tools.properties into source control as the 
 	values are specific to YOUR environment.
