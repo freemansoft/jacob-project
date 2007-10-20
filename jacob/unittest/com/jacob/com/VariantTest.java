@@ -399,6 +399,26 @@ public class VariantTest extends BaseTestCase {
 	}
 
 	/**
+	 * verify decimal works right
+	 */
+	public void testDecimalConversion() {
+		Variant v = new Variant();
+		v.changeType(Variant.VariantDecimal);
+		for (int i = 10; i >= -10; i--) {
+			v.putDecimal(new BigDecimal(i));
+			// first see if we can get it back as decimal
+			assertEquals("conversion back to decimal failed ",new BigDecimal(i),v.getDecimal());
+			v.changeType(Variant.VariantFloat);
+			// now see if a float conversion would work
+			assertEquals("conversion to float failed ",new Float(i),v.getFloat());
+			// now convert it back to decimal for reassignment
+			v.changeType(Variant.VariantDecimal);
+			assertTrue("Failed conversion of type back to Decimal ", v.getvt() == Variant.VariantDecimal);
+		}
+
+	}
+
+	/**
 	 * Spin up a lot of threads and have them all create variants 3/2007 there
 	 * have been several reports in multi-threaded servers that show init()
 	 * failing
@@ -436,9 +456,7 @@ public class VariantTest extends BaseTestCase {
 	}
 
 	/**
-	 * a class to create variants in seperate threads
-	 * 
-	 * @author joe
+	 * a class to create variants in separate threads
 	 * 
 	 */
 	class VariantInitTestThread extends Thread {
@@ -458,6 +476,10 @@ public class VariantTest extends BaseTestCase {
 
 		}
 
+		/** 
+		 * getter so master can see if thread is done
+		 * @return state of complete flag
+		 */
 		public boolean isComplete() {
 			return isComplete;
 		}

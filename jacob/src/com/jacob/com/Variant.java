@@ -365,10 +365,15 @@ public class Variant extends JacobObject {
 					"VT_DECIMAL only supports a scale of 28 and the passed"
 							+ " in value has a scale of " + in.scale());
 		} else {
+			int sign = in.signum();
+			// MS decimals always have positive values with just the sign flipped
+			if (in.signum() < 0){
+				in = in.negate();
+			}
 			byte scale = (byte) in.scale();
 			BigInteger unscaled = in.unscaledValue();
 			BigInteger shifted = unscaled.shiftRight(32);
-			putVariantDecRef(in.signum(), scale, unscaled.intValue(), shifted
+			putVariantDecRef(sign, scale, unscaled.intValue(), shifted
 					.intValue(), shifted.shiftRight(32).intValue());
 		}
 	}
@@ -967,10 +972,15 @@ public class Variant extends JacobObject {
 					"VT_DECIMAL only supports a scale of 28 and the passed"
 							+ " in value has a scale of " + in.scale());
 		} else {
+			int sign = in.signum();
+			// MS decimals always have positive values with just the sign flipped
+			if (in.signum() < 0){
+				in = in.negate();
+			}
 			byte scale = (byte) in.scale();
 			BigInteger unscaled = in.unscaledValue();
 			BigInteger shifted = unscaled.shiftRight(32);
-			putVariantDec(in.signum(), scale, unscaled.intValue(), shifted
+			putVariantDec(sign, scale, unscaled.intValue(), shifted
 					.intValue(), shifted.shiftRight(32).intValue());
 		}
 	}
@@ -1046,8 +1056,6 @@ public class Variant extends JacobObject {
 
 	/**
 	 * This acts a cover for same as
-	 * 
-	 * @link #putObject(Object)
 	 * 
 	 * Why isn't this typed as type Dispatch?
 	 * @param in

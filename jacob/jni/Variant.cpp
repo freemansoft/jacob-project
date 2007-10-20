@@ -1076,7 +1076,11 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
       VariantClear(v); // whatever was there before
       DECIMAL *pd = (DECIMAL *)CoTaskMemAlloc(sizeof(DECIMAL));
       pd->scale = scale;
-      pd->sign = signum == 1?0:0x80;
+      if (signum == 1 || signum == 0){
+    	  pd->sign = 0;
+      } else {
+    	  pd->sign = 0x80;
+      }
       pd->Hi32 = hi;
       pd->Mid32 = mid;
       pd->Lo32 = lo;
@@ -1099,7 +1103,11 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
       VariantClear(v); // whatever was there before
       d = (DECIMAL*)v;
       d->scale = scale;
-      d->sign = signum == 1?0:0x80;
+      if (signum == 1 || signum == 0){
+    	  d->sign = 0;
+      } else {
+    	  d->sign = 0x80;
+      }
       d->Hi32 = hi;
       d->Mid32 = mid;
       d->Lo32 = lo;
