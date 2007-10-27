@@ -89,7 +89,7 @@ public class JacobObject {
 	}
 
 	/**
-	 * Very basic debugging fucntion.
+	 * Very basic debugging function.
 	 * 
 	 * @param istrMessage
 	 */

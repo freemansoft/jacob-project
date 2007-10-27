@@ -85,7 +85,7 @@ public abstract class InvocationProxy {
 	 * 
 	 * @param pTargetObject
 	 * @throws IllegalArgumentException
-	 *             if target is not publicly accessable
+	 *             if target is not publicly accessible
 	 */
 	public void setTarget(Object pTargetObject) {
 		if (JacobObject.isDebugEnabled()) {

@@ -56,7 +56,7 @@ public class DispatchProxy extends JacobObject {
 	private native Dispatch MarshalFromStream();
 
 	/**
-	 * now private so only this object can asccess was: call this to explicitly
+	 * now private so only this object can access was: call this to explicitly
 	 * release the com object before gc
 	 * 
 	 */

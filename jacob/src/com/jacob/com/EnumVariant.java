@@ -56,7 +56,7 @@ public class EnumVariant extends JacobObject implements
 	/**
 	 * Implements java.util.Enumeration
 	 * 
-	 * @return boolean true if there are more elements in ths enumeration
+	 * @return boolean true if there are more elements in this enumeration
 	 */
 	public boolean hasMoreElements() {
 		{

@@ -228,7 +228,7 @@ public abstract class ROT {
 
 	/**
 	 * ROT can't be a subclass of JacobObject because of the way ROT pools are
-	 * managed so we force a DLL load here by referncing JacobObject
+	 * managed so we force a DLL load here by referencing JacobObject
 	 */
 	static {
 		LibraryLoader.loadJacobLibrary();

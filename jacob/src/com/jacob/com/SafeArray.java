@@ -305,14 +305,14 @@ public class SafeArray extends JacobObject {
 	/**
 	 * Retrieves the data from the array cast to a Java data type
 	 * 
-	 * @return String[] String array contained in this collecition
+	 * @return String[] String array contained in this collection
 	 */
 	public native String[] toStringArray();
 
 	/**
 	 * Retrieves the data from the array cast to a Java data type
 	 * 
-	 * @return byte[] byte array contained in this collecition
+	 * @return byte[] byte array contained in this collection
 	 */
 	public native byte[] toByteArray();
 

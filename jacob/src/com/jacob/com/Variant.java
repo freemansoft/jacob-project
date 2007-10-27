@@ -63,8 +63,9 @@ public class Variant extends JacobObject {
 			false);
 
 	/*
-	 * do the run time definition of DEFAULT and MISSING Have to use static
-	 * block because of the way the initialization si done
+	 * Do the run time definition of DEFAULT and MISSING. Have to use static
+	 * block because of the way the initialization is done via two calls
+	 * instead of just a constructor for this type.
 	 */
 	static {
 		com.jacob.com.Variant vtMissing = new com.jacob.com.Variant();
@@ -250,7 +251,7 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * @deprecated superceded by SafeArray
+	 * @deprecated superseded by SafeArray
 	 * @param in
 	 *            doesn't matter because this method does nothing
 	 * @throws com.jacob.com.NotImplementedException
@@ -261,7 +262,7 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * @deprecated superceded by SafeArray
+	 * @deprecated superseded by SafeArray
 	 * @return never returns anything
 	 * @throws com.jacob.com.NotImplementedException
 	 */
@@ -274,7 +275,7 @@ public class Variant extends JacobObject {
 	 * Exists to support jacobgen. This would be deprecated if it weren't for
 	 * jacobgen
 	 * 
-	 * @deprecated superceded by "this"
+	 * @deprecated superseded by "this"
 	 * @return this same object
 	 */
 	@Deprecated
@@ -283,7 +284,7 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * @deprecated superceded by SafeArray
+	 * @deprecated superseded by SafeArray
 	 * @param in
 	 *            doesn't matter because this method does nothing
 	 * @throws com.jacob.com.NotImplementedException
@@ -704,7 +705,7 @@ public class Variant extends JacobObject {
 	private native String getVariantStringRef();
 
 	/**
-	 * gets the content of the veriant as a string ref
+	 * gets the content of the variant as a string ref
 	 * 
 	 * @return String retrieved from the COM area.
 	 * @throws IllegalStateException
@@ -722,7 +723,7 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * @deprecated superceded by SafeArray
+	 * @deprecated superseded by SafeArray
 	 * @return never returns anything
 	 * @throws com.jacob.com.NotImplementedException
 	 */
@@ -809,7 +810,7 @@ public class Variant extends JacobObject {
 	 * return the int value held in this variant if it is an int or a short.
 	 * Throws for other types.
 	 * 
-	 * @return int contents of the windows membory
+	 * @return int contents of the windows memory
 	 * @throws IllegalStateException
 	 *             if variant is not of the requested type
 	 */
@@ -1300,7 +1301,7 @@ public class Variant extends JacobObject {
 	private native void putVariantDouble(double in);
 
 	/**
-	 * wraps this Vaariant around the passed in double.
+	 * wraps this Variant around the passed in double.
 	 * 
 	 * @param in
 	 */
@@ -1827,7 +1828,7 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * constructor that accepts the data object and informaton about whether
+	 * constructor that accepts the data object and information about whether
 	 * this is by reference or not.
 	 * 
 	 * @param pValueObject
@@ -1978,7 +1979,7 @@ public class Variant extends JacobObject {
 	 * freed
 	 * 
 	 * @param pVariant
-	 * @return boolian that is true if Variant is a type of constant, VT_FALSE,
+	 * @return boolean that is true if Variant is a type of constant, VT_FALSE,
 	 *         VT_TRUE, VT_MISSING, DEFAULT
 	 */
 	protected boolean objectIsAConstant(Variant pVariant) {
@@ -2004,7 +2005,7 @@ public class Variant extends JacobObject {
 		// keeping constants around in their static ivars.
 		// those will still be busted.
 		//
-		// The only inconcistency here is that we leak
+		// The only inconsistency here is that we leak
 		// when this class is unloaded because we won't
 		// free the memory even if the constants are being
 		// finalized. this is not a big deal at all.
@@ -2073,7 +2074,7 @@ public class Variant extends JacobObject {
 
 	/**
 	 * this is supposed to create a byte array that represents the underlying
-	 * variant object struct
+	 * variant object structure
 	 */
 	protected native byte[] SerializationWriteToBytes();
 

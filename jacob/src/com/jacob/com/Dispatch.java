@@ -105,7 +105,7 @@ public class Dispatch extends JacobObject {
 	public static final int DISPID_AMBIENT_TRANSFERPRIORITY = -728;
 	/**
 	 * This is public because Dispatch.cpp knows its name and accesses it
-	 * directly to get the disptach id. You really can't rename it or make it
+	 * directly to get the dispatch id. You really can't rename it or make it
 	 * private
 	 */
 	public int m_pDispatch;
@@ -146,10 +146,10 @@ public class Dispatch extends JacobObject {
 	 * is based on the CoCreate() windows function.
 	 * <p>
 	 * 
+	 * @param requestedProgramId
 	 * @throws IllegalArgumentException
 	 *             if null is passed in as the program id
 	 *             <p>
-	 * @param requestedProgramId
 	 */
 	public Dispatch(String requestedProgramId) {
 		programId = requestedProgramId;
@@ -327,12 +327,12 @@ public class Dispatch extends JacobObject {
 	}
 
 	/**
+	 * @param theOneInQuestion
+	 *            dispatch being tested
 	 * @throws IllegalStateException
 	 *             if this dispatch isn't hooked up
 	 * @throws IllegalArgumentException
 	 *             if null the dispatch under test is null
-	 * @param theOneInQuestion
-	 *            dispatch being tested
 	 */
 	private static void throwIfUnattachedDispatch(Dispatch theOneInQuestion) {
 		if (theOneInQuestion == null) {
@@ -421,7 +421,7 @@ public class Dispatch extends JacobObject {
 	}
 
 	/**
-	 * now private so only this object can asccess was: call this to explicitly
+	 * now private so only this object can access was: call this to explicitly
 	 * release the com object before gc
 	 * 
 	 */
@@ -605,7 +605,7 @@ public class Dispatch extends JacobObject {
 	 * @param wFlags
 	 * @param oArg
 	 * @param uArgErr
-	 * @return Variuant returned by invoke
+	 * @return Variant returned by invoke
 	 */
 	public static Variant invoke(Dispatch dispatchTarget, String name,
 			int dispID, int lcid, int wFlags, Object[] oArg, int[] uArgErr) {
@@ -634,7 +634,7 @@ public class Dispatch extends JacobObject {
 	 * @param wFlags
 	 * @param oArg
 	 * @param uArgErr
-	 * @return Variuant returned by invoke
+	 * @return Variant returned by invoke
 	 */
 	public static Variant invoke(Dispatch dispatchTarget, int dispID,
 			int wFlags, Object[] oArg, int[] uArgErr) {
@@ -651,7 +651,7 @@ public class Dispatch extends JacobObject {
 	/**
 	 * @param dispatchTarget
 	 * @param name
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, String name) {
 		throwIfUnattachedDispatch(dispatchTarget);
@@ -662,7 +662,7 @@ public class Dispatch extends JacobObject {
 	 * @param dispatchTarget
 	 * @param name
 	 * @param a1
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, String name, Object a1) {
 		throwIfUnattachedDispatch(dispatchTarget);
@@ -674,7 +674,7 @@ public class Dispatch extends JacobObject {
 	 * @param name
 	 * @param a1
 	 * @param a2
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, String name, Object a1,
 			Object a2) {
@@ -688,7 +688,7 @@ public class Dispatch extends JacobObject {
 	 * @param a1
 	 * @param a2
 	 * @param a3
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, String name, Object a1,
 			Object a2, Object a3) {
@@ -719,7 +719,7 @@ public class Dispatch extends JacobObject {
 	 * @param a3
 	 * @param a4
 	 * @param a5
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, String name, Object a1,
 			Object a2, Object a3, Object a4, Object a5) {
@@ -755,7 +755,7 @@ public class Dispatch extends JacobObject {
 	 * @param a5
 	 * @param a6
 	 * @param a7
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, String name, Object a1,
 			Object a2, Object a3, Object a4, Object a5, Object a6, Object a7) {
@@ -788,7 +788,7 @@ public class Dispatch extends JacobObject {
 	/**
 	 * @param dispatchTarget
 	 * @param dispid
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, int dispid) {
 		throwIfUnattachedDispatch(dispatchTarget);
@@ -799,7 +799,7 @@ public class Dispatch extends JacobObject {
 	 * @param dispatchTarget
 	 * @param dispid
 	 * @param a1
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, int dispid, Object a1) {
 		throwIfUnattachedDispatch(dispatchTarget);
@@ -811,7 +811,7 @@ public class Dispatch extends JacobObject {
 	 * @param dispid
 	 * @param a1
 	 * @param a2
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, int dispid, Object a1,
 			Object a2) {
@@ -825,7 +825,7 @@ public class Dispatch extends JacobObject {
 	 * @param a1
 	 * @param a2
 	 * @param a3
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, int dispid, Object a1,
 			Object a2, Object a3) {
@@ -840,7 +840,7 @@ public class Dispatch extends JacobObject {
 	 * @param a2
 	 * @param a3
 	 * @param a4
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, int dispid, Object a1,
 			Object a2, Object a3, Object a4) {
@@ -856,7 +856,7 @@ public class Dispatch extends JacobObject {
 	 * @param a3
 	 * @param a4
 	 * @param a5
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, int dispid, Object a1,
 			Object a2, Object a3, Object a4, Object a5) {
@@ -874,7 +874,7 @@ public class Dispatch extends JacobObject {
 	 * @param a4
 	 * @param a5
 	 * @param a6
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, int dispid, Object a1,
 			Object a2, Object a3, Object a4, Object a5, Object a6) {
@@ -893,7 +893,7 @@ public class Dispatch extends JacobObject {
 	 * @param a5
 	 * @param a6
 	 * @param a7
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, int dispid, Object a1,
 			Object a2, Object a3, Object a4, Object a5, Object a6, Object a7) {
@@ -913,7 +913,7 @@ public class Dispatch extends JacobObject {
 	 * @param a6
 	 * @param a7
 	 * @param a8
-	 * @return Variant retuned by underlying callN
+	 * @return Variant returned by underlying callN
 	 */
 	public static Variant call(Dispatch dispatchTarget, int dispid, Object a1,
 			Object a2, Object a3, Object a4, Object a5, Object a6, Object a7,

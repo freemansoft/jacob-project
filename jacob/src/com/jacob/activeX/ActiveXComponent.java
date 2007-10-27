@@ -34,14 +34,14 @@ import com.jacob.com.Variant;
  * It is really up to the developer as to whether they want to use the Dispatch
  * interface or the ActiveXComponent interface.
  * <p>
- * This class simulates com.ms.activeX.ActiveXComponent only in the senese that
+ * This class simulates com.ms.activeX.ActiveXComponent only in the sense that
  * it is used for creating Dispatch objects
  */
 public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * Normally used to create a new connection to a microsoft application. The
-	 * passed in parameter is the name of the program as registred in the
+	 * passed in parameter is the name of the program as registered in the
 	 * registry. It can also be the object name.
 	 * <p>
 	 * This constructor causes a new Windows object of the requested type to be
@@ -60,7 +60,7 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * Creates an active X component that is built on top of the COM pointers
-	 * held in the passed in dispatch. This widends the Dispatch object to pick
+	 * held in the passed in dispatch. This widens the Dispatch object to pick
 	 * up the ActiveXComponent API
 	 * 
 	 * @param dispatchToBeWrapped
@@ -117,7 +117,7 @@ public class ActiveXComponent extends Dispatch {
 	}
 
 	/**
-	 * Most code should use the standard ActiveXComponent(String) contructor and
+	 * Most code should use the standard ActiveXComponent(String) constructor and
 	 * not this factory method. This method exists for applications that need
 	 * special behavior. <B>Experimental in release 1.9.2.</B>
 	 * <p>
