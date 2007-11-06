@@ -25,5 +25,12 @@ public class DispatchTest extends BaseTestCase {
 		// System.out.println("VariantDate is "+fromDate.getJavaDate());
 		assertTrue("Could not call obj2variant(Date) and get it to work",
 				testDate.equals(returnedDate));
+		Long someMoney = new Long(12349876L);
+		Variant fromMoney = Dispatch.obj2variant(someMoney);
+		long someMoneyConverted = fromMoney.getCurrency();
+		assertTrue("Could not call obj2variant(Long) and get it to work",
+				someMoney.equals(someMoneyConverted));
+		System.out.println("currency returned was: " + someMoneyConverted);
+
 	}
 }

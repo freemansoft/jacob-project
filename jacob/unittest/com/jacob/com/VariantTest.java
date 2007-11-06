@@ -87,6 +87,26 @@ public class VariantTest extends BaseTestCase {
 		}
 
 		// need to do currency also
+		// currency is an integer scaled up by 10,000 to give 4 digits to the
+		// right of the decimal
+		int currencyScale = 10000;
+		long twentyThousand = 20000 * currencyScale;
+		v = new Variant(twentyThousand, false);
+		vByRef = new Variant(twentyThousand, true);
+		if (!(v.toJavaObject() instanceof Long)) {
+			fail("v.toJavaObject was not Long for currency but was: "
+					+ v.toJavaObject());
+		}
+		if (!v.toJavaObject().equals(vByRef.toJavaObject())) {
+			fail(v.toString() + " could not make type " + v.getvt() + " and "
+					+ vByRef.getvt() + " java objects come out the same");
+		}
+		long twentyThousandDotSeven = twentyThousand + 700;
+		// use the primitive constructor
+		v = new Variant(twentyThousandDotSeven);
+		assertEquals("failed test with " + twentyThousandDotSeven,
+				twentyThousandDotSeven, v.getCurrency());
+
 	}
 
 	/**
@@ -407,13 +427,16 @@ public class VariantTest extends BaseTestCase {
 		for (int i = 10; i >= -10; i--) {
 			v.putDecimal(new BigDecimal(i));
 			// first see if we can get it back as decimal
-			assertEquals("conversion back to decimal failed ",new BigDecimal(i),v.getDecimal());
+			assertEquals("conversion back to decimal failed ",
+					new BigDecimal(i), v.getDecimal());
 			v.changeType(Variant.VariantFloat);
 			// now see if a float conversion would work
-			assertEquals("conversion to float failed ",new Float(i),v.getFloat());
+			assertEquals("conversion to float failed ", new Float(i), v
+					.getFloat());
 			// now convert it back to decimal for reassignment
 			v.changeType(Variant.VariantDecimal);
-			assertTrue("Failed conversion of type back to Decimal ", v.getvt() == Variant.VariantDecimal);
+			assertTrue("Failed conversion of type back to Decimal ",
+					v.getvt() == Variant.VariantDecimal);
 		}
 
 	}
@@ -476,8 +499,9 @@ public class VariantTest extends BaseTestCase {
 
 		}
 
-		/** 
+		/**
 		 * getter so master can see if thread is done
+		 * 
 		 * @return state of complete flag
 		 */
 		public boolean isComplete() {

@@ -19,9 +19,9 @@
  */
 package com.jacob.com;
 
-import java.util.Date;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * The multi-format data type used for all call backs and most communications
@@ -64,8 +64,8 @@ public class Variant extends JacobObject {
 
 	/*
 	 * Do the run time definition of DEFAULT and MISSING. Have to use static
-	 * block because of the way the initialization is done via two calls
-	 * instead of just a constructor for this type.
+	 * block because of the way the initialization is done via two calls instead
+	 * of just a constructor for this type.
 	 */
 	static {
 		com.jacob.com.Variant vtMissing = new com.jacob.com.Variant();
@@ -367,8 +367,9 @@ public class Variant extends JacobObject {
 							+ " in value has a scale of " + in.scale());
 		} else {
 			int sign = in.signum();
-			// MS decimals always have positive values with just the sign flipped
-			if (in.signum() < 0){
+			// MS decimals always have positive values with just the sign
+			// flipped
+			if (in.signum() < 0) {
 				in = in.negate();
 			}
 			byte scale = (byte) in.scale();
@@ -974,15 +975,16 @@ public class Variant extends JacobObject {
 							+ " in value has a scale of " + in.scale());
 		} else {
 			int sign = in.signum();
-			// MS decimals always have positive values with just the sign flipped
-			if (in.signum() < 0){
+			// MS decimals always have positive values with just the sign
+			// flipped
+			if (in.signum() < 0) {
 				in = in.negate();
 			}
 			byte scale = (byte) in.scale();
 			BigInteger unscaled = in.unscaledValue();
 			BigInteger shifted = unscaled.shiftRight(32);
-			putVariantDec(sign, scale, unscaled.intValue(), shifted
-					.intValue(), shifted.shiftRight(32).intValue());
+			putVariantDec(sign, scale, unscaled.intValue(), shifted.intValue(),
+					shifted.shiftRight(32).intValue());
 		}
 	}
 
@@ -1059,6 +1061,7 @@ public class Variant extends JacobObject {
 	 * This acts a cover for same as
 	 * 
 	 * Why isn't this typed as type Dispatch?
+	 * 
 	 * @param in
 	 */
 	public void putDispatch(Dispatch in) {
@@ -1751,7 +1754,8 @@ public class Variant extends JacobObject {
 	 * Converts variant to the passed in type by converting the underlying
 	 * windows variant structure. private so folks use public java method
 	 * 
-	 * @param in the desired resulting type
+	 * @param in
+	 *            the desired resulting type
 	 */
 	private native void changeVariantType(short in);
 
@@ -1812,8 +1816,44 @@ public class Variant extends JacobObject {
 	 * 
 	 * @param in
 	 */
+	public Variant(float in) {
+		this(new Float(in));
+	}
+
+	/**
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
+	 */
+	public Variant(long in) {
+		this(new Long(in));
+	}
+
+	/**
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
+	 */
 	public Variant(boolean in) {
 		this(new Boolean(in));
+	}
+
+	/**
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
+	 */
+	public Variant(short in) {
+		this(new Short(in));
+	}
+
+	/**
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
+	 */
+	public Variant(byte in) {
+		this(new Byte(in));
 	}
 
 	/**
@@ -1892,6 +1932,12 @@ public class Variant extends JacobObject {
 				putDateRef((Date) pValueObject);
 			} else {
 				putDate((Date) pValueObject);
+			}
+		} else if (pValueObject instanceof Long) {
+			if (fByRef) {
+				putCurrencyRef(((Long) pValueObject).longValue());
+			} else {
+				putCurrency(((Long) pValueObject).longValue());
 			}
 		} else if (pValueObject instanceof SafeArray) {
 			if (fByRef) {

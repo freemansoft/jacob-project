@@ -355,54 +355,57 @@ public class Dispatch extends JacobObject {
 	 */
 	@SuppressWarnings("unchecked")
 	protected static Variant obj2variant(Object objectToBeMadeIntoVariant) {
-		if (objectToBeMadeIntoVariant == null)
+		if (objectToBeMadeIntoVariant == null) {
 			return new Variant();
-		if (objectToBeMadeIntoVariant instanceof Variant)
+		} else if (objectToBeMadeIntoVariant instanceof Variant) {
 			// if a variant was passed in then be a slacker and just return it
 			return (Variant) objectToBeMadeIntoVariant;
-		if (objectToBeMadeIntoVariant instanceof Integer
+		} else if (objectToBeMadeIntoVariant instanceof Integer
 				|| objectToBeMadeIntoVariant instanceof Short
 				|| objectToBeMadeIntoVariant instanceof String
 				|| objectToBeMadeIntoVariant instanceof Boolean
 				|| objectToBeMadeIntoVariant instanceof Double
 				|| objectToBeMadeIntoVariant instanceof Float
+				|| objectToBeMadeIntoVariant instanceof Long
 				|| objectToBeMadeIntoVariant instanceof SafeArray
 				|| objectToBeMadeIntoVariant instanceof Date
-				|| objectToBeMadeIntoVariant instanceof Dispatch)
+				|| objectToBeMadeIntoVariant instanceof Dispatch) {
 			return new Variant(objectToBeMadeIntoVariant);
-
-		// automatically convert arrays using reflection
-		Class c1 = objectToBeMadeIntoVariant.getClass();
-		SafeArray sa = null;
-		if (c1.isArray()) {
-			int len1 = Array.getLength(objectToBeMadeIntoVariant);
-			Object first = Array.get(objectToBeMadeIntoVariant, 0);
-			if (first.getClass().isArray()) {
-				int max = 0;
-				for (int i = 0; i < len1; i++) {
-					Object e1 = Array.get(objectToBeMadeIntoVariant, i);
-					int len2 = Array.getLength(e1);
-					if (max < len2) {
-						max = len2;
+		} else {
+			// automatically convert arrays using reflection
+			Class c1 = objectToBeMadeIntoVariant.getClass();
+			SafeArray sa = null;
+			if (c1.isArray()) {
+				int len1 = Array.getLength(objectToBeMadeIntoVariant);
+				Object first = Array.get(objectToBeMadeIntoVariant, 0);
+				if (first.getClass().isArray()) {
+					int max = 0;
+					for (int i = 0; i < len1; i++) {
+						Object e1 = Array.get(objectToBeMadeIntoVariant, i);
+						int len2 = Array.getLength(e1);
+						if (max < len2) {
+							max = len2;
+						}
+					}
+					sa = new SafeArray(Variant.VariantVariant, len1, max);
+					for (int i = 0; i < len1; i++) {
+						Object e1 = Array.get(objectToBeMadeIntoVariant, i);
+						for (int j = 0; j < Array.getLength(e1); j++) {
+							sa.setVariant(i, j, obj2variant(Array.get(e1, j)));
+						}
+					}
+				} else {
+					sa = new SafeArray(Variant.VariantVariant, len1);
+					for (int i = 0; i < len1; i++) {
+						sa.setVariant(i, obj2variant(Array.get(
+								objectToBeMadeIntoVariant, i)));
 					}
 				}
-				sa = new SafeArray(Variant.VariantVariant, len1, max);
-				for (int i = 0; i < len1; i++) {
-					Object e1 = Array.get(objectToBeMadeIntoVariant, i);
-					for (int j = 0; j < Array.getLength(e1); j++) {
-						sa.setVariant(i, j, obj2variant(Array.get(e1, j)));
-					}
-				}
+				return new Variant(sa);
 			} else {
-				sa = new SafeArray(Variant.VariantVariant, len1);
-				for (int i = 0; i < len1; i++) {
-					sa.setVariant(i, obj2variant(Array.get(
-							objectToBeMadeIntoVariant, i)));
-				}
+				throw new ClassCastException("cannot convert to Variant");
 			}
-			return new Variant(sa);
 		}
-		throw new ClassCastException("cannot convert to Variant");
 	}
 
 	/**
