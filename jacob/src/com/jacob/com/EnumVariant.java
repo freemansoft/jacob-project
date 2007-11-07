@@ -40,7 +40,7 @@ public class EnumVariant extends JacobObject implements
 	 */
 	public EnumVariant(Dispatch disp) {
 		int[] hres = new int[1];
-		Variant evv = Dispatch.invokev(disp, Dispatch.DISPID_NEWENUM,
+		Variant evv = Dispatch.invokev(disp, DispatchIdentifier.DISPID_NEWENUM,
 				Dispatch.Get, new Variant[0], hres);
 		if (evv.getvt() != Variant.VariantObject)
 			//

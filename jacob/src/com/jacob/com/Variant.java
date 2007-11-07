@@ -1868,101 +1868,18 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * constructor that accepts the data object and information about whether
-	 * this is by reference or not.
+	 * Constructor that accepts the data object and information about whether
+	 * this is by reference or not. It calls the JavaVariantConverter to
+	 * actually push the data into the newly created Variant.
 	 * 
 	 * @param pValueObject
-	 *            a null object sets this to "empty"
+	 *            The value object that will pushed down into windows memory. A
+	 *            null object sets this to "empty"
 	 * @param fByRef
 	 */
 	public Variant(Object pValueObject, boolean fByRef) {
 		init();
-		if (pValueObject == null) {
-			putEmpty();
-		} else if (pValueObject instanceof Integer) {
-			if (fByRef) {
-				putIntRef(((Integer) pValueObject).intValue());
-			} else {
-				putInt(((Integer) pValueObject).intValue());
-			}
-		} else if (pValueObject instanceof Short) {
-			if (fByRef) {
-				putShortRef(((Short) pValueObject).shortValue());
-			} else {
-				putShort(((Short) pValueObject).shortValue());
-			}
-		} else if (pValueObject instanceof String) {
-			if (fByRef) {
-				putStringRef((String) pValueObject);
-			} else {
-				putString((String) pValueObject);
-			}
-		} else if (pValueObject instanceof Boolean) {
-			if (fByRef) {
-				putBooleanRef(((Boolean) pValueObject).booleanValue());
-			} else {
-				putBoolean(((Boolean) pValueObject).booleanValue());
-			}
-		} else if (pValueObject instanceof Double) {
-			if (fByRef) {
-				putDoubleRef(((Double) pValueObject).doubleValue());
-			} else {
-				putDouble(((Double) pValueObject).doubleValue());
-			}
-		} else if (pValueObject instanceof Float) {
-			if (fByRef) {
-				putFloatRef(((Float) pValueObject).floatValue());
-			} else {
-				putFloat(((Float) pValueObject).floatValue());
-			}
-		} else if (pValueObject instanceof BigDecimal) {
-			if (fByRef) {
-				putDecimalRef(((BigDecimal) pValueObject));
-			} else {
-				putDecimal(((BigDecimal) pValueObject));
-			}
-		} else if (pValueObject instanceof Byte) {
-			if (fByRef) {
-				putByteRef(((Byte) pValueObject).byteValue());
-			} else {
-				putByte(((Byte) pValueObject).byteValue());
-			}
-		} else if (pValueObject instanceof Date) {
-			if (fByRef) {
-				putDateRef((Date) pValueObject);
-			} else {
-				putDate((Date) pValueObject);
-			}
-		} else if (pValueObject instanceof Long) {
-			if (fByRef) {
-				putCurrencyRef(((Long) pValueObject).longValue());
-			} else {
-				putCurrency(((Long) pValueObject).longValue());
-			}
-		} else if (pValueObject instanceof SafeArray) {
-			if (fByRef) {
-				putSafeArrayRef((SafeArray) pValueObject);
-			} else {
-				putSafeArray((SafeArray) pValueObject);
-			}
-		} else if (pValueObject instanceof Dispatch) {
-			if (fByRef) {
-				putDispatchRef((Dispatch) pValueObject);
-			} else {
-				putDispatch((Dispatch) pValueObject);
-			}
-		} else if (pValueObject instanceof Variant) {
-			// newly added 1.12-pre6
-			putVariant(pValueObject);
-		} else {
-			// should really throw an illegal argument exception if its an
-			// invalid type
-			if (fByRef) {
-				putObjectRef(pValueObject);
-			} else {
-				putObject(pValueObject);
-			}
-		}
+		VariantUtilities.populateVariant(this, pValueObject, fByRef);
 	}
 
 	/**
@@ -2138,15 +2055,12 @@ public class Variant extends JacobObject {
 	 * 
 	 * =====================================================================
 	 */
+
 	/**
 	 * Convert a JACOB Variant value to a Java object (type conversions).
-	 * provided in Sourceforge feature request 959381. A fix was done to handle
-	 * byRef bug report 1607878.
-	 * <p>
-	 * Unlike other toXXX() methods, it does not do a type conversion except for
-	 * special data types (it shouldn't do any!)
-	 * <p>
-	 * Converts Variant.VariantArray types to SafeArrays
+	 * provided in Sourceforge feature request 959381. See
+	 * JavaVariantConverter..convertVariantTJavaObject(Variant) for more
+	 * information.
 	 * 
 	 * @return Corresponding Java object of the type matching the Variant type.
 	 * @throws IllegalStateException
@@ -2158,128 +2072,7 @@ public class Variant extends JacobObject {
 	 *             result of error
 	 */
 	public Object toJavaObject() throws JacobException {
-		Object result = null;
+		return VariantUtilities.variantToObject(this);
+	}
 
-		short type = this.getvt(); // variant type
-
-		if ((type & Variant.VariantArray) == VariantArray) { // array
-			// returned?
-			SafeArray array = null;
-			type = (short) (type - Variant.VariantArray);
-			array = this.toSafeArray(false);
-			// result = toJava(array);
-			result = array;
-		} else { // non-array object returned
-			switch (type) {
-			case Variant.VariantEmpty: // 0
-			case Variant.VariantNull: // 1
-				break;
-			case Variant.VariantShort: // 2
-				result = new Short(this.getShort());
-				break;
-			case Variant.VariantShort | Variant.VariantByref: // 2
-				result = new Short(this.getShortRef());
-				break;
-			case Variant.VariantInt: // 3
-				result = new Integer(this.getInt());
-				break;
-			case Variant.VariantInt | Variant.VariantByref: // 3
-				result = new Integer(this.getIntRef());
-				break;
-			case Variant.VariantFloat: // 4
-				result = new Float(this.getFloat());
-				break;
-			case Variant.VariantFloat | Variant.VariantByref: // 4
-				result = new Float(this.getFloatRef());
-				break;
-			case Variant.VariantDouble: // 5
-				result = new Double(this.getDouble());
-				break;
-			case Variant.VariantDouble | Variant.VariantByref: // 5
-				result = new Double(this.getDoubleRef());
-				break;
-			case Variant.VariantCurrency: // 6
-				result = new Long(this.getCurrency());
-				break;
-			case Variant.VariantCurrency | Variant.VariantByref: // 6
-				result = new Long(this.getCurrencyRef());
-				break;
-			case Variant.VariantDate: // 7
-				result = this.getJavaDate();
-				break;
-			case Variant.VariantDate | Variant.VariantByref: // 7
-				result = this.getJavaDateRef();
-				break;
-			case Variant.VariantString: // 8
-				result = this.getString();
-				break;
-			case Variant.VariantString | Variant.VariantByref: // 8
-				result = this.getStringRef();
-				break;
-			case Variant.VariantDispatch: // 9
-				result = this.getDispatch();
-				break;
-			case Variant.VariantDispatch | Variant.VariantByref: // 9
-				result = this.getDispatchRef(); // Can dispatches even be byRef?
-				break;
-			case Variant.VariantError: // 10
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantError");
-				break;
-			case Variant.VariantBoolean: // 11
-				result = new Boolean(this.getBoolean());
-				break;
-			case Variant.VariantBoolean | Variant.VariantByref: // 11
-				result = new Boolean(this.getBooleanRef());
-				break;
-			case Variant.VariantVariant: // 12 they are always by ref
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantVariant without ByRef");
-				break;
-			case Variant.VariantVariant | Variant.VariantByref: // 12
-				result = getVariant();
-				break;
-			case Variant.VariantObject: // 13
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantObject");
-				break;
-			case Variant.VariantDecimal: // 14
-				result = getDecimal();
-				break;
-			case Variant.VariantDecimal | Variant.VariantByref: // 14
-				result = getDecimalRef();
-				break;
-			case Variant.VariantByte: // 17
-				result = new Byte(this.getByte());
-				break;
-			case Variant.VariantByte | Variant.VariantByref: // 17
-				result = new Byte(this.getByteRef());
-				break;
-			case Variant.VariantTypeMask: // 4095
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantTypeMask");
-				break;
-			case Variant.VariantArray: // 8192
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantArray");
-				break;
-			case Variant.VariantByref: // 16384
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantByref");
-				break;
-			default:
-				result = new NotImplementedException("Unknown return type: "
-						+ type);
-				// there was a "return result" here that caused defect 1602118
-				// so it was removed
-				break;
-			}// switch (type)
-
-			if (result instanceof JacobException) {
-				throw (JacobException) result;
-			}
-		}
-
-		return result;
-	}// toJava()
 }

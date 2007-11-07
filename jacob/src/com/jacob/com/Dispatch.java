@@ -19,9 +19,6 @@
  */
 package com.jacob.com;
 
-import java.lang.reflect.Array;
-import java.util.Date;
-
 /**
  * Object represents MS level dispatch object. Each instance of this points at
  * some data structure on the MS windows side.
@@ -31,78 +28,25 @@ import java.util.Date;
  * You're going to live here a lot
  */
 public class Dispatch extends JacobObject {
+
+	/**
+	 * Used to set the locale in a call. The user locale is another option
+	 */
 	public static final int LOCALE_SYSTEM_DEFAULT = 2048;
+	/** used by callN() and callSubN() */
 	public static final int Method = 1;
+	/** used by callN() and callSubN() */
 	public static final int Get = 2;
+	/** used by put() */
 	public static final int Put = 4;
+	/** not used, probably intended for putRef() */
 	public static final int PutRef = 8;
+	/**
+	 * One of legal values for GetDispId. Not used in this layer and probably
+	 * not needed.
+	 */
 	public static final int fdexNameCaseSensitive = 1;
-	public static final int DISPID_UNKNOWN = -1;
-	public static final int DISPID_VALUE = 0;
-	public static final int DISPID_PROPERTYPUT = -3;
-	public static final int DISPID_NEWENUM = -4;
-	public static final int DISPID_EVALUATE = -5;
-	public static final int DISPID_CONSTRUCTOR = -6;
-	public static final int DISPID_DESTRUCTOR = -7;
-	public static final int DISPID_COLLECT = -8;
-	public static final int DISPID_AUTOSIZE = -500;
-	public static final int DISPID_BACKCOLOR = -501;
-	public static final int DISPID_BACKSTYLE = -502;
-	public static final int DISPID_BORDERCOLOR = -503;
-	public static final int DISPID_BORDERSTYLE = -504;
-	public static final int DISPID_BORDERWIDTH = -505;
-	public static final int DISPID_DRAWMODE = -507;
-	public static final int DISPID_DRAWSTYLE = -508;
-	public static final int DISPID_DRAWWIDTH = -509;
-	public static final int DISPID_FILLCOLOR = -510;
-	public static final int DISPID_FILLSTYLE = -511;
-	public static final int DISPID_FONT = -512;
-	public static final int DISPID_FORECOLOR = -513;
-	public static final int DISPID_ENABLED = -514;
-	public static final int DISPID_HWND = -515;
-	public static final int DISPID_TABSTOP = -516;
-	public static final int DISPID_TEXT = -517;
-	public static final int DISPID_CAPTION = -518;
-	public static final int DISPID_BORDERVISIBLE = -519;
-	public static final int DISPID_APPEARANCE = -520;
-	public static final int DISPID_MOUSEPOINTER = -521;
-	public static final int DISPID_MOUSEICON = -522;
-	public static final int DISPID_PICTURE = -523;
-	public static final int DISPID_VALID = -524;
-	public static final int DISPID_READYSTATE = -525;
-	public static final int DISPID_REFRESH = -550;
-	public static final int DISPID_DOCLICK = -551;
-	public static final int DISPID_ABOUTBOX = -552;
-	public static final int DISPID_CLICK = -600;
-	public static final int DISPID_DBLCLICK = -601;
-	public static final int DISPID_KEYDOWN = -602;
-	public static final int DISPID_KEYPRESS = -603;
-	public static final int DISPID_KEYUP = -604;
-	public static final int DISPID_MOUSEDOWN = -605;
-	public static final int DISPID_MOUSEMOVE = -606;
-	public static final int DISPID_MOUSEUP = -607;
-	public static final int DISPID_ERROREVENT = -608;
-	public static final int DISPID_READYSTATECHANGE = -609;
-	public static final int DISPID_AMBIENT_BACKCOLOR = -701;
-	public static final int DISPID_AMBIENT_DISPLAYNAME = -702;
-	public static final int DISPID_AMBIENT_FONT = -703;
-	public static final int DISPID_AMBIENT_FORECOLOR = -704;
-	public static final int DISPID_AMBIENT_LOCALEID = -705;
-	public static final int DISPID_AMBIENT_MESSAGEREFLECT = -706;
-	public static final int DISPID_AMBIENT_SCALEUNITS = -707;
-	public static final int DISPID_AMBIENT_TEXTALIGN = -708;
-	public static final int DISPID_AMBIENT_USERMODE = -709;
-	public static final int DISPID_AMBIENT_UIDEAD = -710;
-	public static final int DISPID_AMBIENT_SHOWGRABHANDLES = -711;
-	public static final int DISPID_AMBIENT_SHOWHATCHING = -712;
-	public static final int DISPID_AMBIENT_DISPLAYASDEFAULT = -713;
-	public static final int DISPID_AMBIENT_SUPPORTSMNEMONICS = -714;
-	public static final int DISPID_AMBIENT_AUTOCLIP = -715;
-	public static final int DISPID_AMBIENT_APPEARANCE = -716;
-	public static final int DISPID_AMBIENT_CODEPAGE = -725;
-	public static final int DISPID_AMBIENT_PALETTE = -726;
-	public static final int DISPID_AMBIENT_CHARSET = -727;
-	public static final int DISPID_AMBIENT_TRANSFERPRIORITY = -728;
+
 	/**
 	 * This is public because Dispatch.cpp knows its name and accesses it
 	 * directly to get the dispatch id. You really can't rename it or make it
@@ -347,83 +291,6 @@ public class Dispatch extends JacobObject {
 	}
 
 	/**
-	 * Map args based on msdn doc This method relies on the variant constructor
-	 * except for arrays
-	 * 
-	 * @param objectToBeMadeIntoVariant
-	 * @return Variant that represents the object
-	 */
-	@SuppressWarnings("unchecked")
-	protected static Variant obj2variant(Object objectToBeMadeIntoVariant) {
-		if (objectToBeMadeIntoVariant == null) {
-			return new Variant();
-		} else if (objectToBeMadeIntoVariant instanceof Variant) {
-			// if a variant was passed in then be a slacker and just return it
-			return (Variant) objectToBeMadeIntoVariant;
-		} else if (objectToBeMadeIntoVariant instanceof Integer
-				|| objectToBeMadeIntoVariant instanceof Short
-				|| objectToBeMadeIntoVariant instanceof String
-				|| objectToBeMadeIntoVariant instanceof Boolean
-				|| objectToBeMadeIntoVariant instanceof Double
-				|| objectToBeMadeIntoVariant instanceof Float
-				|| objectToBeMadeIntoVariant instanceof Long
-				|| objectToBeMadeIntoVariant instanceof SafeArray
-				|| objectToBeMadeIntoVariant instanceof Date
-				|| objectToBeMadeIntoVariant instanceof Dispatch) {
-			return new Variant(objectToBeMadeIntoVariant);
-		} else {
-			// automatically convert arrays using reflection
-			Class c1 = objectToBeMadeIntoVariant.getClass();
-			SafeArray sa = null;
-			if (c1.isArray()) {
-				int len1 = Array.getLength(objectToBeMadeIntoVariant);
-				Object first = Array.get(objectToBeMadeIntoVariant, 0);
-				if (first.getClass().isArray()) {
-					int max = 0;
-					for (int i = 0; i < len1; i++) {
-						Object e1 = Array.get(objectToBeMadeIntoVariant, i);
-						int len2 = Array.getLength(e1);
-						if (max < len2) {
-							max = len2;
-						}
-					}
-					sa = new SafeArray(Variant.VariantVariant, len1, max);
-					for (int i = 0; i < len1; i++) {
-						Object e1 = Array.get(objectToBeMadeIntoVariant, i);
-						for (int j = 0; j < Array.getLength(e1); j++) {
-							sa.setVariant(i, j, obj2variant(Array.get(e1, j)));
-						}
-					}
-				} else {
-					sa = new SafeArray(Variant.VariantVariant, len1);
-					for (int i = 0; i < len1; i++) {
-						sa.setVariant(i, obj2variant(Array.get(
-								objectToBeMadeIntoVariant, i)));
-					}
-				}
-				return new Variant(sa);
-			} else {
-				throw new ClassCastException("cannot convert to Variant");
-			}
-		}
-	}
-
-	/**
-	 * converts an array of objects into an array of Variants by repeatedly
-	 * calling obj2Variant(Object)
-	 * 
-	 * @param arrayOfObjectsToBeConverted
-	 * @return Variant[]
-	 */
-	protected static Variant[] obj2variant(Object[] arrayOfObjectsToBeConverted) {
-		Variant vArg[] = new Variant[arrayOfObjectsToBeConverted.length];
-		for (int i = 0; i < arrayOfObjectsToBeConverted.length; i++) {
-			vArg[i] = obj2variant(arrayOfObjectsToBeConverted[i]);
-		}
-		return vArg;
-	}
-
-	/**
 	 * now private so only this object can access was: call this to explicitly
 	 * release the com object before gc
 	 * 
@@ -516,7 +383,8 @@ public class Dispatch extends JacobObject {
 			Object[] args) {
 		throwIfUnattachedDispatch(dispatchTarget);
 		invokeSubv(dispatchTarget, name, Dispatch.Method | Dispatch.Get,
-				obj2variant(args), new int[args.length]);
+				VariantUtilities.objectsToVariants(args),
+				new int[args.length]);
 	}
 
 	/**
@@ -529,7 +397,8 @@ public class Dispatch extends JacobObject {
 			Object[] args) {
 		throwIfUnattachedDispatch(dispatchTarget);
 		invokeSubv(dispatchTarget, dispID, Dispatch.Method | Dispatch.Get,
-				obj2variant(args), new int[args.length]);
+				VariantUtilities.objectsToVariants(args),
+				new int[args.length]);
 	}
 
 	/*
@@ -584,7 +453,8 @@ public class Dispatch extends JacobObject {
 			Object[] args) {
 		throwIfUnattachedDispatch(dispatchTarget);
 		return invokev(dispatchTarget, name, Dispatch.Method | Dispatch.Get,
-				obj2variant(args), new int[args.length]);
+				VariantUtilities.objectsToVariants(args),
+				new int[args.length]);
 	}
 
 	/**
@@ -597,7 +467,8 @@ public class Dispatch extends JacobObject {
 			Object[] args) {
 		throwIfUnattachedDispatch(dispatchTarget);
 		return invokev(dispatchTarget, dispID, Dispatch.Method | Dispatch.Get,
-				obj2variant(args), new int[args.length]);
+				VariantUtilities.objectsToVariants(args),
+				new int[args.length]);
 	}
 
 	/**
@@ -614,7 +485,7 @@ public class Dispatch extends JacobObject {
 			int dispID, int lcid, int wFlags, Object[] oArg, int[] uArgErr) {
 		throwIfUnattachedDispatch(dispatchTarget);
 		return invokev(dispatchTarget, name, dispID, lcid, wFlags,
-				obj2variant(oArg), uArgErr);
+				VariantUtilities.objectsToVariants(oArg), uArgErr);
 	}
 
 	/**
@@ -623,12 +494,13 @@ public class Dispatch extends JacobObject {
 	 * @param wFlags
 	 * @param oArg
 	 * @param uArgErr
-	 * @return Variuant returned by invoke
+	 * @return Variant returned by invoke
 	 */
 	public static Variant invoke(Dispatch dispatchTarget, String name,
 			int wFlags, Object[] oArg, int[] uArgErr) {
 		throwIfUnattachedDispatch(dispatchTarget);
-		return invokev(dispatchTarget, name, wFlags, obj2variant(oArg), uArgErr);
+		return invokev(dispatchTarget, name, wFlags, VariantUtilities
+				.objectsToVariants(oArg), uArgErr);
 	}
 
 	/**
@@ -642,8 +514,8 @@ public class Dispatch extends JacobObject {
 	public static Variant invoke(Dispatch dispatchTarget, int dispID,
 			int wFlags, Object[] oArg, int[] uArgErr) {
 		throwIfUnattachedDispatch(dispatchTarget);
-		return invokev(dispatchTarget, dispID, wFlags, obj2variant(oArg),
-				uArgErr);
+		return invokev(dispatchTarget, dispID, wFlags, VariantUtilities
+				.objectsToVariants(oArg), uArgErr);
 	}
 
 	/*
@@ -1039,7 +911,7 @@ public class Dispatch extends JacobObject {
 			int dispid, int lcid, int wFlags, Object[] oArg, int[] uArgErr) {
 		throwIfUnattachedDispatch(dispatchTarget);
 		invokeSubv(dispatchTarget, name, dispid, lcid, wFlags,
-				obj2variant(oArg), uArgErr);
+				VariantUtilities.objectsToVariants(oArg), uArgErr);
 	}
 
 	/*
