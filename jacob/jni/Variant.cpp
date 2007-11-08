@@ -611,6 +611,17 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrency
   } else ThrowComFail(env, "putVariantCurrency failed", -1);
 }
 
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantLong
+  (JNIEnv *env, jobject _this, jlong longValue)
+{
+  VARIANT *v = extractVariant(env, _this);
+  if (v) {
+    VariantClear(v); // whatever was there before
+    V_VT(v) = VT_I8;
+    V_I8(v) = (LONGLONG)longValue;
+  } else ThrowComFail(env, "putVariantLong failed", -1);
+}
+
 /**
  * Accepts a dispatch object and sets the type to VT_DISPATCH.
  * There is currently no way to pass NULL into this method 
@@ -662,6 +673,18 @@ JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrency
   return NULL;
 }
 
+JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantLong
+  (JNIEnv *env, jobject _this)
+{
+  VARIANT *v = extractVariant(env, _this);
+  if (v) {
+    if (V_VT(v) !=  VT_I8) {
+      return NULL;
+    }
+    return (jlong)V_I8(v);
+  }
+  return NULL;
+}
 
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantFloatRef
   (JNIEnv *env, jobject _this, jfloat val)
@@ -686,6 +709,19 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrencyRef
     memcpy(pf, &cur, sizeof(*pf)); // was 64. should be sizeof(x) SF 1690420
     V_VT(v) = VT_BYREF|VT_CY;
     V_CYREF(v) = pf;
+  }
+}
+
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantLongRef
+  (JNIEnv *env, jobject _this, jlong longValue)
+{
+  VARIANT *v = extractVariant(env, _this);
+  if (v) {
+    VariantClear(v); // whatever was there before
+    LONGLONG *ps = (LONGLONG *)CoTaskMemAlloc(sizeof(LONGLONG));
+    *ps = longValue;
+    V_VT(v) = VT_I8|VT_BYREF;
+    V_I8REF(v) = ps;
   }
 }
 
@@ -797,6 +833,19 @@ JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrencyRef
     jlong jl;
     memcpy(&jl, cy, sizeof(jl)); // was 64. should be sizeof(x) SF 1690420
     return jl;
+  }
+  return NULL;
+}
+
+JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantLongRef
+  (JNIEnv *env, jobject _this)
+{
+  VARIANT *v = extractVariant(env, _this);
+  if (v) {
+    if (V_VT(v) !=  (VT_I8|VT_BYREF)) {
+      return NULL;
+    }
+    return (jlong)*V_I8REF(v);
   }
   return NULL;
 }

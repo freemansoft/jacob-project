@@ -284,6 +284,14 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrency
 
 /*
  * Class:     com_jacob_com_Variant
+ * Method:    putVariantLong
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantLong
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_jacob_com_Variant
  * Method:    putVariantDispatch
  * Signature: (Ljava/lang/Object;)V
  */
@@ -308,6 +316,13 @@ JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrency
 
 /*
  * Class:     com_jacob_com_Variant
+ * Method:    getVariantLong
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantLong
+  (JNIEnv *, jobject);
+/*
+ * Class:     com_jacob_com_Variant
  * Method:    putVariantFloatRef
  * Signature: (F)V
  */
@@ -320,6 +335,14 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantFloatRef
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantCurrencyRef
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_jacob_com_Variant
+ * Method:    putVariantLongRef
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantLongRef
   (JNIEnv *, jobject, jlong);
 
 /*
@@ -384,6 +407,14 @@ JNIEXPORT jfloat JNICALL Java_com_jacob_com_Variant_getVariantFloatRef
  * Signature: ()J
  */
 JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantCurrencyRef
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jacob_com_Variant
+ * Method:    getVariantLongRef
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantLongRef
   (JNIEnv *, jobject);
 
 /*

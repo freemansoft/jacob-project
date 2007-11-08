@@ -15,9 +15,6 @@ import com.jacob.test.BaseTestCase;
  * InvocationProxy to receive the events. The test was modified in 1.14 to show
  * how to hook up multiple event listeners to various Excel components
  * <p>
- * This test is BROKEN because it leaves an instance of Excel running when it
- * exits.
- * <p>
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.

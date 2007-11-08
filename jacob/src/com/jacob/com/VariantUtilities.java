@@ -86,9 +86,15 @@ public final class VariantUtilities {
 			}
 		} else if (pValueObject instanceof Long) {
 			if (fByRef) {
-				targetVariant.putCurrencyRef(((Long) pValueObject).longValue());
+				targetVariant.putLongRef(((Long) pValueObject).longValue());
 			} else {
-				targetVariant.putCurrency(((Long) pValueObject).longValue());
+				targetVariant.putLong(((Long) pValueObject).longValue());
+			}
+		} else if (pValueObject instanceof Currency) {
+			if (fByRef) {
+				targetVariant.putCurrencyRef(((Currency) pValueObject));
+			} else {
+				targetVariant.putCurrency(((Currency) pValueObject));
 			}
 		} else if (pValueObject instanceof SafeArray) {
 			if (fByRef) {
@@ -247,10 +253,10 @@ public final class VariantUtilities {
 				result = new Double(sourceData.getDoubleRef());
 				break;
 			case Variant.VariantCurrency: // 6
-				result = new Long(sourceData.getCurrency());
+				result = sourceData.getCurrency();
 				break;
 			case Variant.VariantCurrency | Variant.VariantByref: // 6
-				result = new Long(sourceData.getCurrencyRef());
+				result = sourceData.getCurrencyRef();
 				break;
 			case Variant.VariantDate: // 7
 				result = sourceData.getJavaDate();
@@ -303,6 +309,12 @@ public final class VariantUtilities {
 				break;
 			case Variant.VariantByte | Variant.VariantByref: // 17
 				result = new Byte(sourceData.getByteRef());
+				break;
+			case Variant.VariantLongInt: // 20
+				result = new Long(sourceData.getLong());
+				break;
+			case Variant.VariantLongInt | Variant.VariantByref: // 20
+				result = new Long(sourceData.getLongRef());
 				break;
 			case Variant.VariantTypeMask: // 4095
 				result = new NotImplementedException(

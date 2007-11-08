@@ -85,15 +85,45 @@ public class VariantTest extends BaseTestCase {
 			fail(v.toString() + " could not make type " + v.getvt() + " and "
 					+ vByRef.getvt() + " java objects come out the same");
 		}
+	}
+
+	/**
+	 * try and test VT_I8. This should only work on 64 bit machines
+	 */
+	public void testLong() {
+		Variant v = null;
+		Variant vByRef = null;
+
+		long longNumber = 1L << 40;
+		v = new Variant(new Long(longNumber), false);
+		vByRef = new Variant(new Long(longNumber), true);
+		assertEquals("Could recover long number " + longNumber, v.getLong(),
+				longNumber);
+		assertEquals("Could not make long number " + longNumber
+				+ " come out the same for get and getByRef()",
+				v.toJavaObject(), vByRef.toJavaObject());
+		v = new Variant("" + longNumber);
+		v.changeType(Variant.VariantLongInt);
+		assertEquals("Conversion from string to long didn't work ",
+				v.getLong(), longNumber);
+	}
+
+	/**
+	 * do some testing around currencies
+	 */
+	public void testCurrencyHandling() {
+		Variant v = null;
+		Variant vByRef = null;
 
 		// need to do currency also
 		// currency is an integer scaled up by 10,000 to give 4 digits to the
 		// right of the decimal
 		int currencyScale = 10000;
 		long twentyThousand = 20000 * currencyScale;
-		v = new Variant(twentyThousand, false);
-		vByRef = new Variant(twentyThousand, true);
-		if (!(v.toJavaObject() instanceof Long)) {
+		Currency twentyThousandAsCurrency = new Currency(twentyThousand);
+		v = new Variant(twentyThousandAsCurrency, false);
+		vByRef = new Variant(twentyThousandAsCurrency, true);
+		if (!(v.toJavaObject() instanceof Currency)) {
 			fail("v.toJavaObject was not Long for currency but was: "
 					+ v.toJavaObject());
 		}
@@ -102,10 +132,12 @@ public class VariantTest extends BaseTestCase {
 					+ vByRef.getvt() + " java objects come out the same");
 		}
 		long twentyThousandDotSeven = twentyThousand + 700;
+		Currency twentyThousandDotSevenAsCurrency = new Currency(
+				twentyThousandDotSeven);
 		// use the primitive constructor
-		v = new Variant(twentyThousandDotSeven);
+		v = new Variant(twentyThousandDotSevenAsCurrency);
 		assertEquals("failed test with " + twentyThousandDotSeven,
-				twentyThousandDotSeven, v.getCurrency());
+				twentyThousandDotSeven, v.getCurrency().longValue());
 
 	}
 
@@ -370,9 +402,10 @@ public class VariantTest extends BaseTestCase {
 		v.putBoolean(false);
 		assertEquals("failed boolean test(false)", false, v.getBoolean());
 
-		v.putCurrency(123456789123456789L);
+		long originalValue = 123456789123456789L;
+		v.putCurrency(new Currency(originalValue));
 		assertEquals("failed currency test", 123456789123456789L, v
-				.getCurrency());
+				.getCurrency().longValue());
 
 		BigDecimal testDecimal = new BigDecimal("22.222");
 		v.putDecimal(testDecimal);

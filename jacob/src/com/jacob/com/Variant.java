@@ -62,23 +62,6 @@ public class Variant extends JacobObject {
 	public final static com.jacob.com.Variant VT_FALSE = new com.jacob.com.Variant(
 			false);
 
-	/*
-	 * Do the run time definition of DEFAULT and MISSING. Have to use static
-	 * block because of the way the initialization is done via two calls instead
-	 * of just a constructor for this type.
-	 */
-	static {
-		com.jacob.com.Variant vtMissing = new com.jacob.com.Variant();
-		vtMissing.putVariantNoParam();
-		DEFAULT = vtMissing;
-		VT_MISSING = vtMissing;
-	}
-
-	/**
-	 * Pointer to MS struct.
-	 */
-	int m_pVariant = 0;
-
 	/** variant's type is empty : equivalent to VB Nothing and VT_EMPTY */
 	public static final short VariantEmpty = 0;
 
@@ -143,58 +126,604 @@ public class Variant extends JacobObject {
 	/** variant's type is a reference (to IDispatch?) */
 	public static final short VariantByref = 16384;
 
-	/**
-	 * @deprecated should use changeType() followed by getInt()
-	 * @return the value of this variant as an int (after possible conversion)
+	/*
+	 * Do the run time definition of DEFAULT and MISSING. Have to use static
+	 * block because of the way the initialization is done via two calls instead
+	 * of just a constructor for this type.
 	 */
-	@Deprecated
-	public int toInt() {
-		changeType(VariantInt);
-		return getInt();
+	static {
+		com.jacob.com.Variant vtMissing = new com.jacob.com.Variant();
+		vtMissing.putVariantNoParam();
+		DEFAULT = vtMissing;
+		VT_MISSING = vtMissing;
 	}
 
 	/**
-	 * @deprecated should use changeType() followed by getDate()
-	 * @return the value of this variant as a date (after possible conversion)
+	 * Pointer to MS struct.
 	 */
-	@Deprecated
-	public double toDate() {
-		changeType(VariantDate);
-		return getDate();
+	int m_pVariant = 0;
+
+	/**
+	 * public constructor, initializes and sets type to VariantEmpty
+	 */
+	public Variant() {
+		this(null, false);
 	}
 
 	/**
-	 * Returns the windows time contained in this Variant as a Java Date
-	 * converts to a date like many of the other toXXX() methods SF 959382.
-	 * <p>
-	 * This method added 12/2005 for possible use by jacobgen instead of its
-	 * conversion code
-	 * <p>
-	 * This does not convert the data
+	 * Constructor that accepts a primitive rather than an object
 	 * 
-	 * @deprecated callers should use getDate()
-	 * @return java.util.Date version of this variant if it is a date, otherwise
-	 *         null
-	 * 
+	 * @param in
 	 */
-	@Deprecated
-	public Date toJavaDate() {
-		changeType(Variant.VariantDate);
-		return getJavaDate();
+	public Variant(boolean in) {
+		this(new Boolean(in));
 	}
 
 	/**
-	 * @deprecated should be replaced by changeType() followed by getBoolean()
-	 * @return the value of this variant as boolean (after possible conversion)
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
 	 */
-	@Deprecated
-	public boolean toBoolean() {
-		changeType(Variant.VariantBoolean);
-		return getBoolean();
+	public Variant(byte in) {
+		this(new Byte(in));
 	}
 
-	/** @return the value of this variant as an enumeration (java style) */
-	public native EnumVariant toEnumVariant();
+	/**
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
+	 */
+	public Variant(double in) {
+		this(new Double(in));
+	}
+
+	/**
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
+	 */
+	public Variant(float in) {
+		this(new Float(in));
+	}
+
+	/**
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
+	 */
+	public Variant(int in) {
+		this(new Integer(in));
+	};
+
+	/**
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
+	 */
+	public Variant(long in) {
+		this(new Long(in));
+	}
+
+	/**
+	 * Convenience constructor that calls the main one with a byRef value of
+	 * false
+	 * 
+	 * @param in
+	 *            object to be made into variant
+	 */
+	public Variant(Object in) {
+		this(in, false);
+	}
+
+	/**
+	 * Constructor that accepts the data object and information about whether
+	 * this is by reference or not. It calls the JavaVariantConverter to
+	 * actually push the data into the newly created Variant.
+	 * 
+	 * @param pValueObject
+	 *            The value object that will pushed down into windows memory. A
+	 *            null object sets this to "empty"
+	 * @param fByRef
+	 */
+	public Variant(Object pValueObject, boolean fByRef) {
+		init();
+		VariantUtilities.populateVariant(this, pValueObject, fByRef);
+	}
+
+	/**
+	 * Constructor that accepts a primitive rather than an object
+	 * 
+	 * @param in
+	 */
+	public Variant(short in) {
+		this(new Short(in));
+	}
+
+	/**
+	 * Cover for native method so we can cover it.
+	 * <p>
+	 * This cannot convert an object to a byRef. It can convert from byref to
+	 * not byref
+	 * 
+	 * @param in
+	 *            type to convert this variant too
+	 * @return Variant returns this same object so folks can change when
+	 *         replacing calls toXXX() with changeType().getXXX()
+	 */
+	public Variant changeType(short in) {
+		changeVariantType(in);
+		return this;
+	}
+
+	/**
+	 * Converts variant to the passed in type by converting the underlying
+	 * windows variant structure. private so folks use public java method
+	 * 
+	 * @param in
+	 *            the desired resulting type
+	 */
+	private native void changeVariantType(short in);
+
+	/**
+	 * this returns null
+	 * 
+	 * @return ?? comment says null?
+	 */
+	public native Object clone();
+
+	/**
+	 * @deprecated No longer used
+	 * @return null !
+	 */
+	@Deprecated
+	public native Variant cloneIndirect();
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#finalize()
+	 */
+	protected void finalize() {
+		safeRelease();
+	}
+
+	/**
+	 * 
+	 * @return returns the value as a boolean, throws an exception if its not.
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public boolean getBoolean() {
+		if (this.getvt() == VariantBoolean) {
+			return getVariantBoolean();
+		} else {
+			throw new IllegalStateException(
+					"getBoolean() only legal on Variants of type VariantBoolean, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * public cover for native method
+	 * 
+	 * @return the boolean from a booleanRef
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public boolean getBooleanRef() {
+		if ((this.getvt() & VariantBoolean) == VariantBoolean
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantBooleanRef();
+		} else {
+			throw new IllegalStateException(
+					"getBooleanRef() only legal on byRef Variants of type VariantBoolean, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * 
+	 * @return returns the value as a boolean, throws an exception if its not.
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public byte getByte() {
+		if (this.getvt() == VariantByte) {
+			return getVariantByte();
+		} else {
+			throw new IllegalStateException(
+					"getByte() only legal on Variants of type VariantByte, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * public cover for native method
+	 * 
+	 * @return the byte from a booleanRef
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public byte getByteRef() {
+		if ((this.getvt() & VariantByte) == VariantByte
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantByteRef();
+		} else {
+			throw new IllegalStateException(
+					"getByteRef() only legal on byRef Variants of type VariantByte, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * MS Currency objects are 64 bit fixed point numbers with 15 digits to the
+	 * left and 4 to the right of the decimal place.
+	 * 
+	 * @return returns the currency value as a long, throws exception if not a
+	 *         currency type..
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public Currency getCurrency() {
+		if (this.getvt() == VariantCurrency) {
+			return new Currency(getVariantCurrency());
+		} else {
+			throw new IllegalStateException(
+					"getCurrency() only legal on Variants of type VariantCurrency, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * MS Currency objects are 64 bit fixed point numbers with 15 digits to the
+	 * left and 4 to the right of the decimal place.
+	 * 
+	 * @return returns the currency value as a long, throws exception if not a
+	 *         currency type
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public Currency getCurrencyRef() {
+		if ((this.getvt() & VariantCurrency) == VariantCurrency
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return new Currency(getVariantCurrencyRef());
+		} else {
+			throw new IllegalStateException(
+					"getCurrencyRef() only legal on byRef Variants of type VariantCurrency, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * @return double return the date (as a double) value held in this variant
+	 *         (fails on other types?)
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public double getDate() {
+		if (this.getvt() == VariantDate) {
+			return getVariantDate();
+		} else {
+			throw new IllegalStateException(
+					"getDate() only legal on Variants of type VariantDate, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * 
+	 * @return returns the date value as a double, throws exception if not a
+	 *         date type
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public double getDateRef() {
+		if ((this.getvt() & VariantDate) == VariantDate
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantDateRef();
+		} else {
+			throw new IllegalStateException(
+					"getDateRef() only legal on byRef Variants of type VariantDate, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * return the BigDecimal value held in this variant (fails on other types)
+	 * 
+	 * @return BigDecimal
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public BigDecimal getDecimal() {
+		if (this.getvt() == VariantDecimal) {
+			return (BigDecimal) (getVariantDec());
+		} else {
+			throw new IllegalStateException(
+					"getDecimal() only legal on Variants of type VariantDecimal, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * return the BigDecimal value held in this variant (fails on other types)
+	 * 
+	 * @return BigDecimal
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public BigDecimal getDecimalRef() {
+		if ((this.getvt() & VariantDecimal) == VariantDecimal
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return (BigDecimal) (getVariantDecRef());
+		} else {
+			throw new IllegalStateException(
+					"getDecimalRef() only legal on byRef Variants of type VariantDecimal, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * cover for {@link #toDispatch()} This method now matches other getXXX()
+	 * methods. It throws an IllegalStateException if the object is not of type
+	 * VariantDispatch
+	 * 
+	 * @return this object as a dispatch
+	 * @throws IllegalStateException
+	 *             if wrong variant type
+	 */
+	public Dispatch getDispatch() {
+		if ((this.getvt() & VariantDispatch) == VariantDispatch) {
+			return toDispatch();
+		} else {
+			throw new IllegalStateException(
+					"getDispatch() only legal on Variants of type VariantDispatch, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * Dispatch and dispatchRef are treated the same This is just a cover for
+	 * toDispatch() with a flag check
+	 * 
+	 * @return the results of toDispatch()
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public Dispatch getDispatchRef() {
+		if ((this.getvt() & VariantDispatch) == VariantDispatch
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return toDispatch();
+		} else {
+			throw new IllegalStateException(
+					"getDispatchRef() only legal on byRef Variants of type VariantDispatch, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * @return double return the double value held in this variant (fails on
+	 *         other types?)
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public double getDouble() {
+		if (this.getvt() == VariantDouble) {
+			return getVariantDouble();
+		} else {
+			throw new IllegalStateException(
+					"getDouble() only legal on Variants of type VariantDouble, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * 
+	 * @return returns the double value, throws exception if not a Double type
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public double getDoubleRef() {
+		if ((this.getvt() & VariantDouble) == VariantDouble
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantDoubleRef();
+		} else {
+			throw new IllegalStateException(
+					"getDoubleRef() only legal on byRef Variants of type VariantDouble, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * Pointless method that was put here so that putEmpty() has a get method.
+	 * This would have returned null if the value was VT_EMPTY or if it wasn't
+	 * so it would have always returned the same value.
+	 * 
+	 * @deprecated method never did anything
+	 */
+	@Deprecated
+	public void getEmpty() {
+	}
+
+	/**
+	 * @return double return the error value held in this variant (fails on
+	 *         other types?)
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public int getError() {
+		if (this.getvt() == VariantError) {
+			return getVariantError();
+		} else {
+			throw new IllegalStateException(
+					"getError() only legal on Variants of type VariantError, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * 
+	 * @return returns the error value as an int, throws exception if not a
+	 *         Error type
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public int getErrorRef() {
+		if ((this.getvt() & VariantError) == VariantError
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantErrorRef();
+		} else {
+			throw new IllegalStateException(
+					"getErrorRef() only legal on byRef Variants of type VariantError, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * @return returns the value as a float if the type is of type float
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public float getFloat() {
+		if (this.getvt() == VariantFloat) {
+			return getVariantFloat();
+		} else {
+			throw new IllegalStateException(
+					"getFloat() only legal on Variants of type VariantFloat, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * 
+	 * @return returns the float value, throws exception if not a Float type
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public float getFloatRef() {
+		if ((this.getvt() & VariantFloat) == VariantFloat
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantFloatRef();
+		} else {
+			throw new IllegalStateException(
+					"getFloatRef() only legal on byRef Variants of type VariantFloat, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * return the int value held in this variant if it is an int or a short.
+	 * Throws for other types.
+	 * 
+	 * @return int contents of the windows memory
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public int getInt() {
+		if (this.getvt() == VariantInt) {
+			return getVariantInt();
+		} else if (this.getvt() == VariantShort) {
+			return getVariantShort();
+		} else {
+			throw new IllegalStateException(
+					"getInt() only legal on Variants of type VariantInt, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * get the content of this variant as an int
+	 * 
+	 * @return int
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public int getIntRef() {
+		if ((this.getvt() & VariantInt) == VariantInt
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantIntRef();
+		} else {
+			throw new IllegalStateException(
+					"getIntRef() only legal on byRef Variants of type VariantInt, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * returns the windows time contained in this Variant to a Java Date. should
+	 * return null if this is not a date Variant SF 959382
+	 * 
+	 * @return java.util.Date returns the date if this is a VariantDate != 0,
+	 *         null if it is a VariantDate == 0 and throws an
+	 *         IllegalStateException if this isn't a date.
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public Date getJavaDate() {
+		Date returnDate = null;
+		if (getvt() == VariantDate) {
+			double windowsDate = getDate();
+			if (windowsDate != 0) {
+				returnDate = DateUtilities.convertWindowsTimeToDate(getDate());
+			}
+		} else {
+			throw new IllegalStateException(
+					"getJavaDate() only legal on Variants of type VariantDate, not "
+							+ this.getvt());
+		}
+		return returnDate;
+	}
+
+	/**
+	 * returns the windows time contained in this Variant to a Java Date should
+	 * return null if this is not a date reference Variant SF 959382
+	 * 
+	 * @return java.util.Date
+	 */
+	public Date getJavaDateRef() {
+		double windowsDate = getDateRef();
+		if (windowsDate == 0) {
+			return null;
+		} else {
+			return DateUtilities.convertWindowsTimeToDate(windowsDate);
+		}
+	}
+
+	/**
+	 * 64 bit Longs only available on x64. 64 bit long support added 1.14
+	 * 
+	 * @return returns the value as a long, throws exception if not a Long
+	 *         type..
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public long getLong() {
+		if (this.getvt() == VariantLongInt) {
+			return getVariantLong();
+		} else {
+			throw new IllegalStateException(
+					"getLong() only legal on Variants of type VariantLongInt, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * 64 bit Longs only available on x64. 64 bit long support added 1.14
+	 * 
+	 * @return returns the value as a long, throws exception if not a long type
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public long getLongRef() {
+		if ((this.getvt() & VariantLongInt) == VariantLongInt
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantLongRef();
+		} else {
+			throw new IllegalStateException(
+					"getLongRef() only legal on byRef Variants of type VariantLongInt, not "
+							+ this.getvt());
+		}
+	}
 
 	/**
 	 * This method would have returned null if the type was VT_NULL. But because
@@ -205,60 +734,111 @@ public class Variant extends JacobObject {
 	 */
 	@Deprecated
 	public void getNull() {
-	};
-
-	/**
-	 * Set this Variant's type to VT_NULL (the VB equivalent of NULL)
-	 */
-	private native void putVariantNull();
-
-	/**
-	 * Set this Variant's type to VT_NULL (the VB equivalent of NULL)
-	 */
-	public void putNull() {
-		// verify we aren't released yet
-		getvt();
-		putVariantNull();
 	}
 
 	/**
-	 * @deprecated No longer used
-	 * @return null !
+	 * return the int value held in this variant (fails on other types?)
+	 * 
+	 * @return int
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
 	 */
-	@Deprecated
-	public native Variant cloneIndirect();
-
-	/**
-	 * @deprecated should call changeType() then getDouble()
-	 * @return the content of this variant as a double (after possible
-	 *         conversion)
-	 */
-	@Deprecated
-	public double toDouble() {
-		changeType(Variant.VariantDouble);
-		return getDouble();
+	public short getShort() {
+		if (this.getvt() == VariantShort) {
+			return getVariantShort();
+		} else {
+			throw new IllegalStateException(
+					"getShort() only legal on Variants of type VariantShort, not "
+							+ this.getvt());
+		}
 	}
 
 	/**
-	 * @deprecated should be replaced by changeType() followed by getCurrency
-	 * @return the content of this variant as a long reprensenting a monetary
-	 *         amount
+	 * get the content of this variant as an int
+	 * 
+	 * @return int
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
 	 */
-	@Deprecated
-	public long toCurrency() {
-		changeType(Variant.VariantCurrency);
-		return getCurrency();
+	public short getShortRef() {
+		if ((this.getvt() & VariantShort) == VariantShort
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantShortRef();
+		} else {
+			throw new IllegalStateException(
+					"getShortRef() only legal on byRef Variants of type VariantShort, not "
+							+ this.getvt());
+		}
 	}
 
 	/**
-	 * @deprecated superseded by SafeArray
-	 * @param in
-	 *            doesn't matter because this method does nothing
-	 * @throws com.jacob.com.NotImplementedException
+	 * 
+	 * @return string contents of the variant.
+	 * @throws IllegalStateException
+	 *             if this variant is not of type String
 	 */
-	@Deprecated
-	public void putVariantArray(Variant[] in) {
-		throw new NotImplementedException("Not implemented");
+	public String getString() {
+		if (getvt() == Variant.VariantString) {
+			return getVariantString();
+		} else {
+			throw new IllegalStateException(
+					"getString() only legal on Variants of type VariantString, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * gets the content of the variant as a string ref
+	 * 
+	 * @return String retrieved from the COM area.
+	 * @throws IllegalStateException
+	 *             if variant is not of the requested type
+	 */
+	public String getStringRef() {
+		if ((this.getvt() & VariantString) == VariantString
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			return getVariantStringRef();
+		} else {
+			throw new IllegalStateException(
+					"getStringRef() only legal on byRef Variants of type VariantString, not "
+							+ this.getvt());
+		}
+	}
+
+	/**
+	 * Used to get the value from a windows type of VT_VARIANT or a jacob
+	 * Variant type of VariantVariant. Added 1.12 pre 6 - VT_VARIANT support is
+	 * at an alpha level
+	 * 
+	 * @return Object a java Object that represents the content of the enclosed
+	 *         Variant
+	 */
+	public Object getVariant() {
+		if ((this.getvt() & VariantVariant) == VariantVariant
+				&& (this.getvt() & VariantByref) == VariantByref) {
+			if (JacobObject.isDebugEnabled()) {
+				JacobObject.debug("About to call getVariantVariant()");
+			}
+			Variant enclosedVariant = new Variant();
+			int enclosedVariantMemory = getVariantVariant();
+			enclosedVariant.m_pVariant = enclosedVariantMemory;
+			Object enclosedVariantAsJava = enclosedVariant.toJavaObject();
+			// zero out the reference to the underlying windows memory so that
+			// it is still only owned in one place by one java object
+			// (this object of type VariantVariant)
+			// enclosedVariant.putEmpty(); // don't know if this would have had
+			// side effects
+			if (JacobObject.isDebugEnabled()) {
+				JacobObject
+						.debug("Zeroing out enclosed Variant's ref to windows memory");
+			}
+			enclosedVariant.m_pVariant = 0;
+			return enclosedVariantAsJava;
+		} else {
+			throw new IllegalStateException(
+					"getVariant() only legal on Variants of type VariantVariant, not "
+							+ this.getvt());
+		}
 	}
 
 	/**
@@ -272,16 +852,252 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * Exists to support jacobgen. This would be deprecated if it weren't for
-	 * jacobgen
-	 * 
-	 * @deprecated superseded by "this"
-	 * @return this same object
+	 * @return the Variant Array that represents the data in the Variant
+	 * @deprecated superseded by SafeArray
+	 * @throws com.jacob.com.NotImplementedException
 	 */
 	@Deprecated
-	public Variant toVariant() {
-		return this;
+	public Variant[] getVariantArrayRef() {
+		throw new NotImplementedException("Not implemented");
 	}
+
+	/**
+	 * 
+	 * @return the value in this Variant as a boolean, null if not a boolean
+	 */
+	private native boolean getVariantBoolean();
+
+	private native boolean getVariantBooleanRef();
+
+	/**
+	 * @return the value in this Variant as a byte, null if not a byte
+	 */
+	private native byte getVariantByte();
+
+	/**
+	 * @return the value in this Variant as a byte, null if not a byte
+	 */
+	private native byte getVariantByteRef();
+
+	/**
+	 * @return the value in this Variant as a long, null if not a long
+	 */
+	private native long getVariantCurrency();
+
+	/**
+	 * @return the value in this Variant as a long, null if not a long
+	 */
+	private native long getVariantCurrencyRef();
+
+	/**
+	 * @return double return the date (as a double) value held in this variant
+	 *         (fails on other types?)
+	 */
+	private native double getVariantDate();
+
+	/**
+	 * get the content of this variant as a double representing a date
+	 * 
+	 * @return double
+	 */
+	private native double getVariantDateRef();
+
+	/**
+	 * @return the value in this Variant as a decimal, null if not a decimal
+	 */
+	private native Object getVariantDec();
+
+	/**
+	 * @return the value in this Variant (byref) as a decimal, null if not a
+	 *         decimal
+	 */
+	private native Object getVariantDecRef();
+
+	/**
+	 * @return double get the content of this variant as a double
+	 */
+	private native double getVariantDouble();
+
+	/**
+	 * @return double get the content of this variant as a double
+	 */
+	private native double getVariantDoubleRef();
+
+	private native int getVariantError();
+
+	private native int getVariantErrorRef();
+
+	/**
+	 * @return returns the value as a float if the type is of type float
+	 */
+	private native float getVariantFloat();
+
+	/**
+	 * @return returns the value as a float if the type is of type float
+	 */
+	private native float getVariantFloatRef();
+
+	/**
+	 * @return the int value held in this variant (fails on other types?)
+	 */
+	private native int getVariantInt();
+
+	/**
+	 * @return the int value held in this variant (fails on other types?)
+	 */
+	private native int getVariantIntRef();
+
+	/**
+	 * @return the value in this Variant as a long, null if not a long
+	 */
+	private native long getVariantLong();
+
+	/**
+	 * @return the value in this Variant as a long, null if not a long
+	 */
+	private native long getVariantLongRef();
+
+	/**
+	 * get the content of this variant as a short
+	 * 
+	 * @return short
+	 */
+	private native short getVariantShort();
+
+	/**
+	 * @return short the content of this variant as a short
+	 */
+	private native short getVariantShortRef();
+
+	/**
+	 * Native method that actually extracts a string value from the variant
+	 * 
+	 * @return
+	 */
+	private native String getVariantString();
+
+	/**
+	 * @return String the content of this variant as a string
+	 */
+	private native String getVariantStringRef();
+
+	/**
+	 * Returns the variant type via a native method call
+	 * 
+	 * @return short one of the VT_xx types
+	 */
+	private native short getVariantType();
+
+	/**
+	 * Returns the variant type via a native method call. Added 1.12 pre 6 -
+	 * VT_VARIANT support is at an alpha level
+	 * 
+	 * @return Variant one of the VT_Variant types
+	 */
+	private native int getVariantVariant();
+
+	/**
+	 * Reports the type of the underlying Variant object
+	 * 
+	 * @return returns the variant type as a short, one of the Variantxxx values
+	 *         defined as statics in this class. returns VariantNull if not
+	 *         initialized
+	 * @throws IllegalStateException
+	 *             if there is no underlying windows data structure
+	 */
+	public short getvt() {
+		if (m_pVariant != 0) {
+			return getVariantType();
+		} else {
+			throw new IllegalStateException("uninitialized Variant");
+		}
+	}
+
+	/**
+	 * initializes the COM Variant and puts its reference in this instance
+	 */
+	protected native void init();
+
+	/**
+	 * 
+	 * @return returns true if the variant is considered null
+	 * @throws IllegalStateException
+	 *             if there is no underlying windows memory
+	 */
+	public boolean isNull() {
+		getvt();
+		return isVariantConsideredNull();
+	}
+
+	/**
+	 * is the variant null or empty or error or null dispatch
+	 * 
+	 * @return true if it is null or false if not
+	 */
+	private native boolean isVariantConsideredNull();
+
+	/**
+	 * sets the type to VT_ERROR and the error message to DISP_E_PARAMNOTFOIUND
+	 * 
+	 * @deprecated replaced by putNoParam()
+	 */
+	@Deprecated
+	public void noParam() {
+		putNoParam();
+	}
+
+	/**
+	 * returns true if the passed in Variant is a constant that should not be
+	 * freed
+	 * 
+	 * @param pVariant
+	 * @return boolean that is true if Variant is a type of constant, VT_FALSE,
+	 *         VT_TRUE, VT_MISSING, DEFAULT
+	 */
+	protected boolean objectIsAConstant(Variant pVariant) {
+		if (pVariant == VT_FALSE || pVariant == VT_TRUE
+				|| pVariant == VT_MISSING || pVariant == DEFAULT) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	/**
+	 * puts a boolean into the variant and sets it's type
+	 * 
+	 * @param in
+	 *            the new value
+	 */
+	public void putBoolean(boolean in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantBoolean(in);
+	}
+
+	/**
+	 * pushes a boolean into the variant by ref and sets the type of the variant
+	 * to boolean
+	 * 
+	 * @param in
+	 */
+	public void putBooleanRef(boolean in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantBooleanRef(in);
+	}
+
+	/**
+	 * pushes a byte into the varaint and sets the type
+	 * 
+	 * @param in
+	 */
+	public void putByte(byte in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantByte(in);
+	};
 
 	/**
 	 * @deprecated superseded by SafeArray
@@ -295,57 +1111,148 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * set the content of this variant to a short (VT_I2|VT_BYREF)
+	 * pushes a byte into the variant by ref and sets the type
 	 * 
 	 * @param in
 	 */
-	private native void putVariantShortRef(short in);
-
-	/**
-	 * set the content of this variant to a short (VT_I2|VT_BYREF)
-	 * 
-	 * @param in
-	 */
-	public void putShortRef(short in) {
-		// verify we aren't released
+	public void putByteRef(byte in) {
+		// verify we aren't released yet
 		getvt();
-		putVariantShortRef(in);
+		putVariantByteRef(in);
 	}
 
 	/**
-	 * set the content of this variant to an int (VT_I4|VT_BYREF)
-	 * 
 	 * @param in
+	 *            the object that would be wrapped by the Variant if this method
+	 *            was implemented
+	 * @deprecated superseded by SafeArray
+	 * @throws com.jacob.com.NotImplementedException
 	 */
-	private native void putVariantIntRef(int in);
-
-	/**
-	 * set the content of this variant to an int (VT_I4|VT_BYREF)
-	 * 
-	 * @param in
-	 */
-	public void putIntRef(int in) {
-		// verify we aren't released
-		getvt();
-		putVariantIntRef(in);
+	@Deprecated
+	public void putCharArray(Object in) {
+		throw new NotImplementedException("Not implemented");
 	}
 
 	/**
-	 * private JNI method called by putDecimalRef
+	 * Puts a value in as a currency and sets the variant type. MS Currency
+	 * objects are 64 bit fixed point numbers with 15 digits to the left and 4
+	 * to the right of the decimal place.
 	 * 
-	 * @param signum
-	 *            sign
-	 * @param scale
-	 *            BigDecimal's scale
-	 * @param lo
-	 *            low 32 bits
-	 * @param mid
-	 *            middle 32 bits
-	 * @param hi
-	 *            high 32 bits
+	 * @param in
+	 *            the long that will be put into the 64 bit currency object.
 	 */
-	private native void putVariantDecRef(int signum, byte scale, int lo,
-			int mid, int hi);
+	public void putCurrency(Currency in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantCurrency(in.longValue());
+	}
+
+	/**
+	 * Pushes a long into the variant as currency and sets the type. MS Currency
+	 * objects are 64 bit fixed point numbers with 15 digits to the left and 4
+	 * to the right of the decimal place.
+	 * 
+	 * @param in
+	 *            the long that will be put into the 64 bit currency object
+	 */
+	public void putCurrencyRef(Currency in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantCurrencyRef(in.longValue());
+	}
+
+	/**
+	 * converts a java date to a windows time and calls putDate(double) SF
+	 * 959382
+	 * 
+	 * @param inDate
+	 *            a Java date to be converted
+	 * @throws IllegalArgumentException
+	 *             if inDate = null
+	 */
+	public void putDate(Date inDate) {
+		if (inDate == null) {
+			throw new IllegalArgumentException(
+					"Cannot put null in as windows date");
+			// do nothing
+		} else {
+			putDate(DateUtilities.convertDateToWindowsTime(inDate));
+		}
+	}
+
+	/**
+	 * puts a windows date double into the variant and sets the type
+	 * 
+	 * @param in
+	 */
+	public void putDate(double in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantDate(in);
+	}
+
+	/**
+	 * converts a java date to a windows time and calls putDateRef(double) SF
+	 * 959382
+	 * 
+	 * @param inDate
+	 *            a Java date to be converted
+	 * @throws IllegalArgumentException
+	 *             if inDate = null
+	 */
+	public void putDateRef(Date inDate) {
+		if (inDate == null) {
+			throw new IllegalArgumentException(
+					"Cannot put null in as windows date");
+			// do nothing
+		} else {
+			putDateRef(DateUtilities.convertDateToWindowsTime(inDate));
+		}
+	}
+
+	/**
+	 * set the content of this variant to a date (VT_DATE|VT_BYREF)
+	 * 
+	 * @param in
+	 */
+	public void putDateRef(double in) {
+		// verify we aren't released
+		getvt();
+		putVariantDateRef(in);
+	}
+
+	/**
+	 * Set the value of this variant and set the type. This may throw exceptions
+	 * more often than the caller expects because most callers don't manage the
+	 * scale of their BigDecimal objects.
+	 * 
+	 * @param in
+	 *            the big decimal that will convert to the VT_DECIMAL type
+	 * @throws IllegalArgumentException
+	 *             if the scale is > 28, the maximum for VT_DECIMAL
+	 */
+	public void putDecimal(BigDecimal in) {
+		// verify we aren't released yet
+		getvt();
+		if (in.scale() > 28) {
+			// should this really cast to a string and call putStringRef()?
+			throw new IllegalArgumentException(
+					"VT_DECIMAL only supports a scale of 28 and the passed"
+							+ " in value has a scale of " + in.scale());
+		} else {
+			int sign = in.signum();
+			// MS decimals always have positive values with just the sign
+			// flipped
+			if (in.signum() < 0) {
+				in = in.negate();
+			}
+			byte scale = (byte) in.scale();
+			BigInteger unscaled = in.unscaledValue();
+			BigInteger shifted = unscaled.shiftRight(32);
+			putVariantDec(sign, scale, unscaled.intValue(), shifted.intValue(),
+					shifted.shiftRight(32).intValue());
+		}
+	}
 
 	/**
 	 * Set the content of this variant to an decimal (VT_DECIMAL|VT_BYREF) This
@@ -381,11 +1288,36 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * set the content of this variant to a double (VT_R8|VT_BYREF)
+	 * This acts a cover for same as
+	 * 
+	 * Why isn't this typed as type Dispatch?
 	 * 
 	 * @param in
 	 */
-	private native void putVariantDoubleRef(double in);
+	public void putDispatch(Dispatch in) {
+		putVariantDispatch(in);
+	}
+
+	/**
+	 * Dispatch and dispatchRef are treated the same This is a cover for
+	 * putVariantDispatch(). Dispatch and dispatchRef are treated the same
+	 * 
+	 * @param in
+	 */
+	public void putDispatchRef(Dispatch in) {
+		putVariantDispatch(in);
+	}
+
+	/**
+	 * wraps this Variant around the passed in double.
+	 * 
+	 * @param in
+	 */
+	public void putDouble(double in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantDouble(in);
+	}
 
 	/**
 	 * set the content of this variant to a double (VT_R8|VT_BYREF)
@@ -399,48 +1331,217 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * set the content of this variant to a date (VT_DATE|VT_BYREF)
+	 * sets the type to VariantEmpty
 	 * 
-	 * @param in
 	 */
-	private native void putVariantDateRef(double in);
+	public void putEmpty() {
+		// verify we aren't released yet
+		getvt();
+		putVariantEmpty();
+	}
 
 	/**
-	 * set the content of this variant to a date (VT_DATE|VT_BYREF)
+	 * puts an error code (I think) into the variant and sets the type
 	 * 
 	 * @param in
 	 */
-	public void putDateRef(double in) {
+	public void putError(int in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantError(in);
+	}
+
+	/**
+	 * pushes an error code into the variant by ref and sets the type
+	 * 
+	 * @param in
+	 */
+	public void putErrorRef(int in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantErrorRef(in);
+	}
+
+	/**
+	 * fills the Variant with a float and sets the type to float
+	 * 
+	 * @param in
+	 */
+	public void putFloat(float in) {
+		// verify we haven't been released yet
+		getvt();
+		putVariantFloat(in);
+	}
+
+	/**
+	 * pushes a float into the variant and sets the type
+	 * 
+	 * @param in
+	 */
+	public void putFloatRef(float in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantFloatRef(in);
+	}
+
+	/**
+	 * set the value of this variant and set the type
+	 * 
+	 * @param in
+	 */
+	public void putInt(int in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantInt(in);
+	}
+
+	/**
+	 * set the content of this variant to an int (VT_I4|VT_BYREF)
+	 * 
+	 * @param in
+	 */
+	public void putIntRef(int in) {
 		// verify we aren't released
 		getvt();
-		putVariantDateRef(in);
+		putVariantIntRef(in);
 	}
 
 	/**
-	 * converts a java date to a windows time and calls putDateRef(double) SF
-	 * 959382
+	 * Puts a 64 bit Java Long into a 64 bit Variant Long. Only works on x64
+	 * systems otherwise throws an error. 64 bit long support added 1.14
 	 * 
-	 * @param inDate
-	 *            a Java date to be converted
-	 * @throws IllegalArgumentException
-	 *             if inDate = null
+	 * @param in
+	 *            the long that will be put into the 64 bit Long object.
 	 */
-	public void putDateRef(Date inDate) {
-		if (inDate == null) {
-			throw new IllegalArgumentException(
-					"Cannot put null in as windows date");
-			// do nothing
-		} else {
-			putDateRef(DateUtilities.convertDateToWindowsTime(inDate));
-		}
+	public void putLong(long in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantLong(in);
 	}
 
 	/**
-	 * set the content of this variant to a string (VT_BSTR|VT_BYREF)
+	 * Puts a 64 bit Java Long into a 64 bit Variant Long. Only works on x64
+	 * systems otherwise throws an error. 64 bit long support added 1.14
+	 * 
+	 * @param in
+	 *            the long that will be put into the 64 bit Long object.
+	 */
+	public void putLongRef(long in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantLongRef(in);
+	}
+
+	/**
+	 * sets the type to VT_ERROR and the error message to DISP_E_PARAMNOTFOIUND
+	 */
+	public void putNoParam() {
+		// verify we aren't released yet
+		getvt();
+		putVariantNoParam();
+	}
+
+	/**
+	 * Sets the type to VariantDispatch and sets the value to null Equivalent to
+	 * VB's nothing
+	 */
+	public void putNothing() {
+		// verify we aren't released yet
+		getvt();
+		putVariantNothing();
+	}
+
+	/**
+	 * Set this Variant's type to VT_NULL (the VB equivalent of NULL)
+	 */
+	public void putNull() {
+		// verify we aren't released yet
+		getvt();
+		putVariantNull();
+	}
+
+	/**
+	 * Puts an object into the Variant -- converts to Dispatch. Acts as a cover
+	 * for putVariantDispatch(); This primarily exists to support jacobgen. This
+	 * should be deprecated.
+	 * 
+	 * @param in
+	 *            the object we are putting into the Variant, assumes a
+	 * @see Variant#putDispatch(Dispatch)
+	 * @deprecated should use putDispatch()
+	 */
+	@Deprecated
+	public void putObject(Object in) {
+		// this should verify in instanceof Dispatch
+		putVariantDispatch(in);
+	}
+
+	/**
+	 * Just a cover for putObject(). We shouldn't accept any old random object.
+	 * This has been left in to support jacobgen. This should be deprecated.
+	 * 
+	 * @param in
+	 * @deprecated
+	 */
+	@Deprecated
+	public void putObjectRef(Object in) {
+		putObject(in);
+	}
+
+	/**
+	 * have no idea...
 	 * 
 	 * @param in
 	 */
-	private native void putVariantStringRef(String in);
+	public void putSafeArray(SafeArray in) {
+		// verify we haven't been released yet
+		getvt();
+		putVariantSafeArray(in);
+	}
+
+	/**
+	 * have no idea...
+	 * 
+	 * @param in
+	 */
+	public void putSafeArrayRef(SafeArray in) {
+		// verify we haven't been released yet
+		getvt();
+		putVariantSafeArrayRef(in);
+	}
+
+	/**
+	 * set the content of this variant to a short (VT_I2)
+	 * 
+	 * @param in
+	 */
+	public void putShort(short in) {
+		// verify we aren't released
+		getvt();
+		putVariantShort(in);
+	}
+
+	/**
+	 * set the content of this variant to a short (VT_I2|VT_BYREF)
+	 * 
+	 * @param in
+	 */
+	public void putShortRef(short in) {
+		// verify we aren't released
+		getvt();
+		putVariantShortRef(in);
+	}
+
+	/**
+	 * put a string into the variant and set its type
+	 * 
+	 * @param in
+	 */
+	public void putString(String in) {
+		// verify we aren't released yet
+		getvt();
+		putVariantString(in);
+	}
 
 	/**
 	 * set the content of this variant to a string (VT_BSTR|VT_BYREF)
@@ -486,457 +1587,89 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * All VariantVariant type variants are BYREF.
-	 * 
-	 * Set the content of this variant to a string (VT_VARIANT|VT_BYREF).
-	 * 
-	 * Added 1.12 pre 6 - VT_VARIANT support is at an alpha level
-	 * 
-	 * @param in
-	 *            variant to be wrapped
-	 * 
-	 */
-	private native void putVariantVariant(Variant in);
-
-	/**
-	 * Used to get the value from a windows type of VT_VARIANT or a jacob
-	 * Variant type of VariantVariant. Added 1.12 pre 6 - VT_VARIANT support is
-	 * at an alpha level
-	 * 
-	 * @return Object a java Object that represents the content of the enclosed
-	 *         Variant
-	 */
-	public Object getVariant() {
-		if ((this.getvt() & VariantVariant) == VariantVariant
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			if (JacobObject.isDebugEnabled()) {
-				JacobObject.debug("About to call getVariantVariant()");
-			}
-			Variant enclosedVariant = new Variant();
-			int enclosedVariantMemory = getVariantVariant();
-			enclosedVariant.m_pVariant = enclosedVariantMemory;
-			Object enclosedVariantAsJava = enclosedVariant.toJavaObject();
-			// zero out the reference to the underlying windows memory so that
-			// it is still only owned in one place by one java object
-			// (this object of type VariantVariant)
-			// enclosedVariant.putEmpty(); // don't know if this would have had
-			// side effects
-			if (JacobObject.isDebugEnabled()) {
-				JacobObject
-						.debug("Zeroing out enclosed Variant's ref to windows memory");
-			}
-			enclosedVariant.m_pVariant = 0;
-			return enclosedVariantAsJava;
-		} else {
-			throw new IllegalStateException(
-					"getVariant() only legal on Variants of type VariantVariant, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * Returns the variant type via a native method call. Added 1.12 pre 6 -
-	 * VT_VARIANT support is at an alpha level
-	 * 
-	 * @return Variant one of the VT_Variant types
-	 */
-	private native int getVariantVariant();
-
-	/**
-	 * get the content of this variant as a short
-	 * 
-	 * @return short
-	 */
-	private native short getVariantShortRef();
-
-	/**
-	 * get the content of this variant as an int
-	 * 
-	 * @return int
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public short getShortRef() {
-		if ((this.getvt() & VariantShort) == VariantShort
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantShortRef();
-		} else {
-			throw new IllegalStateException(
-					"getShortRef() only legal on byRef Variants of type VariantShort, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * get the content of this variant as an int
-	 * 
-	 * @return int
-	 */
-	private native int getVariantIntRef();
-
-	/**
-	 * get the content of this variant as an int
-	 * 
-	 * @return int
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public int getIntRef() {
-		if ((this.getvt() & VariantInt) == VariantInt
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantIntRef();
-		} else {
-			throw new IllegalStateException(
-					"getIntRef() only legal on byRef Variants of type VariantInt, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * set the content of this variant to a short (VT_I2)
-	 * 
-	 * @param in
-	 */
-	private native void putVariantShort(short in);
-
-	/**
-	 * set the content of this variant to a short (VT_I2)
-	 * 
-	 * @param in
-	 */
-	public void putShort(short in) {
-		// verify we aren't released
-		getvt();
-		putVariantShort(in);
-	}
-
-	/**
-	 * get the content of this variant as a short
-	 * 
-	 * @return short
-	 */
-	private native short getVariantShort();
-
-	/**
-	 * return the int value held in this variant (fails on other types?)
-	 * 
-	 * @return int
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public short getShort() {
-		if (this.getvt() == VariantShort) {
-			return getVariantShort();
-		} else {
-			throw new IllegalStateException(
-					"getShort() only legal on Variants of type VariantShort, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * get the content of this variant as a double
-	 * 
-	 * @return double
-	 */
-	private native double getVariantDoubleRef();
-
-	/**
-	 * 
-	 * @return returns the double value, throws exception if not a Double type
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public double getDoubleRef() {
-		if ((this.getvt() & VariantDouble) == VariantDouble
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantDoubleRef();
-		} else {
-			throw new IllegalStateException(
-					"getDoubleRef() only legal on byRef Variants of type VariantDouble, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * get the content of this variant as a double representing a date
-	 * 
-	 * @return double
-	 */
-	private native double getVariantDateRef();
-
-	/**
-	 * 
-	 * @return returns the date value as a double, throws exception if not a
-	 *         date type
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public double getDateRef() {
-		if ((this.getvt() & VariantDate) == VariantDate
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantDateRef();
-		} else {
-			throw new IllegalStateException(
-					"getDateRef() only legal on byRef Variants of type VariantDate, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * returns the windows time contained in this Variant to a Java Date should
-	 * return null if this is not a date reference Variant SF 959382
-	 * 
-	 * @return java.util.Date
-	 */
-	public Date getJavaDateRef() {
-		double windowsDate = getDateRef();
-		if (windowsDate == 0) {
-			return null;
-		} else {
-			return DateUtilities.convertWindowsTimeToDate(windowsDate);
-		}
-	}
-
-	/**
-	 * get the content of this variant as a string
-	 * 
-	 * @return String
-	 */
-	private native String getVariantStringRef();
-
-	/**
-	 * gets the content of the variant as a string ref
-	 * 
-	 * @return String retrieved from the COM area.
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public String getStringRef() {
-		if ((this.getvt() & VariantString) == VariantString
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantStringRef();
-		} else {
-			throw new IllegalStateException(
-					"getStringRef() only legal on byRef Variants of type VariantString, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
 	 * @deprecated superseded by SafeArray
-	 * @return never returns anything
+	 * @param in
+	 *            doesn't matter because this method does nothing
 	 * @throws com.jacob.com.NotImplementedException
 	 */
 	@Deprecated
-	public Object toCharArray() {
+	public void putVariantArray(Variant[] in) {
 		throw new NotImplementedException("Not implemented");
 	}
 
 	/**
-	 * Clear the content of this variant
+	 * @param in
+	 *            the thing that would be come an array if this method was
+	 *            implemented
+	 * @deprecated superseded by SafeArray
+	 * @throws com.jacob.com.NotImplementedException
 	 */
-	public native void VariantClear();
-
-	/**
-	 * @return the content of this variant as a Dispatch object (after possible
-	 *         conversion)
-	 */
-	public Dispatch toDispatch() {
-		// now make the native call
-		return toVariantDispatch();
+	@Deprecated
+	public void putVariantArrayRef(Variant[] in) {
+		throw new NotImplementedException("Not implemented");
 	}
 
 	/**
-	 * native method used by toDispatch()
+	 * puts a boolean into the variant and sets it's type
 	 * 
-	 * @return
+	 * @param in
+	 *            the new value
 	 */
-	private native Dispatch toVariantDispatch();
+	private native void putVariantBoolean(boolean in);
 
 	/**
-	 * this returns null
+	 * puts a boolean into the variant and sets it's type
 	 * 
-	 * @return ?? comment says null?
+	 * @param in
+	 *            the new value
 	 */
-	public native Object clone();
+	private native void putVariantBooleanRef(boolean in);
 
 	/**
-	 * This method now correctly implements java toString() semantics Attempts
-	 * to return the content of this variant as a string
-	 * <ul>
-	 * <li>"not initialized" if not initialized
-	 * <li>"null" if VariantEmpty,
-	 * <li>"null" if VariantError
-	 * <li>"null" if VariantNull
-	 * <li>the value if we know how to describe one of that type
-	 * <li>three question marks if can't convert
+	 * puts a byte into the variant and sets it's type
 	 * 
-	 * @return String value conversion,
-	 * @throws IllegalStateException
-	 *             if there is no underlying windows data structure
+	 * @param in
+	 *            the new value
 	 */
-	public String toString() {
-		try {
-			// see if we are in a legal state
-			getvt();
-		} catch (IllegalStateException ise) {
-			return "";
-		}
-		if (getvt() == VariantEmpty || getvt() == VariantError
-				|| getvt() == VariantNull) {
-			return "null";
-		}
-		if (getvt() == VariantString) {
-			return getString();
-		}
-		try {
-			Object foo = toJavaObject();
-			// rely on java objects to do the right thing
-			return foo.toString();
-		} catch (NotImplementedException nie) {
-			// some types do not generate a good description yet
-			return "Description not available for type: " + getvt();
-		}
-	}
+	private native void putVariantByte(byte in);
 
 	/**
-	 * return the int value held in this variant (fails on other types?)
+	 * puts a byte into the variant and sets it's type
 	 * 
-	 * @return int
+	 * @param in
+	 *            the new value
 	 */
-	private native int getVariantInt();
+	private native void putVariantByteRef(byte in);
 
 	/**
-	 * return the int value held in this variant if it is an int or a short.
-	 * Throws for other types.
+	 * puts a Currency into the variant and sets it's type
 	 * 
-	 * @return int contents of the windows memory
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
+	 * @param in
+	 *            the new value
 	 */
-	public int getInt() {
-		if (this.getvt() == VariantInt) {
-			return getVariantInt();
-		} else if (this.getvt() == VariantShort) {
-			return getVariantShort();
-		} else {
-			throw new IllegalStateException(
-					"getInt() only legal on Variants of type VariantInt, not "
-							+ this.getvt());
-		}
-	}
+	private native void putVariantCurrency(long in);
 
 	/**
-	 * @return double return the date (as a double) value held in this variant
-	 *         (fails on other types?)
-	 */
-	private native double getVariantDate();
-
-	/**
-	 * @return double return the date (as a double) value held in this variant
-	 *         (fails on other types?)
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public double getDate() {
-		if (this.getvt() == VariantDate) {
-			return getVariantDate();
-		} else {
-			throw new IllegalStateException(
-					"getDate() only legal on Variants of type VariantDate, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * returns the windows time contained in this Variant to a Java Date. should
-	 * return null if this is not a date Variant SF 959382
+	 * puts a Currency into the variant and sets it's type
 	 * 
-	 * @return java.util.Date returns the date if this is a VariantDate != 0,
-	 *         null if it is a VariantDate == 0 and throws an
-	 *         IllegalStateException if this isn't a date.
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
+	 * @param in
+	 *            the new value
 	 */
-	public Date getJavaDate() {
-		Date returnDate = null;
-		if (getvt() == VariantDate) {
-			double windowsDate = getDate();
-			if (windowsDate != 0) {
-				returnDate = DateUtilities.convertWindowsTimeToDate(getDate());
-			}
-		} else {
-			throw new IllegalStateException(
-					"getJavaDate() only legal on Variants of type VariantDate, not "
-							+ this.getvt());
-		}
-		return returnDate;
-	}
+	private native void putVariantCurrencyRef(long in);
 
 	/**
-	 * set the value of this variant and set the type
+	 * set the value of this variant
 	 * 
 	 * @param in
 	 */
-	private native void putVariantInt(int in);
+	private native void putVariantDate(double in);
 
 	/**
-	 * set the value of this variant and set the type
+	 * set the content of this variant to a date (VT_DATE|VT_BYREF)
 	 * 
 	 * @param in
 	 */
-	public void putInt(int in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantInt(in);
-	}
-
-	/**
-	 * @return the value in this Variant as a decimal, null if not a decimal
-	 */
-	private native Object getVariantDec();
-
-	/**
-	 * @return the value in this Variant (byref) as a decimal, null if not a
-	 *         decimal
-	 */
-	private native Object getVariantDecRef();
-
-	/**
-	 * return the BigDecimal value held in this variant (fails on other types)
-	 * 
-	 * @return BigDecimal
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public BigDecimal getDecimal() {
-		if (this.getvt() == VariantDecimal) {
-			return (BigDecimal) (getVariantDec());
-		} else {
-			throw new IllegalStateException(
-					"getDecimal() only legal on Variants of type VariantDecimal, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * return the BigDecimal value held in this variant (fails on other types)
-	 * 
-	 * @return BigDecimal
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public BigDecimal getDecimalRef() {
-		if ((this.getvt() & VariantDecimal) == VariantDecimal
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return (BigDecimal) (getVariantDecRef());
-		} else {
-			throw new IllegalStateException(
-					"getDecimalRef() only legal on byRef Variants of type VariantDecimal, not "
-							+ this.getvt());
-		}
-	}
+	private native void putVariantDateRef(double in);
 
 	/**
 	 * private JNI method called by putDecimal
@@ -956,341 +1689,21 @@ public class Variant extends JacobObject {
 			int hi);
 
 	/**
-	 * Set the value of this variant and set the type. This may throw exceptions
-	 * more often than the caller expects because most callers don't manage the
-	 * scale of their BigDecimal objects.
+	 * private JNI method called by putDecimalRef
 	 * 
-	 * @param in
-	 *            the big decimal that will convert to the VT_DECIMAL type
-	 * @throws IllegalArgumentException
-	 *             if the scale is > 28, the maximum for VT_DECIMAL
+	 * @param signum
+	 *            sign
+	 * @param scale
+	 *            BigDecimal's scale
+	 * @param lo
+	 *            low 32 bits
+	 * @param mid
+	 *            middle 32 bits
+	 * @param hi
+	 *            high 32 bits
 	 */
-	public void putDecimal(BigDecimal in) {
-		// verify we aren't released yet
-		getvt();
-		if (in.scale() > 28) {
-			// should this really cast to a string and call putStringRef()?
-			throw new IllegalArgumentException(
-					"VT_DECIMAL only supports a scale of 28 and the passed"
-							+ " in value has a scale of " + in.scale());
-		} else {
-			int sign = in.signum();
-			// MS decimals always have positive values with just the sign
-			// flipped
-			if (in.signum() < 0) {
-				in = in.negate();
-			}
-			byte scale = (byte) in.scale();
-			BigInteger unscaled = in.unscaledValue();
-			BigInteger shifted = unscaled.shiftRight(32);
-			putVariantDec(sign, scale, unscaled.intValue(), shifted.intValue(),
-					shifted.shiftRight(32).intValue());
-		}
-	}
-
-	/**
-	 * set the value of this variant
-	 * 
-	 * @param in
-	 */
-	private native void putVariantDate(double in);
-
-	/**
-	 * puts a windows date double into the variant and sets the type
-	 * 
-	 * @param in
-	 */
-	public void putDate(double in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantDate(in);
-	}
-
-	/**
-	 * converts a java date to a windows time and calls putDate(double) SF
-	 * 959382
-	 * 
-	 * @param inDate
-	 *            a Java date to be converted
-	 * @throws IllegalArgumentException
-	 *             if inDate = null
-	 */
-	public void putDate(Date inDate) {
-		if (inDate == null) {
-			throw new IllegalArgumentException(
-					"Cannot put null in as windows date");
-			// do nothing
-		} else {
-			putDate(DateUtilities.convertDateToWindowsTime(inDate));
-		}
-	}
-
-	/**
-	 * attempts to return the content of this variant as a double (after
-	 * possible conversion)
-	 * 
-	 * @deprecated should be replaced by changeType() followed by getByte()
-	 * @return byte
-	 */
-	@Deprecated
-	public byte toByte() {
-		changeType(Variant.VariantByte);
-		return getByte();
-	}
-
-	/**
-	 * cover for {@link #toDispatch()} This method now matches other getXXX()
-	 * methods. It throws an IllegalStateException if the object is not of type
-	 * VariantDispatch
-	 * 
-	 * @return this object as a dispatch
-	 * @throws IllegalStateException
-	 *             if wrong variant type
-	 */
-	public Dispatch getDispatch() {
-		if ((this.getvt() & VariantDispatch) == VariantDispatch) {
-			return toDispatch();
-		} else {
-			throw new IllegalStateException(
-					"getDispatch() only legal on Variants of type VariantDispatch, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * This acts a cover for same as
-	 * 
-	 * Why isn't this typed as type Dispatch?
-	 * 
-	 * @param in
-	 */
-	public void putDispatch(Dispatch in) {
-		putVariantDispatch(in);
-	}
-
-	/**
-	 * 
-	 * @return the value in this Variant as a boolean, null if not a boolean
-	 */
-	private native boolean getVariantBoolean();
-
-	/**
-	 * 
-	 * @return returns the value as a boolean, throws an exception if its not.
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public boolean getBoolean() {
-		if (this.getvt() == VariantBoolean) {
-			return getVariantBoolean();
-		} else {
-			throw new IllegalStateException(
-					"getBoolean() only legal on Variants of type VariantBoolean, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * 
-	 * @return the value in this Variant as a byte, null if not a byte
-	 */
-	private native byte getVariantByte();
-
-	/**
-	 * 
-	 * @return returns the value as a boolean, throws an exception if its not.
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public byte getByte() {
-		if (this.getvt() == VariantByte) {
-			return getVariantByte();
-		} else {
-			throw new IllegalStateException(
-					"getByte() only legal on Variants of type VariantByte, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * puts a boolean into the variant and sets it's type
-	 * 
-	 * @param in
-	 *            the new value
-	 */
-	private native void putVariantBoolean(boolean in);
-
-	/**
-	 * puts a boolean into the variant and sets it's type
-	 * 
-	 * @param in
-	 *            the new value
-	 */
-	public void putBoolean(boolean in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantBoolean(in);
-	}
-
-	private native void putVariantByte(byte in);
-
-	/**
-	 * pushes a byte into the varaint and sets the type
-	 * 
-	 * @param in
-	 */
-	public void putByte(byte in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantByte(in);
-	}
-
-	/**
-	 * converts to an error type and returns the error
-	 * 
-	 * @deprecated should use changeType() followed by getError()
-	 * @return the error as an int (after conversion)
-	 */
-	@Deprecated
-	public int toError() {
-		changeType(Variant.VariantError);
-		return getError();
-	}
-
-	/**
-	 * Acts a a cover for toDispatch. This primarily exists to support jacobgen.
-	 * 
-	 * @deprecated this is a cover for toDispatch();
-	 * @return Object returned by toDispatch()
-	 * @see Variant#toDispatch() instead
-	 */
-	@Deprecated
-	public Object toObject() {
-		return toDispatch();
-	}
-
-	/**
-	 * Pointless method that was put here so that putEmpty() has a get method.
-	 * This would have returned null if the value was VT_EMPTY or if it wasn't
-	 * so it would have always returned the same value.
-	 * 
-	 * @deprecated method never did anything
-	 */
-	@Deprecated
-	public void getEmpty() {
-	};
-
-	/**
-	 * Sets the type to VariantEmpty. No values needed
-	 */
-	private native void putVariantEmpty();
-
-	/**
-	 * sets the type to VariantEmpty
-	 * 
-	 */
-	public void putEmpty() {
-		// verify we aren't released yet
-		getvt();
-		putVariantEmpty();
-	}
-
-	/**
-	 * Sets the type to VariantDispatch and sets the value to null Equivalent to
-	 * VB's nothing
-	 */
-	private native void putVariantNothing();
-
-	/**
-	 * Sets the type to VariantDispatch and sets the value to null Equivalent to
-	 * VB's nothing
-	 */
-	public void putNothing() {
-		// verify we aren't released yet
-		getvt();
-		putVariantNothing();
-	}
-
-	private native int getVariantError();
-
-	/**
-	 * @return double return the error value held in this variant (fails on
-	 *         other types?)
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public int getError() {
-		if (this.getvt() == VariantError) {
-			return getVariantError();
-		} else {
-			throw new IllegalStateException(
-					"getError() only legal on Variants of type VariantError, not "
-							+ this.getvt());
-		}
-	}
-
-	private native void putVariantError(int in);
-
-	/**
-	 * puts an error code (I think) into the variant and sets the type
-	 * 
-	 * @param in
-	 */
-	public void putError(int in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantError(in);
-	}
-
-	private native double getVariantDouble();
-
-	/**
-	 * @return double return the double value held in this variant (fails on
-	 *         other types?)
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public double getDouble() {
-		if (this.getvt() == VariantDouble) {
-			return getVariantDouble();
-		} else {
-			throw new IllegalStateException(
-					"getDouble() only legal on Variants of type VariantDouble, not "
-							+ this.getvt());
-		}
-	}
-
-	private native void putVariantCurrency(long in);
-
-	/**
-	 * Puts a value in as a currency and sets the variant type. MS Currency
-	 * objects are 64 bit fixed point numbers with 15 digits to the left and 4
-	 * to the right of the decimal place.
-	 * 
-	 * @param in
-	 *            the long that will be put into the 64 bit currency object.
-	 */
-	public void putCurrency(long in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantCurrency(in);
-	}
-
-	/**
-	 * Puts an object into the Variant -- converts to Dispatch. Acts as a cover
-	 * for putVariantDispatch(); This primarily exists to support jacobgen. This
-	 * should be deprecated.
-	 * 
-	 * @param in
-	 *            the object we are putting into the Variant, assumes a
-	 * @see Variant#putDispatch(Dispatch)
-	 * @deprecated should use putDispatch()
-	 */
-	@Deprecated
-	public void putObject(Object in) {
-		// this should verify in instanceof Dispatch
-		putVariantDispatch(in);
-	}
+	private native void putVariantDecRef(int signum, byte scale, int lo,
+			int mid, int hi);
 
 	/**
 	 * the JNI implementation for putDispatch() so that we can screen the
@@ -1304,382 +1717,20 @@ public class Variant extends JacobObject {
 	private native void putVariantDouble(double in);
 
 	/**
-	 * wraps this Variant around the passed in double.
+	 * set the content of this variant to a double (VT_R8|VT_BYREF)
 	 * 
 	 * @param in
 	 */
-	public void putDouble(double in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantDouble(in);
-	}
+	private native void putVariantDoubleRef(double in);
 
 	/**
-	 * 
-	 * @return the value in this Variant as a long, null if not a long
+	 * Sets the type to VariantEmpty. No values needed
 	 */
-	private native long getVariantCurrency();
+	private native void putVariantEmpty();
 
-	/**
-	 * MS Currency objects are 64 bit fixed point numbers with 15 digits to the
-	 * left and 4 to the right of the decimal place.
-	 * 
-	 * @return returns the currency value as a long, throws exception if not a
-	 *         currency type..
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public long getCurrency() {
-		if (this.getvt() == VariantCurrency) {
-			return getVariantCurrency();
-		} else {
-			throw new IllegalStateException(
-					"getCurrency() only legal on Variants of type VariantCurrency, not "
-							+ this.getvt());
-		}
-	}
-
-	private native void putVariantFloatRef(float in);
-
-	/**
-	 * pushes a float into the variant and sets the type
-	 * 
-	 * @param in
-	 */
-	public void putFloatRef(float in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantFloatRef(in);
-	}
-
-	private native void putVariantCurrencyRef(long in);
-
-	/**
-	 * Pushes a long into the variant as currency and sets the type. MS Currency
-	 * objects are 64 bit fixed point numbers with 15 digits to the left and 4
-	 * to the right of the decimal place.
-	 * 
-	 * @param in
-	 *            the long that will be put into the 64 bit currency object
-	 */
-	public void putCurrencyRef(long in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantCurrencyRef(in);
-	}
+	private native void putVariantError(int in);
 
 	private native void putVariantErrorRef(int in);
-
-	/**
-	 * pushes an error code into the variant by ref and sets the type
-	 * 
-	 * @param in
-	 */
-	public void putErrorRef(int in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantErrorRef(in);
-	}
-
-	private native void putVariantBooleanRef(boolean in);
-
-	/**
-	 * pushes a boolean into the variant by ref and sets the type of the variant
-	 * to boolean
-	 * 
-	 * @param in
-	 */
-	public void putBooleanRef(boolean in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantBooleanRef(in);
-	}
-
-	/**
-	 * Just a cover for putObject(). We shouldn't accept any old random object.
-	 * This has been left in to support jacobgen. This should be deprecated.
-	 * 
-	 * @param in
-	 * @deprecated
-	 */
-	@Deprecated
-	public void putObjectRef(Object in) {
-		putObject(in);
-	}
-
-	private native void putVariantByteRef(byte in);
-
-	/**
-	 * pushes a byte into the variant by ref and sets the type
-	 * 
-	 * @param in
-	 */
-	public void putByteRef(byte in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantByteRef(in);
-	}
-
-	/**
-	 * Native method that actually extracts a string value from the variant
-	 * 
-	 * @return
-	 */
-	private native String getVariantString();
-
-	/**
-	 * 
-	 * @return string contents of the variant.
-	 * @throws IllegalStateException
-	 *             if this variant is not of type String
-	 */
-	public String getString() {
-		if (getvt() == Variant.VariantString) {
-			return getVariantString();
-		} else {
-			throw new IllegalStateException(
-					"getString() only legal on Variants of type VariantString, not "
-							+ this.getvt());
-		}
-	}
-
-	private native void putVariantString(String in);
-
-	/**
-	 * put a string into the variant and set its type
-	 * 
-	 * @param in
-	 */
-	public void putString(String in) {
-		// verify we aren't released yet
-		getvt();
-		putVariantString(in);
-	}
-
-	private native float getVariantFloatRef();
-
-	/**
-	 * 
-	 * @return returns the float value, throws exception if not a Float type
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public float getFloatRef() {
-		if ((this.getvt() & VariantFloat) == VariantFloat
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantFloatRef();
-		} else {
-			throw new IllegalStateException(
-					"getFloatRef() only legal on byRef Variants of type VariantFloat, not "
-							+ this.getvt());
-		}
-	}
-
-	private native long getVariantCurrencyRef();
-
-	/**
-	 * MS Currency objects are 64 bit fixed point numbers with 15 digits to the
-	 * left and 4 to the right of the decimal place.
-	 * 
-	 * @return returns the currency value as a long, throws exception if not a
-	 *         currency type
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public long getCurrencyRef() {
-		if ((this.getvt() & VariantCurrency) == VariantCurrency
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantCurrencyRef();
-		} else {
-			throw new IllegalStateException(
-					"getCurrencyRef() only legal on byRef Variants of type VariantCurrency, not "
-							+ this.getvt());
-		}
-	}
-
-	private native int getVariantErrorRef();
-
-	/**
-	 * 
-	 * @return returns the error value as an int, throws exception if not a
-	 *         Error type
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public int getErrorRef() {
-		if ((this.getvt() & VariantError) == VariantError
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantErrorRef();
-		} else {
-			throw new IllegalStateException(
-					"getErrorRef() only legal on byRef Variants of type VariantError, not "
-							+ this.getvt());
-		}
-	}
-
-	private native boolean getVariantBooleanRef();
-
-	/**
-	 * public cover for native method
-	 * 
-	 * @return the boolean from a booleanRef
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public boolean getBooleanRef() {
-		if ((this.getvt() & VariantBoolean) == VariantBoolean
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantBooleanRef();
-		} else {
-			throw new IllegalStateException(
-					"getBooleanRef() only legal on byRef Variants of type VariantBoolean, not "
-							+ this.getvt());
-		}
-	}
-
-	private native byte getVariantByteRef();
-
-	/**
-	 * public cover for native method
-	 * 
-	 * @return the byte from a booleanRef
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public byte getByteRef() {
-		if ((this.getvt() & VariantByte) == VariantByte
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return getVariantByteRef();
-		} else {
-			throw new IllegalStateException(
-					"getByteRef() only legal on byRef Variants of type VariantByte, not "
-							+ this.getvt());
-		}
-	}
-
-	/**
-	 * attempts to return the contents of this variant as a float (after
-	 * possible conversion)
-	 * 
-	 * @deprecated should use changeType() and getFloat() instead
-	 * @return float
-	 */
-	@Deprecated
-	public float toFloat() {
-		changeType(Variant.VariantFloat);
-		return getFloat();
-	}
-
-	private native SafeArray toVariantSafeArray(boolean deepCopy);
-
-	/**
-	 * By default toSafeArray makes a deep copy due to the fact that this
-	 * Variant owns the embedded SafeArray and will destroy it when it gc's
-	 * calls toSafeArray(true).
-	 * 
-	 * @return the object converted to a SafeArray
-	 */
-	public SafeArray toSafeArray() {
-		// verify we haven't been released yet
-		getvt();
-		return toSafeArray(true);
-	}
-
-	/**
-	 * This lets folk turn into a safe array without a deep copy. Should this
-	 * API be public?
-	 * 
-	 * @param deepCopy
-	 * @return SafeArray constructed
-	 */
-	public SafeArray toSafeArray(boolean deepCopy) {
-		// verify we haven't been released yet
-		getvt();
-		return toVariantSafeArray(deepCopy);
-	}
-
-	private native void putVariantSafeArrayRef(SafeArray in);
-
-	/**
-	 * have no idea...
-	 * 
-	 * @param in
-	 */
-	public void putSafeArrayRef(SafeArray in) {
-		// verify we haven't been released yet
-		getvt();
-		putVariantSafeArrayRef(in);
-	}
-
-	private native void putVariantSafeArray(SafeArray in);
-
-	/**
-	 * have no idea...
-	 * 
-	 * @param in
-	 */
-	public void putSafeArray(SafeArray in) {
-		// verify we haven't been released yet
-		getvt();
-		putVariantSafeArray(in);
-	}
-
-	/**
-	 * sets the type to VT_ERROR and the error message to DISP_E_PARAMNOTFOIUND
-	 */
-	private native void putVariantNoParam();
-
-	/**
-	 * sets the type to VT_ERROR and the error message to DISP_E_PARAMNOTFOIUND
-	 */
-	public void putNoParam() {
-		// verify we aren't released yet
-		getvt();
-		putVariantNoParam();
-	}
-
-	/**
-	 * sets the type to VT_ERROR and the error message to DISP_E_PARAMNOTFOIUND
-	 * 
-	 * @deprecated replaced by putNoParam()
-	 */
-	@Deprecated
-	public void noParam() {
-		putNoParam();
-	}
-
-	/**
-	 * @param in
-	 *            the object that would be wrapped by the Variant if this method
-	 *            was implemented
-	 * @deprecated superseded by SafeArray
-	 * @throws com.jacob.com.NotImplementedException
-	 */
-	@Deprecated
-	public void putCharArray(Object in) {
-		throw new NotImplementedException("Not implemented");
-	}
-
-	/**
-	 * 
-	 * @return returns the value as a float if the type is of type float
-	 */
-	private native float getVariantFloat();
-
-	/**
-	 * @return returns the value as a float if the type is of type float
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
-	 */
-	public float getFloat() {
-		if (this.getvt() == VariantFloat) {
-			return getVariantFloat();
-		} else {
-			throw new IllegalStateException(
-					"getFloat() only legal on Variants of type VariantFloat, not "
-							+ this.getvt());
-		}
-	}
 
 	/**
 	 * fills the Variant with a float and sets the type to float
@@ -1688,272 +1739,88 @@ public class Variant extends JacobObject {
 	 */
 	private native void putVariantFloat(float in);
 
+	private native void putVariantFloatRef(float in);
+
 	/**
-	 * fills the Variant with a float and sets the type to float
+	 * set the value of this variant and set the type
 	 * 
 	 * @param in
 	 */
-	public void putFloat(float in) {
-		// verify we haven't been released yet
-		getvt();
-		putVariantFloat(in);
-	}
+	private native void putVariantInt(int in);
 
 	/**
-	 * Dispatch and dispatchRef are treated the same This is a cover for
-	 * putVariantDispatch(). Dispatch and dispatchRef are treated the same
+	 * set the content of this variant to an int (VT_I4|VT_BYREF)
 	 * 
 	 * @param in
 	 */
-	public void putDispatchRef(Dispatch in) {
-		putVariantDispatch(in);
-	}
+	private native void putVariantIntRef(int in);
+
+	private native void putVariantLong(long in);
+
+	private native void putVariantLongRef(long in);
 
 	/**
-	 * Dispatch and dispatchRef are treated the same This is just a cover for
-	 * toDispatch() with a flag check
-	 * 
-	 * @return the results of toDispatch()
-	 * @throws IllegalStateException
-	 *             if variant is not of the requested type
+	 * sets the type to VT_ERROR and the error message to DISP_E_PARAMNOTFOIUND
 	 */
-	public Dispatch getDispatchRef() {
-		if ((this.getvt() & VariantDispatch) == VariantDispatch
-				&& (this.getvt() & VariantByref) == VariantByref) {
-			return toDispatch();
-		} else {
-			throw new IllegalStateException(
-					"getDispatchRef() only legal on byRef Variants of type VariantDispatch, not "
-							+ this.getvt());
-		}
-	}
+	private native void putVariantNoParam();
 
 	/**
-	 * @param in
-	 *            the thing that would be come an array if this method was
-	 *            implemented
-	 * @deprecated superseded by SafeArray
-	 * @throws com.jacob.com.NotImplementedException
+	 * Sets the type to VariantDispatch and sets the value to null Equivalent to
+	 * VB's nothing
 	 */
-	@Deprecated
-	public void putVariantArrayRef(Variant[] in) {
-		throw new NotImplementedException("Not implemented");
-	}
+	private native void putVariantNothing();
 
 	/**
-	 * @return the Variant Array that represents the data in the Variant
-	 * @deprecated superseded by SafeArray
-	 * @throws com.jacob.com.NotImplementedException
+	 * Set this Variant's type to VT_NULL (the VB equivalent of NULL)
 	 */
-	@Deprecated
-	public Variant[] getVariantArrayRef() {
-		throw new NotImplementedException("Not implemented");
-	}
+	private native void putVariantNull();
+
+	private native void putVariantSafeArray(SafeArray in);
+
+	private native void putVariantSafeArrayRef(SafeArray in);
 
 	/**
-	 * Converts variant to the passed in type by converting the underlying
-	 * windows variant structure. private so folks use public java method
-	 * 
-	 * @param in
-	 *            the desired resulting type
-	 */
-	private native void changeVariantType(short in);
-
-	/**
-	 * Cover for native method so we can cover it.
-	 * <p>
-	 * This cannot convert an object to a byRef. It can convert from byref to
-	 * not byref
-	 * 
-	 * @param in
-	 *            type to convert this variant too
-	 * @return Variant returns this same object so folks can change when
-	 *         replacing calls toXXX() with changeType().getXXX()
-	 */
-	public Variant changeType(short in) {
-		changeVariantType(in);
-		return this;
-	}
-
-	/**
-	 * I don't know what this is. Is it some legacy (pre 1.8) thing?
-	 * 
-	 * @deprecated
-	 * @return this object as a dispatch object by calling toDispatch()
-	 */
-	@Deprecated
-	public Object toScriptObject() {
-		return toDispatch();
-	}
-
-	/**
-	 * public constructor, initializes and sets type to VariantEmpty
-	 */
-	public Variant() {
-		this(null, false);
-	}
-
-	/**
-	 * Constructor that accepts a primitive rather than an object
+	 * set the content of this variant to a short (VT_I2)
 	 * 
 	 * @param in
 	 */
-	public Variant(int in) {
-		this(new Integer(in));
-	}
+	private native void putVariantShort(short in);
 
 	/**
-	 * Constructor that accepts a primitive rather than an object
+	 * set the content of this variant to a short (VT_I2|VT_BYREF)
 	 * 
 	 * @param in
 	 */
-	public Variant(double in) {
-		this(new Double(in));
-	}
+	private native void putVariantShortRef(short in);
+
+	private native void putVariantString(String in);
 
 	/**
-	 * Constructor that accepts a primitive rather than an object
+	 * set the content of this variant to a string (VT_BSTR|VT_BYREF)
 	 * 
 	 * @param in
 	 */
-	public Variant(float in) {
-		this(new Float(in));
-	}
+	private native void putVariantStringRef(String in);
 
 	/**
-	 * Constructor that accepts a primitive rather than an object
+	 * All VariantVariant type variants are BYREF.
+	 * 
+	 * Set the content of this variant to a string (VT_VARIANT|VT_BYREF).
+	 * 
+	 * Added 1.12 pre 6 - VT_VARIANT support is at an alpha level
 	 * 
 	 * @param in
-	 */
-	public Variant(long in) {
-		this(new Long(in));
-	}
-
-	/**
-	 * Constructor that accepts a primitive rather than an object
+	 *            variant to be wrapped
 	 * 
-	 * @param in
 	 */
-	public Variant(boolean in) {
-		this(new Boolean(in));
-	}
+	private native void putVariantVariant(Variant in);
 
 	/**
-	 * Constructor that accepts a primitive rather than an object
-	 * 
-	 * @param in
-	 */
-	public Variant(short in) {
-		this(new Short(in));
-	}
-
-	/**
-	 * Constructor that accepts a primitive rather than an object
-	 * 
-	 * @param in
-	 */
-	public Variant(byte in) {
-		this(new Byte(in));
-	}
-
-	/**
-	 * Convenience constructor that calls the main one with a byRef value of
-	 * false
-	 * 
-	 * @param in
-	 *            object to be made into variant
-	 */
-	public Variant(Object in) {
-		this(in, false);
-	}
-
-	/**
-	 * Constructor that accepts the data object and information about whether
-	 * this is by reference or not. It calls the JavaVariantConverter to
-	 * actually push the data into the newly created Variant.
-	 * 
-	 * @param pValueObject
-	 *            The value object that will pushed down into windows memory. A
-	 *            null object sets this to "empty"
-	 * @param fByRef
-	 */
-	public Variant(Object pValueObject, boolean fByRef) {
-		init();
-		VariantUtilities.populateVariant(this, pValueObject, fByRef);
-	}
-
-	/**
-	 * Returns the variant type via a native method call
-	 * 
-	 * @return short one of the VT_xx types
-	 */
-	private native short getVariantType();
-
-	/**
-	 * Reports the type of the underlying Variant object
-	 * 
-	 * @return returns the variant type as a short, one of the Variantxxx values
-	 *         defined as statics in this class. returns VariantNull if not
-	 *         initialized
-	 * @throws IllegalStateException
-	 *             if there is no underlying windows data structure
-	 */
-	public short getvt() {
-		if (m_pVariant != 0) {
-			return getVariantType();
-		} else {
-			throw new IllegalStateException("uninitialized Variant");
-		}
-	}
-
-	/**
-	 * attempts to return the contents of this Variant as a short (after
-	 * possible conversion)
-	 * 
-	 * @deprecated callers should use changeType() followed by getShort()
-	 * @return short
-	 */
-	@Deprecated
-	public short toShort() {
-		this.changeType(Variant.VariantShort);
-		return getShort();
-	}
-
-	/**
-	 * now private so only this object can asccess was: call this to explicitly
+	 * now private so only this object can access was: call this to explicitly
 	 * release the com object before gc
 	 * 
 	 */
 	private native void release();
-
-	protected native void init();
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#finalize()
-	 */
-	protected void finalize() {
-		safeRelease();
-	}
-
-	/**
-	 * returns true if the passed in Variant is a constant that should not be
-	 * freed
-	 * 
-	 * @param pVariant
-	 * @return boolean that is true if Variant is a type of constant, VT_FALSE,
-	 *         VT_TRUE, VT_MISSING, DEFAULT
-	 */
-	protected boolean objectIsAConstant(Variant pVariant) {
-		if (pVariant == VT_FALSE || pVariant == VT_TRUE
-				|| pVariant == VT_MISSING || pVariant == DEFAULT) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
 
 	/**
 	 * This will release the "C" memory for the Variant unless this Variant is
@@ -1998,13 +1865,40 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * @deprecated superseded by SafeArray
-	 * @return nothing because this method is not implemented
-	 * @throws com.jacob.com.NotImplementedException
+	 * this is supposed to cause the underlying variant object struct to be
+	 * rebuilt from a previously serialized byte array.
+	 * 
+	 * @param ba
+	 */
+	protected native void SerializationReadFromBytes(byte[] ba);
+
+	/**
+	 * this is supposed to create a byte array that represents the underlying
+	 * variant object structure
+	 */
+	protected native byte[] SerializationWriteToBytes();
+
+	/**
+	 * @deprecated should be replaced by changeType() followed by getBoolean()
+	 * @return the value of this variant as boolean (after possible conversion)
 	 */
 	@Deprecated
-	public Variant[] toVariantArray() {
-		throw new NotImplementedException("Not implemented");
+	public boolean toBoolean() {
+		changeType(Variant.VariantBoolean);
+		return getBoolean();
+	}
+
+	/**
+	 * attempts to return the content of this variant as a double (after
+	 * possible conversion)
+	 * 
+	 * @deprecated should be replaced by changeType() followed by getByte()
+	 * @return byte
+	 */
+	@Deprecated
+	public byte toByte() {
+		changeType(Variant.VariantByte);
+		return getByte();
 	}
 
 	/**
@@ -2018,43 +1912,113 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * is the variant null or empty or error or null dispatch
-	 * 
-	 * @return true if it is null or false if not
+	 * @deprecated superseded by SafeArray
+	 * @return never returns anything
+	 * @throws com.jacob.com.NotImplementedException
 	 */
-	private native boolean isVariantConsideredNull();
-
-	/**
-	 * 
-	 * @return returns true if the variant is considered null
-	 * @throws IllegalStateException
-	 *             if there is no underlying windows memory
-	 */
-	public boolean isNull() {
-		getvt();
-		return isVariantConsideredNull();
+	@Deprecated
+	public Object toCharArray() {
+		throw new NotImplementedException("Not implemented");
 	}
 
 	/**
-	 * this is supposed to create a byte array that represents the underlying
-	 * variant object structure
+	 * @deprecated should be replaced by changeType() followed by getCurrency
+	 * @return the content of this variant as a long representing a monetary
+	 *         amount
 	 */
-	protected native byte[] SerializationWriteToBytes();
+	@Deprecated
+	public Currency toCurrency() {
+		changeType(Variant.VariantCurrency);
+		return getCurrency();
+	}
 
 	/**
-	 * this is supposed to cause the underlying variant object struct to be
-	 * rebuilt from a previously serialized byte array.
-	 * 
-	 * @param ba
+	 * @deprecated should use changeType() followed by getDate()
+	 * @return the value of this variant as a date (after possible conversion)
 	 */
-	protected native void SerializationReadFromBytes(byte[] ba);
+	@Deprecated
+	public double toDate() {
+		changeType(VariantDate);
+		return getDate();
+	}
 
-	/*
-	 * =====================================================================
-	 * 
-	 * 
-	 * =====================================================================
+	/**
+	 * @return the content of this variant as a Dispatch object (after possible
+	 *         conversion)
 	 */
+	public Dispatch toDispatch() {
+		// now make the native call
+		return toVariantDispatch();
+	}
+
+	/**
+	 * @deprecated should call changeType() then getDouble()
+	 * @return the content of this variant as a double (after possible
+	 *         conversion)
+	 */
+	@Deprecated
+	public double toDouble() {
+		changeType(Variant.VariantDouble);
+		return getDouble();
+	}
+
+	/** @return the value of this variant as an enumeration (java style) */
+	public native EnumVariant toEnumVariant();
+
+	/**
+	 * converts to an error type and returns the error
+	 * 
+	 * @deprecated should use changeType() followed by getError()
+	 * @return the error as an int (after conversion)
+	 */
+	@Deprecated
+	public int toError() {
+		changeType(Variant.VariantError);
+		return getError();
+	}
+
+	/**
+	 * attempts to return the contents of this variant as a float (after
+	 * possible conversion)
+	 * 
+	 * @deprecated should use changeType() and getFloat() instead
+	 * @return float
+	 */
+	@Deprecated
+	public float toFloat() {
+		changeType(Variant.VariantFloat);
+		return getFloat();
+	}
+
+	/**
+	 * @deprecated should use changeType() followed by getInt()
+	 * @return the value of this variant as an int (after possible conversion)
+	 */
+	@Deprecated
+	public int toInt() {
+		changeType(VariantInt);
+		return getInt();
+	}
+
+	/**
+	 * Returns the windows time contained in this Variant as a Java Date
+	 * converts to a date like many of the other toXXX() methods SF 959382.
+	 * <p>
+	 * This method added 12/2005 for possible use by jacobgen instead of its
+	 * conversion code
+	 * <p>
+	 * This does not convert the data
+	 * 
+	 * @deprecated callers should use getDate()
+	 * @return java.util.Date version of this variant if it is a date, otherwise
+	 *         null
+	 * 
+	 */
+	@Deprecated
+	public Date toJavaDate() {
+		changeType(Variant.VariantDate);
+		return getJavaDate();
+	}
 
 	/**
 	 * Convert a JACOB Variant value to a Java object (type conversions).
@@ -2074,5 +2038,149 @@ public class Variant extends JacobObject {
 	public Object toJavaObject() throws JacobException {
 		return VariantUtilities.variantToObject(this);
 	}
+
+	/**
+	 * Acts a a cover for toDispatch. This primarily exists to support jacobgen.
+	 * 
+	 * @deprecated this is a cover for toDispatch();
+	 * @return Object returned by toDispatch()
+	 * @see Variant#toDispatch() instead
+	 */
+	@Deprecated
+	public Object toObject() {
+		return toDispatch();
+	}
+
+	/**
+	 * By default toSafeArray makes a deep copy due to the fact that this
+	 * Variant owns the embedded SafeArray and will destroy it when it gc's
+	 * calls toSafeArray(true).
+	 * 
+	 * @return the object converted to a SafeArray
+	 */
+	public SafeArray toSafeArray() {
+		// verify we haven't been released yet
+		getvt();
+		return toSafeArray(true);
+	}
+
+	/**
+	 * This lets folk turn into a safe array without a deep copy. Should this
+	 * API be public?
+	 * 
+	 * @param deepCopy
+	 * @return SafeArray constructed
+	 */
+	public SafeArray toSafeArray(boolean deepCopy) {
+		// verify we haven't been released yet
+		getvt();
+		return toVariantSafeArray(deepCopy);
+	}
+
+	/**
+	 * I don't know what this is. Is it some legacy (pre 1.8) thing?
+	 * 
+	 * @deprecated
+	 * @return this object as a dispatch object by calling toDispatch()
+	 */
+	@Deprecated
+	public Object toScriptObject() {
+		return toDispatch();
+	}
+
+	/**
+	 * attempts to return the contents of this Variant as a short (after
+	 * possible conversion)
+	 * 
+	 * @deprecated callers should use changeType() followed by getShort()
+	 * @return short
+	 */
+	@Deprecated
+	public short toShort() {
+		this.changeType(Variant.VariantShort);
+		return getShort();
+	}
+
+	/**
+	 * This method now correctly implements java toString() semantics Attempts
+	 * to return the content of this variant as a string
+	 * <ul>
+	 * <li>"not initialized" if not initialized
+	 * <li>"null" if VariantEmpty,
+	 * <li>"null" if VariantError
+	 * <li>"null" if VariantNull
+	 * <li>the value if we know how to describe one of that type
+	 * <li>three question marks if can't convert
+	 * 
+	 * @return String value conversion,
+	 * @throws IllegalStateException
+	 *             if there is no underlying windows data structure
+	 */
+	public String toString() {
+		try {
+			// see if we are in a legal state
+			getvt();
+		} catch (IllegalStateException ise) {
+			return "";
+		}
+		if (getvt() == VariantEmpty || getvt() == VariantError
+				|| getvt() == VariantNull) {
+			return "null";
+		}
+		if (getvt() == VariantString) {
+			return getString();
+		}
+		try {
+			Object foo = toJavaObject();
+			// rely on java objects to do the right thing
+			return foo.toString();
+		} catch (NotImplementedException nie) {
+			// some types do not generate a good description yet
+			return "Description not available for type: " + getvt();
+		}
+	}
+
+	/**
+	 * Exists to support jacobgen. This would be deprecated if it weren't for
+	 * jacobgen
+	 * 
+	 * @deprecated superseded by "this"
+	 * @return this same object
+	 */
+	@Deprecated
+	public Variant toVariant() {
+		return this;
+	}
+
+	/**
+	 * @deprecated superseded by SafeArray
+	 * @return nothing because this method is not implemented
+	 * @throws com.jacob.com.NotImplementedException
+	 */
+	@Deprecated
+	public Variant[] toVariantArray() {
+		throw new NotImplementedException("Not implemented");
+	}
+
+	/**
+	 * native method used by toDispatch()
+	 * 
+	 * @return
+	 */
+	private native Dispatch toVariantDispatch();
+
+	private native SafeArray toVariantSafeArray(boolean deepCopy);
+
+	/*
+	 * =====================================================================
+	 * 
+	 * 
+	 * =====================================================================
+	 */
+
+	/**
+	 * Clear the content of this variant
+	 */
+	public native void VariantClear();
 
 }
