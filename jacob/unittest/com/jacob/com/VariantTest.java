@@ -1,6 +1,7 @@
 package com.jacob.com;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import com.jacob.test.BaseTestCase;
@@ -470,6 +471,41 @@ public class VariantTest extends BaseTestCase {
 			v.changeType(Variant.VariantDecimal);
 			assertTrue("Failed conversion of type back to Decimal ",
 					v.getvt() == Variant.VariantDecimal);
+		}
+
+	}
+
+	/**
+	 * for(BigDecimal i in 79228162514264337593543950330.0 ..
+	 * 79228162514264337593543950341.0) { com.jacob.com.Variant dv = new
+	 * com.jacob.com.Variant(i, false) println i + " : " + dv.getDecimal() }
+	 * 
+	 */
+	public void testLargeDecimals() {
+		// the largest decimal number, not in hex is
+		// 7922816251426433759354395033.0
+		BigInteger theStartDigits = new BigInteger("ffffffffffffffffffffff00",
+				16);
+		BigInteger theMaxDigits = new BigInteger("ffffffffffffffffffffffff", 16);
+		BigDecimal startDecimal = new BigDecimal(theStartDigits);
+		BigDecimal endDecimal = new BigDecimal(theMaxDigits);
+		BigDecimal incrementDecimal = new BigDecimal(1);
+		BigDecimal testDecimal = startDecimal;
+		while (endDecimal.compareTo(testDecimal) >= 0) {
+			// System.out.println("--->orig:" + testDecimal + "("
+			// + testDecimal.scale() + ")");
+			Variant testVariant = new Variant(testDecimal, false);
+			BigDecimal result = testVariant.getDecimal();
+			// System.out.println(" retreived:" + result + " ("
+			// + result.scale() + ")");
+			assertEquals(testDecimal, result);
+			testDecimal = testDecimal.add(incrementDecimal);
+		}
+		// test Decimal is now too large
+		try {
+			new Variant(testDecimal, false);
+		} catch (IllegalArgumentException iae) {
+			// System.out.println("Caught expected exception");
 		}
 
 	}
