@@ -1231,13 +1231,13 @@ public class Variant extends JacobObject {
 	 * There is 1 byte for the scale.
 	 * 
 	 * @param in
-	 *            the big decimal that will convert to the VT_DECIMAL type
+	 *            the BigDecimal that will be converted to VT_DECIMAL
 	 * @throws IllegalArgumentException
 	 *             if the scale is > 28, the maximum for VT_DECIMAL or if there
 	 *             are more than 12 bytes worth the digits
 	 */
 	public void putDecimal(BigDecimal in) {
-		// verify we aren't released yet
+		// verify we aren't released
 		getvt();
 		if (in.scale() > 28) {
 			// should this really cast to a string and call putStringRef()?
@@ -1246,13 +1246,12 @@ public class Variant extends JacobObject {
 							+ " in value has a scale of " + in.scale());
 		} else {
 			int sign = in.signum();
-			// MS decimals always have positive values with just the sign
+			// VT_DECIMAL always have positive values with just the sign
 			// flipped
 			if (in.signum() < 0) {
 				in = in.negate();
 			}
 			byte scale = (byte) in.scale();
-
 			BigInteger allWordBigInt = in.unscaledValue();
 			if (allWordBigInt.bitLength() > 12 * 8) {
 				throw new IllegalArgumentException(
@@ -1280,14 +1279,19 @@ public class Variant extends JacobObject {
 	}
 
 	/**
-	 * Set the content of this variant to an decimal (VT_DECIM AL|VT_BYREF) This
-	 * may throw exceptions more often than the caller expects because most
-	 * callers don't manage the scale of their BigDecimal objects.
+	 * Set the value of this variant and set the type. This may throw exceptions
+	 * more often than the caller expects because most callers don't manage the
+	 * scale of their BigDecimal objects.
+	 * <p>
+	 * There are 12 bytes available for the integer number.
+	 * <p>
+	 * There is 1 byte for the scale.
 	 * 
 	 * @param in
 	 *            the BigDecimal that will be converted to VT_DECIMAL
 	 * @throws IllegalArgumentException
-	 *             if the scale is > 28, the maximum for VT_DECIMAL
+	 *             if the scale is > 28, the maximum for VT_DECIMAL or if there
+	 *             are more than 12 bytes worth the digits
 	 */
 	public void putDecimalRef(BigDecimal in) {
 		// verify we aren't released
@@ -1299,16 +1303,35 @@ public class Variant extends JacobObject {
 							+ " in value has a scale of " + in.scale());
 		} else {
 			int sign = in.signum();
-			// MS decimals always have positive values with just the sign
+			// VT_DECIMAL always have positive values with just the sign
 			// flipped
 			if (in.signum() < 0) {
 				in = in.negate();
 			}
 			byte scale = (byte) in.scale();
-			BigInteger unscaled = in.unscaledValue();
-			BigInteger shifted = unscaled.shiftRight(32);
-			putVariantDecRef(sign, scale, unscaled.intValue(), shifted
-					.intValue(), shifted.shiftRight(32).intValue());
+			BigInteger allWordBigInt = in.unscaledValue();
+			if (allWordBigInt.bitLength() > 12 * 8) {
+				throw new IllegalArgumentException(
+						"VT_DECIMAL supports a maximum of "
+								+ 12
+								* 8
+								+ " bits not counting scale and the number passed in has "
+								+ allWordBigInt.bitLength());
+
+			}
+			int lowWord = allWordBigInt.intValue();
+			BigInteger middleWordBigInt = allWordBigInt.shiftRight(32);
+			int middleWord = middleWordBigInt.intValue();
+			BigInteger highWordBigInt = allWordBigInt.shiftRight(64);
+			int highWord = highWordBigInt.intValue();
+			// System.out.println(" Big:" + allWordBigInt.toString(16) + " , "
+			// + highWordBigInt.toString(16) + " , "
+			// + middleWordBigInt.toString(16) + "(" + scale + ")");
+			// System.out.println(" int:" + Integer.toHexString(highWord) + " ,
+			// "
+			// + Integer.toHexString(middleWord) + " , "
+			// + Integer.toHexString(lowWord) + "(" + scale + ")");
+			putVariantDecRef(sign, scale, lowWord, middleWord, highWord);
 		}
 	}
 
