@@ -461,16 +461,16 @@ public class VariantTest extends BaseTestCase {
 		for (int i = 10; i >= -10; i--) {
 			v.putDecimal(new BigDecimal(i));
 			// first see if we can get it back as decimal
-			assertEquals("conversion back to decimal failed ",
+			assertEquals("conversion back to decimal failed " + i,
 					new BigDecimal(i), v.getDecimal());
 			v.changeType(Variant.VariantFloat);
 			// now see if a float conversion would work
-			assertEquals("conversion to float failed ", new Float(i), v
+			assertEquals("conversion to float failed " + i, new Float(i), v
 					.getFloat());
 			// now convert it back to decimal for reassignment
 			v.changeType(Variant.VariantDecimal);
-			assertTrue("Failed conversion of type back to Decimal ",
-					v.getvt() == Variant.VariantDecimal);
+			assertTrue("Failed conversion of type back to Decimal " + i, v
+					.getvt() == Variant.VariantDecimal);
 		}
 
 	}
@@ -491,13 +491,10 @@ public class VariantTest extends BaseTestCase {
 		BigDecimal endDecimal = new BigDecimal(theMaxDigits);
 		BigDecimal incrementDecimal = new BigDecimal(1);
 		BigDecimal testDecimal = startDecimal;
+		Variant testVariant;
 		while (endDecimal.compareTo(testDecimal) >= 0) {
-			// System.out.println("--->orig:" + testDecimal + "("
-			// + testDecimal.scale() + ")");
-			Variant testVariant = new Variant(testDecimal, false);
+			testVariant = new Variant(testDecimal, false);
 			BigDecimal result = testVariant.getDecimal();
-			// System.out.println(" retreived:" + result + " ("
-			// + result.scale() + ")");
 			assertEquals(testDecimal, result);
 			testDecimal = testDecimal.add(incrementDecimal);
 		}
@@ -507,7 +504,35 @@ public class VariantTest extends BaseTestCase {
 		} catch (IllegalArgumentException iae) {
 			// System.out.println("Caught expected exception");
 		}
+		// lets try something different. we can call putVariant with rounding
+		// enabled
+		testVariant = new Variant();
+		testVariant.changeType(Variant.VariantDecimal);
+		try {
+			testVariant.putDecimal(endDecimal.setScale(30),
+					BigDecimal.ROUND_UNNECESSARY);
+			fail("Should have thrown exception with scale of 30 and no rounding");
+		} catch (IllegalArgumentException iae) {
+			// should have caught this exception
+		}
+		// now we test with a negative scale. Note that you can't do with
+		// without some magic, in this case scientific notation
+		try {
+			testVariant.putDecimal(new BigDecimal("700E24"));
+			assertTrue(new BigDecimal("700E24").compareTo(testVariant
+					.getDecimal()) == 0);
+		} catch (IllegalArgumentException iae) {
+			// should have caught this exception
+		}
 
+		testVariant.putDecimal(new BigDecimal("700E24"),
+				BigDecimal.ROUND_HALF_UP);
+		// use compareTo because it takes into account varying scales
+		assertTrue(new BigDecimal("700E24").compareTo(testVariant.getDecimal()) == 0);
+
+		// this should pass because we have rounding turned on
+		testVariant.putDecimal(endDecimal.setScale(30),
+				BigDecimal.ROUND_HALF_UP);
 	}
 
 	/**

@@ -21,6 +21,7 @@ package com.jacob.com;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.Date;
 
 /**
@@ -1221,39 +1222,74 @@ public class Variant extends JacobObject {
 		putVariantDateRef(in);
 	}
 
+	private static final BigDecimal LARGEST_DECIMAL = new BigDecimal(
+			new BigInteger("ffffffffffffffffffffffff", 16));
+	private static final BigDecimal SMALLIST_DECIMAL = new BigDecimal(
+			new BigInteger("ffffffffffffffffffffffff", 16).negate());
+
 	/**
-	 * Set the value of this variant and set the type. This may throw exceptions
-	 * more often than the caller expects because most callers don't manage the
-	 * scale of their BigDecimal objects.
-	 * <p>
-	 * There are 12 bytes available for the integer number.
-	 * <p>
-	 * There is 1 byte for the scale.
 	 * 
 	 * @param in
-	 *            the BigDecimal that will be converted to VT_DECIMAL
-	 * @throws IllegalArgumentException
-	 *             if the scale is > 28, the maximum for VT_DECIMAL or if there
-	 *             are more than 12 bytes worth the digits
+	 *            number to be made into VT_DECIMAL
+	 * @param byRef
+	 *            store by reference or not
+	 * @param roundingBehavior
+	 *            one of the BigDecimal ROUND_xxx methods. Any method other than
+	 *            ROUND_UNECESSARY means that the value will be rounded to fit
 	 */
-	public void putDecimal(BigDecimal in) {
+	private void putDecimal(BigDecimal in, boolean byRef, int roundingModel) {
+		boolean allowRounding;
+		if (roundingModel == BigDecimal.ROUND_UNNECESSARY) {
+			allowRounding = false;
+		} else {
+			allowRounding = true;
+		}
 		// verify we aren't released
 		getvt();
-		if (in.scale() > 28) {
-			// should this really cast to a string and call putStringRef()?
+		BigInteger allWordBigInt;
+		if (in == null) {
 			throw new IllegalArgumentException(
-					"VT_DECIMAL only supports a scale of 28 and the passed"
-							+ " in value has a scale of " + in.scale());
-		} else {
-			int sign = in.signum();
-			// VT_DECIMAL always have positive values with just the sign
-			// flipped
-			if (in.signum() < 0) {
-				in = in.negate();
+					"null is not a supported Decimal value.");
+		} else if (LARGEST_DECIMAL.compareTo(in) < 0) {
+			throw new IllegalArgumentException(
+					"Value too large for VT_DECIMAL data type:" + in.toString());
+		} else if (SMALLIST_DECIMAL.compareTo(in) > 0) {
+			throw new IllegalArgumentException(
+					"Value too small for VT_DECIMAL data type:" + in.toString());
+		}
+		allWordBigInt = in.unscaledValue();
+		if (allowRounding) {
+			// First limit the number of digits and then the precision.
+			// Try and round to 29 digits because we can sometimes do that
+			if (allWordBigInt.bitLength() > 96) {
+				in = in.round(new MathContext(29));
+				// see if 29 digits uses more than 96 bits
+				if (allWordBigInt.bitLength() > 96) {
+					// Dang. It was over 97 bits so shorten it one more digit to
+					// stay <= 96 bits
+					in = in.round(new MathContext(28));
+				}
 			}
-			byte scale = (byte) in.scale();
-			BigInteger allWordBigInt = in.unscaledValue();
-			if (allWordBigInt.bitLength() > 12 * 8) {
+			// round the scale to the max MS can support
+			if (in.scale() > 28) {
+				in = in.setScale(28, roundingModel);
+			}
+			if (in.scale() < 0) {
+				in = in.setScale(0, roundingModel);
+			}
+		} else {
+			// no rounding allowed
+			if (in.scale() > 28) {
+				// should this cast to a string and call putStringRef()?
+				throw new IllegalArgumentException(
+						"VT_DECIMAL only supports a maximum scale of 28 and the passed"
+								+ " in value has a scale of " + in.scale());
+			} else if (in.scale() < 0) {
+				// should this cast to a string and call putStringRef()?
+				throw new IllegalArgumentException(
+						"VT_DECIMAL only supports a minimum scale of 0 and the passed"
+								+ " in value has a scale of " + in.scale());
+			} else if (allWordBigInt.bitLength() > 12 * 8) {
 				throw new IllegalArgumentException(
 						"VT_DECIMAL supports a maximum of "
 								+ 12
@@ -1261,21 +1297,58 @@ public class Variant extends JacobObject {
 								+ " bits not counting scale and the number passed in has "
 								+ allWordBigInt.bitLength());
 
+			} else {
+				// no bounds problem to be handled
 			}
-			int lowWord = allWordBigInt.intValue();
-			BigInteger middleWordBigInt = allWordBigInt.shiftRight(32);
-			int middleWord = middleWordBigInt.intValue();
-			BigInteger highWordBigInt = allWordBigInt.shiftRight(64);
-			int highWord = highWordBigInt.intValue();
-			// System.out.println(" Big:" + allWordBigInt.toString(16) + " , "
-			// + highWordBigInt.toString(16) + " , "
-			// + middleWordBigInt.toString(16) + "(" + scale + ")");
-			// System.out.println(" int:" + Integer.toHexString(highWord) + " ,
-			// "
-			// + Integer.toHexString(middleWord) + " , "
-			// + Integer.toHexString(lowWord) + "(" + scale + ")");
+		}
+		// finally we can do what we actually came here to do
+		int sign = in.signum();
+		// VT_DECIMAL always has positive value with just the sign
+		// flipped
+		if (in.signum() < 0) {
+			in = in.negate();
+		}
+		// ugh, reusing allWordBigInt but now should always be positive
+		// and any round is applied
+		allWordBigInt = in.unscaledValue();
+		byte scale = (byte) in.scale();
+		int lowWord = allWordBigInt.intValue();
+		BigInteger middleWordBigInt = allWordBigInt.shiftRight(32);
+		int middleWord = middleWordBigInt.intValue();
+		BigInteger highWordBigInt = allWordBigInt.shiftRight(64);
+		int highWord = highWordBigInt.intValue();
+		if (byRef) {
+			putVariantDecRef(sign, scale, lowWord, middleWord, highWord);
+		} else {
 			putVariantDec(sign, scale, lowWord, middleWord, highWord);
 		}
+	}
+
+	/**
+	 * EXPERIMENTAL 1.14 feature to support rounded decimals.
+	 * <p>
+	 * Set the value of this variant and set the type. This may throw exceptions
+	 * more often than the caller expects because most callers don't manage the
+	 * scale of their BigDecimal objects.
+	 * <p>
+	 * This default set method throws exceptions if precision or size is out of
+	 * bounds
+	 * <p>
+	 * There are 12 bytes available for the integer number.
+	 * <p>
+	 * There is 1 byte for the scale.
+	 * 
+	 * @param in
+	 *            the BigDecimal that will be converted to VT_DECIMAL
+	 * @param roundingBehavior
+	 *            one of the BigDecimal ROUND_xxx methods. Any method other than
+	 *            ROUND_UNECESSARY means that the value will be roudned to fit
+	 * @throws IllegalArgumentException
+	 *             if the scale is > 28, the maximum for VT_DECIMAL or if there
+	 *             are more than 12 bytes worth the digits
+	 */
+	public void putDecimal(BigDecimal in) {
+		putDecimal(in, false, BigDecimal.ROUND_UNNECESSARY);
 	}
 
 	/**
@@ -1289,50 +1362,64 @@ public class Variant extends JacobObject {
 	 * 
 	 * @param in
 	 *            the BigDecimal that will be converted to VT_DECIMAL
+	 * @param roundingBehavior
+	 *            one of the BigDecimal ROUND_xxx methods. Any method other than
+	 *            ROUND_UNECESSARY means that the value will be roudned to fit
+	 * @throws IllegalArgumentException
+	 *             if the scale is > 28, the maximum for VT_DECIMAL or if there
+	 *             are more than 12 bytes worth the digits
+	 */
+	public void putDecimal(BigDecimal in, int roundingBehavior) {
+		putDecimal(in, false, roundingBehavior);
+	}
+
+	/**
+	 * Set the value of this variant and set the type. This may throw exceptions
+	 * more often than the caller expects because most callers don't manage the
+	 * scale of their BigDecimal objects.
+	 * <p>
+	 * This default set method throws exceptions if precision or size is out of
+	 * bounds
+	 * <p>
+	 * There are 12 bytes available for the integer number.
+	 * <p>
+	 * There is 1 byte for the scale.
+	 * 
+	 * @param in
+	 *            the BigDecimal that will be converted to VT_DECIMAL
+	 * @param roundingBehavior
+	 *            one of the BigDecimal ROUND_xxx methods. Any method other than
+	 *            ROUND_UNECESSARY means that the value will be roudned to fit
 	 * @throws IllegalArgumentException
 	 *             if the scale is > 28, the maximum for VT_DECIMAL or if there
 	 *             are more than 12 bytes worth the digits
 	 */
 	public void putDecimalRef(BigDecimal in) {
-		// verify we aren't released
-		getvt();
-		if (in.scale() > 28) {
-			// should this really cast to a string and call putStringRef()?
-			throw new IllegalArgumentException(
-					"VT_DECIMAL only supports a scale of 28 and the passed"
-							+ " in value has a scale of " + in.scale());
-		} else {
-			int sign = in.signum();
-			// VT_DECIMAL always have positive values with just the sign
-			// flipped
-			if (in.signum() < 0) {
-				in = in.negate();
-			}
-			byte scale = (byte) in.scale();
-			BigInteger allWordBigInt = in.unscaledValue();
-			if (allWordBigInt.bitLength() > 12 * 8) {
-				throw new IllegalArgumentException(
-						"VT_DECIMAL supports a maximum of "
-								+ 12
-								* 8
-								+ " bits not counting scale and the number passed in has "
-								+ allWordBigInt.bitLength());
+		putDecimal(in, true, BigDecimal.ROUND_UNNECESSARY);
+	}
 
-			}
-			int lowWord = allWordBigInt.intValue();
-			BigInteger middleWordBigInt = allWordBigInt.shiftRight(32);
-			int middleWord = middleWordBigInt.intValue();
-			BigInteger highWordBigInt = allWordBigInt.shiftRight(64);
-			int highWord = highWordBigInt.intValue();
-			// System.out.println(" Big:" + allWordBigInt.toString(16) + " , "
-			// + highWordBigInt.toString(16) + " , "
-			// + middleWordBigInt.toString(16) + "(" + scale + ")");
-			// System.out.println(" int:" + Integer.toHexString(highWord) + " ,
-			// "
-			// + Integer.toHexString(middleWord) + " , "
-			// + Integer.toHexString(lowWord) + "(" + scale + ")");
-			putVariantDecRef(sign, scale, lowWord, middleWord, highWord);
-		}
+	/**
+	 * EXPERIMENTAL 1.14 feature to support rounded decimals.
+	 * <p>
+	 * Set the value of this variant and set the type. This may throw exceptions
+	 * more often than the caller expects because most callers don't manage the
+	 * scale of their BigDecimal objects.
+	 * <p>
+	 * There are 12 bytes available for the integer number.
+	 * <p>
+	 * There is 1 byte for the scale.
+	 * 
+	 * @param in
+	 *            the BigDecimal that will be converted to VT_DECIMAL
+	 * @param roundingBehavior
+	 *            one of the BigDecimal ROUND_xxx methods. Any method other than
+	 *            ROUND_UNECESSARY means that the value will be roudned to fit
+	 * @throws IllegalArgumentException
+	 *             if the scale is > 28, the maximum for VT_DECIMAL or if there
+	 *             are more than 12 bytes worth the digits
+	 */
+	public void putDecimalRef(BigDecimal in, int roundingBehavior) {
+		putDecimal(in, true, roundingBehavior);
 	}
 
 	/**
