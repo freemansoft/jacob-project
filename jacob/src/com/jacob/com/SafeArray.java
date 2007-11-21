@@ -20,52 +20,62 @@
 package com.jacob.com;
 
 /**
- * This creates an array wrapper around Variant objects(?). Lookslike it
- * supports 1 and two dimensional arrays
+ * This creates an array wrapper around Variant objects(?). This supports 1, 2
+ * and n-dimensional arrays. It exists in this form because n-dimensional arrays
+ * were a later addition.
  */
 public class SafeArray extends JacobObject {
+	/** The super secret int that is actually the pointer to windows memory */
 	int m_pV = 0;
 
 	/**
-	 * constructor
+	 * Constructor. Why does this exist? Yeah, someone will post on sourceforge
+	 * about this comment.
 	 * 
 	 */
 	public SafeArray() {
 	}
 
 	/**
-	 * constructor
+	 * Constructor.
 	 * 
 	 * @param vt
+	 *            type of array
 	 */
 	public SafeArray(int vt) {
 		init(vt, new int[] { 0 }, new int[] { -1 });
 	}
 
 	/**
-	 * constructor
+	 * Constructor for a single dimensional array whose lower bounds is 0 and
+	 * whose upper bound is specified as a parameter
 	 * 
 	 * @param vt
+	 *            type of the array
 	 * @param celems
+	 *            length of the array
 	 */
 	public SafeArray(int vt, int celems) {
 		init(vt, new int[] { 0 }, new int[] { celems });
 	}
 
 	/**
+	 * Creates a two dimensional SafeArray whose base indexes are 0.
+	 * 
 	 * @param vt
+	 *            Type of the array
 	 * @param celems1
+	 *            length of the array in first dimension
 	 * @param celems2
+	 *            length of the array in second dimension
 	 */
 	public SafeArray(int vt, int celems1, int celems2) {
 		init(vt, new int[] { 0, 0 }, new int[] { celems1, celems2 });
 	}
 
 	/**
-	 * constructor (needs more java doc)
-	 * 
-	 * With the addition of N-dimensional array support
-	 * 
+	 * Constructor with support for N-dimensional array support
+	 * <p>
 	 * You create an N-D SafeArray by: SafeArray sa = new
 	 * SafeArray(Variant.VariantVariant, new int[] {0,0,0,0}, new int[]
 	 * {4,4,4,4}); Where the 1st array is lower bounds and 2nd has the lengths
@@ -94,7 +104,7 @@ public class SafeArray extends JacobObject {
 	protected native void init(int vt, int lbounds[], int celems[]);
 
 	/**
-	 * not impl
+	 * not implemented.
 	 * 
 	 * @return 0
 	 */
@@ -118,7 +128,7 @@ public class SafeArray extends JacobObject {
 	public native Object clone();
 
 	/**
-	 * now private so only this object can asccess was: call this to explicitly
+	 * now private so only this object can access. Was: call this to explicitly
 	 * release the com object before gc
 	 * 
 	 */
@@ -129,19 +139,15 @@ public class SafeArray extends JacobObject {
 	 */
 	public native int getvt();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#finalize()
+	/**
+	 * {@inheritDoc}
 	 */
 	protected void finalize() {
 		safeRelease();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jacob.com.JacobObject#safeRelease()
+	/**
+	 * {@inheritDoc}
 	 */
 	public void safeRelease() {
 		super.safeRelease();
@@ -298,7 +304,7 @@ public class SafeArray extends JacobObject {
 	/**
 	 * Retrieves the data from the array cast to a Java data type
 	 * 
-	 * @return double[] double array contained in this colleciton
+	 * @return double[] double array contained in this collection
 	 */
 	public native double[] toDoubleArray();
 
@@ -350,7 +356,7 @@ public class SafeArray extends JacobObject {
 	 * 
 	 * @param sa_idx1
 	 * @param sa_idx2
-	 * @return single character repesentation
+	 * @return single character representation
 	 */
 	public native char getChar(int sa_idx1, int sa_idx2);
 
@@ -531,7 +537,7 @@ public class SafeArray extends JacobObject {
 	 * 
 	 * @param sa_idx1
 	 * @param sa_idx2
-	 * @return double storedin array
+	 * @return double stored in array
 	 */
 	public native double getDouble(int sa_idx1, int sa_idx2);
 
