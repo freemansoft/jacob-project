@@ -155,6 +155,7 @@ public class Jacobgen {
 			fis.read(typelibinfo);
 		}
 
+		System.out.println("TypeLibInspector.queryInterface finished.");
 		// Convert byte array to a vector of lines
 		LineNumberReader reader = new LineNumberReader(new StringReader(
 				new String(typelibinfo)));
@@ -500,6 +501,11 @@ public class Jacobgen {
 				typelibFilename = resolveFileName(args[i]);
 			}
 		}
+		System.out.println("destinationPackage: " + destinationPackage);
+		System.out.println("destinationPath: " + destinationPath);
+		System.out.println("tempFileName: " + tempFileName);
+		System.out.println("inputFileName: " + inputFileName);
+		System.out.println("typelibFilename: " + typelibFilename);
 	}
 
 	/**
@@ -533,7 +539,7 @@ public class Jacobgen {
 				g.parseOptions(args);
 				if (g.typelibFilename == null && g.inputFileName == null) {
 					System.out
-							.println("Jacobgen you need to specify an input file");
+							.println("Jacobgen you need to specify a typelib file or an input file");
 				} else {
 					g.generate();
 					// g.generate( argv[0], argv[1] );

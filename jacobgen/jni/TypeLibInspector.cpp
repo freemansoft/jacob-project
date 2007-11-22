@@ -62,7 +62,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_jacob_jacobgen_TypeLibInspector_queryInter
 	printf("converted %s to %ls\n",sname,wname);
 
 	CoInitialize( 0 );
-	printf("calling ExtractTypeLib with %ls",wname);
+	printf("calling ExtractTypeLib with %ls\n",wname);
 	ExtractTypeLib( wname );
 	CoUninitialize();
 
@@ -92,7 +92,7 @@ void ExtractTypeLib( LPWSTR pszFileName )
 {
 	LPTYPELIB pITypeLib;
 
-	printf("trying to extract library %ls\n", pszFileName);
+	printf("Starting: Extract of library %ls\n", pszFileName);
 	buffer = (LPTSTR )malloc( BUF_SIZE );
 	if( buffer == NULL )
 	{
@@ -109,12 +109,13 @@ void ExtractTypeLib( LPWSTR pszFileName )
 
 	EnumTypeLib( pITypeLib );
 	pITypeLib->Release();
+	printf("Finished: Extract of library %ls\n", pszFileName);
 }
 
 void EnumTypeLib( LPTYPELIB pITypeLib )
 {
 	UINT tiCount = pITypeLib->GetTypeInfoCount();
-	printf("enumerating %d\n",tiCount);
+	printf("Starting: enumerating %d\n",tiCount);
 	//Extract Type lib name
 	BSTR pLibName;
 	pITypeLib->GetDocumentation(-1, &pLibName, NULL, 0, NULL );
@@ -126,20 +127,19 @@ void EnumTypeLib( LPTYPELIB pITypeLib )
 	for ( UINT i = 0; i < tiCount; i++ )
 	{
 		LPTYPEINFO pITypeInfo;
-
 		HRESULT hr = pITypeLib->GetTypeInfo( i, &pITypeInfo );
-
 		if ( S_OK == hr )
 		{
 			ExtractTypeInfo( pITypeInfo );
-							
 			pITypeInfo->Release();
 		}
 	}
+	printf("Finished: enumerating %d\n",tiCount);
 }
 
 void ExtractTypeInfo( LPTYPEINFO pITypeInfo )
 {
+	printf("Starting: ExtractTypeInfo\n");
 	HRESULT hr;
 
 	BSTR theGuid = SysAllocString(L"{00000000-0000-0000-0000-000000000000}");
@@ -185,13 +185,15 @@ void ExtractTypeInfo( LPTYPEINFO pITypeInfo )
 		} else {
 			append2("%EXTENDS;%ls\n",GetVarTypeName( tdesc.vt ) );
 		}
-	} else
+	} else {
 		EnumTypeInfoMembers( pITypeInfo, pTypeAttr );
+	}
 
 	SysFreeString( pszTypeInfoName );
 	SysFreeString( theGuid );
 		
 	pITypeInfo->ReleaseTypeAttr( pTypeAttr );
+	printf("Finished: ExtractTypeInfo\n");
 }
 
 void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
@@ -201,7 +203,9 @@ void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
 	ELEMDESC elemdesc;
 	TYPEDESC tdesc;
 
+	printf("Started: EnumTypeInfoMembers\n");
 	if ( pTypeAttr->cImplTypes ) {
+		//printf("    : cImplTypes\n");
 		for ( unsigned i = 0; i < pTypeAttr->cImplTypes; i++ ) {
 			
 			LPTYPEINFO pImplInfo;
@@ -220,6 +224,7 @@ void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
 	}
 
 	if ( pTypeAttr->cFuncs ) {
+		//printf("    : cFuncs\n");
 		for ( unsigned i = 0; i < pTypeAttr->cFuncs; i++ ) {
 			
 			pITypeInfo->GetFuncDesc( i, &pFuncDesc );
@@ -246,8 +251,9 @@ void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
 					append2b("%ls",pszRefFuncName );
 					SysFreeString( pszRefFuncName );
 				}
-			} else
+			} else{
 				append2("%ls",GetVarTypeName( tdesc.vt ) );
+			}
 
 			append2b(" ;%ls;",pszFuncName );
 
@@ -260,6 +266,7 @@ void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
 	}
 
 	if ( pTypeAttr->cVars )
+		//printf("    : cVars\n");
 	{
 		
 		for ( unsigned i = 0; i < pTypeAttr->cVars; i++ )
@@ -319,6 +326,7 @@ void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
 			SysFreeString( pszVarName );
 		}
 	}
+	printf("Started: EnumTypeInfoMembers\n");
 
 }
 
@@ -345,6 +353,8 @@ BSTR GetUserDefinedType( LPTYPEINFO pITypeInfo, TYPEDESC tdesc ) {
 void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 	TYPEDESC tdesc;
 
+	printf("Started: EnumParameters \n");
+	
 	unsigned int cMaxNames = pFuncDesc->cParams;
 	if (cMaxNames > 0)
 		cMaxNames++;
@@ -356,11 +366,14 @@ void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 	pTypeInfo->GetNames( pFuncDesc->memid, rgBstrNames, cMaxNames, &pcNames );
 	pTypeInfo->GetIDsOfNames( rgBstrNames, pcNames, pMemId );
 
+	//printf("         EnumParameters %d, %d\n",cMaxNames,pcNames);	
+
 	append1( "[" );
 	if (pcNames > 0) {
 
 		for ( unsigned k = 1; k < pcNames; k++ )
 		{
+			//printf("         EnumParameters: working on %d\n",k);	
 			BSTR pszParName = rgBstrNames[ k ];
 			
 			PARAMDESC pd = pFuncDesc->lprgelemdescParam[k-1].paramdesc;
@@ -380,6 +393,7 @@ void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 				append1( "}" );
 			} 
 
+			//printf("         EnumParameters: working on %d b\n",k);	
 			/*
 			VARTYPE vt = pFuncDesc->lprgelemdescParam[k].tdesc.vt;
 			if( vt == VT_PTR ) {
@@ -398,44 +412,60 @@ void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 
 			tdesc = pFuncDesc->lprgelemdescParam[k-1].tdesc;
 
+			//printf("         EnumParameters: working on %d c\n",k);	
 			bool isPointer = false;
 			VARTYPE vt = NULL;
 			if( tdesc.vt == VT_PTR ) {
+				//printf("         EnumParameters: working on %d c1\n",k);	
 				isPointer = true;
 				tdesc = *tdesc.lptdesc;
 
-				TYPEDESC *pPointedAt = tdesc.lptdesc;
-				if (pPointedAt) {
-					vt = pPointedAt->vt;
-				}
+				// SF1650138 added 11/2007 but crashes VM
+//				TYPEDESC *pPointedAt = tdesc.lptdesc;
+//				if (pPointedAt) {
+//					printf("         EnumParameters: working on %d c2\n",k);	
+//					vt = pPointedAt->vt;
+//				}
 			}
+			//printf("         EnumParameters: working on %d d\n",k);	
 			if (vt) {
+				//printf("         EnumParameters: working on %d d1\n",k);	
 				append2( "%ls", GetVarTypeName( vt ) );
 			} else {
+				//printf("         EnumParameters: working on %d d2\n",k);	
 				//Check for user defined types
 				if( tdesc.vt == VT_USERDEFINED ) {
+					//printf("         EnumParameters: working on %d d2x\n",k);	
 					BSTR pszRefFuncName = GetUserDefinedType( pTypeInfo, tdesc );
 					if( pszRefFuncName ) {
 						append2b("%ls",pszRefFuncName );
 						SysFreeString( pszRefFuncName );
 					}
 				} else { 
-					if (isPointer && (tdesc.vt == VT_VARIANT)) {
-						append1("VariantVariant");
-					} else {
+					// SF1650138 added 11/2007 but tries to use a class we don't have
+					// this apparently attempts to differentiate between methods
+					// that take a variant and a VT_Variant but jacob 
+					// doesn't have the VariantVariant class implied by this code
+					//printf("         EnumParameters: working on %d d2y\n",k);	
+					//if (isPointer && (tdesc.vt == VT_VARIANT)) {
+					//	append1("VariantVariant");
+					//} else {
 						append2("%ls",GetVarTypeName( tdesc.vt ) );
-					}
+					//}
 				}
 			}
 
-			if( k < pcNames-1 )
+			//printf("         EnumParameters: working on %d e\n",k);	
+			if( k < pcNames-1 ){
 				append2b( " %ls,", rgBstrNames[k] );
-			else
+			} else {
 				append2b( " %ls", rgBstrNames[k] );
+			}
 			
 		}
 	}
 	append1("]\n" );
+	printf("Finished: EnumParameters\n");	
 }
 
 /**
@@ -531,7 +561,7 @@ LPCTSTR GetTypeKindName( TYPEKIND typekind )
     	CASE_STRING( TKIND_ALIAS )
     	CASE_STRING( TKIND_UNION )
 	}
-		printf("found type %s\n");
+		printf("found type %s\n",s);
 	
 	return s;
 }
@@ -547,7 +577,7 @@ LPCTSTR GetInvokeKindName( INVOKEKIND invkind )
     	CASE_STRING( INVOKE_PROPERTYPUT )
     	CASE_STRING( INVOKE_PROPERTYPUTREF )
 	}	
-
+	printf("found invoke %s\n",s);
 	return s;
 }
 
