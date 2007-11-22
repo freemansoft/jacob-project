@@ -5,12 +5,12 @@ Unpack the source archive or check the files out of CVS into d:\jacobgen
 Install the following tools
 	Microsoft Visual Studio, a stripped down version is available from the MS web site.
 	Eclipse from www.eclipse.org.
-	Java jdk 1.4 (this was built using 1.4.2.09)
+	Java jdk 1.5 (this was built using 1.4.2.09)
 	
 The following configuration was used by most of the development team:
-	JDK = d:\j2sdk1.4.2_09
-	DEST_DIR = d:\jacobgen
-	MSDEVDIR = d:\apps\\"Microsoft Visual Studio"\VC98
+	JDK=d:\\jdk1.5.0_11
+	MSDEV_DIR=d:\\apps\\Microsoft Visual Studio 8\\VC
+	MSDEV_IDE_DIR=d:\\apps\\Microsoft Visual Studio 8\\Common7\\IDE
 
 This project has been converted completely over to ANT.  You can
 run ANT from inside of eclipse or from the command line.
@@ -45,4 +45,4 @@ been removed.
 The java code is in .\src
 The C++ code is in .\jni.
 
-Last Modified 10/2005
+Last Modified 11/2007
