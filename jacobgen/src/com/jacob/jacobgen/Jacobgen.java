@@ -47,9 +47,9 @@ import com.samskivert.viztool.clenum.ClassEnumerator;
  */
 public class Jacobgen {
 
-	public static final String version = "0.4";
+	public static final String version = "0.8";
 	public static Jacobgen instance;
-	protected Vector methodsToAvoid;
+	protected Vector<String> methodsToAvoid;
 
 	/**
 	 * Package where to put generated classes
@@ -66,12 +66,12 @@ public class Jacobgen {
 
 	protected String tempFileName = null;
 
-	protected Vector internalEnums = new Vector();
+	protected Vector<String> internalEnums = new Vector<String>();
 
-	protected Hashtable externalClasses;
+	protected Hashtable<String, String> externalClasses;
 
 	private Jacobgen() {
-		methodsToAvoid = new Vector();
+		methodsToAvoid = new Vector<String>();
 		methodsToAvoid.addElement("QueryInterface");
 		methodsToAvoid.addElement("AddRef");
 		methodsToAvoid.addElement("Release");
@@ -92,7 +92,7 @@ public class Jacobgen {
 					+ warnings[i].reason);
 		}
 
-		externalClasses = new Hashtable();
+		externalClasses = new Hashtable<String, String>();
 		while (aClassEnumerator.hasNext()) {
 			String s = (String) aClassEnumerator.next();
 			int p = s.lastIndexOf('.');
@@ -101,7 +101,7 @@ public class Jacobgen {
 	}
 
 	protected String getExternalClass(String className) {
-		return (String) externalClasses.get(className);
+		return externalClasses.get(className);
 	}
 
 	public boolean isEnum(String className) {
@@ -112,7 +112,7 @@ public class Jacobgen {
 		// as interfaces.
 		if (!result) {
 			fullClassName = getExternalClass(className);
-			if (fullClassName != null)
+			if (fullClassName != null) {
 				try {
 					Class clazz = Class.forName(fullClassName);
 					result = clazz.isInterface(); // Little hack
@@ -122,6 +122,7 @@ public class Jacobgen {
 				} catch (ClassNotFoundException ex1) {
 				} catch (NoClassDefFoundError ex2) {
 				}
+			}
 		}
 
 		return result;
@@ -129,10 +130,8 @@ public class Jacobgen {
 
 	public void generate() throws IOException {
 
-		System.out
-				.println("JACOBGEN "
-						+ version
-						+ ". Copyright 2000-2002 Massimiliano Bigatti. Relased under GNU GPL License");
+		System.out.println("JACOBGEN " + version
+				+ ". See the distribution for licensing details.");
 		System.out.println("starting ...");
 
 		// Create a list of external classes
@@ -160,11 +159,12 @@ public class Jacobgen {
 		LineNumberReader reader = new LineNumberReader(new StringReader(
 				new String(typelibinfo)));
 
-		Vector lines = new Vector();
+		Vector<String> lines = new Vector<String>();
 		while (true) {
 			String line = reader.readLine();
-			if (line == null)
+			if (line == null) {
 				break;
+			}
 
 			lines.addElement(line);
 		}
@@ -174,9 +174,9 @@ public class Jacobgen {
 				File out = new File(tempFileName);
 				FileWriter fw = new FileWriter(out);
 
-				Enumeration e = lines.elements();
+				Enumeration<String> e = lines.elements();
 				while (e.hasMoreElements()) {
-					fw.write((String) e.nextElement());
+					fw.write(e.nextElement());
 					fw.write('\n');
 				}
 
@@ -191,11 +191,11 @@ public class Jacobgen {
 		generateClasses(lines);
 	}
 
-	protected void generateClasses(Vector lines) throws IOException {
+	protected void generateClasses(Vector<String> lines) throws IOException {
 		int count = 0;
 		boolean startClass = false;
-		Vector classMethods = null;
-		Vector classFields = null;
+		Vector<MethodItem> classMethods = null;
+		Vector<FieldItem> classFields = null;
 		String className = "<invalid>";
 		String classType = "<unknown>";
 		String typelibName = "<unknown>";
@@ -205,7 +205,7 @@ public class Jacobgen {
 		int enums = 0;
 		System.out.print("finding ENUMS (" + lines.size() + ")... ");
 		for (int i = 0; i < lines.size(); i++) {
-			String line = (String) lines.elementAt(i);
+			String line = lines.elementAt(i);
 
 			System.out.println("Line=" + line);
 
@@ -224,13 +224,13 @@ public class Jacobgen {
 
 					// Pick up the next row and determine the superclass
 					i++;
-					String derivedAlias = (String) lines.elementAt(i);
+					String derivedAlias = lines.elementAt(i);
 					derivedAlias = derivedAlias.substring(
 							derivedAlias.indexOf(';') + 1).trim();
 
 					// Search for pointed to alias
 					for (int k = 0; k < lines.size(); k++) {
-						line = (String) lines.elementAt(k);
+						line = lines.elementAt(k);
 						if (line.startsWith("CLASS")) {
 							int p1 = line.indexOf(' ');
 							int f1 = line.indexOf(';');
@@ -249,14 +249,14 @@ public class Jacobgen {
 		System.out.println("done (" + enums + ")");
 
 		for (int i = 0; i < internalEnums.size(); i++) {
-			System.out.println((String) internalEnums.elementAt(i));
+			System.out.println(internalEnums.elementAt(i));
 		}
 		className = "<invalid>";
 		classType = "<unknown>";
 
 		System.out.println("generating classes ... ");
 		for (int i = 0; i < lines.size(); i++) {
-			String line = (String) lines.elementAt(i);
+			String line = lines.elementAt(i);
 
 			if (line.startsWith("TYPELIB")) {
 				typelibName = line.substring(8);
@@ -277,8 +277,8 @@ public class Jacobgen {
 							baseClass, classFields, classMethods, guid);
 				}
 				baseClass = "<none>";
-				classMethods = new Vector();
-				classFields = new Vector();
+				classMethods = new Vector<MethodItem>();
+				classFields = new Vector<FieldItem>();
 
 				int p = line.indexOf(' ');
 				int f = line.indexOf(';');
@@ -385,8 +385,8 @@ public class Jacobgen {
 	}
 
 	protected void createSourceFile(String typelibName, String className,
-			String classType, String baseClass, Vector classFields,
-			Vector classMethods, String guid) throws IOException {
+			String classType, String baseClass, Vector<FieldItem> classFields,
+			Vector<MethodItem> classMethods, String guid) throws IOException {
 
 		AbstractGenerator g;
 		String filename;
@@ -451,9 +451,9 @@ public class Jacobgen {
 		return buffer.toString();
 	}
 
-	protected Vector readFile(String filename) throws FileNotFoundException,
-			IOException {
-		Vector result = new Vector();
+	protected Vector<String> readFile(String filename)
+			throws FileNotFoundException, IOException {
+		Vector<String> result = new Vector<String>();
 
 		FileReader fr = new FileReader(filename);
 		LineNumberReader reader = new LineNumberReader(fr);
@@ -478,16 +478,17 @@ public class Jacobgen {
 
 	public void parseOptions(String[] args) {
 		for (int i = 0; i < args.length; i++) {
-			if (args[i].startsWith("-package"))
+			if (args[i].startsWith("-package")) {
 				destinationPackage = args[i].substring(9);
-			else if (args[i].startsWith("-destdir"))
+			} else if (args[i].startsWith("-destdir")) {
 				destinationPath = args[i].substring(9);
-			else if (args[i].startsWith("-listfile"))
+			} else if (args[i].startsWith("-listfile")) {
 				tempFileName = args[i].substring(10);
-			else if (args[i].startsWith("-inputfile"))
+			} else if (args[i].startsWith("-inputfile")) {
 				inputFileName = args[i].substring(11);
-			else
+			} else {
 				typelibFilename = resolveFileName(args[i]);
+			}
 		}
 	}
 
@@ -520,12 +521,13 @@ public class Jacobgen {
 			Jacobgen g = getInstance();
 			try {
 				g.parseOptions(args);
-				if (g.typelibFilename == null && g.inputFileName == null)
+				if (g.typelibFilename == null && g.inputFileName == null) {
 					System.out
 							.println("Jacobgen you need to specify an input file");
-				else
+				} else {
 					g.generate();
-				// g.generate( argv[0], argv[1] );
+					// g.generate( argv[0], argv[1] );
+				}
 			} catch (IOException ex2) {
 				System.err.println("Jacobgen: I/O error (file "
 						+ g.typelibFilename + ")");

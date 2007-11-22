@@ -19,32 +19,39 @@
 package com.jacob.jacobgen;
 
 /**
- * The wrapper for the jni code that generates the tokenized
- * representatation of the DLL that is used by the java classes to generate the stubs
+ * The wrapper for the jni code that generates the tokenized representatation of
+ * the DLL that is used by the java classes to generate the stubs
+ * 
  * @version $Id$
- *
+ * 
  */
 public class TypeLibInspector {
 
-	public native byte[] queryInterface( String filename );
-	
+	/**
+	 * the front for the actual jni code that is the working guts of this thing
+	 * 
+	 * @param filename
+	 * @return
+	 */
+	public native byte[] queryInterface(String filename);
+
 	static {
 		System.loadLibrary("Jacobgen");
 	}
-	
+
 	protected static void main(String[] argv) {
 		byte buf[];
-		
+
 		TypeLibInspector dll = new TypeLibInspector();
-		
-		if( argv.length > 0 ) {
-			buf = dll.queryInterface( argv[0] );
-			
-			for( int i=0; i<buf.length; i++ ) {
-				System.out.print( (char)buf[i] );
+
+		if (argv.length > 0) {
+			buf = dll.queryInterface(argv[0]);
+
+			for (int i = 0; i < buf.length; i++) {
+				System.out.print((char) buf[i]);
 			}
 		} else
 			System.out.println("TypeLibInspector <tlbfilename>");
 	}
-	
+
 }
