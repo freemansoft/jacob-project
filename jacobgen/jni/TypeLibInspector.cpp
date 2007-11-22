@@ -45,18 +45,20 @@ JNIEXPORT jbyteArray JNICALL Java_com_jacob_jacobgen_TypeLibInspector_queryInter
 
 	jbyteArray jb;
 	jboolean iscopy;
-	int cchWideChar;
 	LPWSTR wname;
 	LPCSTR sname;
 
 	buffer = NULL;
 	// could we just get the unicode characters to bein with?
 	sname = env->GetStringUTFChars( name, &iscopy );
-	cchWideChar = strlen( sname ) * 2;
-	wname = (LPWSTR)malloc( cchWideChar );
+  
+    const int size = MultiByteToWideChar(CP_ACP, 0, sname, -1, NULL, 0);   
+    wname = (LPWSTR) malloc(sizeof(WCHAR)*size);   
 
-	//Perform conversion from non Unicode to Unicode string
-	int i = MultiByteToWideChar(CP_ACP,0,sname,strlen(sname),wname,cchWideChar);
+    memset(wname, 0, sizeof(WCHAR)*size); 
+
+	MultiByteToWideChar(CP_ACP, 0, sname, -1, wname, size);
+ 
 	printf("converted %s to %ls\n",sname,wname);
 
 	CoInitialize( 0 );
@@ -139,7 +141,9 @@ void EnumTypeLib( LPTYPELIB pITypeLib )
 void ExtractTypeInfo( LPTYPEINFO pITypeInfo )
 {
 	HRESULT hr;
-	
+
+	BSTR theGuid = SysAllocString(L"{00000000-0000-0000-0000-000000000000}");
+
 	BSTR pszTypeInfoName;
 	hr = pITypeInfo->GetDocumentation(MEMBERID_NIL, &pszTypeInfoName, 0, 0, 0);
 	if ( S_OK != hr )
@@ -151,12 +155,18 @@ void ExtractTypeInfo( LPTYPEINFO pITypeInfo )
 	{
 		printf("failed to get attribute!!!!!!!\n");
 		SysFreeString( pszTypeInfoName );
+		SysFreeString( theGuid );
+
 		return;
 	}
 
 	//append3("CLASS %ls;%ls\n", pszTypeInfoName,
 	append3("CLASS %ls;%s\n", pszTypeInfoName,
 		GetTypeKindName(pTypeAttr->typekind) );
+
+	StringFromGUID2(pTypeAttr->guid, theGuid, 39);
+	append2b("GUID;%ls",theGuid );
+	append1("\n");
 
 	if( pTypeAttr->typekind == TKIND_ALIAS ) {
 		TYPEDESC tdesc;
@@ -179,6 +189,7 @@ void ExtractTypeInfo( LPTYPEINFO pITypeInfo )
 		EnumTypeInfoMembers( pITypeInfo, pTypeAttr );
 
 	SysFreeString( pszTypeInfoName );
+	SysFreeString( theGuid );
 		
 	pITypeInfo->ReleaseTypeAttr( pTypeAttr );
 }
@@ -274,6 +285,32 @@ void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
 				LPTSTR s = GetVarDefaultValue( pvarValue  );
 				append1( s );
 				free( (void *)s );
+			} else {
+				if( pVarDesc->varkind == VAR_DISPATCH ) {
+
+					elemdesc = pVarDesc->elemdescVar;
+					//PARAMDESC pdesc;					//PENDING
+					//pdesc = elemdesc.paramdesc;
+					tdesc = elemdesc.tdesc;
+
+					//If type type is pointer, dereference
+					if( tdesc.vt == VT_PTR ) {
+						tdesc = *tdesc.lptdesc;
+					}
+
+					//Check for user defined types
+					//append2("%ls",GetVarTypeName( tdesc.vt ) );
+					if( tdesc.vt == VT_USERDEFINED ) {
+						//append1( "^" );
+						BSTR pszRefFuncName = GetUserDefinedType( pITypeInfo, tdesc );
+						if( pszRefFuncName ) {
+							append2b("%ls",pszRefFuncName );
+							SysFreeString( pszRefFuncName );
+						}
+					} else {
+						append2("%ls",GetVarTypeName( tdesc.vt ) );
+					}
+				}
 			}
 
 			append1("\n");
@@ -308,7 +345,9 @@ BSTR GetUserDefinedType( LPTYPEINFO pITypeInfo, TYPEDESC tdesc ) {
 void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 	TYPEDESC tdesc;
 
-	unsigned int cMaxNames = pFuncDesc->cParams; //+ pFuncDesc->cParamsOpt;
+	unsigned int cMaxNames = pFuncDesc->cParams;
+	if (cMaxNames > 0)
+		cMaxNames++;
 	unsigned int pcNames;
 
 	BSTR rgBstrNames[ 100 ];
@@ -318,65 +357,85 @@ void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 	pTypeInfo->GetIDsOfNames( rgBstrNames, pcNames, pMemId );
 
 	append1( "[" );
-	for ( unsigned k = 0; k < pcNames; k++ )
-	{
-		BSTR pszParName = rgBstrNames[ k ];
-		
-		PARAMDESC pd = pFuncDesc->lprgelemdescParam[k].paramdesc;
+	if (pcNames > 0) {
 
-		if( pd.wParamFlags != 0 ) {
-			append1( "{" );
+		for ( unsigned k = 1; k < pcNames; k++ )
+		{
+			BSTR pszParName = rgBstrNames[ k ];
+			
+			PARAMDESC pd = pFuncDesc->lprgelemdescParam[k-1].paramdesc;
 
-			if( pd.wParamFlags & PARAMFLAG_FIN )
-				append1( "in-" );
-			if( pd.wParamFlags & PARAMFLAG_FOUT )
-				append1( "out-" );
-			if( pd.wParamFlags & PARAMFLAG_FRETVAL )
-				append1("retval-" );
-			if( pd.wParamFlags & PARAMFLAG_FOPT )
-				append1("optional-" );
+			if( pd.wParamFlags != 0 ) {
+				append1( "{" );
 
-			append1( "}" );
-		}
-		/*
-		VARTYPE vt = pFuncDesc->lprgelemdescParam[k].tdesc.vt;
-		if( vt == VT_PTR ) {
-			TYPEDESC *pPointedAt = pFuncDesc->lprgelemdescParam[k].tdesc.lptdesc;
-			vt = pPointedAt->vt;
-			append2( "%ls", GetVarTypeName( vt ) );
-		} else if( vt == VT_SAFEARRAY ) {
-			TYPEDESC *pPointedAt = pFuncDesc->lprgelemdescParam[k].tdesc.lptdesc;
-			vt = pPointedAt->vt;
-			append2( "SAFEARRAY(%ls)", GetVarTypeName( vt ) );
-		} else {
-			append2( "%ls", GetVarTypeName( vt ) );
-		}
-		*/
+				if( pd.wParamFlags & PARAMFLAG_FIN )
+					append1( "in-" );
+				if( pd.wParamFlags & PARAMFLAG_FOUT )
+					append1( "out-" );
+				if( pd.wParamFlags & PARAMFLAG_FRETVAL )
+					append1("retval-" );
+				if( pd.wParamFlags & PARAMFLAG_FOPT )
+					append1("optional-" );
 
-		//If type type is pointer, dereference
-		tdesc = pFuncDesc->lprgelemdescParam[k].tdesc;
-		if( tdesc.vt == VT_PTR ) {
-			tdesc = *tdesc.lptdesc;
-		}
+				append1( "}" );
+			} 
 
-		//Check for user defined types
-		if( tdesc.vt == VT_USERDEFINED ) {
-			BSTR pszRefFuncName = GetUserDefinedType( pTypeInfo, tdesc );
-			if( pszRefFuncName ) {
-				append2b("%ls",pszRefFuncName );
-				SysFreeString( pszRefFuncName );
+			/*
+			VARTYPE vt = pFuncDesc->lprgelemdescParam[k].tdesc.vt;
+			if( vt == VT_PTR ) {
+				TYPEDESC *pPointedAt = pFuncDesc->lprgelemdescParam[k].tdesc.lptdesc;
+				vt = pPointedAt->vt;
+				append2( "%ls", GetVarTypeName( vt ) );
+			} else if( vt == VT_SAFEARRAY ) {
+				TYPEDESC *pPointedAt = pFuncDesc->lprgelemdescParam[k].tdesc.lptdesc;
+				vt = pPointedAt->vt;
+				append2( "SAFEARRAY(%ls)", GetVarTypeName( vt ) );
+			} else {
+				append2( "%ls", GetVarTypeName( vt ) );
 			}
-		} else
-			append2("%ls",GetVarTypeName( tdesc.vt ) );
+			*/
 
-		if( k < pcNames-1 )
-			append2b( " %ls,", rgBstrNames[k+1] );
-		else
-			append1( " LastParam" );
-		
+
+			tdesc = pFuncDesc->lprgelemdescParam[k-1].tdesc;
+
+			bool isPointer = false;
+			VARTYPE vt = NULL;
+			if( tdesc.vt == VT_PTR ) {
+				isPointer = true;
+				tdesc = *tdesc.lptdesc;
+
+				TYPEDESC *pPointedAt = tdesc.lptdesc;
+				if (pPointedAt) {
+					vt = pPointedAt->vt;
+				}
+			}
+			if (vt) {
+				append2( "%ls", GetVarTypeName( vt ) );
+			} else {
+				//Check for user defined types
+				if( tdesc.vt == VT_USERDEFINED ) {
+					BSTR pszRefFuncName = GetUserDefinedType( pTypeInfo, tdesc );
+					if( pszRefFuncName ) {
+						append2b("%ls",pszRefFuncName );
+						SysFreeString( pszRefFuncName );
+					}
+				} else { 
+					if (isPointer && (tdesc.vt == VT_VARIANT)) {
+						append1("VariantVariant");
+					} else {
+						append2("%ls",GetVarTypeName( tdesc.vt ) );
+					}
+				}
+			}
+
+			if( k < pcNames-1 )
+				append2b( " %ls,", rgBstrNames[k] );
+			else
+				append2b( " %ls", rgBstrNames[k] );
+			
+		}
 	}
 	append1("]\n" );
-
 }
 
 /**

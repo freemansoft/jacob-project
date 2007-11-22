@@ -54,8 +54,11 @@ public class MethodItem {
 		StringTokenizer st = new StringTokenizer( line, ";" );
 		
 		try {
+			
+			String mt = st.nextToken();
+			
 			//Extract method type
-			methodType = computeMethodType( st.nextToken() );
+			methodType = computeMethodType( mt );
 			
 			//Extract return type
 			nativeReturnType = st.nextToken().trim();
@@ -81,7 +84,6 @@ public class MethodItem {
 	}
 	
 	protected void extractParameters( String parameters ) throws IllegalFormatException {
-		additionalMethodRequired = false;
 		
 		//Strip trailing and ending []
 		if( !parameters.startsWith("[") || !parameters.endsWith("]") )
@@ -92,15 +94,24 @@ public class MethodItem {
 
 		StringTokenizer st = new StringTokenizer( parameters, "," );
 		while( st.hasMoreTokens() ) {
+			
+			additionalMethodRequired = false;
+			
 			String param = st.nextToken();
 
 			//Extract parameters data
 			StringTokenizer st1 = new StringTokenizer( param );
+			StringTokenizer st3 = new StringTokenizer( param );
 			String options = st1.nextToken("{}");
-			String type = st1.nextToken(" ");
-			String name = st1.nextToken();
-
-			type = type.substring( 1 ).trim();
+			String type = null;
+			String name = null;
+			if ("-".equals(options.substring(options.length()-1))){
+				type = st1.nextToken(" ").substring(1);
+				name = st1.nextToken();
+			} else {
+				type = st3.nextToken(" ");
+				name = st3.nextToken();
+			}
       
 			//Extract options
 			int direction = ParameterItem.DIRECTION_UNKNOWN;
@@ -278,28 +289,28 @@ public class MethodItem {
 		if( nativeReturnType.equals("VT_EMPTY") )		//Pending
 			result = "";
 		else if( nativeReturnType.equals("VT_NULL") )	//is there some better method?  this calls toDispatch() which results in what ?
-			result = ".getObject()";
+			result = ".toDispatch()";
 		else if( nativeReturnType.equals("VT_I2") )
-			result = ".getShort()";
+			result = ".changeType(Variant.VariantShort).getShort()";
 		else if( nativeReturnType.equals("VT_I4") || nativeReturnType.equals("VT_INT") )
-			result = ".getInt()";
+			result = ".changeType(Variant.VariantInt).getInt()";
 		else if( nativeReturnType.equals("VT_R4") )
-			result = ".getFloat()";
+			result = ".changeType(Variant.VariantFloat).getFloat()";
 		else if( nativeReturnType.equals("VT_R8") )
-			result = ".getDouble()";
+			result = ".changeType(Variant.VariantDouble).getDouble()";
 		else if( nativeReturnType.equals("VT_CY") )		//Currency
-			result = ".getCurrency()";
+			result = ".changeType(Variant.VariantCurrency).getCurrency()";
 		else if( nativeReturnType.equals("VT_DATE") )	// this should use the new toJavaDate() so we could remove the conversion code
-			result = ".getJavaDate()";
+			result = ".getDate()";
 		else if( nativeReturnType.equals("VT_BSTR") )
-			result = ".getString()";
+			result = ".toString()";
 		else if( nativeReturnType.equals("VT_DISPATCH") )	//??? probably not needed because he does .toDispatch() no matter what
 			//result = ".toDispatch()";
 			result = "";
 		else if( nativeReturnType.equals("VT_ERROR") )		//Pending
-			result = ".getError()";
+			result = ".changeType(Variant.VariantError).getError()";
 		else if( nativeReturnType.equals("VT_BOOL") )
-			result = ".getBoolean()";
+			result = ".changeType(Variant.VariantBoolean).getBoolean()";
 		else if( nativeReturnType.equals("VT_VARIANT") )
 			result = "";
 		//ADO.Field.getDataFormat() maps UNKNOWN as Variant. I hope it is
@@ -307,20 +318,20 @@ public class MethodItem {
 		else if( nativeReturnType.equals("VT_UNKNOWN") )
 			result = "";
 		else if( nativeReturnType.equals("VT_UI1") )
-			result = ".getByte()";
+			result = ".changeType(Variant.VariantByte).getByte()";
 		//Simple HRESULT managment
 		else if( nativeReturnType.equals("VT_HRESULT") )
-			result = ".getInt()";
+			result = ".changeType(Variant.VariantInt).getInt()";
 		else if( nativeReturnType.equals("VT_SAFEARRAY") )
 			result = ".toSafeArray()";
 			
 		//Simple enumeration
 		if( Jacobgen.getInstance().isEnum(nativeReturnType) )
-			result = ".getInt()";
+			result = ".changeType(Variant.VariantInt).getInt()";
 			
 		//RGB VB Internal type
 		if( nativeReturnType.equals( "MsoRGBType" ) )
-			result = ".getInt()";
+			result = ".changeType(Variant.VariantInt).getInt()";
 		
 		return result;
 	}

@@ -36,9 +36,9 @@ class ClassGenerator extends AbstractGenerator {
 	protected boolean containsDate = false;
 
 	protected ClassGenerator( String filename, String typelibName, String destinationPackage,
-		String className, String baseClass, Vector classFields, Vector classMethods ) {
+		String className, String baseClass, Vector classFields, Vector classMethods, String guid ) {
 		super( filename, typelibName, destinationPackage, className, baseClass,
-				classFields, classMethods );
+				classFields, classMethods, guid );
 	}
 
 	protected void writeClassDeclaration() throws IOException {
@@ -46,8 +46,13 @@ class ClassGenerator extends AbstractGenerator {
 	}
 
 	protected void writeFields() throws IOException {
-		w.write("\tpublic static final String componentName = \"" + typelibName + "." +
-			className + "\";\n\n");
+		
+		if (guid == null || "<unknown>".equals(guid)){
+			w.write("\tpublic static final String componentName = \"" + typelibName + "." +
+				className + "\";\n\n");
+		} else {
+			w.write("\tpublic static final String componentName = \"clsid:" + guid + "\";\n\n");			
+		}
 	}
 
 	protected void writeConstructors() throws IOException {
@@ -156,7 +161,7 @@ class ClassGenerator extends AbstractGenerator {
     ParameterItem[] parameters = mi.getParameters();
     for ( int i = 0; i < paramNum; i++ ) {
       ParameterItem p = parameters[i];
-      if ( baseTypes || p.getDirection() == ParameterItem.DIRECTION_IN ) {
+      if ( baseTypes || p.getDirection() == ParameterItem.DIRECTION_IN || p.getDirection() == ParameterItem.DIRECTION_UNKNOWN) {
         w.write( "\t * @param " + p.getJavaName() + " an input-parameter of type " + p.getType() + "\n" );
       } else {
         // this is only necessary if we want to comment non-basetypes and if it is an output-parameter
@@ -284,17 +289,20 @@ class ClassGenerator extends AbstractGenerator {
 				//w.write( "\t\tDispatch.put(this, \"" + mi.getName() + "\", " +
 				//	computeParamType( params[0] ) + ");\n" );
 
-        // ---- special processing should be done in the functions write*MethodBody
-/*				if( paramNum == 1 ) {
+        		// ---- special processing should be done in the functions write*MethodBody
+				if( paramNum == 1 ) {
+					
+					ParameterItem[] parameters = mi.getParameters();
+					ParameterItem p = parameters[0];				
 					w.write( "\t\tDispatch.put(this, \"" + mi.getName() + "\", " +
-						params[0].getParameterCallingCode() + ");\n" );
-				} else {*/
-				if ( baseTypes ) {
-					writeFunctionMethodBody( mi, paramNum );
+						p.getParameterCallingCode() + ");\n" );
 				} else {
-					writeOutFunctionMethodBody( mi, paramNum );
+					if ( baseTypes ) {
+						writeFunctionMethodBody( mi, paramNum );
+					} else {
+						writeOutFunctionMethodBody( mi, paramNum );
+					}
 				}
-				//}
 				break;
 		}
 
@@ -321,7 +329,7 @@ class ClassGenerator extends AbstractGenerator {
 			if ( p.getDirection() == ParameterItem.DIRECTION_OUT ) {
 				w.write("\t\tVariant " + p.getVariantName() + " = new Variant();\n");
 				w.write("\t\tif( "+p.getJavaName()+" == null || "+p.getJavaName()+".length == 0 )\n");
-				w.write("\t\t\t"+p.getVariantName()+".noParam();\n");
+				w.write("\t\t\t"+p.getVariantName()+".putNoParam();\n");
 				w.write("\t\telse\n");
 				// 12/2005 hack to get get this to generate compileable code.  
 				// Hopefully someone will look at this later and make sure it is correct
@@ -363,7 +371,7 @@ class ClassGenerator extends AbstractGenerator {
 				w.write( ", " );
 
 			ParameterItem p = parameters[i];
-			if ( p.getDirection() == ParameterItem.DIRECTION_IN ) {
+			if ( p.getDirection() == ParameterItem.DIRECTION_IN || p.getDirection() == ParameterItem.DIRECTION_UNKNOWN) {
 				// if it is an input-parameter we use the normal behaviour
 				w.write( p.getParameterCallingCode() );
 			} else {
@@ -389,7 +397,7 @@ class ClassGenerator extends AbstractGenerator {
 
 		// If we are using paramters with return values we have to retrieve this
 		// values from the Varaints with to*(). This has to be done after the call.
-		// It should look like the following: lastParam[0] = param1.getInt();
+		// It should look like the following: lastParam[0] = param1.toInt();
 		for( int i = 0; i < paramNum; i++ ) {
 			ParameterItem p = parameters[i];
 			// this is only necessary if it is an output-parameter

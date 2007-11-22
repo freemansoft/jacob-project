@@ -128,7 +128,7 @@ public class ParameterItem {
    * @return a String which is the type of this parameter
    */
   public String getType(boolean	baseType) {
-    if ( baseType || (direction == DIRECTION_IN) ) {
+    if ( baseType || (direction == DIRECTION_IN) || (direction == DIRECTION_UNKNOWN)) {
       return getType();
     } else {
       return getArrayType();

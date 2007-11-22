@@ -20,10 +20,10 @@ package com.jacob.jacobgen;
 
 import java.io.*;
 import java.util.*;
-	
+
 /**
  * the class that generates java classes representing DLL entities of type TKIND_ENUM
- * 
+ *
  * @version $Id$
  *
  */
@@ -32,16 +32,16 @@ class EnumGenerator extends AbstractGenerator {
 	protected EnumGenerator( String filename, String typelibName, String destinationPackage,
 		String className, String baseClass, Vector classFields, Vector classMethods ) {
 		super( filename, typelibName, destinationPackage, className, baseClass,
-				classFields, classMethods );
+				classFields, classMethods, null );
 	}
-	
+
 	protected void writeClassDeclaration() throws IOException {
 		w.write( "public interface " + className + " {\n\n" );
 	}
 
 	protected void writeFields() throws IOException {
 		Enumeration e = classFields.elements();
-		
+
 		while( e.hasMoreElements() ) {
 			FieldItem fi = (FieldItem)e.nextElement();
 			w.write("\tpublic static final " + fi.getType() +
@@ -49,12 +49,12 @@ class EnumGenerator extends AbstractGenerator {
 				";\n");
 		}
 	}
-	
+
 	protected void writeConstructors() throws IOException {
 	}
-	
+
 	protected void writeMethods() throws IOException {
 	}
-	
+
 }
 

@@ -42,11 +42,12 @@ public abstract class AbstractGenerator {
 	protected Vector classMethods;
 	protected String destinationPackage;
 	protected Writer w;
+	protected String guid;
 	
 	protected boolean simpleEnums = true;
 	
 	protected AbstractGenerator( String filename, String typelibName, String destinationPackage,
-		String className, String baseClass, Vector classFields, Vector classMethods ) {
+		String className, String baseClass, Vector classFields, Vector classMethods, String guid ) {
 			
 		this.filename = filename;
 		this.typelibName = typelibName;
@@ -55,6 +56,7 @@ public abstract class AbstractGenerator {
 		this.classFields = classFields;
 		this.classMethods = classMethods;
 		this.destinationPackage =destinationPackage;
+		this.guid = guid;
 	}
 	
 	public void generate() throws IOException {

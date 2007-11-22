@@ -26,25 +26,25 @@ import java.io.*;
  * @version $Id$
  */
 class AliasGenerator extends AbstractGenerator {
-		
+
 	protected AliasGenerator( String filename, String typelibName, String destinationPackage,
 		String className, String baseClass ) {
-		super( filename, typelibName, destinationPackage, className, baseClass, 
-				null, null );
+		super( filename, typelibName, destinationPackage, className, baseClass,
+				null, null, null );
 	}
-	
+
 	protected void writeClassDeclaration() throws IOException {
 		w.write( "public interface " + className + " extends " + baseClass + " {\n\n" );
 	}
-	
+
 	protected void writeFields() throws IOException {
 	}
 
 	protected void writeConstructors() throws IOException {
 	}
-	
+
 	protected void writeMethods() throws IOException {
 	}
-	
+
 }
 
