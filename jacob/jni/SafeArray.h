@@ -151,6 +151,14 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromIntArray
 
 /*
  * Class:     com_jacob_com_SafeArray
+ * Method:    fromLongArray
+ * Signature: ([L)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromLongArray
+  (JNIEnv *, jobject, jlongArray);
+
+/*
+ * Class:     com_jacob_com_SafeArray
  * Method:    fromShortArray
  * Signature: ([S)V
  */
@@ -219,6 +227,14 @@ JNIEXPORT jcharArray JNICALL Java_com_jacob_com_SafeArray_toCharArray
  * Signature: ()[I
  */
 JNIEXPORT jintArray JNICALL Java_com_jacob_com_SafeArray_toIntArray
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    toLongArray
+ * Signature: ()[L
+ */
+JNIEXPORT jlongArray JNICALL Java_com_jacob_com_SafeArray_toLongArray
   (JNIEnv *, jobject);
 
 /*
@@ -372,6 +388,54 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getInts
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setInts
   (JNIEnv *, jobject, jint, jint, jintArray, jint);
+
+/*
+ * Class:     SafeArray
+ * Method:    getLong
+ * Signature: (I)J
+ */
+JNIEXPORT jlong JNICALL Java_com_jacob_com_SafeArray_getLong__I
+  (JNIEnv *env, jobject _this, jint idx);
+
+/*
+ * Class:     SafeArray
+ * Method:    getLong
+ * Signature: (II)J
+ */
+JNIEXPORT jlong JNICALL Java_com_jacob_com_SafeArray_getLong__II
+  (JNIEnv *env, jobject _this, jint i, jint j);
+
+/*
+ * Class:     SafeArray
+ * Method:    setLong
+ * Signature: (IJ)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setLong__IJ
+  (JNIEnv *env, jobject _this, jint idx, jlong c);
+
+/*
+ * Class:     SafeArray
+ * Method:    setLong
+ * Signature: (IIJ)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setLong__IIJ
+  (JNIEnv *env, jobject _this, jint i, jint j, jlong c);
+
+/*
+ * Class:     SafeArray
+ * Method:    getLongs
+ * Signature: (II[JI)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getLongs
+  (JNIEnv *env, jobject _this, jint idx, jint nelem, jlongArray ja, jint ja_start);
+
+/*
+ * Class:     SafeArray
+ * Method:    setLongs
+ * Signature: (II[JI)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setLongs
+  (JNIEnv *env, jobject _this, jint idx, jint nelem, jlongArray ja, jint ja_start);
 
 /*
  * Class:     com_jacob_com_SafeArray
@@ -756,6 +820,23 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_SafeArray_getInt___3I
  */
 JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setInt___3II
   (JNIEnv *, jobject, jintArray, jint);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getLong
+ * Signature: ([I)J
+ */
+JNIEXPORT jlong JNICALL Java_com_jacob_com_SafeArray_getLong___3I
+  (JNIEnv *env, jobject _this, jintArray indices);
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setLong
+ * Signature: ([IJ)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setLong___3IJ
+  (JNIEnv *env, jobject _this, jintArray indices, jlong c);
+
 
 /*
  * Class:     com_jacob_com_SafeArray

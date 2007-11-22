@@ -17,7 +17,8 @@
   <tr> 
     <td width="13%" valign="top">1829201</td>
     <td width="87%" valign="top">(M4) Decimal type now throws IllegalArgumentException 
-    	when more than 12 bytes worth the digits exist in BigDecimal.</td>
+    	when more than 12 bytes worth the digits exist in BigDecimal.  Rounding  
+    	support added to reduce precision of BigDecimals when converting into VT_DECIMAL</td>
   </tr>
   <tr>
     <td width="13%" valign="top">1815163</td>
@@ -38,8 +39,8 @@
     <td width="100%" colspan="2"><b>Feature Requests</b></td>
   </tr> 
   <tr>
-    <td width="13%" valign="top">1816863</td>
-    <td width="87%" valign="top">(M1) Migrate Jacob to JDK 5</td>
+    <td width="13%" valign="top">1828371 </td>
+    <td width="87%" valign="top">(M4) Added VT_I8 support to SafeArray.</td>
   </tr>
   <tr>
     <td width="13%" valign="top">1813458</td>
@@ -47,6 +48,10 @@
     	to use new Currency class.  Added VT_I8 64 bit support.  VT_I8 support
     	requires Windows XP or later. VT_I8 not supported by windows in 
     	Windows 2000 and earlier. Added more primitive constructors to Variant.</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1816863</td>
+    <td width="87%" valign="top">(M1) Migrate Jacob to JDK 5</td>
   </tr>
   <tr>
     <td width="13%" valign="top">&nbsp;</td>
@@ -149,7 +154,9 @@
     <td width="87%" valign="top">Jacob 1.13 is built using VC++ 2005.
     	That creates a dependency on the Visual C++ 2005 libraries and msvcr80.dll.
     	This library is normally installed on XP systems but may have to be manually
-    	installed on older systems.  It can be obtained from the MS downloads site.</td>
+    	installed on older systems.  It can be obtained from the MS downloads site.
+    	If you are getting loader errors on this release or later when loading the
+    	dll then you may be missing this library.</td>
   </tr>
   
 </table>

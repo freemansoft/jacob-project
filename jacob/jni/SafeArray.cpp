@@ -384,25 +384,25 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromCharArray
     len = numElements(psa);
   }
   // get the double array - don't make a copy
-  jchar *iarr = env->GetCharArrayElements(a, 0);
+  jchar *arrayElements = env->GetCharArrayElements(a, 0);
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
     V_VT(&v) = VT_UI2;
     for(int i=0;i<len;i++) {
-      V_UI2(&v) = iarr[i];
+      V_UI2(&v) = arrayElements[i];
       long x = i;
       SafeArrayPutElement(psa,&x,&v);
     }
   } else if (vt == VT_UI2 || vt == VT_I2) {
     void *pData;
     SafeArrayAccessData(psa, &pData);
-    memcpy(pData, iarr, len*sizeof(jchar));
+    memcpy(pData, arrayElements, len*sizeof(jchar));
     SafeArrayUnaccessData(psa);
   } else {
     ThrowComFail(env, "safearray cannot be assigned from char", 0);
   }
-  env->ReleaseCharArrayElements(a, iarr, 0);
+  env->ReleaseCharArrayElements(a, arrayElements, 0);
 }
 
 /*
@@ -427,25 +427,68 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromIntArray
     len = numElements(psa);
   }
   // get the int array - don't make a copy
-  jint *iarr = env->GetIntArrayElements(a, 0);
+  jint *arrayElements = env->GetIntArrayElements(a, 0);
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
     V_VT(&v) = VT_I4;
     for(int i=0;i<len;i++) {
-      V_I4(&v) = iarr[i];
+      V_I4(&v) = arrayElements[i];
       long x = i;
       SafeArrayPutElement(psa,&x,&v);
     }
   } else if (vt == VT_I4) {
     void *pData;
     SafeArrayAccessData(psa, &pData);
-    memcpy(pData, iarr, len*sizeof(int));
+    memcpy(pData, arrayElements, len*sizeof(int));
     SafeArrayUnaccessData(psa);
   } else {
     ThrowComFail(env, "safearray cannot be assigned from int", -1);
   }
-  env->ReleaseIntArrayElements(a, iarr, 0);
+  env->ReleaseIntArrayElements(a, arrayElements, 0);
+}
+
+/*
+ * Class:     SafeArray
+ * Method:    fromLongArray
+ * Signature: ([L)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromLongArray
+  (JNIEnv *env, jobject _this, jlongArray a)
+{
+  SAFEARRAY *psa = extractSA(env, _this);
+  if (!psa) {
+    ThrowComFail(env, "safearray object corrupted", -1);
+    return;
+  }
+  VARTYPE vt;
+  SafeArrayGetVartype(psa, &vt);
+  int len = env->GetArrayLength(a);
+  if (len > numElements(psa)) 
+  {
+    // max size of memcpy
+    len = numElements(psa);
+  }
+  // get the long array - don't make a copy
+  jlong *arrayElements = env->GetLongArrayElements(a, 0);
+  if (vt == VT_VARIANT) {
+    VARIANT v;
+    VariantInit(&v);
+    V_VT(&v) = VT_I8;
+    for(int i=0;i<len;i++) {
+      V_I8(&v) = arrayElements[i];
+      long x = i;
+      SafeArrayPutElement(psa,&x,&v);
+    }
+  } else if (vt == VT_I8) {
+    void *pData;
+    SafeArrayAccessData(psa, &pData);
+    memcpy(pData, arrayElements, len*sizeof(long));
+    SafeArrayUnaccessData(psa);
+  } else {
+    ThrowComFail(env, "safearray cannot be assigned from long", -1);
+  }
+  env->ReleaseLongArrayElements(a, arrayElements, 0);
 }
 
 /*
@@ -470,25 +513,25 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromShortArray
     len = numElements(psa);
   }
   // get the short array - don't make a copy
-  jshort *iarr = env->GetShortArrayElements(a, 0);
+  jshort *arrayElements = env->GetShortArrayElements(a, 0);
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
     V_VT(&v) = VT_I2;
     for(int i=0;i<len;i++) {
-      V_I2(&v) = iarr[i];
+      V_I2(&v) = arrayElements[i];
       long x = i;
       SafeArrayPutElement(psa,&x,&v);
     }
   } else if (vt == VT_I2) {
     void *pData;
     SafeArrayAccessData(psa, &pData);
-    memcpy(pData, iarr, len*sizeof(short));
+    memcpy(pData, arrayElements, len*sizeof(short));
     SafeArrayUnaccessData(psa);
   } else {
     ThrowComFail(env, "safearray cannot be assigned from short", -1);
   }
-  env->ReleaseShortArrayElements(a, iarr, 0);
+  env->ReleaseShortArrayElements(a, arrayElements, 0);
 }
 
 /*
@@ -513,25 +556,25 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromDoubleArray
     len = numElements(psa);
   }
   // get the double array - don't make a copy
-  jdouble *iarr = env->GetDoubleArrayElements(a, 0);
+  jdouble *arrayElements = env->GetDoubleArrayElements(a, 0);
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
     V_VT(&v) = VT_R8;
     for(int i=0;i<len;i++) {
-      V_R8(&v) = iarr[i];
+      V_R8(&v) = arrayElements[i];
       long x = i;
       SafeArrayPutElement(psa,&x,&v);
     }
   } else if (vt == VT_R8 || vt == VT_DATE) {
     void *pData;
     SafeArrayAccessData(psa, &pData);
-    memcpy(pData, iarr, len*sizeof(double));
+    memcpy(pData, arrayElements, len*sizeof(double));
     SafeArrayUnaccessData(psa);
   } else {
     ThrowComFail(env, "safearray cannot be assigned from double", -1);
   }
-  env->ReleaseDoubleArrayElements(a, iarr, 0);
+  env->ReleaseDoubleArrayElements(a, arrayElements, 0);
 }
 
 /*
@@ -613,25 +656,25 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromByteArray
     len = numElements(psa);
   }
   // get the byte array - don't make a copy
-  jbyte *iarr = env->GetByteArrayElements(a, 0);
+  jbyte *arrayElements = env->GetByteArrayElements(a, 0);
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
     V_VT(&v) = VT_UI1;
     for(int i=0;i<len;i++) {
-      V_UI1(&v) = iarr[i];
+      V_UI1(&v) = arrayElements[i];
       long x = i;
       SafeArrayPutElement(psa,&x,&v);
     }
   } else if (vt == VT_UI1 || vt == VT_I1) {
     jbyte *pData;
     SafeArrayAccessData(psa, (void **)&pData);
-    memcpy(pData, iarr, len*sizeof(jbyte));
+    memcpy(pData, arrayElements, len*sizeof(jbyte));
     SafeArrayUnaccessData(psa);
   } else {
     ThrowComFail(env, "safearray cannot be assigned from byte", -1);
   }
-  env->ReleaseByteArrayElements(a, iarr, 0);
+  env->ReleaseByteArrayElements(a, arrayElements, 0);
 }
 
 /*
@@ -656,25 +699,25 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromFloatArray
     len = numElements(psa);
   }
   // get the float array - don't make a copy
-  jfloat *iarr = env->GetFloatArrayElements(a, 0);
+  jfloat *arrayElements = env->GetFloatArrayElements(a, 0);
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
     V_VT(&v) = VT_R4;
     for(int i=0;i<len;i++) {
-      V_R4(&v) = iarr[i];
+      V_R4(&v) = arrayElements[i];
       long x = i;
       SafeArrayPutElement(psa,&x,&v);
     }
   } else if (vt == VT_R4) {
     void *pData;
     SafeArrayAccessData(psa, &pData);
-    memcpy(pData, iarr, len*sizeof(float));
+    memcpy(pData, arrayElements, len*sizeof(float));
     SafeArrayUnaccessData(psa);
   } else {
     ThrowComFail(env, "safearray cannot be assigned from float", -1);
   }
-  env->ReleaseFloatArrayElements(a, iarr, 0);
+  env->ReleaseFloatArrayElements(a, arrayElements, 0);
 }
 
 /*
@@ -699,13 +742,13 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromBooleanArray
     len = numElements(psa);
   }
   // get the boolean array - don't make a copy
-  jboolean *iarr = env->GetBooleanArrayElements(a, 0);
+  jboolean *arrayElements = env->GetBooleanArrayElements(a, 0);
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
     V_VT(&v) = VT_BOOL;
     for(int i=0;i<len;i++) {
-      V_BOOL(&v) = iarr[i] ? VARIANT_TRUE : VARIANT_FALSE;
+      V_BOOL(&v) = arrayElements[i] ? VARIANT_TRUE : VARIANT_FALSE;
       long x = i;
       SafeArrayPutElement(psa,&x,&v);
     }
@@ -713,14 +756,14 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromBooleanArray
     // jboolean is 1 byte and VARIANT_BOOL is 2
     VARIANT_BOOL v;
     for(int i=0;i<len;i++) {
-      v = iarr[i] ? VARIANT_TRUE : VARIANT_FALSE;
+      v = arrayElements[i] ? VARIANT_TRUE : VARIANT_FALSE;
       long x = i;
       SafeArrayPutElement(psa,&x,&v);
     }
   } else {
     ThrowComFail(env, "safearray cannot be assigned from boolean", -1);
   }
-  env->ReleaseBooleanArrayElements(a, iarr, 0);
+  env->ReleaseBooleanArrayElements(a, arrayElements, 0);
 }
 
 /*
@@ -776,14 +819,14 @@ JNIEXPORT jcharArray JNICALL Java_com_jacob_com_SafeArray_toCharArray
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
   if (vt == VT_UI2 || vt == VT_I2) {
-    jcharArray iarr = env->NewCharArray(num);
+    jcharArray arrayElements = env->NewCharArray(num);
     void *pData;
     SafeArrayAccessData(sa, &pData);
-    env->SetCharArrayRegion(iarr, 0, num, (jchar *)pData);
+    env->SetCharArrayRegion(arrayElements, 0, num, (jchar *)pData);
     SafeArrayUnaccessData(sa);
-    return iarr;
+    return arrayElements;
   } else if (vt == VT_VARIANT) {
-    jcharArray iarr = env->NewCharArray(num);
+    jcharArray arrayElements = env->NewCharArray(num);
     VARIANT v;
     VariantInit(&v);
     for(int i=lb;i<=ub;i++) {
@@ -793,9 +836,9 @@ JNIEXPORT jcharArray JNICALL Java_com_jacob_com_SafeArray_toCharArray
         return NULL;
       }
       jchar val = V_UI2(&v);
-      env->SetCharArrayRegion(iarr, i, 1, &val);
+      env->SetCharArrayRegion(arrayElements, i, 1, &val);
     }
-    return iarr;
+    return arrayElements;
   }
   return NULL;
 }
@@ -820,14 +863,14 @@ JNIEXPORT jintArray JNICALL Java_com_jacob_com_SafeArray_toIntArray
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
   if (vt == VT_I4) {
-    jintArray iarr = env->NewIntArray(num);
+    jintArray arrayElements = env->NewIntArray(num);
     void *pData;
     SafeArrayAccessData(sa, &pData);
-    env->SetIntArrayRegion(iarr, 0, num, (jint *)pData);
+    env->SetIntArrayRegion(arrayElements, 0, num, (jint *)pData);
     SafeArrayUnaccessData(sa);
-    return iarr;
+    return arrayElements;
   } else if (vt == VT_VARIANT) {
-    jintArray iarr = env->NewIntArray(num);
+    jintArray arrayElements = env->NewIntArray(num);
     VARIANT v;
     VariantInit(&v);
     for(int i=lb;i<=ub;i++) {
@@ -837,9 +880,54 @@ JNIEXPORT jintArray JNICALL Java_com_jacob_com_SafeArray_toIntArray
         return NULL;
       }
       jint val = V_I4(&v);
-      env->SetIntArrayRegion(iarr, i, 1, &val);
+      env->SetIntArrayRegion(arrayElements, i, 1, &val);
     }
-    return iarr;
+    return arrayElements;
+  }
+  return NULL;
+}
+
+
+/*
+ * Class:     SafeArray
+ * Method:    toLongArray
+ * Signature: ()[L
+ */
+JNIEXPORT jlongArray JNICALL Java_com_jacob_com_SafeArray_toLongArray
+  (JNIEnv *env, jobject _this)
+{
+  SAFEARRAY *sa = extractSA(env, _this);
+  if (!sa) {
+    ThrowComFail(env, "safearray object corrupted", -1);
+    return NULL;
+  }
+  long lb, ub;
+  SafeArrayGetLBound(sa, 1, &lb);
+  SafeArrayGetUBound(sa, 1, &ub);
+  int num = ub - lb + 1;
+  VARTYPE vt;
+  SafeArrayGetVartype(sa, &vt);
+  if (vt == VT_I8) {
+    jlongArray arrayElements = env->NewLongArray(num);
+    void *pData;
+    SafeArrayAccessData(sa, &pData);
+    env->SetLongArrayRegion(arrayElements, 0, num, (jlong *)pData);
+    SafeArrayUnaccessData(sa);
+    return arrayElements;
+  } else if (vt == VT_VARIANT) {
+    jlongArray arrayElements = env->NewLongArray(num);
+    VARIANT v;
+    VariantInit(&v);
+    for(int i=lb;i<=ub;i++) {
+      long ix = i;
+      SafeArrayGetElement(sa, &ix, (void*) &v);
+      if (FAILED(VariantChangeType(&v, &v, 0, VT_I8))) {
+        return NULL;
+      }
+      jlong val = V_I8(&v);
+      env->SetLongArrayRegion(arrayElements, i, 1, &val);
+    }
+    return arrayElements;
   }
   return NULL;
 }
@@ -865,14 +953,14 @@ JNIEXPORT jshortArray JNICALL Java_com_jacob_com_SafeArray_toShortArray
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
   if (vt == VT_I2) {
-    jshortArray iarr = env->NewShortArray(num);
+    jshortArray arrayElements = env->NewShortArray(num);
     void *pData;
     SafeArrayAccessData(sa, &pData);
-    env->SetShortArrayRegion(iarr, 0, num, (jshort *)pData);
+    env->SetShortArrayRegion(arrayElements, 0, num, (jshort *)pData);
     SafeArrayUnaccessData(sa);
-    return iarr;
+    return arrayElements;
   } else if (vt == VT_VARIANT) {
-    jshortArray iarr = env->NewShortArray(num);
+    jshortArray arrayElements = env->NewShortArray(num);
     VARIANT v;
     VariantInit(&v);
     for(int i=lb;i<=ub;i++) {
@@ -882,9 +970,9 @@ JNIEXPORT jshortArray JNICALL Java_com_jacob_com_SafeArray_toShortArray
         return NULL;
       }
       jshort val = V_I2(&v);
-      env->SetShortArrayRegion(iarr, i, 1, &val);
+      env->SetShortArrayRegion(arrayElements, i, 1, &val);
     }
-    return iarr;
+    return arrayElements;
   }
   return NULL;
 }
@@ -909,14 +997,14 @@ JNIEXPORT jdoubleArray JNICALL Java_com_jacob_com_SafeArray_toDoubleArray
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
   if (vt == VT_R8) {
-    jdoubleArray iarr = env->NewDoubleArray(num);
+    jdoubleArray arrayElements = env->NewDoubleArray(num);
     void *pData;
     SafeArrayAccessData(sa, &pData);
-    env->SetDoubleArrayRegion(iarr, 0, num, (jdouble *)pData);
+    env->SetDoubleArrayRegion(arrayElements, 0, num, (jdouble *)pData);
     SafeArrayUnaccessData(sa);
-    return iarr;
+    return arrayElements;
   } else if (vt == VT_VARIANT) {
-    jdoubleArray iarr = env->NewDoubleArray(num);
+    jdoubleArray arrayElements = env->NewDoubleArray(num);
     VARIANT v;
     VariantInit(&v);
     for(int i=lb;i<=ub;i++) {
@@ -926,9 +1014,9 @@ JNIEXPORT jdoubleArray JNICALL Java_com_jacob_com_SafeArray_toDoubleArray
         return NULL;
       }
       jdouble val = V_R8(&v);
-      env->SetDoubleArrayRegion(iarr, i, 1, &val);
+      env->SetDoubleArrayRegion(arrayElements, i, 1, &val);
     }
-    return iarr;
+    return arrayElements;
   }
   return NULL;
 }
@@ -955,7 +1043,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toStringArray
   if (vt == VT_VARIANT) 
   {
     jclass sClass = env->FindClass("java/lang/String");
-    jobjectArray iarr = env->NewObjectArray(num, sClass, NULL);
+    jobjectArray arrayElements = env->NewObjectArray(num, sClass, NULL);
     VARIANT v;
     VariantInit(&v);
     for(int i=lb;i<=ub;i++) {
@@ -966,20 +1054,20 @@ JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toStringArray
       }
       BSTR bs = V_BSTR(&v);
       jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061 
-      env->SetObjectArrayElement(iarr, i, js);
+      env->SetObjectArrayElement(arrayElements, i, js);
     }
-    return iarr;
+    return arrayElements;
   } else if (vt == VT_BSTR) {
     jclass sClass = env->FindClass("java/lang/String");
-    jobjectArray iarr = env->NewObjectArray(num, sClass, NULL);
+    jobjectArray arrayElements = env->NewObjectArray(num, sClass, NULL);
     for(int i=lb;i<=ub;i++) {
       BSTR bs = NULL;
       long ix = i;
       SafeArrayGetElement(sa, &ix, (void*) &bs);
       jstring js = env->NewString((jchar*)bs, SysStringLen(bs)); // SR cast SF 1689061 
-      env->SetObjectArrayElement(iarr, i, js);
+      env->SetObjectArrayElement(arrayElements, i, js);
     }
-    return iarr;
+    return arrayElements;
   }
   ThrowComFail(env, "safearray cannot be converted to string[]", 0);
   return NULL;
@@ -1005,14 +1093,14 @@ JNIEXPORT jbyteArray JNICALL Java_com_jacob_com_SafeArray_toByteArray
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
   if (vt == VT_I1 || vt == VT_UI1) {
-    jbyteArray iarr = env->NewByteArray(num);
+    jbyteArray arrayElements = env->NewByteArray(num);
     jbyte *pData;
     SafeArrayAccessData(sa, (void **)&pData);
-    env->SetByteArrayRegion(iarr, 0, num, pData);
+    env->SetByteArrayRegion(arrayElements, 0, num, pData);
     SafeArrayUnaccessData(sa);
-    return iarr;
+    return arrayElements;
   } else if (vt == VT_VARIANT) {
-    jbyteArray iarr = env->NewByteArray(num);
+    jbyteArray arrayElements = env->NewByteArray(num);
     VARIANT v;
     VariantInit(&v);
     for(int i=lb,j=0;i<=ub;i++,j++) {
@@ -1022,9 +1110,9 @@ JNIEXPORT jbyteArray JNICALL Java_com_jacob_com_SafeArray_toByteArray
         return NULL;
       }
       jbyte val = V_UI1(&v);
-      env->SetByteArrayRegion(iarr, j, 1, &val);
+      env->SetByteArrayRegion(arrayElements, j, 1, &val);
     }
-    return iarr;
+    return arrayElements;
   }
   return NULL;
 }
@@ -1049,14 +1137,14 @@ JNIEXPORT jfloatArray JNICALL Java_com_jacob_com_SafeArray_toFloatArray
   VARTYPE vt;
   SafeArrayGetVartype(sa, &vt);
   if (vt == VT_R4) {
-    jfloatArray iarr = env->NewFloatArray(num);
+    jfloatArray arrayElements = env->NewFloatArray(num);
     void *pData;
     SafeArrayAccessData(sa, &pData);
-    env->SetFloatArrayRegion(iarr, 0, num, (jfloat *)pData);
+    env->SetFloatArrayRegion(arrayElements, 0, num, (jfloat *)pData);
     SafeArrayUnaccessData(sa);
-    return iarr;
+    return arrayElements;
   } else if (vt == VT_VARIANT) {
-    jfloatArray iarr = env->NewFloatArray(num);
+    jfloatArray arrayElements = env->NewFloatArray(num);
     VARIANT v;
     VariantInit(&v);
     for(int i=lb;i<=ub;i++) {
@@ -1066,9 +1154,9 @@ JNIEXPORT jfloatArray JNICALL Java_com_jacob_com_SafeArray_toFloatArray
         return NULL;
       }
       jfloat val = V_R4(&v);
-      env->SetFloatArrayRegion(iarr, i, 1, &val);
+      env->SetFloatArrayRegion(arrayElements, i, 1, &val);
     }
-    return iarr;
+    return arrayElements;
   }
   return NULL;
 }
@@ -1094,17 +1182,17 @@ JNIEXPORT jbooleanArray JNICALL Java_com_jacob_com_SafeArray_toBooleanArray
   SafeArrayGetVartype(sa, &vt);
   if (vt == VT_BOOL) {
     // need to loop because jboolean=1 byte and VARIANT_BOOL=2 bytes
-    jbooleanArray iarr = env->NewBooleanArray(num);
+    jbooleanArray arrayElements = env->NewBooleanArray(num);
     VARIANT_BOOL v;
     for(int i=lb,j=0;i<=ub;i++,j++) {
       long ix = i;
       SafeArrayGetElement(sa, &ix, (void*) &v);
       jboolean val = v == VARIANT_TRUE ? JNI_TRUE : JNI_FALSE;
-      env->SetBooleanArrayRegion(iarr, j, 1, &val);
+      env->SetBooleanArrayRegion(arrayElements, j, 1, &val);
     }
-    return iarr;
+    return arrayElements;
   } else if (vt == VT_VARIANT) {
-    jbooleanArray iarr = env->NewBooleanArray(num);
+    jbooleanArray arrayElements = env->NewBooleanArray(num);
     VARIANT v;
     VariantInit(&v);
     for(int i=lb;i<=ub;i++) {
@@ -1114,9 +1202,9 @@ JNIEXPORT jbooleanArray JNICALL Java_com_jacob_com_SafeArray_toBooleanArray
         return NULL;
       }
       jboolean val = V_BOOL(&v) == VARIANT_TRUE ? JNI_TRUE : JNI_FALSE;
-      env->SetBooleanArrayRegion(iarr, i, 1, &val);
+      env->SetBooleanArrayRegion(arrayElements, i, 1, &val);
     }
-    return iarr;
+    return arrayElements;
   }
   return NULL;
 }
@@ -1310,25 +1398,25 @@ JNIEXPORT jobjectArray JNICALL Java_com_jacob_com_SafeArray_toVariantArray
   } \
   VARTYPE vt; \
   SafeArrayGetVartype(psa, &vt); \
-  jtyp *iarr = env->jgetArr(ja, 0); \
+  jtyp *arrayElements = env->jgetArr(ja, 0); \
   if (vt == VT_VARIANT) { \
     VARIANT v; \
     VariantInit(&v); \
     V_VT(&v) = varType; \
     for(int i=ja_start,j=idx;i<ja_start+nelem;i++,j++) { \
-      varAccess(&v) = iarr[i]; \
+      varAccess(&v) = arrayElements[i]; \
       long x = j; \
       SafeArrayPutElement(psa,&x,&v); \
     } \
   } else if (vt == varType || vt == varType2) { \
     jtyp *pData; \
     SafeArrayAccessData(psa, (void **)&pData); \
-    memcpy(&pData[idx], &iarr[ja_start], nelem*sizeof(jtyp)); \
+    memcpy(&pData[idx], &arrayElements[ja_start], nelem*sizeof(jtyp)); \
     SafeArrayUnaccessData(psa); \
   } else { \
     ThrowComFail(env, "safearray type mismatch", -1); \
   } \
-  env->jrelArr(ja, iarr, 0);
+  env->jrelArr(ja, arrayElements, 0);
 
 /*
  * Class:     SafeArray
@@ -1398,6 +1486,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setChars
        GetCharArrayElements, ReleaseCharArrayElements);
 }
 
+/*----------------------- INTS ----------------------------------*/
+
 /*
  * Class:     SafeArray
  * Method:    getInt
@@ -1464,6 +1554,79 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setInts
   SETARRAYCODE(VT_I4, VT_I4, V_I4, jint, 
        GetIntArrayElements, ReleaseIntArrayElements);
 }
+
+/*----------------------- END INTS ----------------------------------*/
+/*----------------------- LONGS ----------------------------------*/
+
+/*
+ * Class:     SafeArray
+ * Method:    getLong
+ * Signature: (I)J
+ */
+JNIEXPORT jlong JNICALL Java_com_jacob_com_SafeArray_getLong__I
+  (JNIEnv *env, jobject _this, jint idx)
+{
+  GET1DCODE(VT_I8, V_I8, jlong)
+}
+
+/*
+ * Class:     SafeArray
+ * Method:    getLong
+ * Signature: (II)J
+ */
+JNIEXPORT jlong JNICALL Java_com_jacob_com_SafeArray_getLong__II
+  (JNIEnv *env, jobject _this, jint i, jint j)
+{
+  GET2DCODE(VT_I8, V_I8, jlong)
+}
+
+/*
+ * Class:     SafeArray
+ * Method:    setLong
+ * Signature: (IJ)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setLong__IJ
+  (JNIEnv *env, jobject _this, jint idx, jlong c)
+{
+  SET1DCODE(VT_I8, V_I8);
+}
+
+/*
+ * Class:     SafeArray
+ * Method:    setLong
+ * Signature: (IIJ)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setLong__IIJ
+  (JNIEnv *env, jobject _this, jint i, jint j, jlong c)
+{
+  SET2DCODE(VT_I8, V_I8);
+}
+
+/*
+ * Class:     SafeArray
+ * Method:    getLongs
+ * Signature: (II[JI)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_getLongs
+  (JNIEnv *env, jobject _this, jint idx, jint nelem, jlongArray ja, jint ja_start)
+{
+  GETARRAYCODE(VT_I8, VT_I8, V_I8, jlong, SetLongArrayRegion);
+}
+
+/*
+ * Class:     SafeArray
+ * Method:    setLongs
+ * Signature: (II[JI)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setLongs
+  (JNIEnv *env, jobject _this, jint idx, jint nelem, jlongArray ja, jint ja_start)
+{
+  SETARRAYCODE(VT_I8, VT_I8, V_I8, jlong, 
+       GetLongArrayElements, ReleaseLongArrayElements);
+}
+
+/*------------------------ END LONGS -----------------------------*/
+
 
 /*
  * Class:     SafeArray
@@ -2206,27 +2369,27 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBooleans
   {
     len = numElements(psa);
   }
-  jboolean *iarr = env->GetBooleanArrayElements(ja, 0);
+  jboolean *arrayElements = env->GetBooleanArrayElements(ja, 0);
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
     V_VT(&v) = VT_BOOL;
     for(int i=ja_start,j=idx;i<ja_start+nelem;i++,j++) {
-      V_BOOL(&v) = iarr[i] == JNI_TRUE ? VARIANT_TRUE : VARIANT_FALSE;
+      V_BOOL(&v) = arrayElements[i] == JNI_TRUE ? VARIANT_TRUE : VARIANT_FALSE;
       long x = j;
       SafeArrayPutElement(psa,&x,&v);
     }
   } else if (vt == VT_BOOL) {
     VARIANT_BOOL v;
     for(int i=ja_start,j=idx;i<ja_start+nelem;i++,j++) {
-      v = iarr[i] == JNI_TRUE ? VARIANT_TRUE : VARIANT_FALSE;
+      v = arrayElements[i] == JNI_TRUE ? VARIANT_TRUE : VARIANT_FALSE;
       long x = j;
       SafeArrayPutElement(psa,&x,&v);
     }
   } else {
     ThrowComFail(env, "safearray type mismatch", -1);
   } 
-  env->ReleaseBooleanArrayElements(ja, iarr, 0);
+  env->ReleaseBooleanArrayElements(ja, arrayElements, 0);
 }
 
 /*
@@ -2660,6 +2823,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setChar___3IC
   SETNDCODE(VT_UI2, V_UI2);
 }
 
+/*----------------------- INTS ----------------------------------*/
+
 /*
  * Class:     com_jacob_com_SafeArray
  * Method:    getInt
@@ -2682,6 +2847,34 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setInt___3II
 {
   SETNDCODE(VT_I4, V_I4);
 }
+
+/*----------------------- END INTS ----------------------------------*/
+/*----------------------- LONGS ----------------------------------*/
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getLong
+ * Signature: ([I)J
+ */
+JNIEXPORT jlong JNICALL Java_com_jacob_com_SafeArray_getLong___3I
+  (JNIEnv *env, jobject _this, jintArray indices)
+{
+  GETNDCODE(VT_I8, V_I8, jlong)
+}
+
+
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    setLong
+ * Signature: ([IJ)V
+ */
+JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setLong___3IJ
+  (JNIEnv *env, jobject _this, jintArray indices, jlong c)
+{
+  SETNDCODE(VT_I8, V_I8);
+}
+
+/*----------------------- END LONGS ----------------------------------*/
 
 /*
  * Class:     com_jacob_com_SafeArray
