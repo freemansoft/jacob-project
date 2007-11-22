@@ -64,10 +64,11 @@ public class MethodItem {
 
 			// Extract return type
 			nativeReturnType = st.nextToken().trim();
-			if (nativeReturnType.length() > 0)
+			if (nativeReturnType.length() > 0) {
 				returnType = computeVarType(nativeReturnType);
-			else
+			} else {
 				returnType = "";
+			}
 
 			// Extract name
 			name = st.nextToken();
@@ -89,9 +90,10 @@ public class MethodItem {
 			throws IllegalFormatException {
 
 		// Strip trailing and ending []
-		if (!parameters.startsWith("[") || !parameters.endsWith("]"))
+		if (!parameters.startsWith("[") || !parameters.endsWith("]")) {
 			throw new IllegalFormatException("Parameters format error : "
 					+ parameters);
+		}
 
 		parameters = parameters.substring(1, parameters.length() - 1);
 
@@ -122,14 +124,15 @@ public class MethodItem {
 			StringTokenizer st2 = new StringTokenizer(options, "-");
 			while (st2.hasMoreTokens()) {
 				String option = st2.nextToken();
-				if (option.equals("in"))
+				if (option.equals("in")) {
 					direction = ParameterItem.DIRECTION_IN;
-				else if (option.equals("out"))
+				} else if (option.equals("out")) {
 					direction = ParameterItem.DIRECTION_OUT;
-				else if (option.equals("retval"))
+				} else if (option.equals("retval")) {
 					direction = ParameterItem.DIRECTION_RETVAL;
-				else if (option.equals("optional"))
+				} else if (option.equals("optional")) {
 					optional = true;
+				}
 			}
 
 			ParameterItem pi = new ParameterItem(parameterName, parameterType,
@@ -137,8 +140,9 @@ public class MethodItem {
 
 			// This parameter is a Java base class
 			// if( pi.getObjectType() != pi.getType() )
-			if (optional || direction == ParameterItem.DIRECTION_OUT)
+			if (optional || direction == ParameterItem.DIRECTION_OUT) {
 				additionalMethodRequired = true;
+			}
 
 			parametersList.addElement(pi);
 		}
@@ -172,15 +176,16 @@ public class MethodItem {
 				"Variant", "byte" };
 
 		customReturnType = true;
-		if (returnType.trim().length() == 0)
+		if (returnType.trim().length() == 0) {
 			customReturnType = false;
-		else
+		} else {
 			for (int i = 0; i < types.length; i++) {
 				if (types[i].equals(returnType.trim())) {
 					customReturnType = false;
 					break;
 				}
 			}
+		}
 	}
 
 	public boolean isCustomReturnType() {
@@ -197,16 +202,17 @@ public class MethodItem {
 			throws IllegalFormatException {
 		int result = METHODTYPE_UNKNOWN;
 
-		if (type.equals("INVOKE_FUNC"))
+		if (type.equals("INVOKE_FUNC")) {
 			result = METHODTYPE_FUNCTION;
-		else if (type.equals("INVOKE_PROPERTYGET"))
+		} else if (type.equals("INVOKE_PROPERTYGET")) {
 			result = METHODTYPE_PROPERTYGET;
-		else if (type.equals("INVOKE_PROPERTYPUT"))
+		} else if (type.equals("INVOKE_PROPERTYPUT")) {
 			result = METHODTYPE_PROPERTYPUT;
-		else if (type.equals("INVOKE_PROPERTYPUTREF"))
+		} else if (type.equals("INVOKE_PROPERTYPUTREF")) {
 			result = METHODTYPE_PROPERTYPUTREF;
-		else
+		} else {
 			throw new IllegalFormatException("Unknown method type: " + type);
+		}
 
 		return result;
 	}
@@ -215,71 +221,69 @@ public class MethodItem {
 			throws IllegalFormatException {
 		String result = "";
 
-		if (type.equals("VT_EMPTY")) // Pending
+		if (type.equals("VT_EMPTY")) {
 			result = "void";
-		else if (type.equals("VT_NULL"))
+		} else if (type.equals("VT_NULL")) {
 			result = "Object";
-		else if (type.equals("VT_I2"))
+		} else if (type.equals("VT_I2")) {
 			result = "short";
-		else if (type.equals("VT_I4") || type.equals("VT_INT"))
+		} else if (type.equals("VT_I4") || type.equals("VT_INT")) {
 			result = "int";
-		else if (type.equals("VT_R4"))
+		} else if (type.equals("VT_R4")) {
 			result = "float";
-		else if (type.equals("VT_R8"))
+		} else if (type.equals("VT_R8")) {
 			result = "double";
-		else if (type.equals("VT_CY")) // Currency
+		} else if (type.equals("VT_CY")) {
 			result = "long";
-		else if (type.equals("VT_DATE"))
+		} else if (type.equals("VT_DATE")) {
 			result = "java.util.Date";
-		else if (type.equals("VT_BSTR"))
+		} else if (type.equals("VT_BSTR")) {
 			result = "String";
-		else if (type.equals("VT_DISPATCH")) // ???
+		} else if (type.equals("VT_DISPATCH")) {
 			// result = "Dispatch";
 			result = "Object";
-		else if (type.equals("VT_ERROR")) // Pending
+		} else if (type.equals("VT_ERROR")) {
 			result = "int";
-		else if (type.equals("VT_BOOL"))
+		} else if (type.equals("VT_BOOL")) {
 			result = "boolean";
-		else if (type.equals("VT_VARIANT"))
+		} else if (type.equals("VT_VARIANT")) {
 			result = "Variant";
-		// ADO.Field.getDataFormat() maps UNKNOWN as Variant. I hope it is
-		// correct
-		else if (type.equals("VT_UNKNOWN"))
+		} else if (type.equals("VT_UNKNOWN")) {
 			result = "Variant";
-		else if (type.equals("VT_I1"))
+		} else if (type.equals("VT_I1")) {
 			result = "byte";
-		else if (type.equals("VT_UI1"))
+		} else if (type.equals("VT_UI1")) {
 			result = "byte";
-		else if (type.equals("VT_UI2"))
+		} else if (type.equals("VT_UI2")) {
 			result = "short";
-		else if (type.equals("VT_UI4"))
+		} else if (type.equals("VT_UI4")) {
 			result = "int";
-		else if (type.equals("VT_I8"))
+		} else if (type.equals("VT_I8")) {
 			result = "long";
-		else if (type.equals("VT_UI8"))
+		} else if (type.equals("VT_UI8")) {
 			result = "long";
-		else if (type.equals("VT_INT"))
+		} else if (type.equals("VT_INT")) {
 			result = "int";
-		else if (type.equals("VT_UINT"))
+		} else if (type.equals("VT_UINT")) {
 			result = "int";
-		else if (type.equals("VT_VOID"))
+		} else if (type.equals("VT_VOID")) {
 			result = "void";
-		// Simple HRESULT managment
-		else if (type.equals("VT_HRESULT"))
+		} else if (type.equals("VT_HRESULT")) {
 			result = "int";
-		else if (type.equals("VT_SAFEARRAY"))
+		} else if (type.equals("VT_SAFEARRAY")) {
 			result = "SafeArray";
-		// RGB VB Internal type
-		else if (type.equals("MsoRGBType"))
+		} else if (type.equals("MsoRGBType")) {
 			result = "int";
-		else
+		} else {
 			// Custom type
 			result = Jacobgen.getInstance().getExternalClass(type) == null ? type
 					: Jacobgen.getInstance().getExternalClass(type);
+		}
 
 		// Simple enumeration
-		if (Jacobgen.getInstance().isEnum(type))
+		if (Jacobgen.getInstance().isEnum(type)) {
 			result = "int";
+		}
 
 		return result;
 	}
@@ -291,63 +295,63 @@ public class MethodItem {
 	protected String getReturnConversionMethodCode() {
 		String result = "";
 
-		if (nativeReturnType.equals("VT_EMPTY")) // Pending
+		if (nativeReturnType.equals("VT_EMPTY")) {
 			result = "";
-		else if (nativeReturnType.equals("VT_NULL")) // is there some better
+		} else if (nativeReturnType.equals("VT_NULL")) {
 			// method? this calls
 			// toDispatch() which
 			// results in what ?
 			result = ".toDispatch()";
-		else if (nativeReturnType.equals("VT_I2"))
+		} else if (nativeReturnType.equals("VT_I2")) {
 			result = ".changeType(Variant.VariantShort).getShort()";
-		else if (nativeReturnType.equals("VT_I4")
-				|| nativeReturnType.equals("VT_INT"))
+		} else if (nativeReturnType.equals("VT_I4")
+				|| nativeReturnType.equals("VT_INT")) {
 			result = ".changeType(Variant.VariantInt).getInt()";
-		else if (nativeReturnType.equals("VT_R4"))
+		} else if (nativeReturnType.equals("VT_R4")) {
 			result = ".changeType(Variant.VariantFloat).getFloat()";
-		else if (nativeReturnType.equals("VT_R8"))
+		} else if (nativeReturnType.equals("VT_R8")) {
 			result = ".changeType(Variant.VariantDouble).getDouble()";
-		else if (nativeReturnType.equals("VT_CY")) // Currency
+		} else if (nativeReturnType.equals("VT_CY")) {
 			result = ".changeType(Variant.VariantCurrency).getCurrency()";
-		else if (nativeReturnType.equals("VT_DATE")) // this should use the
+		} else if (nativeReturnType.equals("VT_DATE")) {
 			// new toJavaDate() so
 			// we could remove the
 			// conversion code
 			result = ".getDate()";
-		else if (nativeReturnType.equals("VT_BSTR"))
+		} else if (nativeReturnType.equals("VT_BSTR")) {
 			result = ".toString()";
-		else if (nativeReturnType.equals("VT_DISPATCH")) // ??? probably not
+		} else if (nativeReturnType.equals("VT_DISPATCH")) {
 			// needed because he
 			// does
 			// .toDispatch() no
 			// matter what
 			// result = ".toDispatch()";
 			result = "";
-		else if (nativeReturnType.equals("VT_ERROR")) // Pending
+		} else if (nativeReturnType.equals("VT_ERROR")) {
 			result = ".changeType(Variant.VariantError).getError()";
-		else if (nativeReturnType.equals("VT_BOOL"))
+		} else if (nativeReturnType.equals("VT_BOOL")) {
 			result = ".changeType(Variant.VariantBoolean).getBoolean()";
-		else if (nativeReturnType.equals("VT_VARIANT"))
+		} else if (nativeReturnType.equals("VT_VARIANT")) {
 			result = "";
-		// ADO.Field.getDataFormat() maps UNKNOWN as Variant. I hope it is
-		// correct
-		else if (nativeReturnType.equals("VT_UNKNOWN"))
+		} else if (nativeReturnType.equals("VT_UNKNOWN")) {
 			result = "";
-		else if (nativeReturnType.equals("VT_UI1"))
+		} else if (nativeReturnType.equals("VT_UI1")) {
 			result = ".changeType(Variant.VariantByte).getByte()";
-		// Simple HRESULT managment
-		else if (nativeReturnType.equals("VT_HRESULT"))
+		} else if (nativeReturnType.equals("VT_HRESULT")) {
 			result = ".changeType(Variant.VariantInt).getInt()";
-		else if (nativeReturnType.equals("VT_SAFEARRAY"))
+		} else if (nativeReturnType.equals("VT_SAFEARRAY")) {
 			result = ".toSafeArray()";
+		}
 
 		// Simple enumeration
-		if (Jacobgen.getInstance().isEnum(nativeReturnType))
+		if (Jacobgen.getInstance().isEnum(nativeReturnType)) {
 			result = ".changeType(Variant.VariantInt).getInt()";
+		}
 
 		// RGB VB Internal type
-		if (nativeReturnType.equals("MsoRGBType"))
+		if (nativeReturnType.equals("MsoRGBType")) {
 			result = ".changeType(Variant.VariantInt).getInt()";
+		}
 
 		return result;
 	}

@@ -295,8 +295,9 @@ public class Jacobgen {
 						int f = line.indexOf(';');
 						if (!line.substring(f + 1).trim().endsWith("Events")) {
 							baseClass = line.substring(f + 1).trim();
-							if (baseClass.equals("IDispatch"))
+							if (baseClass.equals("IDispatch")) {
 								baseClass = "Dispatch";
+							}
 						}
 
 					} else {
@@ -338,12 +339,14 @@ public class Jacobgen {
 											+ " parmValue]";
 
 									MethodItem mi = new MethodItem(getPropLine);
-									if (!methodsToAvoid.contains(mi.getName()))
+									if (!methodsToAvoid.contains(mi.getName())) {
 										classMethods.addElement(mi);
+									}
 
 									MethodItem mi2 = new MethodItem(putPropLine);
-									if (!methodsToAvoid.contains(mi2.getName()))
+									if (!methodsToAvoid.contains(mi2.getName())) {
 										classMethods.addElement(mi2);
+									}
 
 									/*
 									 * 
@@ -359,8 +362,9 @@ public class Jacobgen {
 								} else {
 
 									MethodItem mi = new MethodItem(line);
-									if (!methodsToAvoid.contains(mi.getName()))
+									if (!methodsToAvoid.contains(mi.getName())) {
 										classMethods.addElement(mi);
+									}
 								}
 							}
 						} catch (IllegalFormatException ife) {
@@ -392,9 +396,11 @@ public class Jacobgen {
 		String filename;
 		String directory = "";
 
-		if (destinationPath.length() > 0)
-			if (!destinationPath.endsWith(File.separator))
+		if (destinationPath.length() > 0) {
+			if (!destinationPath.endsWith(File.separator)) {
 				destinationPath += File.separator;
+			}
+		}
 
 		if (destinationPackage.length() > 0) {
 			directory = convertPackageToDir(destinationPackage)
@@ -433,8 +439,9 @@ public class Jacobgen {
 			System.err.println("Unrecognized class type " + classType);
 		}
 
-		if (g != null)
+		if (g != null) {
 			g.generate();
+		}
 
 	}
 
@@ -444,8 +451,9 @@ public class Jacobgen {
 
 		while (st.hasMoreTokens()) {
 			buffer.append(st.nextToken());
-			if (st.hasMoreTokens())
+			if (st.hasMoreTokens()) {
 				buffer.append(File.separator);
+			}
 		}
 
 		return buffer.toString();
@@ -460,8 +468,9 @@ public class Jacobgen {
 
 		while (true) {
 			String line = reader.readLine();
-			if (line == null)
+			if (line == null) {
 				break;
+			}
 
 			result.addElement(line);
 		}
@@ -470,8 +479,9 @@ public class Jacobgen {
 	}
 
 	public static Jacobgen getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new Jacobgen();
+		}
 
 		return instance;
 	}

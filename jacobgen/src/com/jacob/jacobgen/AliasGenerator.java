@@ -18,23 +18,25 @@
  */
 package com.jacob.jacobgen;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
- * This class creates any of the wrapper classes that map to a DLL object
- * of type TKIND_ALIAS
+ * This class creates any of the wrapper classes that map to a DLL object of
+ * type TKIND_ALIAS
+ * 
  * @version $Id$
  */
 class AliasGenerator extends AbstractGenerator {
 
-	protected AliasGenerator( String filename, String typelibName, String destinationPackage,
-		String className, String baseClass ) {
-		super( filename, typelibName, destinationPackage, className, baseClass,
-				null, null, null );
+	protected AliasGenerator(String filename, String typelibName,
+			String destinationPackage, String className, String baseClass) {
+		super(filename, typelibName, destinationPackage, className, baseClass,
+				null, null, null);
 	}
 
 	protected void writeClassDeclaration() throws IOException {
-		w.write( "public interface " + className + " extends " + baseClass + " {\n\n" );
+		w.write("public interface " + className + " extends " + baseClass
+				+ " {\n\n");
 	}
 
 	protected void writeFields() throws IOException {
@@ -47,4 +49,3 @@ class AliasGenerator extends AbstractGenerator {
 	}
 
 }
-

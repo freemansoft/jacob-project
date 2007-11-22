@@ -50,8 +50,9 @@ public class TypeLibInspector {
 			for (int i = 0; i < buf.length; i++) {
 				System.out.print((char) buf[i]);
 			}
-		} else
+		} else {
 			System.out.println("TypeLibInspector <tlbfilename>");
+		}
 	}
 
 }

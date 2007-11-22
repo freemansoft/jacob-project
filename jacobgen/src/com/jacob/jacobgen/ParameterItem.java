@@ -20,9 +20,9 @@ package com.jacob.jacobgen;
 
 /**
  * Represent a method parameter
- *
+ * 
  * @version $Id$
- * @author  Massimiliano Bigatti
+ * @author Massimiliano Bigatti
  */
 public class ParameterItem {
 
@@ -30,7 +30,7 @@ public class ParameterItem {
 	private String nativeType;
 	private String type;
 	private String objectType;
-	//private String arrayType;
+	// private String arrayType;
 	private int direction;
 	private boolean optional;
 	private boolean object;
@@ -41,16 +41,17 @@ public class ParameterItem {
 	public static final int DIRECTION_OUT = 2;
 	public static final int DIRECTION_RETVAL = 3;
 
-	private	String[] types = { "void", "Object", "short", "int", "float", "double",
-							"long", "Date", "String", "Dispatch", "Error",
-							"boolean", "Variant", "byte" };
+	private String[] types = { "void", "Object", "short", "int", "float",
+			"double", "long", "Date", "String", "Dispatch", "Error", "boolean",
+			"Variant", "byte" };
 
-	private	String[] otypes = { "void", "Object", "Short", "Int", "Float", "Double",
-							"Long", "Date", "String", "Dispatch", "Error",
-							"Boolean", "Variant", "Byte" };
+	private String[] otypes = { "void", "Object", "Short", "Int", "Float",
+			"Double", "Long", "Date", "String", "Dispatch", "Error", "Boolean",
+			"Variant", "Byte" };
 
-	protected ParameterItem( String name, String nativeType, String type, int direction, boolean optional) {
-		this.name = name.substring(0,1).toLowerCase() + name.substring(1);
+	protected ParameterItem(String name, String nativeType, String type,
+			int direction, boolean optional) {
+		this.name = name.substring(0, 1).toLowerCase() + name.substring(1);
 		this.nativeType = nativeType;
 		this.type = type;
 		this.direction = direction;
@@ -65,75 +66,84 @@ public class ParameterItem {
 		return name;
 	}
 
-  /**
-   * Returns the name for the parameter used by the java component.
-   * If it is the same as a Java-Keyword it will be preceeded by a <code>p_</code>.
-   * @return a String which is the name of the parameter without any
-   *         conflicts with Java-Keywords
-   */
-  public String getJavaName() {
-    if ( ClassGenerator.checkForJavaKeywords(this.name) ) {
-      return "p_" + this.name;
-    } else {
-      return this.name;
-    }
-  }
+	/**
+	 * Returns the name for the parameter used by the java component. If it is
+	 * the same as a Java-Keyword it will be preceeded by a <code>p_</code>.
+	 * 
+	 * @return a String which is the name of the parameter without any conflicts
+	 *         with Java-Keywords
+	 */
+	public String getJavaName() {
+		if (ClassGenerator.checkForJavaKeywords(this.name)) {
+			return "p_" + this.name;
+		} else {
+			return this.name;
+		}
+	}
 
-  /**
-   * Returns the name for the parameter as it is used by the Variant-variable
-   * which is necessary for calls with out-parameters.
-   * @return a String which is the name of the Variant-variable of this parameter
-   */
-  public String getVariantName() {
-    return "vnt_" + this.name;
-  }
+	/**
+	 * Returns the name for the parameter as it is used by the Variant-variable
+	 * which is necessary for calls with out-parameters.
+	 * 
+	 * @return a String which is the name of the Variant-variable of this
+	 *         parameter
+	 */
+	public String getVariantName() {
+		return "vnt_" + this.name;
+	}
 
-  /**
-   * Returns the name for the put*Ref-method for this parameter as it is used
-   * by the Variant-variable which is necessary for calls with out-parameters.
-   * @return a String which is the name of the put*Ref-method of this parameter
-   */
-  public String getVariantPutMethod() {
-	  if (getObjectType().equals("java.util.Date")) {
-		  return "putDateRef";
-	  } else {
-		  return "put" + getObjectType() + "Ref";
-	  }
-  }
+	/**
+	 * Returns the name for the put*Ref-method for this parameter as it is used
+	 * by the Variant-variable which is necessary for calls with out-parameters.
+	 * 
+	 * @return a String which is the name of the put*Ref-method of this
+	 *         parameter
+	 */
+	public String getVariantPutMethod() {
+		if (getObjectType().equals("java.util.Date")) {
+			return "putDateRef";
+		} else {
+			return "put" + getObjectType() + "Ref";
+		}
+	}
 
-  /**
-   * Returns the name for the to*-method for this parameter as it is used
-   * by the Variant-variable which is necessary for calls with out-parameters.
-   * @return a String which is the name of the to*-method of this parameter
-   */
-  public String getVariantGetMethod() {
-	  if (getObjectType().equals("java.util.Date")) {
-		  return "toJavaDate";
-	  } else {
-		  return "to" + getObjectType();
-	  }
-  }
+	/**
+	 * Returns the name for the to*-method for this parameter as it is used by
+	 * the Variant-variable which is necessary for calls with out-parameters.
+	 * 
+	 * @return a String which is the name of the to*-method of this parameter
+	 */
+	public String getVariantGetMethod() {
+		if (getObjectType().equals("java.util.Date")) {
+			return "toJavaDate";
+		} else {
+			return "to" + getObjectType();
+		}
+	}
 
-  /**
-   * Returns the type for the parameter as an array.
-   * @return a String which is the type of this parameter as an array
-   */
-  public String getArrayType() {
-    return this.type + "[]";
-  }
+	/**
+	 * Returns the type for the parameter as an array.
+	 * 
+	 * @return a String which is the type of this parameter as an array
+	 */
+	public String getArrayType() {
+		return this.type + "[]";
+	}
 
-  /**
-   * Returns the type for this parameter. Also if non-basetypes are
-   * requested it returns ab basetye if it is a pure input parameter.
-   * @return a String which is the type of this parameter
-   */
-  public String getType(boolean	baseType) {
-    if ( baseType || (direction == DIRECTION_IN) || (direction == DIRECTION_UNKNOWN)) {
-      return getType();
-    } else {
-      return getArrayType();
-    }
-  }
+	/**
+	 * Returns the type for this parameter. Also if non-basetypes are requested
+	 * it returns ab basetye if it is a pure input parameter.
+	 * 
+	 * @return a String which is the type of this parameter
+	 */
+	public String getType(boolean baseType) {
+		if (baseType || (direction == DIRECTION_IN)
+				|| (direction == DIRECTION_UNKNOWN)) {
+			return getType();
+		} else {
+			return getArrayType();
+		}
+	}
 
 	public String getType() {
 		return type;
@@ -163,92 +173,90 @@ public class ParameterItem {
 		return customType;
 	}
 
-
 	/**
-     * Return the method required to pass this parameter to the Dispatch
-	 * call method.
+	 * Return the method required to pass this parameter to the Dispatch call
+	 * method.
 	 */
 	protected String getParameterCallingCode() {
 		String result = name;
 		String paramName = name;
 
-		if( ClassGenerator.checkForJavaKeywords( name ) )
+		if (ClassGenerator.checkForJavaKeywords(name)) {
 			paramName = "p_" + name;
+		}
 
-		result = Jacobgen.getInstance().getExternalClass(paramName)==null ?
-			paramName : Jacobgen.getInstance().getExternalClass(paramName);
+		result = Jacobgen.getInstance().getExternalClass(paramName) == null ? paramName
+				: Jacobgen.getInstance().getExternalClass(paramName);
 
-		if( nativeType.equals("VT_EMPTY") )		//Pending
+		if (nativeType.equals("VT_EMPTY")) {
 			result = "";
-		else if( nativeType.equals("VT_NULL") ) //Pending
+		} else if (nativeType.equals("VT_NULL")) {
 			result = "";
-		else if( nativeType.equals("VT_I2") )
+		} else if (nativeType.equals("VT_I2")) {
 			result = "new Variant(" + paramName + ")";
-		else if( nativeType.equals("VT_I4") || nativeType.equals("VT_INT") )
+		} else if (nativeType.equals("VT_I4") || nativeType.equals("VT_INT")) {
 			result = "new Variant(" + paramName + ")";
-		else if( nativeType.equals("VT_R4") )
+		} else if (nativeType.equals("VT_R4")) {
 			result = "new Variant(" + paramName + ")";
-		else if( nativeType.equals("VT_R8") )
+		} else if (nativeType.equals("VT_R8")) {
 			result = "new Variant(" + paramName + ")";
-		else if( nativeType.equals("VT_CY") )		//Currency
+		} else if (nativeType.equals("VT_CY")) {
 			result = "new Variant(" + paramName + ")";
-		else if( nativeType.equals("VT_DATE") )
+		} else if (nativeType.equals("VT_DATE")) {
 			result = "new Variant(" + paramName + ")";
-		else if( nativeType.equals("VT_BSTR") )
+		} else if (nativeType.equals("VT_BSTR")) {
 			result = paramName;
-		else if( nativeType.equals("VT_DISPATCH") )
+		} else if (nativeType.equals("VT_DISPATCH")) {
 			result = paramName;
-		else if( nativeType.equals("VT_ERROR") )
+		} else if (nativeType.equals("VT_ERROR")) {
 			result = "new Variant(" + paramName + ")";
-		else if( nativeType.equals("VT_BOOL") )
+		} else if (nativeType.equals("VT_BOOL")) {
 			result = "new Variant(" + paramName + ")";
-		else if( nativeType.equals("VT_HRESULT") )
+		} else if (nativeType.equals("VT_HRESULT")) {
 			result = "new Variant(" + paramName + ")";
-
-		//For variant use class type
-		//else if( nativeType.equals("VT_VARIANT") )
-
-		//JACOB wrapper ADO.Field.getDataFormat() maps UNKNOWN as Variant.
-		//I hope it is correct
-		else if( nativeType.equals("VT_UNKNOWN") )
+		} else if (nativeType.equals("VT_UNKNOWN")) {
 			result = paramName;
-		else if( nativeType.equals("VT_UI1") )		//Pending
+		} else if (nativeType.equals("VT_UI1")) {
 			result = "new Variant(" + paramName + ")";
+		}
 
-		//Simple Enums
-		if( Jacobgen.getInstance().isEnum(nativeType) )
+		// Simple Enums
+		if (Jacobgen.getInstance().isEnum(nativeType)) {
 			result = "new Variant(" + paramName + ")";
+		}
 
-		//RGB VB Internal type
-		if( nativeType.equals( "MsoRGBType" ) )
+		// RGB VB Internal type
+		if (nativeType.equals("MsoRGBType")) {
 			result = "new Variant(" + paramName + ")";
+		}
 
 		return result;
 	}
 
 	protected void computeCustomType() {
 		customType = true;
-		if( type.trim().length() == 0 )
+		if (type.trim().length() == 0) {
 			customType = false;
-		else
-			for( int i=0; i<types.length; i++ ) {
-				if( types[i].equals( type.trim() ) ) {
+		} else {
+			for (int i = 0; i < types.length; i++) {
+				if (types[i].equals(type.trim())) {
 					customType = false;
 					break;
 				}
 			}
+		}
 	}
 
 	protected void computeObjectType() {
-		for( int i=0; i<types.length; i++ )
-			if( types[i].equals( type ) ) {
+		for (int i = 0; i < types.length; i++) {
+			if (types[i].equals(type)) {
 				objectType = otypes[i];
 				break;
 			}
+		}
 
-		if( objectType == null )
+		if (objectType == null) {
 			objectType = type;
+		}
 	}
 }
-
-

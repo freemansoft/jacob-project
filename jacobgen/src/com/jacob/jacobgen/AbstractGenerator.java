@@ -83,8 +83,9 @@ public abstract class AbstractGenerator {
 
 	protected void writePackageDeclaration() throws IOException {
 		if (destinationPackage != null
-				&& destinationPackage.trim().length() > 0)
+				&& destinationPackage.trim().length() > 0) {
 			w.write("package " + destinationPackage + ";\n\n");
+		}
 	}
 
 	protected abstract void writeClassDeclaration() throws IOException;

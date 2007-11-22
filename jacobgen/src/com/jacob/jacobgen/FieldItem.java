@@ -18,90 +18,95 @@
  */
 package com.jacob.jacobgen;
 
-import java.util.*;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 /**
  * Represents a class method
- *
+ * 
  * @version $Id$
- * @author  Massimiliano Bigatti
+ * @author Massimiliano Bigatti
  */
 public class FieldItem {
-	
+
 	private String name;
 	private String type;
 	private String nativeType;
-	/** note that this field is set but never read.  It looks like an incomplete implementation */
+	/**
+	 * note that this field is set but never read. It looks like an incomplete
+	 * implementation
+	 */
 	private int fieldType;
 	private String defaultValue;
 
 	public static final int FIELDTYPE_UNKNOWN = -1;
 	public static final int FIELDTYPE_CONST = 0;
-	
+
 	protected FieldItem(String line) throws IllegalFormatException {
-		extractData( line );
+		extractData(line);
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getType() {
 		return type;
 	}
-	
+
 	public String getDefaultValue() {
 		return defaultValue;
 	}
-	
+
 	/**
-	 * this was added to remove a compiler warning but it looks like the field type
-	 * was never fully implemented
+	 * this was added to remove a compiler warning but it looks like the field
+	 * type was never fully implemented
+	 * 
 	 * @return the field type that was set
 	 */
 	public int getFieldType() {
 		return fieldType;
 	}
-	
+
 	/**
 	 * Extract information from a well formatted line
 	 */
-	protected void extractData( String line ) throws IllegalFormatException {
-		StringTokenizer st = new StringTokenizer( line, ";" );
-		
-		try {
-			//Extract field type
-			computeFieldType( st.nextToken() );
-			
-			//Extract variable name
-			name = st.nextToken();
-			
-			//Compute variable type
-			nativeType = st.nextToken();
-			computeFieldVartype( nativeType );
+	protected void extractData(String line) throws IllegalFormatException {
+		StringTokenizer st = new StringTokenizer(line, ";");
 
-			//Extract default value
+		try {
+			// Extract field type
+			computeFieldType(st.nextToken());
+
+			// Extract variable name
+			name = st.nextToken();
+
+			// Compute variable type
+			nativeType = st.nextToken();
+			computeFieldVartype(nativeType);
+
+			// Extract default value
 			defaultValue = st.nextToken();
-			
-		} catch( NoSuchElementException ns ) {
-			System.err.println("Seems that line " + line + " is not well " +
-			"formed, report to support.");
+
+		} catch (NoSuchElementException ns) {
+			System.err.println("Seems that line " + line + " is not well "
+					+ "formed, report to support.");
 			ns.printStackTrace();
 		}
-		
+
 	}
-	
-	protected void computeFieldType( String type ) {
+
+	protected void computeFieldType(String type) {
 		fieldType = FIELDTYPE_UNKNOWN;
-		if( type.equals( "VAR_CONST" ) ){
+		if (type.equals("VAR_CONST")) {
 			fieldType = FIELDTYPE_CONST;
 		}
 	}
-	
-	protected void computeFieldVartype( String fieldVartype ) {
+
+	protected void computeFieldVartype(String fieldVartype) {
 		type = "";
-		if( nativeType.equals("VT_I4") )
+		if (nativeType.equals("VT_I4")) {
 			type = "int";
+		}
 	}
 }
-

@@ -66,8 +66,9 @@ class ClassGenerator extends AbstractGenerator {
 			writeConstructor1();
 			writeConstructor2();
 			writeConstructor4();
-		} else
+		} else {
 			writeConstructor3();
+		}
 	}
 
 	protected void writeConstructor1() throws IOException {
@@ -116,8 +117,9 @@ class ClassGenerator extends AbstractGenerator {
 					|| mi.getMethodType() == MethodItem.METHODTYPE_PROPERTYPUTREF) {
 
 				writeMethod(mi);
-				if (mi.isAdditionalMethodRequired())
+				if (mi.isAdditionalMethodRequired()) {
 					writeByRefMethod(mi);
+				}
 			}
 		}
 	}
@@ -216,12 +218,13 @@ class ClassGenerator extends AbstractGenerator {
 
 		w.write("\tpublic ");
 		if (mi.getMethodType() == MethodItem.METHODTYPE_PROPERTYGET
-				&& mi.getReturnType().trim().length() == 0)
+				&& mi.getReturnType().trim().length() == 0) {
 			w.write("Variant");
-		else if (mi.getReturnType().trim().length() == 0)
+		} else if (mi.getReturnType().trim().length() == 0) {
 			w.write("void");
-		else
+		} else {
 			w.write(mi.getReturnType());
+		}
 
 		w.write(" ");
 
@@ -230,8 +233,9 @@ class ClassGenerator extends AbstractGenerator {
 		// Change Method name if it is a property get or set
 		switch (mi.getMethodType()) {
 		case MethodItem.METHODTYPE_FUNCTION:
-			if (checkForJavaKeywords(mi.getName()))
+			if (checkForJavaKeywords(mi.getName())) {
 				methodName.append("m_");
+			}
 			methodName.append(mi.getName().substring(0, 1).toLowerCase());
 			methodName.append(mi.getName().substring(1));
 			break;
@@ -265,8 +269,9 @@ class ClassGenerator extends AbstractGenerator {
 			// w.write( p.getType() + "_" + p.getNativeType() );
 			w.write(p.getType(baseTypes) + " " + p.getJavaName());
 
-			if (i < paramNum - 1)
+			if (i < paramNum - 1) {
 				w.write(", ");
+			}
 		}
 
 		w.write(") {\n");
@@ -290,14 +295,16 @@ class ClassGenerator extends AbstractGenerator {
 			if (paramNum == 0) {
 				w.write("\t\treturn ");
 
-				if (mi.isCustomReturnType())
+				if (mi.isCustomReturnType()) {
 					w.write("new " + mi.getReturnType() + "(");
+				}
 
 				w.write("Dispatch.get(this, \"" + mi.getName() + "\")"
 						+ mi.getReturnConversionMethodCode());
 
-				if (mi.isCustomReturnType())
+				if (mi.isCustomReturnType()) {
 					w.write(".toDispatch())");
+				}
 
 				w.write(";\n");
 			} else {
@@ -386,8 +393,9 @@ class ClassGenerator extends AbstractGenerator {
 		if (!mi.getReturnType().equals("void")) {
 			w.write(mi.getReturnType() + " result_of_" + mi.getName() + " = ");
 
-			if (mi.isCustomReturnType())
+			if (mi.isCustomReturnType()) {
 				w.write("new " + mi.getReturnType() + "(");
+			}
 
 			if (mi.getReturnType().equals("java.util.Date")) {
 				w.write("javaDateToComDate(");
@@ -396,18 +404,22 @@ class ClassGenerator extends AbstractGenerator {
 		}
 
 		w.write("Dispatch.call");
-		if (paramNum > 8)
+		if (paramNum > 8) {
 			w.write("N");
+		}
 		w.write("(this, \"" + mi.getName() + "\"");
-		if (paramNum > 0)
+		if (paramNum > 0) {
 			w.write(", ");
+		}
 
-		if (paramNum > 8)
+		if (paramNum > 8) {
 			w.write("new Object[] { ");
+		}
 
 		for (int i = 0; i < paramNum; i++) {
-			if (i != 0)
+			if (i != 0) {
 				w.write(", ");
+			}
 
 			ParameterItem p = parameters[i];
 			if (p.getDirection() == ParameterItem.DIRECTION_IN
@@ -420,18 +432,22 @@ class ClassGenerator extends AbstractGenerator {
 			}
 		}
 
-		if (paramNum > 8)
+		if (paramNum > 8) {
 			w.write("}");
+		}
 
 		w.write(")");
-		if (!mi.getReturnType().equals("void"))
+		if (!mi.getReturnType().equals("void")) {
 			w.write(mi.getReturnConversionMethodCode());
+		}
 
-		if (mi.isCustomReturnType())
+		if (mi.isCustomReturnType()) {
 			w.write(".toDispatch())");
+		}
 
-		if (mi.getReturnType().equals("java.util.Date"))
+		if (mi.getReturnType().equals("java.util.Date")) {
 			w.write(")");
+		}
 
 		w.write(";\n\n");
 
@@ -473,38 +489,46 @@ class ClassGenerator extends AbstractGenerator {
 		if (!mi.getReturnType().equals("void")) {
 			w.write("return ");
 
-			if (mi.isCustomReturnType())
+			if (mi.isCustomReturnType()) {
 				w.write("new " + mi.getReturnType() + "(");
+			}
 		}
 
 		w.write("Dispatch.call");
-		if (paramNum > 8)
+		if (paramNum > 8) {
 			w.write("N");
+		}
 		w.write("(this, \"" + mi.getName() + "\"");
-		if (paramNum > 0)
+		if (paramNum > 0) {
 			w.write(", ");
+		}
 
 		ParameterItem[] parameters = mi.getParameters();
-		if (paramNum > 8)
+		if (paramNum > 8) {
 			w.write("new Object[] { ");
+		}
 
 		for (int i = 0; i < paramNum; i++) {
-			if (i != 0)
+			if (i != 0) {
 				w.write(", ");
+			}
 
 			ParameterItem p = parameters[i];
 			w.write(p.getParameterCallingCode());
 		}
 
-		if (paramNum > 8)
+		if (paramNum > 8) {
 			w.write("}");
+		}
 
 		w.write(")");
-		if (!mi.getReturnType().equals("void"))
+		if (!mi.getReturnType().equals("void")) {
 			w.write(mi.getReturnConversionMethodCode());
+		}
 
-		if (mi.isCustomReturnType())
+		if (mi.isCustomReturnType()) {
 			w.write(".toDispatch())");
+		}
 
 		w.write(";\n");
 	}
@@ -536,8 +560,9 @@ class ClassGenerator extends AbstractGenerator {
 	}
 
 	protected void writeEndings() throws IOException {
-		if (containsDate)
+		if (containsDate) {
 			writeDateConversionCode();
+		}
 	}
 
 	/*
@@ -554,11 +579,12 @@ class ClassGenerator extends AbstractGenerator {
 	 */
 	public static boolean checkForJavaKeywords(String s) {
 		boolean result = false;
-		for (int i = 0; i < javaKeywords.length; i++)
+		for (int i = 0; i < javaKeywords.length; i++) {
 			if (s.equalsIgnoreCase(javaKeywords[i])) {
 				result = true;
 				break;
 			}
+		}
 
 		return result;
 	}
