@@ -509,8 +509,7 @@ public class VariantTest extends BaseTestCase {
 		testVariant = new Variant();
 		testVariant.changeType(Variant.VariantDecimal);
 		try {
-			testVariant.putDecimal(endDecimal.setScale(30),
-					BigDecimal.ROUND_UNNECESSARY);
+			testVariant.putDecimal(endDecimal.setScale(30));
 			fail("Should have thrown exception with scale of 30 and no rounding");
 		} catch (IllegalArgumentException iae) {
 			// should have caught this exception
@@ -525,14 +524,56 @@ public class VariantTest extends BaseTestCase {
 			// should have caught this exception
 		}
 
-		testVariant.putDecimal(new BigDecimal("700E24"),
-				BigDecimal.ROUND_HALF_UP);
+		testVariant.putDecimal(VariantUtilities
+				.roundToMSDecimal(new BigDecimal("700E24")));
 		// use compareTo because it takes into account varying scales
 		assertTrue(new BigDecimal("700E24").compareTo(testVariant.getDecimal()) == 0);
 
+		// This passes because the number is within range.
+		testVariant.putDecimal(endDecimal);
+
 		// this should pass because we have rounding turned on
-		testVariant.putDecimal(endDecimal.setScale(30),
-				BigDecimal.ROUND_HALF_UP);
+		// it turns out the max number gets more digits when
+		// it's scale is set to 30. so we can't use the max number when there is
+		// a scale
+		BigDecimal modifiedDecimal = endDecimal;
+		System.out.println("integer piece starts                       as "
+				+ modifiedDecimal.unscaledValue().toString(16) + " scale=: "
+				+ modifiedDecimal.scale());
+		System.out.println("integer piece after rounding without scale is "
+				+ VariantUtilities.roundToMSDecimal(modifiedDecimal)
+						.unscaledValue().toString(16) + " scale=: "
+				+ modifiedDecimal.scale());
+		System.out.println("integer piece after rounding with scale 30 is "
+				+ VariantUtilities.roundToMSDecimal(
+						modifiedDecimal.setScale(30)).unscaledValue().toString(
+						16) + " scale=: " + modifiedDecimal.scale());
+		try {
+			testVariant.putDecimal(VariantUtilities
+					.roundToMSDecimal(modifiedDecimal.setScale(30)));
+			fail("should have thrown an exception for a number whose scale "
+					+ "change created too many digits to be represented.");
+		} catch (IllegalArgumentException iae) {
+			// should catch an exception here because the rounding after scale
+			// change would have made the number too large
+		}
+
+		System.out.println("");
+		modifiedDecimal = endDecimal.subtract(incrementDecimal);
+		System.out.println("integer piece starts                       as "
+				+ modifiedDecimal.unscaledValue().toString(16) + " scale=: "
+				+ modifiedDecimal.scale());
+		System.out.println("integer piece after rounding without scale is "
+				+ VariantUtilities.roundToMSDecimal(modifiedDecimal)
+						.unscaledValue().toString(16) + " scale=: "
+				+ modifiedDecimal.scale());
+		System.out.println("integer piece after rounding with scale 30 is "
+				+ VariantUtilities.roundToMSDecimal(
+						modifiedDecimal.setScale(30)).unscaledValue().toString(
+						16) + " scale=: " + modifiedDecimal.scale());
+		testVariant.putDecimal(VariantUtilities
+				.roundToMSDecimal(modifiedDecimal.setScale(30)));
+		System.out.println("");
 	}
 
 	/**

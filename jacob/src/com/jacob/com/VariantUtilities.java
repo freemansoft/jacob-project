@@ -5,6 +5,8 @@ package com.jacob.com;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.Date;
 
 /**
@@ -343,4 +345,122 @@ public final class VariantUtilities {
 
 		return result;
 	}// toJava()
+
+	/**
+	 * Verifies that we have a scale 0 <= x <= 28 and now more than 96 bits of
+	 * data. The roundToMSDecimal method will attempt to adjust a BigDecimal to
+	 * pass this set of tests
+	 * 
+	 * @param in
+	 * @throws IllegalArgumentException
+	 *             if out of bounds
+	 */
+	protected static void validateDecimalScaleAndBits(BigDecimal in) {
+		BigInteger allWordBigInt = in.unscaledValue();
+		if (in.scale() > 28) {
+			// should this cast to a string and call putStringRef()?
+			throw new IllegalArgumentException(
+					"VT_DECIMAL only supports a maximum scale of 28 and the passed"
+							+ " in value has a scale of " + in.scale());
+		} else if (in.scale() < 0) {
+			// should this cast to a string and call putStringRef()?
+			throw new IllegalArgumentException(
+					"VT_DECIMAL only supports a minimum scale of 0 and the passed"
+							+ " in value has a scale of " + in.scale());
+		} else if (allWordBigInt.bitLength() > 12 * 8) {
+			throw new IllegalArgumentException(
+					"VT_DECIMAL supports a maximum of "
+							+ 12
+							* 8
+							+ " bits not counting scale and the number passed in has "
+							+ allWordBigInt.bitLength());
+
+		} else {
+			// no bounds problem to be handled
+		}
+
+	}
+
+	/**
+	 * Largest possible number with scale set to 0
+	 */
+	private static final BigDecimal LARGEST_DECIMAL = new BigDecimal(
+			new BigInteger("ffffffffffffffffffffffff", 16));
+	/**
+	 * Smallest possible number with scale set to 0. MS doesn't support negative
+	 * scales like BigDecimal.
+	 */
+	private static final BigDecimal SMALLEST_DECIMAL = new BigDecimal(
+			new BigInteger("ffffffffffffffffffffffff", 16).negate());
+
+	/**
+	 * Does any validation that couldn't have been fixed by rounding or scale
+	 * modification.
+	 * 
+	 * @param in
+	 *            The BigDecimal to be validated
+	 * @throws IllegalArgumentException
+	 *             if the number is too large or too small or null
+	 */
+	protected static void validateDecimalMinMax(BigDecimal in) {
+		if (in == null) {
+			throw new IllegalArgumentException(
+					"null is not a supported Decimal value.");
+		} else if (LARGEST_DECIMAL.compareTo(in) < 0) {
+			throw new IllegalArgumentException(
+					"Value too large for VT_DECIMAL data type:" + in.toString()
+							+ " integer: " + in.toBigInteger().toString(16)
+							+ " scale: " + in.scale());
+		} else if (SMALLEST_DECIMAL.compareTo(in) > 0) {
+			throw new IllegalArgumentException(
+					"Value too small for VT_DECIMAL data type:" + in.toString()
+							+ " integer: " + in.toBigInteger().toString(16)
+							+ " scale: " + in.scale());
+		}
+
+	}
+
+	/**
+	 * Rounds the scale and bit length so that it will pass
+	 * validateDecimalScaleBits(). Developers should call this method if they
+	 * really want MS Decimal and don't want to lose precision.
+	 * <p>
+	 * Changing the scale on a number that can fit in an MS Decimal can change
+	 * the number's representation enough that it will round to a number too
+	 * large to be represented by an MS VT_DECIMAL
+	 * 
+	 * @param sourceDecimal
+	 * @return BigDecimal a new big decimal that was rounded to fit in an MS
+	 *         VT_DECIMAL
+	 */
+	public static BigDecimal roundToMSDecimal(BigDecimal sourceDecimal) {
+		BigInteger sourceDecimalIntComponent = sourceDecimal.unscaledValue();
+		BigDecimal destinationDecimal = new BigDecimal(
+				sourceDecimalIntComponent, sourceDecimal.scale());
+		int roundingModel = BigDecimal.ROUND_HALF_UP;
+		validateDecimalMinMax(destinationDecimal);
+		// First limit the number of digits and then the precision.
+		// Try and round to 29 digits because we can sometimes do that
+		BigInteger allWordBigInt;
+		allWordBigInt = destinationDecimal.unscaledValue();
+		if (allWordBigInt.bitLength() > 96) {
+			destinationDecimal = destinationDecimal.round(new MathContext(29));
+			// see if 29 digits uses more than 96 bits
+			if (allWordBigInt.bitLength() > 96) {
+				// Dang. It was over 97 bits so shorten it one more digit to
+				// stay <= 96 bits
+				destinationDecimal = destinationDecimal.round(new MathContext(
+						28));
+			}
+		}
+		// the bit manipulations above may change the scale so do it afterwards
+		// round the scale to the max MS can support
+		if (destinationDecimal.scale() > 28) {
+			destinationDecimal = destinationDecimal.setScale(28, roundingModel);
+		}
+		if (destinationDecimal.scale() < 0) {
+			destinationDecimal = destinationDecimal.setScale(0, roundingModel);
+		}
+		return destinationDecimal;
+	}
 }

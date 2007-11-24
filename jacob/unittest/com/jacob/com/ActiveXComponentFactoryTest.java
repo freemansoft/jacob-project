@@ -12,6 +12,50 @@ import com.jacob.test.BaseTestCase;
  * options.
  */
 public class ActiveXComponentFactoryTest extends BaseTestCase {
+
+	/**
+	 * This test is supposed to verify we get multiple instances when we mean
+	 * too. Unfortunately, it requires that the runner of the test verify via
+	 * the "Windows Task Manager"
+	 */
+	public void testMultipleInstances() {
+		ComThread.InitMTA();
+		String mApplicationId = "Word.Application";
+		ActiveXComponent instance1 = ActiveXComponent
+				.createNewInstance(mApplicationId);
+		ActiveXComponent instance2 = ActiveXComponent
+				.createNewInstance(mApplicationId);
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException ie) {
+		}
+		instance1.invoke("Quit", new Variant[] {});
+		instance2.invoke("Quit", new Variant[] {});
+		ComThread.Release();
+
+	}
+
+	/**
+	 * This test is supposed to verify we can force multiple items through a
+	 * single running instance. It requires that a user physically watch the
+	 * "Windows Task Manager" to verify only one copy of MS Word is executing
+	 */
+	public void testOnlyOneInstance() {
+		ComThread.InitMTA();
+		String mApplicationId = "Word.Application";
+		ActiveXComponent instance1 = new ActiveXComponent(mApplicationId);
+		ActiveXComponent instance2 = ActiveXComponent
+				.connectToActiveInstance(mApplicationId);
+		assertNotNull(instance2);
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException ie) {
+		}
+		instance1.invoke("Quit", new Variant[] {});
+		ComThread.Release();
+
+	}
+
 	/**
 	 * Test that verifies function of the ActiveXComponentFactory
 	 */

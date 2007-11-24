@@ -49,7 +49,7 @@
 
 	<property name="application.title" value="JACOB : Java COM Bridge" />
 	<property name="application.vendor" value="http://jacob-project.sourceforge.net" />
-	<property name="src.java.jacob.mainpackage" value="com.jacob" />
+	<property name="src.java.mainpackage" value="com.jacob" />
 	<property name="java.class.main" value="com.jacob.com.Jacob" />
 	<property name="generated.filename.dll" value="jacob.dll" />
 	<property name="generated.filename.jar" value="jacob.jar" />
@@ -57,7 +57,7 @@
 	
 	<property name="junit.jar"         value="${basedir}\lib\junit3.8.1\junit.jar" />
 		
-	<property name="src.java.jacob"    value="${basedir}/src" />
+	<property name="src.java.mainroot"    value="${basedir}/src" />
 	<property name="src.java.samples"  value="${basedir}/samples" />
 	<property name="src.java.unittest" value="${basedir}/unittest" />
 	<property name="src.cpp"           value="${basedir}/jni" />
@@ -199,7 +199,7 @@
 		 ================================================================== -->
 	<target name="javaJarCheck">
 		<uptodate property="jarUpToDate" targetfile="${release.file.jar}">
-			<srcfiles dir="${src.java.jacob}" includes="com/**/*.java" />
+			<srcfiles dir="${src.java.mainroot}" includes="com/**/*.java" />
 			<!-- Check the build file itself as well -->
 			<srcfiles dir="${basedir}" includes="build.xml" />
 		</uptodate>
@@ -213,19 +213,19 @@
 		 ================================================================== -->
 	<target name="javaCompile" >
 		<echo>Building Jacob classes in ${release.dir.java}</echo>
-		<javac srcdir="${src.java.jacob}" 
+		<javac srcdir="${src.java.mainroot}" 
 			destdir="${release.dir.java}" 
-			listfiles="true" debug="on" source="1.4" />
+			listfiles="true" debug="on" source="1.5" />
 		<echo>Building sample classes in ${release.dir.java}</echo>
 		<javac srcdir="${src.java.samples}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}"
-			listfiles="true" debug="on" source="1.4" />
+			listfiles="true" debug="on" source="1.5" />
 		<echo>Building Jacob test classes in ${release.dir.java} using junit jar ${junit.jar}</echo>
 		<javac srcdir="${src.java.unittest}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}:${junit.jar}"
-			listfiles="true" debug="on" source="1.4" />
+			listfiles="true" debug="on" source="1.5" />
 		<copy file="version.properties" todir="${release.dir.java}"/>
 	</target>
 	<!-- ======================================================================
@@ -250,7 +250,7 @@
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
                 <attribute name="Main-Class" value="${java.class.main}"/>
-				<section name="${src.java.jacob.mainpackage}">
+				<section name="${src.java.mainpackage}">
 					<attribute name="Specification-Title" value="${application.title}" />
 					<attribute name="Specification-Vendor" value="${application.vendor}" />
 					<attribute name="Implementation-Title" value="${application.title} Java libraries" />
@@ -388,13 +388,13 @@
 	</target>
 
 	<!-- ======================================================================
-		       Use this target to create javadoc from ${src.java.jacob.mainpackage}/*
+		       Use this target to create javadoc from ${src.java.mainpackage}/*
 		 ================================================================== -->
 	<target name="generateJavaDoc">
 		<defaultexcludes add="**/*Test*"/>
 		<javadoc
-				packagenames="${src.java.jacob.mainpackage}/**"
-				sourcepath="${src.java.jacob}"
+				packagenames="${src.java.mainpackage}/**"
+				sourcepath="${src.java.mainroot}"
 				destdir="${release.dir.java}/docs/api"
 				author="true"
 				version="true"
@@ -403,11 +403,11 @@
 		
 			<doctitle><![CDATA[<h1>${application.title}</h1>]]></doctitle>
 			<bottom><![CDATA[<i>${application.vendor}</i>]]></bottom>
-			<group title="Core COM Communication" packages="${src.java.jacob.mainpackage}.com/**"/>
-			<group title="Higher Level Active X" packages="${src.java.jacob.mainpackage}.activeX/**"/>
-			<group title="API Stub Generator" packages="${src.java.jacob.mainpackage}.jacobgen/**"/>
-			<link offline="true" href="http://java.sun.com/j2se/1.4.2/docs/api/" packagelistLoc="C:\tmp"/>
-			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
+			<group title="Core COM Communication" packages="${src.java.mainpackage}.com/**"/>
+			<group title="Higher Level Active X" packages="${src.java.mainpackage}.activeX/**"/>
+			<group title="API Stub Generator" packages="${src.java.mainpackage}.jacobgen/**"/>
+			<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>
+			<link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
 		</javadoc>
 		<defaultexcludes default="true"/>
 	</target>
