@@ -222,8 +222,13 @@ public final class VariantUtilities {
 			// returned?
 			SafeArray array = null;
 			type = (short) (type - Variant.VariantArray);
-			array = sourceData.toSafeArray(false);
-			// result = toJava(array);
+			// From SF Bug 1840487
+			// This did call toSafeArray(false) but that meant
+			// this was the only variantToObject() that didn't have its own
+			// copy of the data so you would end up with weird run time
+			// errors after some GC. So now we just get stupid about it and
+			// always make a copy just like toSafeArray() does.
+			array = sourceData.toSafeArray();
 			result = array;
 		} else { // non-array object returned
 			switch (type) {
