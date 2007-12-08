@@ -5,7 +5,7 @@
 <h3>What's New</h3>
 <ul>
 <li>
-	Binaries compiled with Java 5. JDK 1.4 support dropped.  
+	Binaries are now compiled with Java 5. JDK 1.4 support dropped.  
 </li>
 </ul>
 
@@ -14,6 +14,16 @@
   <tr>
     <td width="100%" colspan="2"><b>Bugs</b></td>
   </tr> 
+  <tr> 
+    <td width="13%" valign="top">1840487</td>
+    <td width="87%" valign="top">(M6) toJavaObject() converting to SafeArray
+    did shallow copy that left two objects pointing at the same windows memory.</td>
+  </tr>
+  <tr> 
+    <td width="13%" valign="top">1829201</td>
+    <td width="87%" valign="top">(M5) DECIMAL rounding behavior externalized 
+    and old Variant decimal API restored.</td>
+  </tr>
   <tr> 
     <td width="13%" valign="top">1829201</td>
     <td width="87%" valign="top">(M5) DECIMAL rounding behavior externalized 
@@ -69,6 +79,11 @@
     <td width="13%" valign="top"></td>
     <td width="87%" valign="top">This is now built with Java 5 compiler and
     Java 5 syntax. This release is not compatible with JDK 1.4.x and earlier.</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top"></td>
+    <td width="87%" valign="top">This release requires the Visual C++ 2005
+    libraries.  See 1.13 Known Issues for more information.</td>
   </tr>
   
 </table>
@@ -159,7 +174,8 @@
     <td width="87%" valign="top">Jacob 1.13 is built using VC++ 2005.
     	That creates a dependency on the Visual C++ 2005 libraries and msvcr80.dll.
     	This library is normally installed on XP systems but may have to be manually
-    	installed on older systems.  It can be obtained from the MS downloads site.
+    	installed on older systems.  The pagackage, often referred to as vcredist.exe
+    	can be obtained from the MS downloads site.
     	If you are getting loader errors on this release or later when loading the
     	dll then you may be missing this library.</td>
   </tr>
