@@ -7,6 +7,9 @@
 <li>
 	Binaries are now compiled with Java 5. JDK 1.4 support dropped.  
 </li>
+<li>
+	Jacob now loads dlls based on platform (32 bit /64 bit) and version number.  
+</li>
 </ul>
 
 <h3>Tracked Changes</h3>
@@ -53,6 +56,14 @@
   <tr>
     <td width="100%" colspan="2"><b>Feature Requests</b></td>
   </tr> 
+  <tr> 
+    <td width="13%" valign="top">1845039 </td>
+    <td width="87%" valign="top">(M6) Jacob DLL names are now qualified by platform and 
+    release.  The JacobLibraryLoader now determines the correct 32bit or 64bit 
+    dll based on the system architecture.  Jacob.jar now also knows the version 
+    of the dll it is looking for (by name) and loads the correct one. JWS clients 
+    will have to modify their dll loaders. See: The JWS classloader sample </td>
+  </tr>
   <tr>
     <td width="13%" valign="top">1828371 </td>
     <td width="87%" valign="top">(M4) Added VT_I8 support to SafeArray.</td>

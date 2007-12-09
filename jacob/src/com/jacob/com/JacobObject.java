@@ -104,7 +104,7 @@ public class JacobObject {
 	 * force the jacob DLL to be loaded whenever this class is referenced
 	 */
 	static {
-		LibraryLoader.loadJacobLibrary();
+		JacobLibraryLoader.loadJacobLibrary();
 	}
 
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import com.jacob.com.JacobLibraryLoader;
+
 /**
  * It is sometimes necessary to run Jacob without being able to install the dll
  * on the client machine. This is true in JavaWebStart (JWS) and possibly Applet
@@ -35,11 +37,18 @@ public class DLLFromJARClassLoader {
 	 */
 	public boolean loadLibrary() {
 		try {
-			// Finds a stream to the dll. Change path/class if necessary
-			InputStream inputStream = getClass().getResource("/jacob.dll")
+			// this assumes that the dll is in the root dir of the signed
+			// jws jar file for this application.
+			//
+			// Starting in 1.14M6, the dll is named by platform and architecture
+			// so the best thing to do is to ask the LibraryLoader what name we
+			// expect.
+			InputStream inputStream = getClass().getResource(
+					"/" + JacobLibraryLoader.getPreferredDLLName() + ".dll")
 					.openStream();
-			// Change name if necessary
-			File temporaryDll = File.createTempFile("jacob", ".dll");
+			// Put the DLL somewhere we can find it with a name Jacob expects
+			File temporaryDll = File.createTempFile(JacobLibraryLoader
+					.getPreferredDLLName(), ".dll");
 			FileOutputStream outputStream = new FileOutputStream(temporaryDll);
 			byte[] array = new byte[8192];
 			for (int i = inputStream.read(array); i != -1; i = inputStream
@@ -48,7 +57,11 @@ public class DLLFromJARClassLoader {
 			}
 			outputStream.close();
 			temporaryDll.deleteOnExit();
-			System.load(temporaryDll.getPath());
+			// Ask LibraryLoader to load the dll for us based on the path we
+			// set
+			System.setProperty(JacobLibraryLoader.JACOB_DLL_PATH, temporaryDll
+					.getPath());
+			JacobLibraryLoader.loadJacobLibrary();
 			return true;
 		} catch (Throwable e) {
 			e.printStackTrace();
