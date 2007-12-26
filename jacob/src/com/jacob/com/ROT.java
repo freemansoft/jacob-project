@@ -231,7 +231,7 @@ public abstract class ROT {
 	 * managed so we force a DLL load here by referencing JacobObject
 	 */
 	static {
-		JacobLibraryLoader.loadJacobLibrary();
+		LibraryLoader.loadJacobLibrary();
 	}
 
 }

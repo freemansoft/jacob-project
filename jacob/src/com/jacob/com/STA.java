@@ -96,6 +96,6 @@ public class STA extends Thread {
 	 * DLL without this
 	 */
 	static {
-		JacobLibraryLoader.loadJacobLibrary();
+		LibraryLoader.loadJacobLibrary();
 	}
 }

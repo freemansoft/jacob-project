@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import com.jacob.com.JacobLibraryLoader;
+import com.jacob.com.LibraryLoader;
 
 /**
  * It is sometimes necessary to run Jacob without being able to install the dll
@@ -43,11 +43,13 @@ public class DLLFromJARClassLoader {
 			// Starting in 1.14M6, the dll is named by platform and architecture
 			// so the best thing to do is to ask the LibraryLoader what name we
 			// expect.
+			// this code might be different if you customize the name of
+			// the jacob dll to match some custom naming convention
 			InputStream inputStream = getClass().getResource(
-					"/" + JacobLibraryLoader.getPreferredDLLName() + ".dll")
+					"/" + LibraryLoader.getPreferredDLLName() + ".dll")
 					.openStream();
 			// Put the DLL somewhere we can find it with a name Jacob expects
-			File temporaryDll = File.createTempFile(JacobLibraryLoader
+			File temporaryDll = File.createTempFile(LibraryLoader
 					.getPreferredDLLName(), ".dll");
 			FileOutputStream outputStream = new FileOutputStream(temporaryDll);
 			byte[] array = new byte[8192];
@@ -59,9 +61,9 @@ public class DLLFromJARClassLoader {
 			temporaryDll.deleteOnExit();
 			// Ask LibraryLoader to load the dll for us based on the path we
 			// set
-			System.setProperty(JacobLibraryLoader.JACOB_DLL_PATH, temporaryDll
+			System.setProperty(LibraryLoader.JACOB_DLL_PATH, temporaryDll
 					.getPath());
-			JacobLibraryLoader.loadJacobLibrary();
+			LibraryLoader.loadJacobLibrary();
 			return true;
 		} catch (Throwable e) {
 			e.printStackTrace();

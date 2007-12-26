@@ -19,7 +19,6 @@
  */
 package com.jacob.com;
 
-
 /**
  * The superclass of all Jacob objects. It is used to create a standard API
  * framework and to facilitate memory management for Java and COM memory
@@ -69,9 +68,10 @@ public class JacobObject {
 	}
 
 	/**
-	 * Loads version.properties and returns the value of version in it
+	 * Loads JacobVersion.Properties and returns the value of version in it
+	 * 
 	 * @deprecated use JacobReleaseInfo.getBuildDate() instead.
-	 * @return String value of version in version.properties or "" if none
+	 * @return String value of version in JacobVersion.Properties or "" if none
 	 */
 	@Deprecated
 	public static String getBuildDate() {
@@ -79,9 +79,10 @@ public class JacobObject {
 	}
 
 	/**
-	 * Loads version.properties and returns the value of version in it
+	 * Loads JacobVersion.Properties and returns the value of version in it
+	 * 
 	 * @deprecated use JacobReleaseInfo.getBuildVersion() instead.
-	 * @return String value of version in version.properties or "" if none
+	 * @return String value of version in JacobVersion.Properties or "" if none
 	 */
 	@Deprecated
 	public static String getBuildVersion() {
@@ -104,7 +105,7 @@ public class JacobObject {
 	 * force the jacob DLL to be loaded whenever this class is referenced
 	 */
 	static {
-		JacobLibraryLoader.loadJacobLibrary();
+		LibraryLoader.loadJacobLibrary();
 	}
 
 }
