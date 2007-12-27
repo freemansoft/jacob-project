@@ -41,17 +41,17 @@ import java.util.Set;
  * 
  * <li> If system property {@link #JACOB_DLL_NAME} is defined, the file located
  * there will be loaded as the jacob dll. </li>
- * <li> If system property {@link #JACOB_DLL_NAME_32} and
- * {@link #JACOB_DLL_NAME_64} are defined, the file located there will be loaded
- * as the jacob dll, depending on the version of Windows. </li>
+ * <li> If system property {@link #JACOB_DLL_NAME_X86} and
+ * {@link #JACOB_DLL_NAME_X64} are defined, the file located there will be
+ * loaded as the jacob dll, depending on the version of Windows. </li>
  * 
  * <li> If {@link #JACOB_DLL_NAME} is defined in the
  * {@code com.jacob.com.JacobLibraryLoader} resource file, the specified dll
  * will be loaded from the {@code java.library.path}. </li>
- * <li> If {@link #JACOB_DLL_NAME_32} and {@link #JACOB_DLL_NAME_64} are defined
- * in the {@code com.jacob.com.JacobLibraryLoader} resource file, the specified
- * dll will be loaded from the {@code java.library.path}, depending on the
- * version of Windows. </li>
+ * <li> If {@link #JACOB_DLL_NAME_X86} and {@link #JACOB_DLL_NAME_X64} are
+ * defined in the {@code com.jacob.com.JacobLibraryLoader} resource file, the
+ * specified dll will be loaded from the {@code java.library.path}, depending
+ * on the version of Windows. </li>
  * 
  * <li> If none of the above are true, the default is to load the library named
  * "jacob-&lt;version&gt;-&lt;arch&gt" (or
@@ -89,14 +89,14 @@ public final class LibraryLoader {
 	 * contain an alternate name for the JNI library (default is 'jacob'), 32
 	 * bit windows.
 	 */
-	public static final String JACOB_DLL_NAME_32 = "jacob.dll.name.32";
+	public static final String JACOB_DLL_NAME_X86 = "jacob.dll.name.x86";
 
 	/**
 	 * Name of system property (currently <tt>jacob.dll.name</tt>) that may
 	 * contain an alternate name for the JNI library (default is 'jacob'), 64
 	 * bit windows.
 	 */
-	public static final String JACOB_DLL_NAME_64 = "jacob.dll.name.64";
+	public static final String JACOB_DLL_NAME_X64 = "jacob.dll.name.x64";
 
 	/**
 	 * Appended to "jacob" when building DLL name This string must EXACTLY match
@@ -156,20 +156,20 @@ public final class LibraryLoader {
 
 			if (System.getProperty(JACOB_DLL_NAME) != null) {
 				name = System.getProperty(JACOB_DLL_NAME);
-			} else if (System.getProperty(JACOB_DLL_NAME_32) != null
+			} else if (System.getProperty(JACOB_DLL_NAME_X86) != null
 					&& shouldLoad32Bit()) {
-				name = System.getProperty(JACOB_DLL_NAME_32);
-			} else if (System.getProperty(JACOB_DLL_NAME_64) != null
+				name = System.getProperty(JACOB_DLL_NAME_X86);
+			} else if (System.getProperty(JACOB_DLL_NAME_X64) != null
 					&& !shouldLoad32Bit()) {
-				name = System.getProperty(JACOB_DLL_NAME_64);
+				name = System.getProperty(JACOB_DLL_NAME_X64);
 			} else if (resources != null && keys.contains(JACOB_DLL_NAME)) {
 				name = resources.getString(JACOB_DLL_NAME);
-			} else if (resources != null && keys.contains(JACOB_DLL_NAME_32)
+			} else if (resources != null && keys.contains(JACOB_DLL_NAME_X86)
 					&& shouldLoad32Bit()) {
-				name = resources.getString(JACOB_DLL_NAME_32);
-			} else if (resources != null && keys.contains(JACOB_DLL_NAME_64)
+				name = resources.getString(JACOB_DLL_NAME_X86);
+			} else if (resources != null && keys.contains(JACOB_DLL_NAME_X64)
 					&& !shouldLoad32Bit()) {
-				name = resources.getString(JACOB_DLL_NAME_64);
+				name = resources.getString(JACOB_DLL_NAME_X64);
 			} else {
 				// No alternate NAME or PATH was defined, so use the default.
 				// We will almost always end up here.
