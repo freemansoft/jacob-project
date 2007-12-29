@@ -1,0 +1,66 @@
+<%
+/*
+  Copyright (C) 2007  Robert Searle  
+  
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as
+  published by the Free Software Foundation; either version 2 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ */
+%>
+
+//basicGetGenFeature.TODO.override.javajetinc
+		final String funcName = "<% 
+{
+String name = genFeature.getName().trim();
+if (name.startsWith("JACOB"))
+	stringBuffer.append(name.substring("JACOB".length()));
+else
+	stringBuffer.append(name);
+}
+%>";
+
+		final com.jacob.com.Dispatch dispatchComponent = getDispatch(); 
+		final com.jacob.com.Variant retInvoke = com.jacob.com.Dispatch.get(dispatchComponent, funcName);
+    <%
+		String className = genFeature.getImportedType(genClass);
+		if (className.lastIndexOf('.')>0){
+			className = className.substring(className.lastIndexOf('.')+1);		
+		}
+		final org.eclipse.emf.ecore.EClass classifier;
+		if (genPackage.getEcorePackage().getName().equals("jacobimpl"))
+			classifier = (org.eclipse.emf.ecore.EClass) genPackage.getEcorePackage().getESuperPackage().getEClassifier(className);
+		else
+			classifier = (org.eclipse.emf.ecore.EClass) genPackage.getEcorePackage().getEClassifier(className);
+
+		if ( null == classifier ) { 
+ %>
+		//there is no class name here <%= className %>
+		return retInvoke.toJavaObject();
+	<% 	} else if ( classifier.isInterface()) {  
+			String classType = null;
+			classType = genFeature.getType().trim();
+			final int lastIndexOf = classType.lastIndexOf('.');
+			classType = classType.substring(0, lastIndexOf) + ".jacobimpl" + classType.substring(lastIndexOf);
+	%>
+		//is an interface <%= genFeature.getImportedType(genClass) %>
+		final <%= classType %> retVal = new <%= classType %>();
+		retVal.setDispatch(retInvoke.toDispatch());
+		return retVal;
+	<% } else { %>
+		//is a class
+		final <%=genFeature.getType().trim()%> retVal = new <%=genFeature.getType().trim()%>();
+		retVal.setDispatch(retInvoke.toDispatch());
+		return retVal;
+	<% } %> 
+	
+	
