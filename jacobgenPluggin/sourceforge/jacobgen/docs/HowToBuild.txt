@@ -1,0 +1,48 @@
+To build and run:
+
+Unpack the source archive or check the files out of CVS into d:\jacobgen 
+
+Install the following tools
+	Microsoft Visual Studio, a stripped down version is available from the MS web site.
+	Eclipse from www.eclipse.org.
+	Java jdk 1.5 (this was built using 1.4.2.09)
+	
+The following configuration was used by most of the development team:
+	JDK=d:\\jdk1.5.0_11
+	MSDEV_DIR=d:\\apps\\Microsoft Visual Studio 8\\VC
+	MSDEV_IDE_DIR=d:\\apps\\Microsoft Visual Studio 8\\Common7\\IDE
+
+This project has been converted completely over to ANT.  You can
+run ANT from inside of eclipse or from the command line.
+The ant process is driven off of a configuration file
+compilation_tools.properties.  Instructions on the information required
+in that file are contained in build.xml in the root directory.
+
+Ant, via build.xml will do the following with teh default target.
+	Build the Java code
+	Build the jni code
+	create the dll
+	create jar file
+
+The package target creates the 
+	javadoc and 
+	zip files
+
+ECLIPSE
+
+Eclipse users will have to do some minor tweaks to their project if they 
+want to use the integrated build process.  This is because the unit
+tests are files located in the "unittest" directory while
+the project source files themselves are in "src" the root directory.
+	Eclipse automatically adds the whole project as a source directory
+	Remove the root of the project from the build path
+	Add folders samples, src and unittest to the build path
+	Exclude *.txt from each of the newly added folders.  
+	
+The Servlet examples that required j2ee libraries to compile have temporarily
+been removed.
+
+The java code is in .\src
+The C++ code is in .\jni.
+
+Last Modified 11/2007
