@@ -317,7 +317,7 @@ public class MethodItem {
 			// new toJavaDate() so
 			// we could remove the
 			// conversion code
-			result = ".getDate()";
+			result = ".getJavaDate()";
 		} else if (nativeReturnType.equals("VT_BSTR")) {
 			result = ".toString()";
 		} else if (nativeReturnType.equals("VT_DISPATCH")) {

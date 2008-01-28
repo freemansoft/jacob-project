@@ -78,6 +78,9 @@ JNIEXPORT jbyteArray JNICALL Java_com_jacob_jacobgen_TypeLibInspector_queryInter
 	jb = env->NewByteArray( dim );
 	env->SetByteArrayRegion( jb, 0, dim, (jbyte *)buffer );
 
+	fflush(stdout);
+	fflush(stderr);
+
 	return jb;
 }
 /**
@@ -418,6 +421,7 @@ void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 			if( tdesc.vt == VT_PTR ) {
 				//printf("         EnumParameters: working on %d c1\n",k);	
 				isPointer = true;
+				// reset tdesc to be the thing that was pointed at
 				tdesc = *tdesc.lptdesc;
 
 				// SF1650138 added 11/2007 but crashes VM
@@ -429,6 +433,8 @@ void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 			}
 			//printf("         EnumParameters: working on %d d\n",k);	
 			if (vt) {
+				// this was added for SF1650138 but doesn't do anything  
+				// because the code that sets it is commented out
 				//printf("         EnumParameters: working on %d d1\n",k);	
 				append2( "%ls", GetVarTypeName( vt ) );
 			} else {
