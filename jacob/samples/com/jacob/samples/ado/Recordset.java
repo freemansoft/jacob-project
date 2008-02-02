@@ -1,409 +1,342 @@
 package com.jacob.samples.ado;
-import com.jacob.com.*;
 
-public class Recordset extends Dispatch
-{
-  public Recordset()
-  {
-    super("ADODB.Recordset");
-  }
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
+
+public class Recordset extends Dispatch {
+	public Recordset() {
+		super("ADODB.Recordset");
+	}
 
 	/**
-	 * This constructor is used instead of a case operation to
-	 * turn a Dispatch object into a wider object - it must exist
-	 * in every wrapper class whose instances may be returned from
-	 * method calls wrapped in VT_DISPATCH Variants.
+	 * This constructor is used instead of a case operation to turn a Dispatch
+	 * object into a wider object - it must exist in every wrapper class whose
+	 * instances may be returned from method calls wrapped in VT_DISPATCH
+	 * Variants.
 	 */
-	public Recordset(Dispatch d)
-	{
+	public Recordset(Dispatch d) {
 		super(d);
 	}
 
-  public Variant getProperties()
-  {
-    return Dispatch.get(this, "Properties");
-  }
-
-  public int getAbsolutePosition()
-	{
-    return Dispatch.get(this, "AbsolutePosition").getInt();
+	public Variant getProperties() {
+		return Dispatch.get(this, "Properties");
 	}
 
-  public void setAbsolutePosition(int pl)
-	{
-	  Dispatch.put(this, "AbsolutePosition", new Variant(pl));
+	public int getAbsolutePosition() {
+		return Dispatch.get(this, "AbsolutePosition").getInt();
 	}
 
-  public Connection getActiveConnection()
-  {
-    return new Connection(Dispatch.get(this, "ActiveConnection").toDispatch());
-  }
-
-  public void setActiveConnection(Connection ppvObject)
-  {
-    Dispatch.put(this, "ActiveConnection", ppvObject);
-  }
-
-  public void setActiveConnection(Variant ppvObject)
-  {
-    Dispatch.put(this, "ActiveConnection", ppvObject);
-  }
-
-  public boolean getBOF()
-	{
-	  return Dispatch.get(this, "BOF").getBoolean();
+	public void setAbsolutePosition(int pl) {
+		Dispatch.put(this, "AbsolutePosition", new Variant(pl));
 	}
 
-  public Variant getBookmark()
-	{
-	  return Dispatch.get(this, "Bookmark");
+	public Connection getActiveConnection() {
+		return new Connection(Dispatch.get(this, "ActiveConnection")
+				.toDispatch());
 	}
 
-  public void setBookmark(Variant pvBookmark)
-	{
-	  Dispatch.put(this, "Bookmark", pvBookmark);
+	public void setActiveConnection(Connection ppvObject) {
+		Dispatch.put(this, "ActiveConnection", ppvObject);
 	}
 
-  public int getCacheSize()
-	{
-	  return Dispatch.get(this, "CacheSize").getInt();
+	public void setActiveConnection(Variant ppvObject) {
+		Dispatch.put(this, "ActiveConnection", ppvObject);
 	}
 
-  public void setCacheSize(int pl)
-	{
-	  Dispatch.put(this, "CacheSize", new Variant(pl));
+	public boolean getBOF() {
+		return Dispatch.get(this, "BOF").getBoolean();
 	}
 
-  public int getCursorType()
-	{
-	  return Dispatch.get(this, "CursorType").getInt();
+	public Variant getBookmark() {
+		return Dispatch.get(this, "Bookmark");
 	}
 
-  public void setCursorType(int pl)
-	{
-	  Dispatch.put(this, "CursorType", new Variant(pl));
+	public void setBookmark(Variant pvBookmark) {
+		Dispatch.put(this, "Bookmark", pvBookmark);
 	}
 
-  public boolean getEOF()
-	{
-	  return Dispatch.get(this, "EOF").getBoolean();
-  }
-
-  public Fields getFields()
-	{
-	  return new Fields(Dispatch.get(this, "Fields").toDispatch());
+	public int getCacheSize() {
+		return Dispatch.get(this, "CacheSize").getInt();
 	}
 
-  public int getLockType()
-	{
-	  return Dispatch.get(this, "LockType").getInt();
+	public void setCacheSize(int pl) {
+		Dispatch.put(this, "CacheSize", new Variant(pl));
 	}
 
-  public void setLockType(int plLockType)
-	{
-	  Dispatch.put(this, "LockType", new Variant(plLockType));
+	public int getCursorType() {
+		return Dispatch.get(this, "CursorType").getInt();
 	}
 
-  public int getMaxRecords()
-	{
-	  return Dispatch.get(this, "MaxRecords").getInt();
+	public void setCursorType(int pl) {
+		Dispatch.put(this, "CursorType", new Variant(pl));
 	}
 
-  public void setMaxRecords(int pl)
-	{
-	  Dispatch.put(this, "MaxRecords", new Variant(pl));
+	public boolean getEOF() {
+		return Dispatch.get(this, "EOF").getBoolean();
 	}
 
-  public int getRecordCount()
-	{
-	  return Dispatch.get(this, "RecordCount").getInt();
+	public Fields getFields() {
+		return new Fields(Dispatch.get(this, "Fields").toDispatch());
 	}
 
-  public void setSource(Object pvSource)
-	{
-	  Dispatch.put(this, "Source", pvSource);
+	public int getLockType() {
+		return Dispatch.get(this, "LockType").getInt();
 	}
 
-  public void setSource(String pvSource)
-	{
-	  Dispatch.put(this, "Source", pvSource);
+	public void setLockType(int plLockType) {
+		Dispatch.put(this, "LockType", new Variant(plLockType));
 	}
 
-  public Variant getSource()
-	{
-	  return Dispatch.get(this, "Source");
+	public int getMaxRecords() {
+		return Dispatch.get(this, "MaxRecords").getInt();
 	}
 
-  public void AddNew(Variant FieldList, Variant Values)
-	{
-	  Dispatch.call(this, "AddNew", FieldList, Values);
+	public void setMaxRecords(int pl) {
+		Dispatch.put(this, "MaxRecords", new Variant(pl));
 	}
 
-  public void CancelUpdate()
-	{
-	  Dispatch.call(this, "CancelUpdate");
+	public int getRecordCount() {
+		return Dispatch.get(this, "RecordCount").getInt();
 	}
 
-  public void Close()
-	{
-	  Dispatch.call(this, "Close");
+	public void setSource(Object pvSource) {
+		Dispatch.put(this, "Source", pvSource);
 	}
 
-  public void Delete(int AffectRecords)
-	{
-	  Dispatch.call(this, "Delete", new Variant(AffectRecords));
+	public void setSource(String pvSource) {
+		Dispatch.put(this, "Source", pvSource);
 	}
 
-  public Variant GetRows(int Rows, Variant Start, Variant Fields)
-	{
-	  return Dispatch.call(this, "GetRows", new Variant(Rows), Start, Fields); 
+	public Variant getSource() {
+		return Dispatch.get(this, "Source");
+	}
+
+	public void AddNew(Variant FieldList, Variant Values) {
+		Dispatch.call(this, "AddNew", FieldList, Values);
+	}
+
+	public void CancelUpdate() {
+		Dispatch.call(this, "CancelUpdate");
+	}
+
+	public void Close() {
+		Dispatch.call(this, "Close");
+	}
+
+	public void Delete(int AffectRecords) {
+		Dispatch.call(this, "Delete", new Variant(AffectRecords));
+	}
+
+	public Variant GetRows(int Rows, Variant Start, Variant Fields) {
+		return Dispatch.call(this, "GetRows", new Variant(Rows), Start, Fields);
 	}
 
 	// get all rows
-  public Variant GetRows()
-	{
-	  return Dispatch.call(this, "GetRows");
+	public Variant GetRows() {
+		return Dispatch.call(this, "GetRows");
 	}
 
-  public void Move(int NumRecords, Variant Start)
-	{
-	  Dispatch.call(this, "Move", new Variant(NumRecords), Start);
+	public void Move(int NumRecords, Variant Start) {
+		Dispatch.call(this, "Move", new Variant(NumRecords), Start);
 	}
 
-  public void MoveNext()
-	{
-	  Dispatch.call(this, "MoveNext");
+	public void MoveNext() {
+		Dispatch.call(this, "MoveNext");
 	}
 
-  public void MovePrevious()
-	{
-	  Dispatch.call(this, "MovePrevious");
+	public void MovePrevious() {
+		Dispatch.call(this, "MovePrevious");
 	}
 
-  public void MoveFirst()
-	{
-	  Dispatch.call(this, "MoveFirst");
+	public void MoveFirst() {
+		Dispatch.call(this, "MoveFirst");
 	}
 
-  public void MoveLast()
-	{
-	  Dispatch.call(this, "MoveLast");
+	public void MoveLast() {
+		Dispatch.call(this, "MoveLast");
 	}
 
-  public void Open(Variant Source, Variant ActiveConnection, int CursorType, int LockType, int Options)
-	{
-	  Dispatch.call(this, "Open", Source, ActiveConnection, new Variant(CursorType), new Variant(LockType), new Variant(Options));
+	public void Open(Variant Source, Variant ActiveConnection, int CursorType,
+			int LockType, int Options) {
+		Dispatch.call(this, "Open", Source, ActiveConnection, new Variant(
+				CursorType), new Variant(LockType), new Variant(Options));
 	}
 
-  public void Open(Variant Source, Variant ActiveConnection)
-	{
-	  Dispatch.call(this, "Open", Source, ActiveConnection);
+	public void Open(Variant Source, Variant ActiveConnection) {
+		Dispatch.call(this, "Open", Source, ActiveConnection);
 	}
 
-  public void Requery(int Options)
-	{
-	  Dispatch.call(this, "Requery", new Variant(Options));
+	public void Requery(int Options) {
+		Dispatch.call(this, "Requery", new Variant(Options));
 	}
 
-  public void Update(Variant Fields, Variant Values)
-	{
-	  Dispatch.call(this, "Update", Fields, Values);
+	public void Update(Variant Fields, Variant Values) {
+		Dispatch.call(this, "Update", Fields, Values);
 	}
 
-  public int getAbsolutePage()
-	{
-	  return Dispatch.get(this, "AbsolutePage").getInt();
+	public int getAbsolutePage() {
+		return Dispatch.get(this, "AbsolutePage").getInt();
 	}
 
-  public void setAbsolutePage(int pl)
-	{
-	  Dispatch.put(this, "AbsolutePage", new Variant(pl));
+	public void setAbsolutePage(int pl) {
+		Dispatch.put(this, "AbsolutePage", new Variant(pl));
 	}
 
-  public int getEditMode()
-	{
-	  return Dispatch.get(this, "EditMode").getInt();
+	public int getEditMode() {
+		return Dispatch.get(this, "EditMode").getInt();
 	}
 
-  public Variant getFilter()
-	{
-	  return Dispatch.get(this, "Filter");
+	public Variant getFilter() {
+		return Dispatch.get(this, "Filter");
 	}
 
-  public void setFilter(Variant Criteria)
-	{
-	  Dispatch.put(this, "Filter", Criteria);
+	public void setFilter(Variant Criteria) {
+		Dispatch.put(this, "Filter", Criteria);
 	}
 
-  public int getPageCount()
-	{
-	  return Dispatch.get(this, "PageCount").getInt();
+	public int getPageCount() {
+		return Dispatch.get(this, "PageCount").getInt();
 	}
 
-  public int getPageSize()
-	{
-	  return Dispatch.get(this, "PageSize").getInt();
+	public int getPageSize() {
+		return Dispatch.get(this, "PageSize").getInt();
 	}
 
-  public void setPageSize(int pl)
-	{
-	  Dispatch.put(this, "PageSize", new Variant(pl));
+	public void setPageSize(int pl) {
+		Dispatch.put(this, "PageSize", new Variant(pl));
 	}
 
-  public String getSort()
-	{
-	  return Dispatch.get(this, "Sort").toString();
+	public String getSort() {
+		return Dispatch.get(this, "Sort").toString();
 	}
 
-  public void setSort(String Criteria)
-	{
-	  Dispatch.put(this, "Sort", Criteria);
+	public void setSort(String Criteria) {
+		Dispatch.put(this, "Sort", Criteria);
 	}
 
-  public int getStatus()
-	{
-	  return Dispatch.get(this, "Status").getInt();
+	public int getStatus() {
+		return Dispatch.get(this, "Status").getInt();
 	}
 
-  public int getState()
-	{
-	  return Dispatch.get(this, "State").getInt();
+	public int getState() {
+		return Dispatch.get(this, "State").getInt();
 	}
 
-  public void UpdateBatch(int AffectRecords)
-	{
-	  Dispatch.call(this, "UpdateBatch", new Variant(AffectRecords));
+	public void UpdateBatch(int AffectRecords) {
+		Dispatch.call(this, "UpdateBatch", new Variant(AffectRecords));
 	}
 
-  public void CancelBatch(int AffectRecords)
-	{
-	  Dispatch.call(this, "CancelBatch", new Variant(AffectRecords));
+	public void CancelBatch(int AffectRecords) {
+		Dispatch.call(this, "CancelBatch", new Variant(AffectRecords));
 	}
 
-  public int getCursorLocation()
-	{
-	  return Dispatch.get(this, "CursorLocation").getInt();
+	public int getCursorLocation() {
+		return Dispatch.get(this, "CursorLocation").getInt();
 	}
 
-  public void setCursorLocation(int pl)
-	{
-	  Dispatch.put(this, "CursorLocation", new Variant(pl));
+	public void setCursorLocation(int pl) {
+		Dispatch.put(this, "CursorLocation", new Variant(pl));
 	}
 
-  public Recordset NextRecordset(Variant RecordsAffected)
-	{
-	  return new Recordset(Dispatch.call(this, "NextRecordset", RecordsAffected).toDispatch());
+	public Recordset NextRecordset(Variant RecordsAffected) {
+		return new Recordset(Dispatch.call(this, "NextRecordset",
+				RecordsAffected).toDispatch());
 	}
 
-  public boolean Supports(int CursorOptions)
-	{
-	  return Dispatch.call(this, "Supports", new Variant(CursorOptions)).getBoolean();
+	public boolean Supports(int CursorOptions) {
+		return Dispatch.call(this, "Supports", new Variant(CursorOptions))
+				.getBoolean();
 	}
 
-  public Variant getCollect(Variant Index)
-	{
-	  return Dispatch.get(this, "Collect");
+	public Variant getCollect(Variant Index) {
+		return Dispatch.get(this, "Collect");
 	}
 
-  public void setCollect(Variant Index, Variant pvar)
-	{
-	  Dispatch.call(this, "Collect", Index, pvar);
+	public void setCollect(Variant Index, Variant pvar) {
+		Dispatch.call(this, "Collect", Index, pvar);
 	}
 
-  public int getMarshalOptions()
-	{
-	  return Dispatch.get(this, "MarshalOptions").getInt();
+	public int getMarshalOptions() {
+		return Dispatch.get(this, "MarshalOptions").getInt();
 	}
 
-  public void setMarshalOptions(int pl)
-	{
-	  Dispatch.put(this, "MarshalOptions", new Variant(pl));
-  }
-
-  public void Find(String Criteria, int SkipRecords, int SearchDirection, Variant Start)
-	{
-	  Dispatch.call(this, "Find", Criteria, new Variant(SkipRecords), new Variant(SearchDirection), Start);
+	public void setMarshalOptions(int pl) {
+		Dispatch.put(this, "MarshalOptions", new Variant(pl));
 	}
 
-  public void Cancel()
-	{
-	  Dispatch.call(this, "Cancel");
+	public void Find(String Criteria, int SkipRecords, int SearchDirection,
+			Variant Start) {
+		Dispatch.call(this, "Find", Criteria, new Variant(SkipRecords),
+				new Variant(SearchDirection), Start);
 	}
 
-  public Variant getDataSource()
-	{
-	  return Dispatch.get(this, "DataSource");
+	public void Cancel() {
+		Dispatch.call(this, "Cancel");
 	}
 
-  public void setDataSource(Variant ppunkDataSource)
-  {
-	  Dispatch.put(this, "DataSource", ppunkDataSource);
+	public Variant getDataSource() {
+		return Dispatch.get(this, "DataSource");
 	}
 
-  public void Save(String FileName, int PersistFormat)
-	{
-	  Dispatch.call(this, "Save", FileName, new Variant(PersistFormat));
+	public void setDataSource(Variant ppunkDataSource) {
+		Dispatch.put(this, "DataSource", ppunkDataSource);
 	}
 
-  public Variant getActiveCommand()
-	{
-	  return Dispatch.get(this, "ActiveCommand");
+	public void Save(String FileName, int PersistFormat) {
+		Dispatch.call(this, "Save", FileName, new Variant(PersistFormat));
 	}
 
-  public void setStayInSync(boolean pb)
-	{
-	  Dispatch.put(this, "StayInSync", new Variant(pb));
+	public Variant getActiveCommand() {
+		return Dispatch.get(this, "ActiveCommand");
 	}
 
-  public boolean getStayInSync()
-	{
-	  return Dispatch.get(this, "StayInSync").getBoolean();
+	public void setStayInSync(boolean pb) {
+		Dispatch.put(this, "StayInSync", new Variant(pb));
 	}
 
-  public String GetString(int StringFormat, int NumRows, String ColumnDelimeter, String RowDelimeter, String NullExpr)
-	{
-	  return Dispatch.call(this, "GetString", new Variant(StringFormat),
-		    new Variant(NumRows), ColumnDelimeter, RowDelimeter, NullExpr).toString();
+	public boolean getStayInSync() {
+		return Dispatch.get(this, "StayInSync").getBoolean();
 	}
 
-  public String getDataMember()
-	{
-	  return Dispatch.get(this, "DataMember").toString();
+	public String GetString(int StringFormat, int NumRows,
+			String ColumnDelimeter, String RowDelimeter, String NullExpr) {
+		return Dispatch.call(this, "GetString", new Variant(StringFormat),
+				new Variant(NumRows), ColumnDelimeter, RowDelimeter, NullExpr)
+				.toString();
 	}
 
-  public void setDataMember(String pl)
-	{
-	  Dispatch.put(this, "DataMember", new Variant(pl));
+	public String getDataMember() {
+		return Dispatch.get(this, "DataMember").toString();
 	}
 
-  public int CompareBookmarks(Variant Bookmark1, Variant Bookmark2)
-	{
-	  return Dispatch.call(this, "CompareBookmarks", Bookmark1, Bookmark2).getInt();
+	public void setDataMember(String pl) {
+		Dispatch.put(this, "DataMember", new Variant(pl));
 	}
 
-  public Recordset Clone(int LockType)
-	{
-	  return new Recordset(Dispatch.call(this, "Clone", 
-		           new Variant(LockType)).toDispatch());
+	public int CompareBookmarks(Variant Bookmark1, Variant Bookmark2) {
+		return Dispatch.call(this, "CompareBookmarks", Bookmark1, Bookmark2)
+				.getInt();
 	}
 
-  public void Resync(int AffectRecords, int ResyncValues)
-	{
-	  Dispatch.call(this, "Resync", new Variant(AffectRecords), new Variant(ResyncValues));
+	public Recordset Clone(int LockType) {
+		return new Recordset(Dispatch
+				.call(this, "Clone", new Variant(LockType)).toDispatch());
 	}
 
-  public void Seek(Variant KeyValues, int SeekOption)
-	{
-	  Dispatch.call(this, "Seek", KeyValues, new Variant(SeekOption));
+	public void Resync(int AffectRecords, int ResyncValues) {
+		Dispatch.call(this, "Resync", new Variant(AffectRecords), new Variant(
+				ResyncValues));
 	}
 
-  public void setIndex(String pl)
-	{
-	  Dispatch.put(this, "Index", new Variant(pl));
+	public void Seek(Variant KeyValues, int SeekOption) {
+		Dispatch.call(this, "Seek", KeyValues, new Variant(SeekOption));
 	}
 
-  public String getIndex()
-	{
-	  return Dispatch.get(this, "Index)").toString();
+	public void setIndex(String pl) {
+		Dispatch.put(this, "Index", new Variant(pl));
+	}
+
+	public String getIndex() {
+		return Dispatch.get(this, "Index)").toString();
 	}
 }

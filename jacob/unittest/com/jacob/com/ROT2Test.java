@@ -14,6 +14,9 @@ import com.jacob.test.BaseTestCase;
  */
 public class ROT2Test extends BaseTestCase {
 
+	/**
+	 * runs a multi-threaded test
+	 */
 	public void testDoesNotBlowUp() {
 		ROT2TestThread threads[] = new ROT2TestThread[4];
 		for (int i = 0; i < threads.length; i++) {
@@ -29,12 +32,14 @@ public class ROT2Test extends BaseTestCase {
 	 */
 
 	public class ROT2TestThread extends Thread {
-		private java.util.List ThreadObjects;
+		private java.util.List<Variant> ThreadObjects;
 
 		private int initialRunSize = 0;
 
 		/**
 		 * @param arg0
+		 * @param iStartCount
+		 *            the initial number of threads
 		 */
 		public ROT2TestThread(String arg0, int iStartCount) {
 			super(arg0);
@@ -43,7 +48,7 @@ public class ROT2Test extends BaseTestCase {
 		}
 
 		/**
-		 * A semi-complexe serie of steps to put the ROT under stress. 1)
+		 * A semi-complex series of steps to put the ROT under stress. 1)
 		 * discard half the objects we've created 2) if size is greater than 1
 		 * but not a even number, add 1 new object 3) stop when size is 1.
 		 * 
@@ -54,7 +59,7 @@ public class ROT2Test extends BaseTestCase {
 			// so the gc can't collect them
 			// we need to create these in the thread so they end up in the right
 			// ROT table
-			ThreadObjects = new java.util.ArrayList(initialRunSize);
+			ThreadObjects = new java.util.ArrayList<Variant>(initialRunSize);
 			for (int i = 0; i < initialRunSize; i++) {
 				// create the object
 				Variant aNewVariant = new Variant(getName() + "_" + i);
@@ -105,8 +110,8 @@ public class ROT2Test extends BaseTestCase {
 		}
 
 		/**
-		 * Another test would be to override this to always return the same name.
-		 * That would really screw the ROT!
+		 * Another test would be to override this to always return the same
+		 * name. That would really screw the ROT!
 		 * 
 		 * @see java.lang.Object#toString()
 		 */

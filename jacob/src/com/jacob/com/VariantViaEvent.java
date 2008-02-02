@@ -19,15 +19,16 @@
  */
 package com.jacob.com;
 
-/** 
- * a public class to variant that is used
- * to track which variant objects are created by event callbacks
- * This is soley used for that purpose.
+/**
+ * a public class to variant that is used to track which variant objects are
+ * created by event callbacks This is solely used for that purpose.
  */
 public class VariantViaEvent extends Variant {
 
-    public VariantViaEvent(){
-        super();
-    }
+	/**
+	 * Standard constructor used by JNI event handling layer
+	 */
+	public VariantViaEvent() {
+		super();
+	}
 }
-

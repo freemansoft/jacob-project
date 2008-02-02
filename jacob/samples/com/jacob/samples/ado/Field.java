@@ -1,122 +1,101 @@
 package com.jacob.samples.ado;
-import com.jacob.com.*;
 
-public class Field extends Dispatch
-{
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
+
+public class Field extends Dispatch {
 	/**
-	 * This constructor is used instead of a case operation to
-	 * turn a Dispatch object into a wider object - it must exist
-	 * in every wrapper class whose instances may be returned from
-	 * method calls wrapped in VT_DISPATCH Variants.
+	 * This constructor is used instead of a case operation to turn a Dispatch
+	 * object into a wider object - it must exist in every wrapper class whose
+	 * instances may be returned from method calls wrapped in VT_DISPATCH
+	 * Variants.
 	 */
-	public Field(Dispatch d)
-	{
+	public Field(Dispatch d) {
 		super(d);
 	}
 
-  public Variant getProperties()
-  {
-    return Dispatch.get(this, "Properties");
-  }
-
-  public int getActualSize()
-	{
-	  return Dispatch.get(this, "ActualSize").getInt();
+	public Variant getProperties() {
+		return Dispatch.get(this, "Properties");
 	}
 
-  public int getAttributes()
-	{
-	  return Dispatch.get(this, "Attributes").getInt();
+	public int getActualSize() {
+		return Dispatch.get(this, "ActualSize").getInt();
 	}
 
-  public int getDefinedSize()
-	{
-	  return Dispatch.get(this, "DefinedSize").getInt();
+	public int getAttributes() {
+		return Dispatch.get(this, "Attributes").getInt();
 	}
 
-  public String getName()
-	{
-	  return Dispatch.get(this, "Name").toString();
+	public int getDefinedSize() {
+		return Dispatch.get(this, "DefinedSize").getInt();
 	}
 
-  public int getType()
-	{
-	  return Dispatch.get(this, "Type").getInt();
+	public String getName() {
+		return Dispatch.get(this, "Name").toString();
 	}
 
-  public Variant getValue()
-	{
-	  return Dispatch.get(this, "Value");
+	public int getType() {
+		return Dispatch.get(this, "Type").getInt();
 	}
 
-  public void setValue(Variant pvar)
-	{
-	  Dispatch.put(this, "Value", pvar);
+	public Variant getValue() {
+		return Dispatch.get(this, "Value");
 	}
 
-  public byte getPrecision()
-	{
-	  return Dispatch.get(this, "Precision").getByte();
+	public void setValue(Variant pvar) {
+		Dispatch.put(this, "Value", pvar);
 	}
 
-  public byte getNumericScale()
-	{
-	  return Dispatch.get(this, "NumericScale").getByte();
+	public byte getPrecision() {
+		return Dispatch.get(this, "Precision").getByte();
 	}
 
-  public void AppendChunk(Variant Data)
-	{
-	  Dispatch.call(this, "AppendChunk", Data);
+	public byte getNumericScale() {
+		return Dispatch.get(this, "NumericScale").getByte();
 	}
 
-  public Variant GetChunk(int Length)
-	{
-	  return Dispatch.call(this, "GetChunk", new Variant(Length));
+	public void AppendChunk(Variant Data) {
+		Dispatch.call(this, "AppendChunk", Data);
 	}
 
-  public Variant getOriginalValue()
-	{
-	  return Dispatch.get(this, "OriginalValue");
+	public Variant GetChunk(int Length) {
+		return Dispatch.call(this, "GetChunk", new Variant(Length));
 	}
 
-  public Variant getUnderlyingValue()
-	{
-	  return Dispatch.get(this, "UnderlyingValue");
+	public Variant getOriginalValue() {
+		return Dispatch.get(this, "OriginalValue");
 	}
 
-  public Variant getDataFormat()
-	{
-	  return Dispatch.get(this, "DataFormat");
+	public Variant getUnderlyingValue() {
+		return Dispatch.get(this, "UnderlyingValue");
 	}
 
-  public void setDataFormat(Variant ppiDF)
-	{
-	  Dispatch.put(this, "DataFormat", ppiDF);
+	public Variant getDataFormat() {
+		return Dispatch.get(this, "DataFormat");
 	}
 
-  public void setPrecision(byte pb)
-	{
-	  Dispatch.put(this, "Precision", new Variant(pb));
+	public void setDataFormat(Variant ppiDF) {
+		Dispatch.put(this, "DataFormat", ppiDF);
 	}
 
-  public void setNumericScale(byte pb)
-	{
-	  Dispatch.put(this, "NumericScale", new Variant(pb));
+	public void setPrecision(byte pb) {
+		Dispatch.put(this, "Precision", new Variant(pb));
 	}
 
-  public void setType(int pDataType)
-	{
-	  Dispatch.put(this, "Type", new Variant(pDataType));
+	public void setNumericScale(byte pb) {
+		Dispatch.put(this, "NumericScale", new Variant(pb));
 	}
 
-  public void setDefinedSize(int pl)
-	{
-	  Dispatch.put(this, "DefinedSize", new Variant(pl));
+	public void setType(int pDataType) {
+		Dispatch.put(this, "Type", new Variant(pDataType));
 	}
 
-  public void setAttributes(int pl)
-	{
-	  Dispatch.put(this, "Attributes", new Variant(pl));
+	public void setDefinedSize(int pl) {
+		Dispatch.put(this, "DefinedSize", new Variant(pl));
+	}
+
+	public void setAttributes(int pl) {
+		Dispatch.put(this, "Attributes", new Variant(pl));
 	}
 
 }

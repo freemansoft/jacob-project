@@ -1,6 +1,114 @@
 <HTML>
 <BODY>
 <!--  ---------  -->
+<h2>JACOB 1.14</h2>
+<h3>What's New</h3>
+<ul>
+<li>
+	Binaries are now compiled with Java 5. JDK 1.4 support dropped.  
+</li>
+<li>
+	Jacob now loads dlls based on platform (32 bit /64 bit) and version number.  
+</li>
+</ul>
+
+<h3>Tracked Changes</h3>
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" >
+  <tr>
+    <td width="100%" colspan="2"><b>Bugs</b></td>
+  </tr> 
+  <tr>
+    <td width="13%" valign="top">1857439</td>
+    <td width="87%" valign="top">(M7) version.properties renamed to META-INF/JacobVersion.properties
+    to remove collision with WebSphere version.properties.</td>
+  </tr>
+  <tr> 
+    <td width="13%" valign="top">1840487</td>
+    <td width="87%" valign="top">(M6) toJavaObject() converting to SafeArray
+    did shallow copy that left two objects pointing at the same windows memory.</td>
+  </tr>
+  <tr> 
+    <td width="13%" valign="top">1829201</td>
+    <td width="87%" valign="top">(M5) DECIMAL rounding behavior externalized 
+    and old Variant decimal API restored.</td>
+  </tr>
+  <tr> 
+    <td width="13%" valign="top">1829201</td>
+    <td width="87%" valign="top">(M5) DECIMAL rounding behavior externalized 
+    and old Variant decimal API restored.</td>
+  </tr>
+  <tr> 
+    <td width="13%" valign="top">1829201</td>
+    <td width="87%" valign="top">(M4) Decimal type now throws IllegalArgumentException 
+    	when more than 12 bytes worth the digits exist in BigDecimal.  Rounding  
+    	support added to reduce precision of BigDecimals when converting into VT_DECIMAL</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1815163</td>
+    <td width="87%" valign="top">(M2) Double and Decimal conversion to Int fails for negative values</td>
+  </tr> 
+  <tr> 
+    <td width="13%" valign="top">&nbsp;</td>
+    <td width="87%" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="2"><b>Patches</b></td>
+  </tr> 
+  <tr> 
+    <td width="13%" valign="top">&nbsp;</td>
+    <td width="87%" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="2"><b>Feature Requests</b></td>
+  </tr> 
+  <tr> 
+    <td width="13%" valign="top">1845039 </td>
+    <td width="87%" valign="top">(M7) Jacob DLL name can now be customized to 
+    support bundling of Jacob in other products.</td> 
+  </tr>
+    <td width="13%" valign="top">1845039 </td>
+    <td width="87%" valign="top">(M6) Jacob DLL names are now qualified by platform and 
+    release.  The JacobLibraryLoader now determines the correct 32bit or 64bit 
+    dll based on the system architecture.  Jacob.jar now also knows the version 
+    of the dll it is looking for (by name) and loads the correct one. JWS clients 
+    will have to modify their dll loaders. See: The JWS classloader sample </td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1828371 </td>
+    <td width="87%" valign="top">(M4) Added VT_I8 support to SafeArray.</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1813458</td>
+    <td width="87%" valign="top">(M3) Expand type support. Changed currency support
+    	to use new Currency class.  Added VT_I8 64 bit support.  VT_I8 support
+    	requires Windows XP or later. VT_I8 not supported by windows in 
+    	Windows 2000 and earlier. Added more primitive constructors to Variant.</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">1816863</td>
+    <td width="87%" valign="top">(M1) Migrate Jacob to JDK 5</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top">&nbsp;</td>
+    <td width="87%" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="100%" colspan="2"><b>Known Issues</b></td>
+  </tr> 
+  <tr>
+    <td width="13%" valign="top"></td>
+    <td width="87%" valign="top">This is now built with Java 5 compiler and
+    Java 5 syntax. This release is not compatible with JDK 1.4.x and earlier.</td>
+  </tr>
+  <tr>
+    <td width="13%" valign="top"></td>
+    <td width="87%" valign="top">This release requires the Visual C++ 2005
+    libraries.  See 1.13 Known Issues for more information.</td>
+  </tr>
+  
+</table>
+
+<!--  ---------  -->
 <h2>JACOB 1.13</h2>
 <h3>What's New</h3>
 <ul>
@@ -82,11 +190,14 @@
     <td width="100%" colspan="2"><b>Known Issues</b></td>
   </tr> 
   <tr>
-    <td width="13%" valign="top">VC++ libraries</td>
+    <td width="13%" valign="top"></td>
     <td width="87%" valign="top">Jacob 1.13 is built using VC++ 2005.
     	That creates a dependency on the Visual C++ 2005 libraries and msvcr80.dll.
     	This library is normally installed on XP systems but may have to be manually
-    	installed on older systems.  It can be obtained from the MS downloads site.</td>
+    	installed on older systems.  The pagackage, often referred to as vcredist.exe
+    	can be obtained from the MS downloads site.
+    	If you are getting loader errors on this release or later when loading the
+    	dll then you may be missing this library.</td>
   </tr>
   
 </table>

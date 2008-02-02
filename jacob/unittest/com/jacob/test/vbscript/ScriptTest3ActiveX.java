@@ -1,8 +1,11 @@
 package com.jacob.test.vbscript;
 
-import com.jacob.com.*;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.ComException;
+import com.jacob.com.ComThread;
+import com.jacob.com.DispatchEvents;
+import com.jacob.com.Variant;
 import com.jacob.test.BaseTestCase;
-import com.jacob.activeX.*;
 
 /**
  * Here we create the ScriptControl component in a separate MTA thread and then
@@ -33,9 +36,8 @@ public class ScriptTest3ActiveX extends BaseTestCase {
 			}
 
 			Variant result = sC.invoke("Eval", getSampleVPScriptForEval());
-			System.out
-					.println("eval(" + getSampleVPScriptForEval()
-							+ ") = " + result);
+			System.out.println("eval(" + getSampleVPScriptForEval() + ") = "
+					+ result);
 			System.out.println("setting quit");
 			ScriptTest3ActiveX.quit = true;
 		} catch (ComException e) {
@@ -58,8 +60,9 @@ public class ScriptTest3ActiveX extends BaseTestCase {
 				ScriptTestErrEvents te = new ScriptTestErrEvents();
 				de = new DispatchEvents(sC, te);
 				System.out.println("sControl=" + sC);
-				while (!quit)
+				while (!quit) {
 					sleep(100);
+				}
 				ComThread.Release();
 			} catch (Exception e) {
 				e.printStackTrace();

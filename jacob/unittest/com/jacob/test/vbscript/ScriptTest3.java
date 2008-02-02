@@ -1,8 +1,12 @@
 package com.jacob.test.vbscript;
 
-import com.jacob.com.*;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.ComException;
+import com.jacob.com.ComThread;
+import com.jacob.com.Dispatch;
+import com.jacob.com.DispatchEvents;
+import com.jacob.com.Variant;
 import com.jacob.test.BaseTestCase;
-import com.jacob.activeX.*;
 
 /**
  * Here we create the ScriptControl component in a separate MTA thread and then
@@ -10,8 +14,9 @@ import com.jacob.activeX.*;
  * MTA thread. If you try to create it as an STA then you will not be able to
  * make calls into a component running in another thread.
  * <p>
- * May need to run with some command line options (including from inside Eclipse).  
- * Look in the docs area at the Jacob usage document for command line options.
+ * May need to run with some command line options (including from inside
+ * Eclipse). Look in the docs area at the Jacob usage document for command line
+ * options.
  */
 public class ScriptTest3 extends BaseTestCase {
 
@@ -29,13 +34,15 @@ public class ScriptTest3 extends BaseTestCase {
 			ScriptTest3Inner script = new ScriptTest3Inner();
 			script.start();
 			try {
-			Thread.sleep(1000);
-			} catch (InterruptedException ie){
+				Thread.sleep(1000);
+			} catch (InterruptedException ie) {
 				// should we get this?
 			}
 
-			Variant result = Dispatch.call(sControl, "Eval", getSampleVPScriptForEval());
-			System.out.println("eval(" + getSampleVPScriptForEval() + ") = " + result);
+			Variant result = Dispatch.call(sControl, "Eval",
+					getSampleVPScriptForEval());
+			System.out.println("eval(" + getSampleVPScriptForEval() + ") = "
+					+ result);
 			System.out.println("setting quit");
 			ScriptTest3.quit = true;
 		} catch (ComException e) {
@@ -54,13 +61,14 @@ public class ScriptTest3 extends BaseTestCase {
 				System.out.println("OnInit");
 				String lang = "VBScript";
 				sC = new ActiveXComponent("ScriptControl");
-				sControl = (Dispatch) sC.getObject();
+				sControl = sC.getObject();
 				Dispatch.put(sControl, "Language", lang);
 				ScriptTestErrEvents te = new ScriptTestErrEvents();
 				de = new DispatchEvents(sControl, te);
 				System.out.println("sControl=" + sControl);
-				while (!quit)
+				while (!quit) {
 					sleep(100);
+				}
 				ComThread.Release();
 			} catch (Exception e) {
 				e.printStackTrace();

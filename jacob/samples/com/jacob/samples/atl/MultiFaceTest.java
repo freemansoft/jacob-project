@@ -1,14 +1,23 @@
 package com.jacob.samples.atl;
 
-import com.jacob.com.*;
-import com.jacob.activeX.*;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
 
 class MultiFaceTest {
+
+	/**
+	 * standard main() test program
+	 * 
+	 * @param args
+	 *            the command line arguments
+	 */
 	public static void main(String[] args) {
 		// this method has been deprecated as being unreliable.
 		// shutdown should be done through other means
-		// whoever wrote this example should explain what this was intended to do
-		//System.runFinalizersOnExit(true);
+		// whoever wrote this example should explain what this was intended to
+		// do
+		// System.runFinalizersOnExit(true);
 
 		ActiveXComponent mf = new ActiveXComponent("MultiFace.Face");
 		try {

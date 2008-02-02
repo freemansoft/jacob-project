@@ -7,6 +7,9 @@ import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
 import com.jacob.test.BaseTestCase;
 
+/**
+ * Test class to verify dispatch with SafeArray
+ */
 public class SafeArrayDispatchTest extends BaseTestCase {
 	public void testDispatchWithSafeArray() {
 		try {
@@ -36,7 +39,7 @@ public class SafeArrayDispatchTest extends BaseTestCase {
 			assertTrue(result.toString().equals("6"));
 		} catch (ComException e) {
 			e.printStackTrace();
-			fail("script failure "+e);
+			fail("script failure " + e);
 		}
 	}
 }

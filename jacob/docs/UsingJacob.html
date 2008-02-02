@@ -23,6 +23,16 @@ to provide a more object like API.
 The only exception to this guideline is that the <code>ActiveXComponent</code> class is always
 used to make the initial connection to the target dll/COM component.
 
+
+<hr>
+<H2> Considerations when doing server side automation of office </h2>
+<p>
+Most office and many windows client type applications are not written to be used
+in high volume or multi-threaded server environment. There is a 
+<a href="http://support.microsoft.com/kb/257757/">
+support note </a>
+on the Microsoft web site that discusses some of the issues. 
+<p>
 <hr>
 <H2> Determining the API of the target application </h2>
 <p>
@@ -32,14 +42,22 @@ Section not yet written.
 <h2> The Jacob DLL </h2>
 <p>
 Jacob.jar relies on a DLL file that it loads off of the library path or classpath.  
-This means that you must either copy jacob.dll into your path or use VM options to 
-add jacob.dll directory to the path.  
+This means that you must either copy the appropriate jacob ddll into your path or 
+use VM options to add directory holding jacob dll to the path.  Prior to 1.14M6, 
+the jacob DLL name was alwasy "jacob.dll".  This made it hard to verify jacob 
+was loading the correct dll when multiple copies of jacob were installed on a 
+single system.  It also was confusing on 64 bit systems where the 32 bit and 64 bit 
+dlls have the same tames. 
+Starting in 1.14M6, Jacob's library 
+loader selects a dll with the appropriate name based on the jacob release and platform.
+The dll naming convention is: <BR>
+<code>jacob&lt;platform&gt;.&lt;version.&gt;.dll</code>  
 <p>
+<h3>Classloader issues</h3>
 The code is written so that the jacob.dll is only loaded one time per classloader.
 This works fine in the standard application but can cause problems if jacob.jar
 is loaded from more than one class loader.  This can happen in the situation where multiple
 jacob dependent web applications run in the same container like a web server or JWS runtime.
-<p>
 In the case of a web server, Jacob is normally put in the application specific WEB-INF/lib directory.
 This is the "right" way to do it and works in most situations.  
 But, if Jacob is put in the WEB-INF/lib directory of each application's war file for more than 
@@ -71,16 +89,54 @@ oblem
 Visual C redistributable installer SP1</A>
 </pre>
 
-<p>
+<p></p>
 <hr>
 <h2>Jacob Command Line Settings</h2>
-This library supports several different :
-	<h3>java.library.path</h3>
-	Used to add the location of the jacob dll to the JVM's library path.
+This library supports several differentommand line options:
+<table border=1>
+<tr><td colspan=3>
+<h3>dll path location and dll name customization</h3>
+</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
+	<h4>java.library.path</h4>
+	</td><td>
+	Standard Java property used to add the location of the jacob dll to the JVM's library path.
+	(Added 1.11)
 	<p>
-	Example: -Djava.library.path=d:/jacob/release/x86 
+	Example: <code>-Djava.library.path=d:/jacob/release/x86</code> 
+</td></tr>
 
-	<h3>com.jacob.autogc </h3>
+<tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
+	<h4>jacob.dll.name</h4>
+	</td><td>
+	Override the standard DLL name with a custom one.  This stops jacob from 
+	using its 32bit/64bit detection and dll rendevous logic.
+	Sometimes used when
+	Jacob is bundled with another application and the application wishes
+	to tie the jacob dll version number to the application version numbber. 
+	(Added 1.14M7)
+	<p>
+	Example: <code>-Djacob.dll.name=MyFunkyDllName.dll</code> 
+</td></tr>
+
+<tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
+	<h4>jacob.dll.name.x86 & jacob.dll.name.x64</h4>
+	</td><td>
+	Override the standard 32 bit DLL name with custome ones. 
+	Sometimes used when
+	Jacob is bundled with another application and the application wishes
+	to tie the jacob dll version number to the application version numbber.
+	(Added 1.14M7)
+	<p>
+	Example to override 32 bit dll name: <code>-Djacob.dll.name.x86=MyFunkyDllName-32bit.dll</code> 
+</td></tr>
+
+<tr><td colspan=3>
+<h3>Memory Management</h3>
+</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
+	<h4>com.jacob.autogc </h4>
+	</td><td>
 	Determines if automatic garbage collection is enabled.  This is the
 	only way to free up objects created in event callbacks.  	Automatic garbage collection , based on Java gc rules, garbage collection can be enabled via the 
 	<code>com.java.autogc</code> command line option. 
@@ -95,16 +151,20 @@ This library supports several different :
 	to long running threads or to objects created as part of event callbacks.
 	Code was added to let users try and let the JVM manage the object life cycles
 	even though the <a href="JacobComLifetime.html">JacobComLifetime.html</a> document 
-	says this is a bad idea.
+	says this is a bad idea. Added 1.9.
 	<p>
 	<p> 
 	This value is cached at startup and cannot be changed on-the-fly via <code>System.setProperty();</code>
 	<p>
-	The default value is <strong>false</strong>
+	The default value is <em>false</em>
 	<p>
 	Example: <code>-Dcom.jacob.autogc=false</code>
 	
-	<h3>&ltclass_name&gt.PutInROT</h3>
+	</td></tr>
+	
+<tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
+	<h4>&ltclass_name&gt.PutInROT</h4>
+	</td><td>
 	Lets a program specify that instances of certain classes are to not be inserted
 	into the ROT.  This experimental (1.13) feature provides a mechanism for freeing
 	VariantViaEvent objects that are created in Event threads.  There is normally no 
@@ -116,7 +176,7 @@ This library supports several different :
 	outside of the thread it was created in but emperical evidence shows there are
 	situations where this great reduces the long running memory footprint of applications
 	that process a lot of events. <em>This function is still experimental</em>.
-	The functionality of this overlaps the experimental <code>com.jacob.autogc</code> introduced
+	The functionality was added 1.13. Some of this overlaps the experimental <code>com.jacob.autogc</code> introduced
 	in 1.9.
 	See the ROT.java test program for an example of the effects of this option.
 	<p> 
@@ -126,8 +186,14 @@ This library supports several different :
 	Example: <code>System.setProperty("com.jacob.com.VariantViaVariant.PutInROT","false");</code>
 	<BR>
 	Example: <code>-Dcom.jacob.com.VariantViaVariant.PutInROT=false</code>
+</td></tr>
 	
-	<h3>com.jacob.debug</h3>
+<tr><td colspan=3>
+<h3>Debugging and Troubleshooting</h3>	
+</td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
+	<h4>com.jacob.debug</h4>
+	</td><td>
 	Determines if debug output is enabled to standard out. 
 	<p> 
 	This value is cached at startup and cannot be changed on-the-fly via <code>System.setProperty();</code>
@@ -136,14 +202,21 @@ This library supports several different :
 	<p>
 	
 	Example: <code>-Dcom.jacob.debug=false</code>
+	</td><tr>
 	
-	<h3>-XCheck:jni</h3>
+<tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
+	
+	<h4>-XCheck:jni</h4>
+	</td><td>
 	This turns on additional JVM checking for JNI issues.  This is
 	not an actual JACOB system property but a property used by the JVM.
 	<p>
 	The default is "no additional checking"
-	Example: -XCheck:jni
-<p>
+	Example: <code>-XCheck:jni</code>
+</td></tr>
+</table>
+	
+<p></p>
 <hr>
 <h2>Finding the DLL version using windows command line</h2>
 The jacob.dll file includes the jacob release number in the version field.  
@@ -153,8 +226,17 @@ The dll version number is stored in the "image version" field of the
 This information from <a href="http://msdn2.microsoft.com/en-gb/library/h88b7dc8(VS.71).aspx">
 The Microsoft msdn web site</a>
 
+<hr>
+<h2>Unit Tests</h2>
+Jacob must know the location of the DLL when running the unit tests in Eclipse.
+The simplest way to do this is to add the dll path to the unit as a VM argument.
+The argument should be specified based on where you installed the jacob source package. 
+If you have jacob unpacked in d:/jacob_1_5 and built using build.xml, 
+then the vm arguments would be: 
+<br><code>-Djava.library.path=d:/jacob_1_5/release/x86</code> .
+
 <p>
-Last Modified 7/2007
+Last Modified 12/2007
 
 </BODY>
 </HTML>

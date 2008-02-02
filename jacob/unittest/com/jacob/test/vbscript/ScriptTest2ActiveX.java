@@ -26,8 +26,9 @@ import com.jacob.test.BaseTestCase;
  * multiple threads to access a Dispatch pointer, then create that many
  * DispatchProxy objects.
  * <p>
- * May need to run with some command line options (including from inside Eclipse).  
- * Look in the docs area at the Jacob usage document for command line options.
+ * May need to run with some command line options (including from inside
+ * Eclipse). Look in the docs area at the Jacob usage document for command line
+ * options.
  */
 public class ScriptTest2ActiveX extends BaseTestCase {
 	public static ActiveXComponent sC;
@@ -42,9 +43,9 @@ public class ScriptTest2ActiveX extends BaseTestCase {
 			ScriptTest2ActiveXSTA script = new ScriptTest2ActiveXSTA();
 			try {
 				Thread.sleep(1000);
-				} catch (InterruptedException ie){
-					// should we get this?
-				}
+			} catch (InterruptedException ie) {
+				// should we get this?
+			}
 
 			// get a thread-local Dispatch from sCon
 			ActiveXComponent sc = new ActiveXComponent(sCon.toDispatch());
@@ -60,7 +61,7 @@ public class ScriptTest2ActiveX extends BaseTestCase {
 			System.out.println("called quit");
 		} catch (ComException e) {
 			e.printStackTrace();
-			fail("blew up with Com Exception "+e);
+			fail("blew up with Com Exception " + e);
 		} finally {
 			Integer I = null;
 			for (int i = 1; i < 1000000; i++) {

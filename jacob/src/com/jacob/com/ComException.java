@@ -22,111 +22,120 @@ package com.jacob.com;
 /**
  * Standard exception thrown by com jni code when there is a problem
  */
-public abstract class ComException extends JacobException
-{
-    // Fields
-    /** COM code initializes this filed with an appropriate return code
-     * that was returned by the underlying com code 
-     **/
-    protected int hr;
-    /** No documentation is available at this time.  Someone should document this field */
-    protected int m_helpContext;
-    /** No documentation is available at this time.  Someone should document this field */
-    protected String m_helpFile;
-    /** No documentation is available at this time.  Someone should document this field */
-    protected String m_source;
+public abstract class ComException extends JacobException {
 
-    /**
-     * constructor
-     *  
-     */
-    public ComException() {
-        super();
-    }
+	/**
+	 * COM code initializes this filed with an appropriate return code that was
+	 * returned by the underlying com code
+	 */
+	protected int hr;
+	/**
+	 * No documentation is available at this time. Someone should document this
+	 * field
+	 */
+	protected int m_helpContext;
+	/**
+	 * No documentation is available at this time. Someone should document this
+	 * field
+	 */
+	protected String m_helpFile;
+	/**
+	 * No documentation is available at this time. Someone should document this
+	 * field
+	 */
+	protected String m_source;
 
-    /**
-     * constructor with error code?
-     * 
-     * @param newHr ??
-     */
-    public ComException(int newHr) {
-        super();
-        this.hr = newHr;
-    }
+	/**
+	 * constructor
+	 * 
+	 */
+	public ComException() {
+		super();
+	}
 
-    /**
-     * @param newHr
-     * @param description
-     */
-    public ComException(int newHr, String description) {
-        super(description);
-        this.hr = newHr;
-    }
+	/**
+	 * constructor with error code?
+	 * 
+	 * @param newHr ??
+	 */
+	public ComException(int newHr) {
+		super();
+		this.hr = newHr;
+	}
 
-    /**
-     * @param newHr
-     * @param source
-     * @param helpFile
-     * @param helpContext
-     */
-    public ComException(int newHr, String source, String helpFile,
-            int helpContext) {
-        super();
-        this.hr = newHr;
-        m_source = source;
-        m_helpFile = helpFile;
-        m_helpContext = helpContext;
-    }
+	/**
+	 * @param newHr
+	 * @param description
+	 */
+	public ComException(int newHr, String description) {
+		super(description);
+		this.hr = newHr;
+	}
 
-    /**
-     * @param newHr
-     * @param description
-     * @param source
-     * @param helpFile
-     * @param helpContext
-     */
-    public ComException(int newHr, String description, String source,
-            String helpFile, int helpContext) {
-        super(description);
-        this.hr = newHr;
-        m_source = source;
-        m_helpFile = helpFile;
-        m_helpContext = helpContext;
-    }
+	/**
+	 * @param newHr
+	 * @param source
+	 * @param helpFile
+	 * @param helpContext
+	 */
+	public ComException(int newHr, String source, String helpFile,
+			int helpContext) {
+		super();
+		this.hr = newHr;
+		m_source = source;
+		m_helpFile = helpFile;
+		m_helpContext = helpContext;
+	}
 
-    /**
-     * @param description
-     */
-    public ComException(String description) {
-        super(description);
-    }
+	/**
+	 * @param newHr
+	 * @param description
+	 * @param source
+	 * @param helpFile
+	 * @param helpContext
+	 */
+	public ComException(int newHr, String description, String source,
+			String helpFile, int helpContext) {
+		super(description);
+		this.hr = newHr;
+		m_source = source;
+		m_helpFile = helpFile;
+		m_helpContext = helpContext;
+	}
 
-    /**
-     * @return int representation of the help context
-     */
-    // Methods
-    public int getHelpContext() {
-        return m_helpContext;
-    }
+	/**
+	 * @param description
+	 */
+	public ComException(String description) {
+		super(description);
+	}
 
-    /**
-     * @return String ??? help file
-     */
-    public String getHelpFile() {
-        return m_helpFile;
-    }
+	/**
+	 * @return int representation of the help context
+	 */
+	// Methods
+	public int getHelpContext() {
+		return m_helpContext;
+	}
 
-    /**
-     * @return int hr result ??
-     */
-    public int getHResult() {
-        return hr;
-    }
+	/**
+	 * @return String ??? help file
+	 */
+	public String getHelpFile() {
+		return m_helpFile;
+	}
 
-    /**
-     * @return String source ??
-     */
-    public String getSource() {
-        return m_source;
-    }
+	/**
+	 * @return int hr result ??
+	 */
+	public int getHResult() {
+		return hr;
+	}
+
+	/**
+	 * @return String source ??
+	 */
+	public String getSource() {
+		return m_source;
+	}
 }

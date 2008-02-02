@@ -1,25 +1,38 @@
 package com.jacob.samples.MathProj;
 
 import com.jacob.activeX.ActiveXComponent;
-import com.jacob.com.*;
+import com.jacob.com.Dispatch;
+import com.jacob.com.DispatchEvents;
+import com.jacob.com.Variant;
 
 /**
- * This example uses the MathTest sample VB COM DLL under
- * the MathProj directory
+ * This example uses the MathTest sample VB COM DLL under the MathProj directory
  * <p>
- * May need to run with some command line options (including from inside Eclipse).  
- * Look in the docs area at the Jacob usage document for command line options.
+ * May need to run with some command line options (including from inside
+ * Eclipse). Look in the docs area at the Jacob usage document for command line
+ * options.
  */
 class MathTest {
+	/**
+	 * standard main program to run the sample
+	 * 
+	 * @param args
+	 *            command line parameters
+	 */
 	public static void main(String[] args) {
 		MathTest me = new MathTest();
 		me.runTest();
 	}
-	
-	public MathTest(){
+
+	/** default constructor */
+	public MathTest() {
 	}
-	
-	public void runTest(){
+
+	/**
+	 * not clear why we need a class and run method but that's the way it was
+	 * written
+	 */
+	public void runTest() {
 		// deprecated
 		// System.runFinalizersOnExit(true);
 		Dispatch test = new ActiveXComponent("MathTest.Math");
@@ -42,14 +55,29 @@ class MathTest {
 		System.out.println("v.toDispatch=" + v.toDispatch());
 	}
 
-public class TestEvents {
-	public void DoneAdd(Variant[] args) {
-		System.out.println("DoneAdd called in java");
-	}
+	/**
+	 * 
+	 * sample class to catch the events
+	 * 
+	 */
+	public class TestEvents {
+		/**
+		 * catches the DoneAdd event
+		 * 
+		 * @param args
+		 */
+		public void DoneAdd(Variant[] args) {
+			System.out.println("DoneAdd called in java");
+		}
 
-	public void DoneMult(Variant[] args) {
-		System.out.println("DoneMult called in java");
+		/**
+		 * catches the DoneMult event
+		 * 
+		 * @param args
+		 */
+		public void DoneMult(Variant[] args) {
+			System.out.println("DoneMult called in java");
+		}
 	}
-}
 
 }

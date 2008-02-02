@@ -29,58 +29,64 @@ package com.jacob.com;
  * construct a separate DispatchProxy instance for each such case!
  */
 public class DispatchProxy extends JacobObject {
-    /**
-     * Comment for <code>m_pStream</code>
-     */
-    public int m_pStream;
+	/**
+	 * Comment for <code>m_pStream</code>
+	 */
+	public int m_pStream;
 
-    /**
-     * Marshals the passed in dispatch into the stream
-     * @param localDispatch
-     */
-    public DispatchProxy(Dispatch localDispatch) {
-        MarshalIntoStream(localDispatch);
-    }
+	/**
+	 * Marshals the passed in dispatch into the stream
+	 * 
+	 * @param localDispatch
+	 */
+	public DispatchProxy(Dispatch localDispatch) {
+		MarshalIntoStream(localDispatch);
+	}
 
-    /**
-     * 
-     * @return Dispatch the dispatch retrieved from the stream
-     */
-    public Dispatch toDispatch() {
-        return MarshalFromStream();
-    }
+	/**
+	 * 
+	 * @return Dispatch the dispatch retrieved from the stream
+	 */
+	public Dispatch toDispatch() {
+		return MarshalFromStream();
+	}
 
-    private native void MarshalIntoStream(Dispatch d);
+	private native void MarshalIntoStream(Dispatch d);
 
-    private native Dispatch MarshalFromStream();
+	private native Dispatch MarshalFromStream();
 
-    /**
-     *  now private so only this object can asccess
-     *  was: call this to explicitly release the com object before gc
-     * 
-     */
-    private native void release();
+	/**
+	 * now private so only this object can access was: call this to explicitly
+	 * release the com object before gc
+	 * 
+	 */
+	private native void release();
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#finalize()
-     */
-    public void finalize() {
-        safeRelease();
-    }
-    
-    /*
-     *  (non-Javadoc)
-     * @see com.jacob.com.JacobObject#safeRelease()
-     */
-    public void safeRelease()
-    {
-        super.safeRelease();
-        if (m_pStream != 0){
-            release();
-            m_pStream = 0;
-        } else {
-            // looks like a double release
-            if (isDebugEnabled()){debug(this.getClass().getName()+":"+this.hashCode()+" double release");}
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#finalize()
+	 */
+	public void finalize() {
+		safeRelease();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jacob.com.JacobObject#safeRelease()
+	 */
+	public void safeRelease() {
+		super.safeRelease();
+		if (m_pStream != 0) {
+			release();
+			m_pStream = 0;
+		} else {
+			// looks like a double release
+			if (isDebugEnabled()) {
+				debug(this.getClass().getName() + ":" + this.hashCode()
+						+ " double release");
+			}
+		}
+	}
 }
