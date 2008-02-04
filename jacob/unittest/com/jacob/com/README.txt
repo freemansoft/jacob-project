@@ -1,1 +1,0 @@
-This package exists in case folks need to test the Jacob COM objects and need access to protected methods
