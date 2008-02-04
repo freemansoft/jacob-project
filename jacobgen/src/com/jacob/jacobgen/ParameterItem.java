@@ -259,4 +259,11 @@ public class ParameterItem {
 			objectType = type;
 		}
 	}
+
+	/** for debugging */
+	public String toString() {
+		return name + "," + nativeType + "," + objectType + "," + otypes + ","
+				+ type + "," + types;
+
+	}
 }

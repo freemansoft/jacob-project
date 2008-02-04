@@ -118,7 +118,7 @@ void ExtractTypeLib( LPWSTR pszFileName )
 void EnumTypeLib( LPTYPELIB pITypeLib )
 {
 	UINT tiCount = pITypeLib->GetTypeInfoCount();
-	printf("Starting: enumerating %d\n",tiCount);
+	//printf("Starting: enumerating %d\n",tiCount);
 	//Extract Type lib name
 	BSTR pLibName;
 	pITypeLib->GetDocumentation(-1, &pLibName, NULL, 0, NULL );
@@ -137,12 +137,12 @@ void EnumTypeLib( LPTYPELIB pITypeLib )
 			pITypeInfo->Release();
 		}
 	}
-	printf("Finished: enumerating %d\n",tiCount);
+	//printf("Finished: enumerating %d\n",tiCount);
 }
 
 void ExtractTypeInfo( LPTYPEINFO pITypeInfo )
 {
-	printf("Starting: ExtractTypeInfo\n");
+	//printf("Starting: ExtractTypeInfo\n");
 	HRESULT hr;
 
 	BSTR theGuid = SysAllocString(L"{00000000-0000-0000-0000-000000000000}");
@@ -196,7 +196,7 @@ void ExtractTypeInfo( LPTYPEINFO pITypeInfo )
 	SysFreeString( theGuid );
 		
 	pITypeInfo->ReleaseTypeAttr( pTypeAttr );
-	printf("Finished: ExtractTypeInfo\n");
+	//printf("Finished: ExtractTypeInfo\n");
 }
 
 void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
@@ -206,7 +206,7 @@ void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
 	ELEMDESC elemdesc;
 	TYPEDESC tdesc;
 
-	printf("Started: EnumTypeInfoMembers\n");
+	//printf("Started: EnumTypeInfoMembers\n");
 	if ( pTypeAttr->cImplTypes ) {
 		//printf("    : cImplTypes\n");
 		for ( unsigned i = 0; i < pTypeAttr->cImplTypes; i++ ) {
@@ -329,7 +329,7 @@ void EnumTypeInfoMembers( LPTYPEINFO pITypeInfo, LPTYPEATTR pTypeAttr  )
 			SysFreeString( pszVarName );
 		}
 	}
-	printf("Started: EnumTypeInfoMembers\n");
+	//printf("Finished: EnumTypeInfoMembers\n");
 
 }
 
@@ -356,7 +356,7 @@ BSTR GetUserDefinedType( LPTYPEINFO pITypeInfo, TYPEDESC tdesc ) {
 void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 	TYPEDESC tdesc;
 
-	printf("Started: EnumParameters \n");
+	//printf("Started: EnumParameters \n");
 	
 	unsigned int cMaxNames = pFuncDesc->cParams;
 	if (cMaxNames > 0)
@@ -369,17 +369,36 @@ void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 	pTypeInfo->GetNames( pFuncDesc->memid, rgBstrNames, cMaxNames, &pcNames );
 	pTypeInfo->GetIDsOfNames( rgBstrNames, pcNames, pMemId );
 
-	//printf("         EnumParameters %d, %d\n",cMaxNames,pcNames);	
+	//printf("         EnumParameters %d, numParams: %d\n",cMaxNames,pcNames);	
 
 	append1( "[" );
 	if (pcNames > 0) {
 
-		for ( unsigned k = 1; k < pcNames; k++ )
+		// the 0th position is the name of the function itself 
+		// for INVOKE_FUNC we want to igore this but
+		// for INVOKE_PROPERTYPUT we'd like to make that the name of the
+		// parameter that we want to pass in
+		for ( unsigned k = 0; k < pcNames; k++ )
 		{
-			//printf("         EnumParameters: working on %d\n",k);	
-			BSTR pszParName = rgBstrNames[ k ];
-			
-			PARAMDESC pd = pFuncDesc->lprgelemdescParam[k-1].paramdesc;
+			//if (k == 0){printf("         EnumParameters: Entrypoint defined as %S\n",rgBstrNames[0]);}
+			BSTR pszParName = NULL;
+			PARAMDESC pd;
+			if (k == 0 && pcNames == 1){
+				// probably a property put method
+				pszParName = rgBstrNames[k];
+				pd = pFuncDesc->lprgelemdescParam[k].paramdesc;
+				tdesc =        pFuncDesc->lprgelemdescParam[k].tdesc;
+			} else {
+				// its probaly an invoke which means we do that offset thing
+				if (k == 0 && pcNames > 1){
+					k++; // start in position one for the parm name
+				}
+				pszParName = rgBstrNames[k];
+				pd = pFuncDesc->lprgelemdescParam[k-1].paramdesc;
+				tdesc =        pFuncDesc->lprgelemdescParam[k-1].tdesc;
+			}
+			//printf("         EnumParameters: %d %S of type %d direction %d\n",
+			//		k,pszParName,tdesc.vt,pd.wParamFlags);
 
 			if( pd.wParamFlags != 0 ) {
 				append1( "{" );
@@ -413,23 +432,25 @@ void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 			*/
 
 
-			tdesc = pFuncDesc->lprgelemdescParam[k-1].tdesc;
 
 			//printf("         EnumParameters: working on %d c\n",k);	
 			bool isPointer = false;
 			VARTYPE vt = NULL;
+			//If type type is pointer, dereference
 			if( tdesc.vt == VT_PTR ) {
-				//printf("         EnumParameters: working on %d c1\n",k);	
+				//printf("         EnumParameters: working on %d type: %d c1 \n",k,tdesc.vt);	
 				isPointer = true;
 				// reset tdesc to be the thing that was pointed at
 				tdesc = *tdesc.lptdesc;
+				//printf("         EnumParameters: working on %d type: %d c2 \n",k,tdesc.vt);	
 
-				// SF1650138 added 11/2007 but crashes VM
-//				TYPEDESC *pPointedAt = tdesc.lptdesc;
-//				if (pPointedAt) {
-//					printf("         EnumParameters: working on %d c2\n",k);	
-//					vt = pPointedAt->vt;
-//				}
+				// SF1650138 added 11/2007 but crashes VM 
+				// if tdesc is VT_USER_DEFINED
+				//TYPEDESC *pPointedAt = tdesc.lptdesc;
+				//if (pPointedAt) {
+				//	printf("         EnumParameters: working on %d %d c3 \n",k, pPointedAt->vt);	
+				//	vt = pPointedAt->vt;
+				//}
 			}
 			//printf("         EnumParameters: working on %d d\n",k);	
 			if (vt) {
@@ -462,16 +483,11 @@ void EnumParameters( ITypeInfo *pTypeInfo, FUNCDESC *pFuncDesc ) {
 			}
 
 			//printf("         EnumParameters: working on %d e\n",k);	
-			if( k < pcNames-1 ){
-				append2b( " %ls,", rgBstrNames[k] );
-			} else {
-				append2b( " %ls", rgBstrNames[k] );
-			}
-			
+			append2b( " %ls,", pszParName );			
 		}
 	}
 	append1("]\n" );
-	printf("Finished: EnumParameters\n");	
+	//printf("Finished: EnumParameters\n");	
 }
 
 /**
@@ -583,7 +599,7 @@ LPCTSTR GetInvokeKindName( INVOKEKIND invkind )
     	CASE_STRING( INVOKE_PROPERTYPUT )
     	CASE_STRING( INVOKE_PROPERTYPUTREF )
 	}	
-	printf("found invoke %s\n",s);
+	//printf("found invoke %s\n",s);
 	return s;
 }
 

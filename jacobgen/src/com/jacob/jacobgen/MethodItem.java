@@ -75,6 +75,8 @@ public class MethodItem {
 
 			// Extract parameters
 			extractParameters(st.nextToken());
+			// System.out.println(" extracted PUT parameters from line: "
+			// + line + " resulting in: " + this.parametersList);
 
 			// Computes if the return type is a standard type
 			computeCustomReturnType();
@@ -86,34 +88,54 @@ public class MethodItem {
 		}
 	}
 
+	/**
+	 * This extracts the parameters from a line that comes from typelib.
+	 * 
+	 * Sample lines looks like:
+	 * 
+	 * <pre>
+	 * INVOKE_FUNC;VT_VOID ;SetRange;[{in-}VT_I4 Start,{in-}VT_I4 End]
+	 * INVOKE_FUNC;VT_VOID ;Collapse;[{in-optional-}VT_VARIANT Direction]
+	 * INVOKE_FUNC;VT_VOID ;Sync;[MsoSyncEventType SyncEventType]
+	 * </pre>
+	 * 
+	 * The parameters section for the first one would be
+	 * <code>[{in-}VT_I4 Start,{in-}VT_I4 End] </code> where the first
+	 * parameter is <code>{in-}VT_I4 Start</code> and the second parameter is
+	 * <code>{in-}VT_I4 End</code>
+	 * 
+	 * @param parameters
+	 * @throws IllegalFormatException
+	 */
 	protected void extractParameters(String parameters)
 			throws IllegalFormatException {
+		additionalMethodRequired = false;
 
-		// Strip trailing and ending []
+		// Strip trailing and ending [] on the parameter list
 		if (!parameters.startsWith("[") || !parameters.endsWith("]")) {
 			throw new IllegalFormatException("Parameters format error : "
 					+ parameters);
+		} else {
+			parameters = parameters.substring(1, parameters.length() - 1);
 		}
 
-		parameters = parameters.substring(1, parameters.length() - 1);
-
+		// the parameters are in a comma separated list
 		StringTokenizer st = new StringTokenizer(parameters, ",");
 		while (st.hasMoreTokens()) {
-
-			additionalMethodRequired = false;
-
 			String param = st.nextToken();
 
 			// Extract parameters data
 			StringTokenizer st1 = new StringTokenizer(param);
-			StringTokenizer st3 = new StringTokenizer(param);
 			String options = st1.nextToken("{}");
 			String parameterType = null;
 			String parameterName = null;
-			if ("-".equals(options.substring(options.length() - 1))) {
-				parameterType = st1.nextToken(" ").substring(1);
+			if (options.endsWith("-")) {
+				parameterType = st1.nextToken(" ").substring(1).trim();
 				parameterName = st1.nextToken();
 			} else {
+				// SF1650138 added this to handle enumerated types.
+				// they look like [type value]
+				StringTokenizer st3 = new StringTokenizer(param);
 				parameterType = st3.nextToken(" ");
 				parameterName = st3.nextToken();
 			}
@@ -121,6 +143,8 @@ public class MethodItem {
 			// Extract options
 			int direction = ParameterItem.DIRECTION_UNKNOWN;
 			boolean optional = false;
+			// this is a while loop because it could be a compound
+			// option description like {in-optional-}
 			StringTokenizer st2 = new StringTokenizer(options, "-");
 			while (st2.hasMoreTokens()) {
 				String option = st2.nextToken();
@@ -144,6 +168,7 @@ public class MethodItem {
 				additionalMethodRequired = true;
 			}
 
+			// System.out.println("Parameter: " + pi);
 			parametersList.addElement(pi);
 		}
 

@@ -62,6 +62,7 @@ public abstract class AbstractGenerator {
 	}
 
 	public void generate() throws IOException {
+		// System.out.println("Writing class: " + filename);
 		w = new FileWriter(filename);
 		w.write(classHeader);
 

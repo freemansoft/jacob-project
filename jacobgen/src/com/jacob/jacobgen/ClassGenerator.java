@@ -132,6 +132,8 @@ class ClassGenerator extends AbstractGenerator {
 	}
 
 	protected void writeMethod(MethodItem mi) throws IOException {
+		// System.out.println("Writing method: " + mi.getName() + " type:"
+		// + mi.getMethodType());
 		ParameterItem[] parameters = mi.getParameters();
 
 		writeMethodDeclaration(mi, parameters.length, true);
@@ -252,6 +254,7 @@ class ClassGenerator extends AbstractGenerator {
 			break;
 		}
 
+		// this should remove any duplicate method names
 		for (int i = 0; i < objectMethods.length; i++) {
 			if (objectMethods[i].equals(methodName.toString())) {
 				methodName.append("1");
@@ -259,6 +262,9 @@ class ClassGenerator extends AbstractGenerator {
 			}
 		}
 
+		// System.out.println("-------> writing " + methodName.toString()
+		// + " of type " + mi.getMethodType() + " with "
+		// + mi.getParameters().length + " parameters");
 		w.write(methodName.toString());
 		w.write("(");
 
