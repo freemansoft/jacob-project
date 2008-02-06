@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://generator.jacob.sourceforge.net/WMIEXTENSIONLib" 
+       class = "com.company.jacob.WMIEXTENSIONLib.Package" />
+  </extension>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://generator.jacob.sourceforge.net/jacobimpl" 
+       class = "com.company.jacob.WMIEXTENSIONLib.jacobimpl.Package" />
+  </extension>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://generator.jacob.sourceforge.net/com2" 
+       class = "com.jacob.com.ComPackage" />
+  </extension>
+
+</plugin>
