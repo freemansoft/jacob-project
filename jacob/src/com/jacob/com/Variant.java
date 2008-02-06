@@ -107,8 +107,13 @@ public class Variant extends JacobObject {
 	/** variant's type is object VT_DECIMAL */
 	public static final short VariantDecimal = 14;
 
+	// VT_I1 = 16
+
 	/** variant's type is byte VT_UI1 */
 	public static final short VariantByte = 17;
+
+	// VT_UI2 = 18
+	// VT_UI4 = 19
 
 	/**
 	 * variant's type is 64 bit long integer VT_I8 - not yet implemented in
@@ -117,13 +122,28 @@ public class Variant extends JacobObject {
 	 */
 	public static final short VariantLongInt = 20;
 
-	/** what is this? */
+	// VT_UI8 = 21
+	// VT_INT = 22
+	// VT_UNIT = 23
+	// VT_VOID = 24
+	// VT_HRESULT = 25
+
+	/**
+	 * This value is for reference only and is not to be used by any callers
+	 */
+	public static final short VariantPointer = 26;
+
+	// VT_SAFEARRAY = 27
+	// VT_CARRARY = 28
+	// VT_USERDEFINED = 29
+
+	/** what is this? VT_TYPEMASK && VT_BSTR_BLOB */
 	public static final short VariantTypeMask = 4095;
 
-	/** variant's type is array */
+	/** variant's type is array VT_ARRAY */
 	public static final short VariantArray = 8192;
 
-	/** variant's type is a reference (to IDispatch?) */
+	/** variant's type is a reference (to IDispatch?) VT_BYREF */
 	public static final short VariantByref = 16384;
 
 	/*
