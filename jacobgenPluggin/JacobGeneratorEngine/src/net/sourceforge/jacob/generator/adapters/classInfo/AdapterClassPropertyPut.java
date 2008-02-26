@@ -64,7 +64,8 @@ public class AdapterClassPropertyPut extends BaseAdapterClass {
 		EStructuralFeature structuralFeature = classModel.getEStructuralFeature(name);
 		if (null == structuralFeature) {
 			log.fatal("Attribute\t" + name);
-			final EClassifier classifier = AdapterUtilities.getClassifier(type, companyPackage);
+			final EClassifier classifier = AdapterUtilities.getDispatch(companyPackage);
+//			final EClassifier classifier = AdapterUtilities.getClassifier(type, companyPackage);
 			structuralFeature = AdapterUtilities.createEAttribute(name, classifier);
 			structuralFeature.setChangeable(false);
 			structuralFeature.setVolatile(true);
