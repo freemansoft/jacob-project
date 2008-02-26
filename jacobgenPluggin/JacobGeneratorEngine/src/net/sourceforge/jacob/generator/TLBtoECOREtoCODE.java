@@ -160,6 +160,8 @@ public class TLBtoECOREtoCODE {
 		final TypeLibInspector lib = new TypeLibInspector();
 		assert null != typelibFilename;
 		final byte[] queryInterface = lib.queryInterface(typelibFilename);
+		System.out.flush();
+		System.err.flush();
 		final String st = new String(queryInterface);
 		final String typeLib = new LineNumberReader(new StringReader(st)).readLine().substring("TYPELIB ".length()).trim();
 
