@@ -146,6 +146,8 @@ public final class LibraryLoader {
 		}
 
 		if (path != null) {
+			JacobObject.debug("Loading library " + path
+					+ " using System.loadLibrary ");
 			System.load(path);
 		} else {
 			// Path was not defined, so use the OS mechanism for loading
@@ -176,6 +178,8 @@ public final class LibraryLoader {
 				name = getPreferredDLLName();
 			}
 
+			JacobObject.debug("Loading library " + name
+					+ " using System.loadLibrary ");
 			// System.out.println("Loading " + name);
 			System.loadLibrary(name);
 		}
@@ -195,7 +199,7 @@ public final class LibraryLoader {
 			return "jacob" + "-" + JacobReleaseInfo.getBuildVersion() + "-"
 					+ DLL_NAME_MODIFIER_32_BIT;
 		} else {
-			return "jacob" + "-" + JacobReleaseInfo.getBuildVersion() + "- "
+			return "jacob" + "-" + JacobReleaseInfo.getBuildVersion() + "-"
 					+ DLL_NAME_MODIFIER_64_BIT;
 		}
 	}

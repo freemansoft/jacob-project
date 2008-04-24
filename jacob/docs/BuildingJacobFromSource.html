@@ -56,6 +56,7 @@ using the example build.xml as a template.
 <TR><TD>1.12</TD><TD>VC 98 (6.0) & 2003 64bit libs</TD><TD>1.4.2</TD><td>1.6.5</td><TD>3.2.2</TD><TD>32 and 64 bit</TD></TR>
 <TR><TD>1.13</TD><TD>VC 2005</TD><TD>1.4.2</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
 <TR><TD>1.14</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.15</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
 </table>
 Microsoft Visual C++ 8.0 supports 64 bit builds. so no additional tools are required.
 
@@ -108,17 +109,36 @@ Open up the project properties and go to the "Java Build Path" properties panel.
 <li>	Set the default build output directory to <code>jacob-project/release/java</code></li>
 </ul>
 
+<h2> Troubleshooting Build Problems </h2>
+<ul>
+<li>
+Symptom: The jar is built but no dlls were compiled.<p>
+Problem: compilation_tools.properties does not have the correct location for the Microsoft tools.<p>
+</li>
+<li>
+Sympton: Can't find jni.h or can't find C++ compiler<p>
+Problem: compilation_tools.properties configured incorrectly.  Either
+paths are wrong or the separator is wrong.  It requires two backslashes for a separator.<p>
+</li>
+</ul>
 
 <h1> Running Samples and Tests </h1>
 Samples and JUnit test programs can be found in the source jar or in CVS.  The programs
 can be run from a bat file or from inside the Eclipse IDE.  The java library
 path variable must be set to include the directory the jacob.dll is in.  The
-simplest way to do that is to add it as a command line option. 
+simplest way to do that is to add it as a command line option. The following 
+assume that your jacob development area is located in c:\dev\jacob:
+<pre>
+	-Djava.library.path=c:/jacob/release/x86 
+	-Dcom.jacob.autogc=false 
+	-Dcom.jacob.debug=false 
+	-Xcheck:jni
+</pre> 
 <p>
 JUnit test programs can be individually run from inside eclipse or en-masse 
 via the <code>ant test</code> target.
 
-Last Modified 7/2007 1.13M3
+Last Modified 4/2008 1.15
 
 </BODY>
 </HTML>

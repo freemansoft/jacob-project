@@ -16,10 +16,10 @@
 	The file for MS Visual C++ 8.0 building 32 and 64 bit
 	(releases up to 1.11 only supported 32 builds) looks something like:
 	  
-		JDK=d:\\jdk1.5.0_11
-		MSDEV_DIR=d:\\apps\\Microsoft Visual Studio 8\\VC
-		MSDEV_IDE_DIR=d:\\apps\\Microsoft Visual Studio 8\\Common7\\IDE
-		version=1.14-M1
+		JDK=c:\\dev\\jdk1.5.0_15
+		MSDEV_DIR=c:\\dev\\Microsoft Visual Studio 8\\VC
+		MSDEV_IDE_DIR=c:\\dev\\Microsoft Visual Studio 8\\Common7\\IDE
+		version=1.14.1
             
 	DO NOT check compilation_tools.properties into source control as the 
 	values are specific to YOUR environment.
@@ -126,39 +126,26 @@
 			This module used to rely on that.  Now it just checks to see if we have
 			the right compilers.
 	 ================================================================== -->
-	<available file="${compiler.x86}" property="canBuild.x86"/>
-	<echo message="canBuild.x86=${canBuild.x86}" />
-	<available file="${compiler.x64}" property="canBuild.x64"/>
-	<echo message="canBuild.x64=${canBuild.x64}" />
+	<available file="${compiler.x86}" property="compilerAvailable.x86"/>
+	<echo message="compilerAvailable.x86=${compilerAvailable.x86}" />
+	<available file="${compiler.x64}" property="compilerAvailable.x64"/>
+	<echo message="compilerAvailable.x64=${compilerAvailable.x64}" />
 		
 	<!-- ======================================================================
 		      Compare the date/time of the DLL against that of the cpp source.
 		      Up to date is only true if dll exists and is later than source
-		 ================================================================== -->
-	<uptodate property="dllUpToDate.x86" targetfile="${release.file.x86.dll}">
-		<srcfiles dir="${src.cpp}" includes="*.cpp" />
-		<srcfiles dir="${src.cpp}" includes="*.h" />
-		<!-- Check the build file itself as well -->
-		<srcfiles dir="${basedir}" includes="build.xml" />
-	</uptodate>
-	<echo message="dllUpToDate.x86= ${dllUpToDate.x86} (${release.file.x86.dll})" />
-	
-	<uptodate property="dllUpToDate.x64" targetfile="${release.file.x64.dll}">
-		<srcfiles dir="${src.cpp}" includes="*.cpp" />
-		<srcfiles dir="${src.cpp}" includes="*.h" />
-		<!-- Check the build file itself as well -->
-		<srcfiles dir="${basedir}" includes="build.xml" />
-	</uptodate>
-	<echo message="dllUpToDate.x64= ${dllUpToDate.x64} (${release.file.x64.dll})" />
-
-	<!-- ======================================================================
 		      We should build if we can build and the dll is not up to date
 		 ================================================================== -->
 	<condition property="shouldBuild.x86">
 		<and>
-			<isset property="canBuild.x86"/>
+			<istrue value="${compilerAvailable.x86}"/>
 			<not>
-				<isset property="dllUpToDate.x86"/>
+				<uptodate targetfile="${release.file.x86.dll}">
+					<srcfiles dir="${src.cpp}" includes="*.cpp" />
+					<srcfiles dir="${src.cpp}" includes="*.h" />
+					<!-- Check the build file itself as well -->
+					<srcfiles dir="${basedir}" includes="build.xml" />
+				</uptodate>
 			</not>
 		</and>
 	</condition>
@@ -166,10 +153,15 @@
 	
 	<condition property="shouldBuild.x64">
 		<and>
-			<isset property="canBuild.x64"/>
+			<istrue value="${compilerAvailable.x64}"/>
 			<not>
-				<isset property="dllUpToDate.x64"/>
-			</not>
+				<uptodate targetfile="${release.file.x64.dll}">
+					<srcfiles dir="${src.cpp}" includes="*.cpp" />
+					<srcfiles dir="${src.cpp}" includes="*.h" />
+					<!-- Check the build file itself as well -->
+					<srcfiles dir="${basedir}" includes="build.xml" />
+				</uptodate>
+			</not>			
 		</and>
 	</condition>
 	<echo message="shouldBuild.x64= ${shouldBuild.x64}" />
