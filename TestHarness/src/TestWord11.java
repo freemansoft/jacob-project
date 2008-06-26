@@ -20,9 +20,9 @@ import junit.framework.TestCase;
 
 import com.Word.Application;
 import com.Word.Document;
-import com.Word.jacobimpl.Documents;
+import com.Word.Documents;
+import com.Word.Selection;
 import com.jacob.activeX.ActiveXComponent;
-import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 
 public class TestWord11  extends TestCase {
@@ -60,13 +60,17 @@ public class TestWord11  extends TestCase {
 	public void testNewDocument() {
 		testLoad();
 		wordApp.Activate();
-		Documents doc = new Documents();
-		Dispatch documents = (Dispatch) wordApp.getDocuments();
-		doc.setDispatch(documents);
-		Document add = ((com.Word.Documents)doc).Add(Variant.VT_MISSING, Variant.VT_MISSING, Variant.VT_MISSING, Variant.VT_MISSING);
+
+		Documents documents =  wordApp.getDocuments();
+		
+		Document add = documents.Add(Variant.VT_MISSING, Variant.VT_MISSING, Variant.VT_MISSING, Variant.VT_MISSING);
+		add.Activate();
+		Selection selection = wordApp.getSelection();
+		selection.TypeText("This is a simple test");
+		
 		add.PrintPreview();
 		add.ClosePrintPreview();
-		add.Close();
+		add.Close(Variant.VT_FALSE, Variant.VT_MISSING, Variant.VT_MISSING);
 	}
 	
 }
