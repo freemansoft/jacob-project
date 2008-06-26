@@ -36,6 +36,10 @@ import org.apache.log4j.Logger;
  * @author Robert Searle
  */
 public class TestGenerator {
+	public static final String MODEL = "model";
+
+	public static final String MODEL_COMPANY = MODEL + java.io.File.separatorChar +  "company";
+
 	final static private Logger log = Logger.getLogger(TestGenerator.class);
 
 	public static void main(final String[] args) {
@@ -53,7 +57,7 @@ public class TestGenerator {
 			if (g.typelibFilename == null) {
 				System.out.println("Jacobgen you need to specify an input file");
 			} else {
-				final TLBtoECOREtoCODE gener = new TLBtoECOREtoCODE(g.destinationPackage, g.typelibFilename, 	"model/company");
+				final TLBtoECOREtoCODE gener = new TLBtoECOREtoCODE(g.destinationPackage, g.typelibFilename, 	MODEL_COMPANY);
 				try {
 					gener.generate();
 				} catch (final FileNotFoundException e) {
