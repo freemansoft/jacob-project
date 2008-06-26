@@ -56,6 +56,10 @@ else
 		stringBuffer.append(";");
 	} else if ("com.jacob.com.Variant".equals(returnType) ) {
 		stringBuffer.append("\n\t\treturn retInvoke;");
+	} else if (genFeature.isEnumType()) {
+		stringBuffer.append("\n\t\tfinal int int1 = retInvoke.getInt();");
+		stringBuffer.append("\n\t\treturn " + returnType + ".get(int1);");
+	
 	} else {
 		stringBuffer.append("\n\t\treturn ("); 
 		stringBuffer.append(returnType);

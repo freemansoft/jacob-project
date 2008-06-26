@@ -53,7 +53,7 @@ public class TestGenerator {
 			if (g.typelibFilename == null) {
 				System.out.println("Jacobgen you need to specify an input file");
 			} else {
-				final TLBtoECOREtoCODE gener = new TLBtoECOREtoCODE(g.destinationPackage, g.typelibFilename);
+				final TLBtoECOREtoCODE gener = new TLBtoECOREtoCODE(g.destinationPackage, g.typelibFilename, 	"model/company");
 				try {
 					gener.generate();
 				} catch (final FileNotFoundException e) {

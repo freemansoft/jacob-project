@@ -40,6 +40,10 @@ else
 }
 %>";
 		final com.jacob.com.Dispatch dispatchComponent = getDispatch();
-		final Object o = new<%=genFeature.getName()%>;
-
+<%	if (genFeature.isEnumType()) {
+		stringBuffer.append("\n\t\tfinal Object o = new" + genFeature.getName().trim() + ".getValue();");
+	} else {
+		stringBuffer.append("\n\t\tfinal Object o = new" + genFeature.getName().trim() + ";");
+	} 
+%>
 		com.jacob.com.Dispatch.put(dispatchComponent, funcName, o);

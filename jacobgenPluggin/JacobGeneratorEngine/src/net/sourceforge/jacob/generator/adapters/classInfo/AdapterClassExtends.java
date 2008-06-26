@@ -47,6 +47,7 @@ public class AdapterClassExtends extends BaseAdapterClass {
 			classifier = disClassifier.eClass();
 		}
 		assert (classifier != null);
-		classModel.getESuperTypes().add(classifier);
+		if (classifier != null)
+			classModel.getESuperTypes().add(classifier);
 	}
 }

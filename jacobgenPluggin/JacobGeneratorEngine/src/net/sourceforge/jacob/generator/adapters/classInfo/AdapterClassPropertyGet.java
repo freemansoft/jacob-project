@@ -60,7 +60,7 @@ public class AdapterClassPropertyGet extends BaseAdapterClass {
 			}
 			AdapterUtilities.createMethod(textLine, type, "get" + name, inOut, companyPackage, classModel);
 		} else {
-			AdapterUtilities.createAttribute(textLine, name, companyPackage, classModel);
+			AdapterUtilities.createAttribute(type, name, companyPackage, classModel);
 		}
 	}
 

@@ -18,16 +18,17 @@
 
 import junit.framework.TestCase;
 
-import com.company.jacob.Excel.Application;
-import com.company.jacob.Excel.JACOB_Application;
-import com.company.jacob.Excel.jacobimpl.Range;
-import com.company.jacob.Excel.Workbook;
-import com.company.jacob.Excel.jacobimpl.Workbooks;
-import com.company.jacob.Excel.Worksheet;
-import com.company.jacob.Excel.jacobimpl.Sheets;
+import com.Excel.Application;
+import com.Excel.Range;
+import com.Excel.Workbook;
+import com.Excel.Workbooks;
+import com.Excel.Worksheet;
+import com.Excel.XlWindowState;
+import com.Excel.XlXmlImportResult;
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
+import com.sun.java.swing.plaf.windows.resources.windows;
 
 public class TestExcel11  extends TestCase {
 	private ActiveXComponent activeXcomponent;
@@ -38,7 +39,6 @@ public class TestExcel11  extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		System.loadLibrary("jacobX86.1.14M6");
 		activeXcomponent = new ActiveXComponent("Excel.Application");
 		excelApp = new Application();
 		excelApp.setDispatch(activeXcomponent);
@@ -49,7 +49,7 @@ public class TestExcel11  extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (workbook != null){
-			workbook.Close(new Variant(false), null, null);
+			workbook.Close(Variant.VT_FALSE, Variant.VT_MISSING, Variant.VT_MISSING);
 			workbook = null;
 		}
 		excelApp.Quit();
@@ -64,8 +64,7 @@ public class TestExcel11  extends TestCase {
 	
 	public void testWorkbook() throws Exception {
 		testLoad();
-		final Workbooks workbooks = new Workbooks();
-		workbooks.setDispatch((Dispatch) excelApp.getWorkbooks());
+		final Workbooks workbooks = excelApp.getWorkbooks();
 		workbook = workbooks.Add(Variant.VT_MISSING);
 	}
 	
@@ -81,4 +80,23 @@ public class TestExcel11  extends TestCase {
 		assertEquals(123.456, range_A1.getValue().getDouble());
 		assertEquals(246.912,  range_A2.getValue().getDouble());
 	}
+
+	public void testWindowState() throws Exception {
+		testWorkbook();
+		final Worksheet sheet = new Worksheet();
+		final Variant activeSheet = new Variant( workbook.getActiveSheet());
+		sheet.setDispatch(activeSheet.toDispatch());
+		
+		XlWindowState windowState ;
+		
+		excelApp.getActiveWindow().setWindowState(XlWindowState.XL_NORMAL);
+		windowState = excelApp.getActiveWindow().getWindowState();
+		assertEquals(XlWindowState.XL_NORMAL, windowState);
+
+		excelApp.getActiveWindow().setWindowState(XlWindowState.XL_MAXIMIZED);
+		windowState = excelApp.getActiveWindow().getWindowState();
+		assertEquals(XlWindowState.XL_MAXIMIZED, windowState);
+
+	}
+	
 }

@@ -53,7 +53,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import com.jacob.jacobgen.TypeLibInspector;
 
 public class TLBtoECOREtoCODE {
-	private static final String fileLocation = "model/company";
+	private final String fileLocation ;
 
 	private final static Logger log = Logger.getLogger(TLBtoECOREtoCODE.class);
 
@@ -65,8 +65,9 @@ public class TLBtoECOREtoCODE {
 	private final EPackage superPackage = EcoreFactory.eINSTANCE.createEPackage();
 	private final String typelibFilename;
 
-	public TLBtoECOREtoCODE(final String destinationPackage, final String typelibFilename) {
+	public TLBtoECOREtoCODE(final String destinationPackage, final String typelibFilename, final String fileLocation) {
 		this.typelibFilename = typelibFilename;
+		this.fileLocation = fileLocation;
 
 		// create a package that represents company
 		final StringTokenizer packageTokenizer = new StringTokenizer(destinationPackage.trim(), ".");
