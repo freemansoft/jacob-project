@@ -67,6 +67,14 @@ public class TestWord11  extends TestCase {
 		add.Activate();
 		Selection selection = wordApp.getSelection();
 		selection.TypeText("This is a simple test");
+		selection.TypeParagraph();
+		selection.TypeParagraph();
+		selection.TypeParagraph();
+		selection.TypeParagraph();
+		selection.TypeText("This is a simple test");
+		selection.TypeParagraph();
+		selection.TypeParagraph();
+		selection.TypeParagraph();
 		
 		add.PrintPreview();
 		add.ClosePrintPreview();
