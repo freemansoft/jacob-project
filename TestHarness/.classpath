@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="modelSrc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/JacobGeneratorEngine/lib/jacob.jar"/>
 	<classpathentry kind="lib" path="/JacobGeneratorEngine/lib/junit-4.4.jar"/>
