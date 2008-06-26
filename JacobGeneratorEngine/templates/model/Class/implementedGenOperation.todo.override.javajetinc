@@ -1,0 +1,136 @@
+<%
+/*
+  Copyright (C) 2007  Robert Searle  
+  
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as
+  published by the Free Software Foundation; either version 2 of the
+  License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ */
+%>
+
+//implementedGenOperation.todo.override.javajetinc
+/*		final String genClassName = "<% 
+{
+String name = genClass.getName().trim();
+if (name.startsWith("JACOB"))
+	stringBuffer.append(name.substring("JACOB".length()));
+else
+	stringBuffer.append(name);
+}
+%>";*/
+
+
+<%
+final int wFlags;
+String funcName = genOperation.getName().trim();
+	if (funcName.startsWith("get")){
+		funcName = funcName.substring(3);
+		wFlags = 2 ;/*com.jacob.com.Dispatch.Get;*/
+	} else {
+		wFlags = 1 ;/*com.jacob.com.Dispatch.Method;*/
+	}
+%>
+final int wFlags = <%= wFlags %>;
+
+
+		String funcName = "<% 
+if (funcName.startsWith("JACOB"))
+	stringBuffer.append(funcName.substring("JACOB".length()));
+else
+	stringBuffer.append(funcName);
+%>";
+
+
+<%@ include file="returnTypes.javajetinc" %>
+<%
+{
+	final org.eclipse.emf.codegen.ecore.genmodel.GenOperation i = genOperation;
+	final org.eclipse.emf.common.util.EList<GenParameter> genParameters = i.getGenParameters();
+
+	if (0 == genParameters.size()){
+		stringBuffer.append("final com.jacob.com.Variant o[] = new com.jacob.com.Variant[0];");
+		stringBuffer.append("final int uArgErr[] = new int[0];");
+	} else {
+		stringBuffer.append("final int uArgErr[] = new int["+genParameters.size()+"];");
+		stringBuffer.append("final com.jacob.com.Variant o[] = new com.jacob.com.Variant[]{");
+		for (int j = 0; j < genParameters.size(); j++) {
+			final GenParameter  genParameter = genParameters.get(j);
+			if (j !=0)
+				stringBuffer.append(" ,");
+			if (genParameter.getType().trim().equals("com.jacob.com.Variant")){
+				stringBuffer.append(genParameter.getName());
+			}else {
+				stringBuffer.append(" new com.jacob.com.Variant(");
+				stringBuffer.append(genParameter.getName());
+				stringBuffer.append(")");
+			}
+		}
+		stringBuffer.append("};");
+	}
+	stringBuffer.append("\n");
+}
+	final String returnType = genOperation.getType().trim();
+
+	final String func = map.get(returnType);
+%>
+		final com.jacob.com.Dispatch dispatchComponent = getDispatch(); 
+		final com.jacob.com.Variant retInvoke = com.jacob.com.Dispatch.invoke(dispatchComponent, funcName, wFlags, o, uArgErr);
+		
+    <%
+		String className = returnType;
+		if (className.lastIndexOf('.')>0){
+			className = className.substring(className.lastIndexOf('.')+1);		
+		}
+		final org.eclipse.emf.ecore.EClass classifier;
+		if (genPackage.getEcorePackage().getName().equals("jacobimpl")){
+			org.eclipse.emf.ecore.EClassifier classifier2 = null;
+			classifier2 = genPackage.getEcorePackage().getESuperPackage().getEClassifier(className);
+			if (classifier2 instanceof org.eclipse.emf.ecore.EClass )
+				classifier = (org.eclipse.emf.ecore.EClass) classifier2;
+			else
+				classifier=null;
+		}else{
+			org.eclipse.emf.ecore.EClassifier classifier2 = null;
+			classifier2 =  genPackage.getEcorePackage().getEClassifier(className);
+			if (classifier2 instanceof org.eclipse.emf.ecore.EClass )
+				classifier = (org.eclipse.emf.ecore.EClass) classifier2;
+			else
+				classifier=null;
+		}
+
+		if (returnType.equals("void") ) {
+		} else if ( null == classifier) {
+			if ( null == func ) { 
+ %>
+		//there is no class name here <%= className %>
+		return retInvoke<%= func %>;
+	<% 		} else {  %>
+		return retInvoke<%= func %>;
+	<% 	}
+	} else if ( classifier.isInterface()) {  
+			String classType = null;			
+			classType = genOperation.getType().trim();
+			final int lastIndexOf = classType.lastIndexOf('.');
+			classType = classType.substring(0, lastIndexOf) + ".jacobimpl" + classType.substring(lastIndexOf);
+	%>
+		//is an interface <%= genOperation.getImportedType(genClass) %>
+		final <%= classType %> retVal = new <%= classType %>();
+		retVal.setDispatch(retInvoke.toDispatch());
+		return retVal;
+	<% } else { %>
+		//is a class
+		final <%=genOperation.getType().trim()%> retVal = new <%=genOperation.getType().trim()%>();
+		retVal.setDispatch(retInvoke.toDispatch());
+		return retVal;
+	<% } %> 
+	

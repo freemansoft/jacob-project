@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PLUG Plug-in
+Bundle-SymbolicName: PLUG; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: plug.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.emf,
+ org.eclipse.emf.codegen,
+ org.eclipse.emf.codegen.ecore,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: lib/jacob.jar,
+ lib/log4j-1.2.15.jar,
+ .
