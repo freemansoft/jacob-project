@@ -96,8 +96,8 @@ public class JacobObject {
 	 */
 	protected static void debug(String istrMessage) {
 		if (isDebugEnabled()) {
-			System.out.println(istrMessage + " in thread "
-					+ Thread.currentThread().getName());
+			System.out.println(Thread.currentThread().getName() + ": "
+					+ istrMessage);
 		}
 	}
 

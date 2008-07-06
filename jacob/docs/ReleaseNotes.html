@@ -10,7 +10,12 @@
   <tr> 
     <td width="13%" valign="top">2011706</td>
     <td width="87%" valign="top">Fixed windows memory corruption unhooking 
-    call back proxies</td>
+    call back proxy</td>
+  </tr>
+  <tr> 
+    <td width="13%" valign="top">1986987 </td>
+    <td width="87%" valign="top">Possible deadlock when multiple threads starting 
+    and stopping that rely on implicit ComThread.InitMTA</td>
   </tr>
   <tr> 
     <td width="13%" valign="top">&nbsp;</td>
@@ -148,6 +153,7 @@
     <td width="87%" valign="top">(M7) Jacob DLL name can now be customized to 
     support bundling of Jacob in other products.</td> 
   </tr>
+  <tr>
     <td width="13%" valign="top">1845039 </td>
     <td width="87%" valign="top">(M6) Jacob DLL names are now qualified by platform and 
     release.  The JacobLibraryLoader now determines the correct 32bit or 64bit 

@@ -95,7 +95,7 @@ public abstract class ROT {
 	}
 
 	/**
-	 * returns the pool for this thread if it exists. can create a new one if
+	 * Returns the pool for this thread if it exists. can create a new one if
 	 * you wish by passing in TRUE
 	 * 
 	 * @param createIfDoesNotExist
@@ -115,19 +115,20 @@ public abstract class ROT {
 	 * Iterates across all of the entries in the Hashmap in the rot that
 	 * corresponds to this thread. This calls safeRelease() on each entry and
 	 * then clears the map when done and removes it from the rot. All traces of
-	 * this thread's objects will disapear. This is called by COMThread in the
+	 * this thread's objects will disappear. This is called by COMThread in the
 	 * tear down and provides a synchronous way of releasing memory
 	 */
-	protected synchronized static void clearObjects() {
-		Map<JacobObject, String> tab = getThreadObjects(false);
+	protected static void clearObjects() {
 		if (JacobObject.isDebugEnabled()) {
 			JacobObject.debug("ROT: " + rot.keySet().size()
 					+ " thread tables exist");
 		}
+
+		Map<JacobObject, String> tab = getThreadObjects(false);
 		if (tab != null) {
 			if (JacobObject.isDebugEnabled()) {
 				JacobObject.debug("ROT: " + tab.keySet().size()
-						+ " objects to clear in this thread ");
+						+ " objects to clear in this thread's ROT ");
 			}
 			// walk the values
 			Iterator<JacobObject> it = tab.keySet().iterator();
@@ -155,13 +156,11 @@ public abstract class ROT {
 					}
 					o.safeRelease();
 				}
-				// used to be an iterator.remove() but why bother when we're
-				// nuking them all anyway?
 			}
 			// empty the collection
 			tab.clear();
 			// remove the collection from rot
-			rot.remove(Thread.currentThread().getName());
+			ROT.removeThread();
 			if (JacobObject.isDebugEnabled()) {
 				JacobObject.debug("ROT: thread table cleared and removed");
 			}
@@ -173,18 +172,27 @@ public abstract class ROT {
 	}
 
 	/**
+	 * Removes the map from the rot that is associated with the current thread.
+	 */
+	private synchronized static void removeThread() {
+		// should this see if it exists first?
+		rot.remove(Thread.currentThread().getName());
+	}
+
+	/**
 	 * @deprecated the java model leave the responsibility of clearing up
 	 *             objects to the Garbage Collector. Our programming model
 	 *             should not require that the user specifically remove object
-	 *             from the thread.
-	 * 
-	 * This will remove an object from the ROT
+	 *             from the thread. <br>
+	 *             This will remove an object from the ROT <br>
+	 *             This does not need to be synchronized because only the rot
+	 *             modification related methods need to synchronized. Each
+	 *             individual map is only modified in a single thread.
 	 * @param o
 	 */
 	@Deprecated
-	protected synchronized static void removeObject(JacobObject o) {
-		String t_name = Thread.currentThread().getName();
-		Map<JacobObject, String> tab = rot.get(t_name);
+	protected static void removeObject(JacobObject o) {
+		Map<JacobObject, String> tab = ROT.getThreadObjects(false);
 		if (tab != null) {
 			tab.remove(o);
 		}
@@ -192,11 +200,23 @@ public abstract class ROT {
 	}
 
 	/**
-	 * adds an object to the HashMap for the current thread
+	 * Adds an object to the HashMap for the current thread. <br>
+	 * <p>
+	 * This method does not need to be threaded because the only concurrent
+	 * modification risk is on the hash map that contains all of the thread
+	 * related hash maps. The individual thread related maps are only used on a
+	 * per thread basis so there isn't a locking issue.
+	 * <p>
+	 * In addition, this method cannot be threaded because it calls
+	 * ComThread.InitMTA. The ComThread object has some methods that call ROT so
+	 * we could end up deadlocked. This method should be safe without the
+	 * synchronization because the ROT works on per thread basis and the methods
+	 * that add threads and remove thread related entries are all synchronized
+	 * 
 	 * 
 	 * @param o
 	 */
-	protected synchronized static void addObject(JacobObject o) {
+	protected static void addObject(JacobObject o) {
 		// check the system property to see if this class is put in the ROT
 		// the default value is "true" which simulates the old behavior
 		String shouldIncludeClassInROT = System.getProperty(o.getClass()
@@ -208,11 +228,14 @@ public abstract class ROT {
 						+ o.getClass().getName() + " not added to ROT");
 			}
 		} else {
+			// first see if we have a table for this thread
 			Map<JacobObject, String> tab = getThreadObjects(false);
 			if (tab == null) {
 				// this thread has not been initialized as a COM thread
 				// so make it part of MTA for backwards compatibility
 				ComThread.InitMTA(false);
+				// don't really need the "true" because the InitMTA will have
+				// called back to the ROT to create a table for this thread
 				tab = getThreadObjects(true);
 			}
 			if (JacobObject.isDebugEnabled()) {
@@ -220,6 +243,7 @@ public abstract class ROT {
 						+ o.getClass().getName()
 						+ " table size prior to addition:" + tab.size());
 			}
+			// add the object to the table that is specific to this thread
 			if (tab != null) {
 				tab.put(o, null);
 			}
