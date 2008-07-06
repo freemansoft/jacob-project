@@ -60,33 +60,36 @@ EventProxy::~EventProxy()
 	JNIEnv *env;
     Disconnect();
     jint vmConnectionStatus = JNI_EVERSION ;
-        
+    jint attachReturnStatus = -1; // AttachCurrentThread return status.. negative numbers are failure return codes.
+    
 	// attach to the current running thread -- JDK 1.4 jni.h has two param cover for 3 param call
     vmConnectionStatus = jvm->GetEnv((void **)&env, JNI_VERSION_1_2);
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+		if ((env != NULL)&& env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
    	if (vmConnectionStatus == JNI_EDETACHED){
 		//printf("Unhook: Attaching to current thread using JNI Version 1.2 (%d)\n",vmConnectionStatus);
 		JavaVMAttachArgs attachmentArgs; 
         attachmentArgs.version = JNI_VERSION_1_2;  
         attachmentArgs.name = NULL; 
         attachmentArgs.group = NULL; 
-        jvm->AttachCurrentThread((void **)&env, &attachmentArgs); 
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+        attachReturnStatus = jvm->AttachCurrentThread((void **)&env, &attachmentArgs); 
+		if ((env != NULL) && env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
    	} else {
-   		// should really look for JNI_OK versus an error
-   		// started method hooked so no need to attach again
+   		// should really look for JNI_OK versus an error because it could have been JNI_EVERSION
+   		// started method with thread hooked to VM so no need to attach again
    		//printf("Unhook:  No need to attach because already attached %d\n",vmConnectionStatus);
    	}
 
-
-	env->DeleteGlobalRef(javaSinkObj);
-		if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+   	// we should always have an env by this point but lets be paranoid and check
+	if (env != NULL){
+		env->DeleteGlobalRef(javaSinkObj);
+			if (env->ExceptionOccurred()) { env->ExceptionDescribe(); env->ExceptionClear();}
+	}
 	if (MethNum) {
 	    delete [] MethName;
 	    delete [] MethID;
 	}
-	// detach from thread
-	if (vmConnectionStatus == JNI_EDETACHED){
+	// detach from thread only if we attached to it in this function
+	if (attachReturnStatus == 0){
 		jvm->DetachCurrentThread();
 		//printf("Unhook: Detached\n");
 	} else {

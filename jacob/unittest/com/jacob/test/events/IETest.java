@@ -11,7 +11,7 @@ import com.jacob.test.BaseTestCase;
  * This test runs fine against jdk 1.4 and 1.5
  * 
  * This demonstrates the new event handling code in jacob 1.7 This example will
- * open up IE and print out some of the events it listens to as it havigates to
+ * open up IE and print out some of the events it listens to as it navigates to
  * web sites. contributed by Niels Olof Bouvin mailto:n.o.bouvin@daimi.au.dk and
  * Henning Jae jehoej@daimi.au.dk
  * <p>
@@ -23,27 +23,48 @@ import com.jacob.test.BaseTestCase;
 public class IETest extends BaseTestCase {
 
 	/**
+	 * well known address we can navigate to
+	 */
+	private String testUrls[] = {
+			"http://sourceforge.net/projects/jacob-project",
+			"http://www.google.com" };
+
+	/**
 	 * runs the IE test and feeds it commands
 	 */
-	public void testRunIE() {
+	public void testRunIECleanly() {
+		runTheTest(true, testUrls);
+	}
+
+	/**
+	 * runs the IE test and feeds it commands
+	 */
+	public void testRunIETerminateWithoutWait() {
+		runTheTest(false, testUrls);
+	}
+
+	/**
+	 * The actual work of running the test.
+	 * 
+	 * @param waitForQuit
+	 * @param urls
+	 */
+	private void runTheTest(boolean waitForQuit, String[] urls) {
 		// this line starts the pump but it runs fine without it
 		ComThread.startMainSTA();
-		// remove this line and it dies
-		// /ComThread.InitMTA(true);
-		IETestThread aThread = new IETestThread();
+		// Run the test in a thread. Lets us test running out of "main" thread
+		IETestThread aThread = new IETestThread(waitForQuit, urls);
 		aThread.start();
 		while (aThread.isAlive()) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(250);
 			} catch (InterruptedException e) {
-				// doen with the sleep
-				// e.printStackTrace();
+				// done with the sleep
 			}
 		}
-		System.out
-				.println("Main: Thread quit, about to quit main sta in thread "
-						+ Thread.currentThread().getName());
-		// this line only does someting if startMainSTA() was called
+		System.out.println("Main: Thread quit, about to quitMainSTA in thread "
+				+ Thread.currentThread().getName());
+		// this line only does something if startMainSTA() was called
 		ComThread.quitMainSTA();
 		System.out.println("Main: did quit main sta in thread "
 				+ Thread.currentThread().getName());
@@ -60,21 +81,42 @@ class IETestThread extends Thread {
 	public static boolean quitHandled = false;
 
 	/**
+	 * determines if we wait until last quit call back received before
+	 * terminating
+	 */
+	private static boolean waitUntilReceivedQuitCallback = true;
+
+	/**
+	 * the places we should navigate to
+	 */
+	private static String[] targets = null;
+
+	/**
 	 * holds any caught exception so the main/test case can see them
 	 */
 	public Throwable threadFailedWithException = null;
 
 	/**
 	 * constructor for the test thread
+	 * 
+	 * @param beNeat
+	 *            should we wait until quit received
+	 * @param urls
+	 *            the web pages we will navigate to
 	 */
-	public IETestThread() {
+	public IETestThread(boolean beNeat, String urls[]) {
 		super();
+		waitUntilReceivedQuitCallback = beNeat;
+		targets = urls;
 	}
 
+	/**
+	 * Run through the addresses passed in via the constructor
+	 */
 	public void run() {
-		// this used to be 5 seconds but sourceforge is slow
-		int delay = 5000; // msec
-		// paired with statement below that blows up
+		// pick a time that lets sourceforge respond (in msec)
+		int delay = 3000;
+		// pre-1.14 paired with statement below that blows up
 		ComThread.InitMTA();
 		ActiveXComponent ie = new ActiveXComponent(
 				"InternetExplorer.Application");
@@ -88,27 +130,16 @@ class IETestThread extends Thread {
 			IEEvents ieE = new IEEvents();
 			new DispatchEvents(ie, ieE, "InternetExplorer.Application.1");
 			System.out.println("IETestThread: Did hookup event listener");
-			// / why is this here? Was there some other code here in the past?
-			Variant optional = new Variant();
-			optional.putNoParam();
 
-			System.out
-					.println("IETestThread: About to call navigate to sourceforge");
-			Dispatch.call(ie, "Navigate", new Variant(
-					"http://sourceforge.net/projects/jacob-project"));
-			System.out
-					.println("IETestThread: Did call navigate to sourceforge");
-			try {
-				Thread.sleep(delay);
-			} catch (Exception e) {
-			}
-			System.out.println("IETestThread: About to call navigate to yahoo");
-			Dispatch.call(ie, "Navigate", new Variant(
-					"http://groups.yahoo.com/group/jacob-project"));
-			System.out.println("IETestThread: Did call navigate to yahoo");
-			try {
-				Thread.sleep(delay);
-			} catch (Exception e) {
+			for (String url : targets) {
+				System.out.println("IETestThread: About to call navigate to "
+						+ url);
+				Dispatch.call(ie, "Navigate", new Variant(url));
+				System.out.println("IETestThread: Did call navigate to " + url);
+				try {
+					Thread.sleep(delay);
+				} catch (Exception e) {
+				}
 			}
 		} catch (Exception e) {
 			threadFailedWithException = e;
@@ -121,35 +152,29 @@ class IETestThread extends Thread {
 			ie.invoke("Quit", new Variant[] {});
 			System.out.println("IETestThread: Did send Quit");
 		}
-		// this blows up when it tries to release a DispatchEvents object
-		// I think this is because there is still one event we should get back
-		// "OnQuit" that will came after we have released the thread pool
-		// this is probably messed up because DispatchEvent object will have
-		// been
-		// freed before the callback
-		// commenting out ie.invoke(quit...) causes this to work without error
-		// this code tries to wait until the quit has been handled but that
-		// doesn't work
-		System.out
-				.println("IETestThread: Waiting until we've received the quit callback");
-		while (!quitHandled) {
-			try {
-				Thread.sleep(delay / 5);
-			} catch (InterruptedException e) {
+		// a value is set to false if we try to crash VM by leaving before
+		// callbacks all received
+		if (waitUntilReceivedQuitCallback) {
+			System.out
+					.println("IETestThread: Waiting until we've received quit callback");
+			// wait a little while for it to end
+			while (!quitHandled) {
+				try {
+					Thread.sleep(delay / 10);
+				} catch (InterruptedException e) {
+				}
 			}
+			System.out.println("IETestThread: Received the OnQuit callback");
+		} else {
+			System.out.println("IETestThread: Not waiting for OnQuit callback");
 		}
-		System.out.println("IETestThread: Received the quit callback");
-		// wait a little while for it to end
-		// try {Thread.sleep(delay); } catch (InterruptedException e) {}
-		System.out
-				.println("IETestThread: about to call ComThread.Release in thread "
-						+ Thread.currentThread().getName());
-
+		System.out.println("IETestThread: Calling ComThread.Release in thread "
+				+ Thread.currentThread().getName());
 		ComThread.Release();
 	}
 
 	/**
-	 * The events class must be publicly accessable for reflection to work. The
+	 * The events class must be publicly accessible for reflection to work. The
 	 * list of available events is located at
 	 * http://msdn2.microsoft.com/en-us/library/aa768280.aspx
 	 */
@@ -163,7 +188,7 @@ class IETestThread extends Thread {
 		public void BeforeNavigate2(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): BeforeNavigate2 "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -175,7 +200,7 @@ class IETestThread extends Thread {
 		public void CommandStateChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName()
-					+ "): CommandStateChange " + args.length);
+					+ "): CommandStateChange " + args.length + " parameters");
 		}
 
 		/**
@@ -187,7 +212,7 @@ class IETestThread extends Thread {
 		public void DocumentComplete(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): DocumentComplete "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -199,7 +224,7 @@ class IETestThread extends Thread {
 		public void DownloadBegin(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): DownloadBegin "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -211,7 +236,7 @@ class IETestThread extends Thread {
 		public void DownloadComplete(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): DownloadComplete "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -223,7 +248,7 @@ class IETestThread extends Thread {
 		public void NavigateError(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): NavigateError "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -235,7 +260,7 @@ class IETestThread extends Thread {
 		public void NavigateComplete2(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): NavigateComplete "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -247,7 +272,7 @@ class IETestThread extends Thread {
 		public void NewWindow2(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): NewWindow2 "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -259,7 +284,7 @@ class IETestThread extends Thread {
 		public void OnFullScreen(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): OnFullScreen "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -271,7 +296,7 @@ class IETestThread extends Thread {
 		public void OnMenuBar(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): OnMenuBar "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -283,7 +308,7 @@ class IETestThread extends Thread {
 		public void OnQuit(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): OnQuit "
-					+ args.length);
+					+ args.length + " parameters");
 			IETestThread.quitHandled = true;
 		}
 
@@ -296,7 +321,7 @@ class IETestThread extends Thread {
 		public void OnStatusBar(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): OnStatusBar "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -308,7 +333,7 @@ class IETestThread extends Thread {
 		public void OnTheaterMode(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): OnTheaterMode "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -320,7 +345,7 @@ class IETestThread extends Thread {
 		public void OnToolBar(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): OnToolBar "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -332,7 +357,7 @@ class IETestThread extends Thread {
 		public void OnVisible(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): OnVisible "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -344,7 +369,7 @@ class IETestThread extends Thread {
 		public void ProgressChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): ProgressChange "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -356,7 +381,7 @@ class IETestThread extends Thread {
 		public void PropertyChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): PropertyChange "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -368,7 +393,7 @@ class IETestThread extends Thread {
 		public void SetSecureLockIcon(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName()
-					+ "): setSecureLockIcon " + args.length);
+					+ "): setSecureLockIcon " + args.length + " parameters");
 		}
 
 		/**
@@ -380,7 +405,7 @@ class IETestThread extends Thread {
 		public void StatusTextChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): StatusTextChange "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -392,7 +417,7 @@ class IETestThread extends Thread {
 		public void TitleChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): TitleChange "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 
 		/**
@@ -404,7 +429,7 @@ class IETestThread extends Thread {
 		public void WindowClosing(Variant[] args) {
 			System.out.println("IEEvents Received ("
 					+ Thread.currentThread().getName() + "): WindowClosing "
-					+ args.length);
+					+ args.length + " parameters");
 		}
 	}
 
