@@ -29,8 +29,8 @@
 	</target>
 
 	<target name="zip"  description="export is asynchronise">
-		<echo> ${Bundle-Version} </echo>
-		<zip destfile="JacobGen-1.0.01.zip" basedir="dist" compress="true" />
+		<echo> Make sure you have changed the manifest file as well !!! ${Bundle-Version} </echo>
+		<zip destfile="JacobGen-1.0.02.zip" basedir="dist" compress="true" />
 		<delete  includeemptydirs="true" dir="dist"/>
 	</target>
 
