@@ -111,10 +111,14 @@ else
 		if (returnType.equals("void") ) {
 		} else if ( null == classifier) {
 			if ( null == func ) { 
- %>
-		//there is no class name here <%= className %>
-		return retInvoke<%= func %>;
-	<% 		} else {  %>
+				if (genOperation.isEnumType()) { 
+					stringBuffer.append("\n\t\tfinal int int1 = retInvoke.getInt();");
+					stringBuffer.append("\n\t\treturn " + genOperation.getType().trim() + ".get(int1);");
+		 		} else {  %>
+					//there is no class name here <%= className %> in implementedGenOperation
+					return retInvoke<%= func %>;
+	<%			}
+	 		} else {  %>
 		return retInvoke<%= func %>;
 	<% 	}
 	} else if ( classifier.isInterface()) {  
