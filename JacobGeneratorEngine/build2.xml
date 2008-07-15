@@ -8,10 +8,30 @@
 		</copy>
 	</target>
 
-    <target name="zip"  description="export is asynchronise">
+	<target name="emf">
+		<emf.Ecore2Java> 
+		    model="model/company.ecore"
+			genmodel="model/company.genmodel"
+
+			reconcileGenModel="reload"
+
+            generateJavaCode="true"
+            generateModelProject="false"
+            generateEditProject="false"
+            generateEditorProject="false"
+
+            modelProject="D:/workspace/sourceforge/JacobGeneratorEngine"
+            modelProjectFragmentPath="genSrc"
+		>
+			
+			<arg line="-package http://org.library org.examples Library"/>
+		</emf.Ecore2Java>
+	</target>
+
+	<target name="zip"  description="export is asynchronise">
 		<echo> ${Bundle-Version} </echo>
 		<zip destfile="JacobGen-1.0.01.zip" basedir="dist" compress="true" />
 		<delete  includeemptydirs="true" dir="dist"/>
-    </target>
+	</target>
 
 </project>
