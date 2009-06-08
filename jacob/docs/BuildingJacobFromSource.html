@@ -38,10 +38,10 @@ Eclipse 3.3 with the C/C++ module and JDK 1.5.
 In that situation, you would just create the <i>compilation_tools.properties</i>
 using the example build.xml as a template.  
 <UL>
-<li>	Microsoft Visual C++ 8.0 and it's included library. (to D:\apps in my case)
-<li>	Eclipse 3.3 or later from www.eclipse.org as the Java IDE.  
-<li>	Eclipse 3.3 or later with the C/C++ plugin can be used for C coding in place of VC++ IDE.
-<li>	Java JDK 1.5 (1.14 was built using 1.5.0.11)
+<li>	Microsoft Visual C++ 8.0 and it's included library. (to C:\ProgramFiles in my case)
+<li>	Eclipse 3.4 or later from www.eclipse.org as the Java IDE.  
+<li>	Eclipse 3.4 or later with the C/C++ plugin can be used for C coding in place of VC++ IDE.
+<li>	Java JDK 1.5 (1.15 was built using 1.5.0.16)
 </ul>
 <p>
 <p>
@@ -56,6 +56,7 @@ using the example build.xml as a template.
 <TR><TD>1.12</TD><TD>VC 98 (6.0) & 2003 64bit libs</TD><TD>1.4.2</TD><td>1.6.5</td><TD>3.2.2</TD><TD>32 and 64 bit</TD></TR>
 <TR><TD>1.13</TD><TD>VC 2005</TD><TD>1.4.2</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
 <TR><TD>1.14</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.15</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.7.0</TD><TD>3.4</TD><TD>32 and 64 bit</TD></TR>
 </table>
 Microsoft Visual C++ 8.0 supports 64 bit builds. so no additional tools are required.
 
@@ -128,7 +129,7 @@ path variable must be set to include the directory the jacob.dll is in.  The
 simplest way to do that is to add it as a command line option. The following 
 assume that your jacob development area is located in c:\dev\jacob:
 <pre>
-	-Djava.library.path=c:/jacob/release/x86 
+	-Djava.library.path=c:/dev/jacob/release/x86 
 	-Dcom.jacob.autogc=false 
 	-Dcom.jacob.debug=false 
 	-Xcheck:jni
@@ -137,7 +138,7 @@ assume that your jacob development area is located in c:\dev\jacob:
 JUnit test programs can be individually run from inside eclipse or en-masse 
 via the <code>ant test</code> target.
 
-Last Modified 4/2008 1.15
+Last Modified 10/2008 1.15
 
 </BODY>
 </HTML>

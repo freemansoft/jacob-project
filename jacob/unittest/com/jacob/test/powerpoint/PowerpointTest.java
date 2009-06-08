@@ -18,9 +18,12 @@ import com.jacob.test.BaseTestCase;
  * 
  * power point test program posted to sourceforge to demonstrate memory problem.
  * The submitter stated they had the problem on windows 2000 with office 2000 I
- * have been unable to duplicate on windows XP with office 2003. I am comitting
+ * have been unable to duplicate on windows XP with office 2003. I am adding
  * this to the tree just in case we need to come back to it.
  * <P>
+ * This test was modified for office 2007 to synchronize communication with Excel.
+ * Office 2003 didn't require this.
+ * <p>
  * This relies on BaseTestCase to provide the root path to the file under test
  * <p>
  * May need to run with some command line options (including from inside
@@ -117,8 +120,13 @@ public class PowerpointTest extends BaseTestCase {
 								+ ": Iteration " + i);
 						System.out.flush();
 					}
+					// office 2003 seems to have been able to handle more
+					// multi-threaded requests than office 2007
+					// office 2003 could handle 5 threads @ 50 iterations
+					// office 2007 can only handle 1 thread at a time
+					synchronized(comPowerpoint){
 					Dispatch comPresentations = Dispatch.get(comPowerpoint,
-							"Presentations").toDispatch();
+					"Presentations").toDispatch();
 					Dispatch comPresentation = Dispatch.call(
 							comPresentations,
 							"Open",
@@ -127,6 +135,7 @@ public class PowerpointTest extends BaseTestCase {
 							new Integer(0), new Integer(0), new Integer(0))
 							.toDispatch();
 					Dispatch.call(comPresentation, "Close");
+					}
 				}
 			} catch (ComFailException cfe) {
 				threadFailedWithException = cfe;

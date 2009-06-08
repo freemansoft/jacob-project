@@ -16,10 +16,10 @@
 	The file for MS Visual C++ 8.0 building 32 and 64 bit
 	(releases up to 1.11 only supported 32 builds) looks something like:
 	  
-		JDK=c:\\dev\\jdk1.5.0_15
-		MSDEV_DIR=c:\\dev\\Microsoft Visual Studio 8\\VC
-		MSDEV_IDE_DIR=c:\\dev\\Microsoft Visual Studio 8\\Common7\\IDE
-		version=1.14.1
+		JDK=c:\\dev\\jdk1.5.0_18
+		MSDEV_DIR=c:\\Program Files\\Microsoft Visual Studio 8\\VC
+		MSDEV_IDE_DIR=c:\\Program Files\\Microsoft Visual Studio 8\\Common7\\IDE
+		version=1.15-M1
             
 	DO NOT check compilation_tools.properties into source control as the 
 	values are specific to YOUR environment.
@@ -275,7 +275,7 @@
 			<arg value="/D _USRDLL"/>
 			<arg value="/D _WINDLL" />
 			<!-- create a multi threaded dll -->
-			<arg value="/MD"/>
+			<arg value="/MT"/>
 			<!-- raise the warning level from the default -->
 			<!-- <arg value="/Wp64"/> -->
 			<arg value="/W3" />
@@ -307,7 +307,7 @@
 			<arg value="/D _USRDLL"/>
 			<arg value="/D _WINDLL" />
 			<!-- create a multi threaded dll -->
-			<arg value="/MD"/>
+			<arg value="/MT"/>
 			<!-- raise the warning level from the default -->
 			<!-- <arg value="/Wp64"/> -->
 			<arg value="/W3" />

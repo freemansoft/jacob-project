@@ -114,13 +114,11 @@ public final class VariantUtilities {
 			// newly added 1.12-pre6 to support VT_VARIANT
 			targetVariant.putVariant(pValueObject);
 		} else {
-			// should really throw an illegal argument exception if its an
-			// invalid type
-			if (fByRef) {
-				targetVariant.putObjectRef(pValueObject);
-			} else {
-				targetVariant.putObject(pValueObject);
-			}
+			// sourceforge patch 2171967
+			// used to rely on coercion but sometimes crashed VM
+			throw new NotImplementedException(
+					"populateVariant() not implemented for "
+							+ pValueObject.getClass());
 		}
 	}
 
@@ -131,7 +129,6 @@ public final class VariantUtilities {
 	 * @param objectToBeMadeIntoVariant
 	 * @return Variant that represents the object
 	 */
-	@SuppressWarnings("unchecked")
 	protected static Variant objectToVariant(Object objectToBeMadeIntoVariant) {
 		if (objectToBeMadeIntoVariant == null) {
 			return new Variant();
@@ -140,10 +137,14 @@ public final class VariantUtilities {
 			return (Variant) objectToBeMadeIntoVariant;
 		} else if (objectToBeMadeIntoVariant.getClass().isArray()) {
 			// automatically convert arrays using reflection
+			// handle it differently based on the type of array
+			// added primitive support sourceforge 2762275
 			SafeArray sa = null;
 			int len1 = Array.getLength(objectToBeMadeIntoVariant);
-			Object first = Array.get(objectToBeMadeIntoVariant, 0);
-			if (first.getClass().isArray()) {
+			Class componentType = objectToBeMadeIntoVariant.getClass()
+					.getComponentType();
+
+			if (componentType.isArray()) { // array of arrays
 				int max = 0;
 				for (int i = 0; i < len1; i++) {
 					Object e1 = Array.get(objectToBeMadeIntoVariant, i);
@@ -159,7 +160,32 @@ public final class VariantUtilities {
 						sa.setVariant(i, j, objectToVariant(Array.get(e1, j)));
 					}
 				}
+			} else if (byte.class.equals(componentType)) {
+				byte[] arr = (byte[]) objectToBeMadeIntoVariant;
+				sa = new SafeArray(Variant.VariantByte, len1);
+				for (int i = 0; i < len1; i++) {
+					sa.setByte(i, arr[i]);
+				}
+			} else if (int.class.equals(componentType)) {
+				int[] arr = (int[]) objectToBeMadeIntoVariant;
+				sa = new SafeArray(Variant.VariantInt, len1);
+				for (int i = 0; i < len1; i++) {
+					sa.setInt(i, arr[i]);
+				}
+			} else if (double.class.equals(componentType)) {
+				double[] arr = (double[]) objectToBeMadeIntoVariant;
+				sa = new SafeArray(Variant.VariantDouble, len1);
+				for (int i = 0; i < len1; i++) {
+					sa.setDouble(i, arr[i]);
+				}
+			} else if (long.class.equals(componentType)) {
+				long[] arr = (long[]) objectToBeMadeIntoVariant;
+				sa = new SafeArray(Variant.VariantLongInt, len1);
+				for (int i = 0; i < len1; i++) {
+					sa.setLong(i, arr[i]);
+				}
 			} else {
+				// array of object
 				sa = new SafeArray(Variant.VariantVariant, len1);
 				for (int i = 0; i < len1; i++) {
 					sa.setVariant(i, objectToVariant(Array.get(

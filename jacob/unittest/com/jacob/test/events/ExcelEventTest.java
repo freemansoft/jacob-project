@@ -32,7 +32,11 @@ public class ExcelEventTest extends BaseTestCase {
 		// You can probably also listen Excel.Sheet and Excel.Chart
 		String excelApplicationProgramId = "Excel.Application";
 		String excelSheetProgramId = "Excel.Sheet";
-		String typeLibLocation = "C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE";
+		String typeLibLocation;
+		// office 2003
+		typeLibLocation = "C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE";
+		// office 2007
+		typeLibLocation = "C:\\Program Files\\Microsoft Office\\OFFICE12\\EXCEL.EXE";
 
 		// Grab The Component.
 		ActiveXComponent axc = new ActiveXComponent(excelApplicationProgramId);
@@ -46,7 +50,14 @@ public class ExcelEventTest extends BaseTestCase {
 			Dispatch workbooks = axc.getPropertyAsComponent("Workbooks");
 			Dispatch workbook = Dispatch.get(workbooks, "Add").toDispatch();
 			Dispatch sheet = Dispatch.get(workbook, "ActiveSheet").toDispatch();
-			hookupListener(sheet, excelSheetProgramId, typeLibLocation);
+			System.out.println("Workbook: "+workbook);
+			System.out.println("Sheet: "+sheet);
+			if (typeLibLocation.contains("OFFICE11")){
+				// office 2007 throws crashes the VM
+				System.out.println("Hooking up sheet listener");
+				hookupListener(sheet, excelSheetProgramId, typeLibLocation);
+			}
+			System.out.println("Retrieving cells");
 			Dispatch a1 = Dispatch.invoke(sheet, "Range", Dispatch.Get,
 					new Object[] { "A1" }, new int[1]).toDispatch();
 			Dispatch a2 = Dispatch.invoke(sheet, "Range", Dispatch.Get,
@@ -101,7 +112,7 @@ public class ExcelEventTest extends BaseTestCase {
 					.println("No exception thrown but no dispatch returned for Excel events");
 		} else {
 			// Yea!
-			System.out.println("Successfully attached to " + programId);
+			System.out.println("Successfully attached listener to " + programId);
 
 		}
 	}

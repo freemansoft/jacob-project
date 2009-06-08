@@ -1,5 +1,6 @@
 package com.jacob.com;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import com.jacob.test.BaseTestCase;
@@ -30,4 +31,73 @@ public class VariantUtilitiesTest extends BaseTestCase {
 		System.out.println("currency returned was: " + someMoneyConverted);
 
 	}
+
+	public void testPrimitiveByteArray() {
+		byte[] arr = new byte[] { 1, 2, 3 };
+
+		Variant arrVar = VariantUtilities.objectToVariant(arr);
+		assertNotNull(arrVar);
+		SafeArray sa = arrVar.toSafeArray();
+		assertNotNull(sa);
+
+		assertEquals(Variant.VariantByte, sa.getvt());
+
+		assertEquals(0, sa.getLBound());
+		assertEquals(2, sa.getUBound());
+
+		byte[] bytes = sa.toByteArray();
+		assertTrue(Arrays.equals(bytes, arr));
+	}
+
+	public void testPrimitiveIntArray() {
+		int[] arr = new int[] { 1000, 2000, 3 };
+
+		Variant arrVar = VariantUtilities.objectToVariant(arr);
+		assertNotNull(arrVar);
+		SafeArray sa = arrVar.toSafeArray();
+		assertNotNull(sa);
+
+		assertEquals(Variant.VariantInt, sa.getvt());
+
+		assertEquals(0, sa.getLBound());
+		assertEquals(2, sa.getUBound());
+
+		int[] ints = sa.toIntArray();
+		assertTrue(Arrays.equals(ints, arr));
+	}
+
+	public void testPrimitiveDoubleArray() {
+		double[] arr = new double[] { 1000, 2000, 3 };
+
+		Variant arrVar = VariantUtilities.objectToVariant(arr);
+		assertNotNull(arrVar);
+		SafeArray sa = arrVar.toSafeArray();
+		assertNotNull(sa);
+
+		assertEquals(Variant.VariantDouble, sa.getvt());
+
+		assertEquals(0, sa.getLBound());
+		assertEquals(2, sa.getUBound());
+
+		double[] doubles = sa.toDoubleArray();
+		assertTrue(Arrays.equals(doubles, arr));
+	}
+
+	public void testPrimitiveLongArray() {
+		long[] arr = new long[] { 0xcafebabecafebabeL, 42, 0xbabecafebabeL };
+
+		Variant arrVar = VariantUtilities.objectToVariant(arr);
+		assertNotNull(arrVar);
+		SafeArray sa = arrVar.toSafeArray();
+		assertNotNull(sa);
+
+		assertEquals(Variant.VariantLongInt, sa.getvt());
+
+		assertEquals(0, sa.getLBound());
+		assertEquals(2, sa.getUBound());
+
+		long[] longs = sa.toLongArray();
+		assertTrue(Arrays.equals(longs, arr));
+	}
+
 }
