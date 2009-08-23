@@ -50,6 +50,20 @@ public abstract class ROT {
 			.equalsIgnoreCase(System.getProperty("com.jacob.autogc"));
 
 	/**
+	 * If the code is ran from an applet that is called from javascript the Java
+	 * Plugin does not give full permissions to the code and thus System
+	 * properties cannot be accessed. They can be accessed at class
+	 * initialization time.
+	 * 
+	 * The default behavior is to include all classes in the ROT, setting a
+	 * boolean here to indicate this prevents a call to System.getProperty as
+	 * part of the general call flow.
+	 */
+	protected static final Boolean INCLUDE_ALL_CLASSES_IN_ROT = Boolean
+			.valueOf(System.getProperty("com.jacob.includeAllClassesInROT",
+					"true"));
+
+	/**
 	 * Suffix added to class name to make up property name that determines if
 	 * this object should be stored in the ROT. This 1.13 "feature" makes it
 	 * possible to cause VariantViaEvent objects to not be added to the ROT in
@@ -217,11 +231,15 @@ public abstract class ROT {
 	 * @param o
 	 */
 	protected static void addObject(JacobObject o) {
-		// check the system property to see if this class is put in the ROT
-		// the default value is "true" which simulates the old behavior
-		String shouldIncludeClassInROT = System.getProperty(o.getClass()
-				.getName()
-				+ PUT_IN_ROT_SUFFIX, "true");
+		String shouldIncludeClassInROT = "true";
+		// only call System.getProperty if we are not including all classes in
+		// the ROT. This lets us run with standard Jacob behavior in Applets
+		// without the security exception raised by System.getProperty in the
+		// flow
+		if (!ROT.INCLUDE_ALL_CLASSES_IN_ROT) {
+			shouldIncludeClassInROT = System.getProperty(o.getClass().getName()
+					+ PUT_IN_ROT_SUFFIX, "true");
+		}
 		if (shouldIncludeClassInROT.equalsIgnoreCase("false")) {
 			if (JacobObject.isDebugEnabled()) {
 				JacobObject.debug("JacobObject: New instance of "

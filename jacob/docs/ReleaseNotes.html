@@ -1,11 +1,14 @@
 <HTML>
 <BODY>
 <!--  ---------  -->
-<h2>JACOB 1.15 M1</h2>
+<h2>JACOB 1.15 M2</h2>
 <h3>What's New</h3>
 <ul>
 <li>
-	MS Libraries are now statically linked using /MT instead of /MD to reduce issues library compatability issues, especially on older platforms.  
+	MS Libraries are now statically linked using /MT instead of /MD to 
+	reduce issues library compatibility issues, especially on older platforms.
+	The VC++ redistributable library no longer needs to be installed 
+	as a stand alone product.
 </li>
 </ul>
 <h3>Tracked Changes</h3>
@@ -13,6 +16,14 @@
   <tr>
     <td colspan="2"><b>Bugs</b></td>
   </tr> 
+  <tr> 
+    <td width="13%" valign="top">2721937</td>
+    <td width="87%" valign="top">System.getProperties call caused security exception in applet. 
+    	<i>com.jacob.includeAllClassesInROT</i> now acts as master switch for class/ROT control.
+    	This change also has the side benefit that the PutInROT property is not 
+    	checked on every object creation for users who run in the standard
+    	<i>all classes in ROT</i> mode. (M2)</td>
+  </tr>
   <tr> 
     <td width="13%" valign="top">&nbsp;</td>
     <td width="87%" valign="top">&nbsp;</td>

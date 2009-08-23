@@ -71,14 +71,21 @@ should be fixed in some future release, fix method and time not yet determined.
 <p>
 <hr>
 <h2>Microsoft Visual C++ library dependencies.</h2>
+<p>
+	Jacob 1.15 is build with VC++ 2005 staticly linked into the DLL.  This
+	removes the need for a separate msvcr80.dll installation.
+</p>
+<p>
 	Jacob 1.13 is built with VC++ 2005 that creates a dependency on msvcr80.dll.  
 	Windows XP and later seem to already include the necessary components.  
 	NT/2000 and Server/2003 require that you download the Visual C 2005 redistributable 
 	package, vcredist_x86.exe from the microsoft web site. 
 	Microsoft has a download available that supplies the necessary components.
 	It is distributed as a redistributable package.
+	</p>
 <p>
 If you see the following message then you probably don't have the right C++ libraries.
+</p>
 <pre>
 Exception in thread "main" java.lang.UnsatisfiedLinkError: C:\apps\...\jacob.dll: This application has fa 
 iled to start because the application configuration is incorrect. Reinstalling the application may fix this pr 
@@ -162,6 +169,20 @@ This library supports several different command line options:
 	
 	</td></tr>
 	
+<tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
+	<h4>com.jacob.includeAllClassesInROT</h4>
+	</td><td>
+	Acts as master switch for  and &ltclass_name&gt.PutInROT.
+	This property determines if the (experimental) PutInROT property is even
+	checked.  It was added in version 1.15 because the property check in 
+	PutInROT brok applets because they are not allowed to check system properties
+	at run time.  com.jacob.includeAllClassesInROT is checked at class initialization
+	which is allowed. 
+	<p>The default value of this flag is <i>true</i> which matches all behvior 
+	prior to 1.13 and the default behvior for 1.13 on</p>
+	<p>Setting this flag to false causes Jacob to check the  and &ltclass_name&gt.PutInROT
+	property for every Jacob object that is created.</p>
+</td></tr>
 <tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
 	<h4>&ltclass_name&gt.PutInROT</h4>
 	</td><td>
