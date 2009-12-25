@@ -483,7 +483,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_fromLongArray
   } else if (vt == VT_I8) {
     void *pData;
     SafeArrayAccessData(psa, &pData);
-    memcpy(pData, arrayElements, len*sizeof(long));
+    // VT_I8 is actually a LONGLONG and not a long in length SF 2819445
+    memcpy(pData, arrayElements, len*sizeof(LONGLONG));
     SafeArrayUnaccessData(psa);
   } else {
     ThrowComFail(env, "safearray cannot be assigned from long", -1);
