@@ -6,7 +6,7 @@ Java classes communicate with via JNI.  The library and dll isolate the Java dev
 from the underlying windows libraries so that the Java developer does not have to write
 custom JNI code.  
 <p>
-Jacob is not used for creating ActiveX plugins or other moduless that
+Jacob is not used for creating ActiveX plugins or other modules that
 live inside of Microsoft Windows applications. 
 <hr>
 
@@ -44,7 +44,7 @@ Section not yet written.
 Jacob.jar relies on a DLL file that it loads off of the library path or classpath.  
 This means that you must either copy the appropriate jacob ddll into your path or 
 use VM options to add directory holding jacob dll to the path.  Prior to 1.14M6, 
-the jacob DLL name was alwasy "jacob.dll".  This made it hard to verify jacob 
+the jacob DLL name was always "jacob.dll".  This made it hard to verify jacob 
 was loading the correct dll when multiple copies of jacob were installed on a 
 single system.  It also was confusing on 64 bit systems where the 32 bit and 64 bit 
 dlls have the same tames. 
@@ -62,24 +62,24 @@ In the case of a web server, Jacob is normally put in the application specific W
 This is the "right" way to do it and works in most situations.  
 But, if Jacob is put in the WEB-INF/lib directory of each application's war file for more than 
 one application then a problem occurs.
-In this situation, the web server uses a different classloader for each applicaiton.
+In this situation, the web server uses a different classloader for each application.
 This means that each application will attempt to load the jacob.dll and errors
 are generated.  The only way around this at this time (1.11) is to put the jacob.jar
-in the common/lib because that classloader is inherited by all of the applicaitons
+in the common/lib because that classloader is inherited by all of the applications
 so the DLLs will only get loaded once.  This problem is described in SF 1645463 and 
 should be fixed in some future release, fix method and time not yet determined.
 <p>
 <hr>
 <h2>Microsoft Visual C++ library dependencies.</h2>
 <p>
-	Jacob 1.15 is build with VC++ 2005 staticly linked into the DLL.  This
+	Jacob 1.15 is build with VC++ 2005 statically linked into the DLL.  This
 	removes the need for a separate msvcr80.dll installation.
 </p>
 <p>
 	Jacob 1.13 is built with VC++ 2005 that creates a dependency on msvcr80.dll.  
 	Windows XP and later seem to already include the necessary components.  
 	NT/2000 and Server/2003 require that you download the Visual C 2005 redistributable 
-	package, vcredist_x86.exe from the microsoft web site. 
+	package, vcredist_x86.exe from the Microsoft web site. 
 	Microsoft has a download available that supplies the necessary components.
 	It is distributed as a redistributable package.
 	</p>
@@ -87,9 +87,8 @@ should be fixed in some future release, fix method and time not yet determined.
 If you see the following message then you probably don't have the right C++ libraries.
 </p>
 <pre>
-Exception in thread "main" java.lang.UnsatisfiedLinkError: C:\apps\...\jacob.dll: This application has fa 
-iled to start because the application configuration is incorrect. Reinstalling the application may fix this pr 
-oblem 
+Exception in thread "main" java.lang.UnsatisfiedLinkError: C:\apps\...\jacob.dll: This application has 
+failed to start because the application configuration is incorrect. Reinstalling the application may fix this problem 
 </pre>	
 <pre>
 <A href="http://www.microsoft.com/downloads/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en">
@@ -117,10 +116,10 @@ This library supports several different command line options:
 	<h4>jacob.dll.name</h4>
 	</td><td>
 	Override the standard DLL name with a custom one.  This stops jacob from 
-	using its 32bit/64bit detection and dll rendevous logic.
+	using its 32bit/64bit detection and dll rendezvous logic.
 	Sometimes used when
 	Jacob is bundled with another application and the application wishes
-	to tie the jacob dll version number to the application version numbber. 
+	to tie the jacob dll version number to the application version number. 
 	(Added 1.14M7)
 	<p>
 	Example: <code>-Djacob.dll.name=MyFunkyDllName.dll</code> 
@@ -129,10 +128,10 @@ This library supports several different command line options:
 <tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
 	<h4>jacob.dll.name.x86 & jacob.dll.name.x64</h4>
 	</td><td>
-	Override the standard 32 bit DLL name with custome ones. 
+	Override the standard 32 bit DLL name with custom ones. 
 	Sometimes used when
 	Jacob is bundled with another application and the application wishes
-	to tie the jacob dll version number to the application version numbber.
+	to tie the jacob dll version number to the application version number.
 	(Added 1.14M7)
 	<p>
 	Example to override 32 bit dll name: <code>-Djacob.dll.name.x86=MyFunkyDllName-32bit.dll</code> 
@@ -145,7 +144,8 @@ This library supports several different command line options:
 	<h4>com.jacob.autogc </h4>
 	</td><td>
 	Determines if automatic garbage collection is enabled.  This is the
-	only way to free up objects created in event callbacks.  	Automatic garbage collection , based on Java gc rules, garbage collection can be enabled via the 
+	only way to free up objects created in event callbacks.  	Automatic garbage collection , 
+	based on Java gc rules, garbage collection can be enabled via the 
 	<code>com.java.autogc</code> command line option. 
 	<em>This feature was added in release 1.9 is not fully debugged.  </em>
 	<p>
@@ -178,9 +178,9 @@ This library supports several different command line options:
 	PutInROT brok applets because they are not allowed to check system properties
 	at run time.  com.jacob.includeAllClassesInROT is checked at class initialization
 	which is allowed. 
-	<p>The default value of this flag is <i>true</i> which matches all behvior 
-	prior to 1.13 and the default behvior for 1.13 on</p>
-	<p>Setting this flag to false causes Jacob to check the  and &ltclass_name&gt.PutInROT
+	<p>The default value of this flag is <i>true</i> which matches all behavior 
+	prior to 1.13 and the default behavior for 1.13 on</p>
+	<p>Setting this flag to false causes Jacob to check the  and &lt;class_name&gt;.PutInROT
 	property for every Jacob object that is created.</p>
 </td></tr>
 <tr><td>&nbsp;&nbsp;&nbsp;</td><td valign="top">
@@ -189,12 +189,12 @@ This library supports several different command line options:
 	Lets a program specify that instances of certain classes are to not be inserted
 	into the ROT.  This experimental (1.13) feature provides a mechanism for freeing
 	VariantViaEvent objects that are created in Event threads.  There is normally no 
-	way to free those objects because the thread terminates outside of any normaly MTA/STA
-	Startup/Teardown code.  Each event occures in a new thread and creates a new ROT entry
+	way to free those objects because the thread terminates outside of any normally MTA/STA
+	Startup/Teardown code.  Each event occurs in a new thread and creates a new ROT entry
 	so they grow without bounds. 
 	<p>
 	This option may cause VM crashes in certain situations where windows memory is freed 
-	outside of the thread it was created in but emperical evidence shows there are
+	outside of the thread it was created in but empirical evidence shows there are
 	situations where this great reduces the long running memory footprint of applications
 	that process a lot of events. <em>This function is still experimental</em>.
 	The functionality was added 1.13. Some of this overlaps the experimental <code>com.jacob.autogc</code> introduced
