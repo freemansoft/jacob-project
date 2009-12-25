@@ -1867,18 +1867,20 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString__ILjava_lang_Strin
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
-    const char *str = env->GetStringUTFChars(s, NULL);
-    CComBSTR bs(str);
+    // SF 2847577 support unicode move from GetStringUTFChars() to GetStringChars()
+    const jchar *str = env->GetStringChars(s, NULL);
+    CComBSTR bs((LPCOLESTR)str);
     V_VT(&v) = VT_BSTR;
     V_BSTR(&v) = bs.Copy();
     SafeArrayPutElement(sa,&idx,&v); \
-    env->ReleaseStringUTFChars(s, str);
+    env->ReleaseStringChars(s, str);
     VariantClear(&v);
   } else if (vt == VT_BSTR) {
-    const char *str = env->GetStringUTFChars(s, NULL);
-    CComBSTR bs(str);
+	// SF 2847577 support unicode move from GetStringUTFChars() to GetStringChars()
+    const jchar *str = env->GetStringChars(s, NULL);
+    CComBSTR bs((LPCOLESTR)str);
     SafeArrayPutElement(sa,&idx,bs.Detach());
-    env->ReleaseStringUTFChars(s, str);
+    env->ReleaseStringChars(s, str);
   } else {
     ThrowComFail(env, "safearray cannot set string", 0);
   }
@@ -1906,20 +1908,22 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString__IILjava_lang_Stri
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
-    const char *str = env->GetStringUTFChars(s, NULL);
-    CComBSTR bs(str);
+    // SF 2847577 support unicode move from GetStringUTFChars() to GetStringChars()
+    const jchar *str = env->GetStringChars(s, NULL);
+    CComBSTR bs((LPCOLESTR)str);
     V_VT(&v) = VT_BSTR;
     V_BSTR(&v) = bs.Copy();
     long idx[2] = {i,j};
     SafeArrayPutElement(sa,idx,&v);
-    env->ReleaseStringUTFChars(s, str);
+    env->ReleaseStringChars(s, str);
     VariantClear(&v);
   } else if (vt == VT_BSTR) {
     long idx[2] = {i,j};
-    const char *str = env->GetStringUTFChars(s, NULL);
-    CComBSTR bs(str);
+    // SF 2847577 support unicode move from GetStringUTFChars() to GetStringChars()
+    const jchar *str = env->GetStringChars(s, NULL);
+    CComBSTR bs((LPCOLESTR)str);
     SafeArrayPutElement(sa,idx,bs.Detach());
-    env->ReleaseStringUTFChars(s, str);
+    env->ReleaseStringChars(s, str);
   } else {
     ThrowComFail(env, "safearray cannot set string", 0);
   }
@@ -2000,24 +2004,26 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setStrings
     for(int i=ja_start,j=idx;i<ja_start+nelem;i++,j++) 
     {
       jstring s = (jstring)env->GetObjectArrayElement(ja, i);
-      const char *str = env->GetStringUTFChars(s, NULL);
-      CComBSTR bs(str);
+      // SF 2847577 support unicode move from GetStringUTFChars() to GetStringChars()
+      const jchar *str = env->GetStringChars(s, NULL);
+      CComBSTR bs((LPCOLESTR)str);
       V_VT(&v) = VT_BSTR;
       V_BSTR(&v) = bs.Copy();
       long x = j; 
       SafeArrayPutElement(psa,&x,&v); 
       VariantClear(&v);
-      env->ReleaseStringUTFChars(s, str);
+      env->ReleaseStringChars(s, str);
     } 
   } else if (vt == VT_BSTR) {
     for(int i=ja_start,j=idx;i<ja_start+nelem;i++,j++) 
     {
       jstring s = (jstring)env->GetObjectArrayElement(ja, i);
-      const char *str = env->GetStringUTFChars(s, NULL);
-      CComBSTR bs(str);
+      // SF 2847577 support unicode move from GetStringUTFChars() to GetStringChars()
+      const jchar *str = env->GetStringChars(s, NULL);
+      CComBSTR bs((LPCOLESTR)str);
       long x = j; 
       SafeArrayPutElement(psa,&x,bs.Detach()); 
-      env->ReleaseStringUTFChars(s, str);
+      env->ReleaseStringChars(s, str);
     } 
   } else {
     ThrowComFail(env, "safearray cannot set strings", 0);
@@ -3006,18 +3012,20 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setString___3ILjava_lang_Str
   if (vt == VT_VARIANT) {
     VARIANT v;
     VariantInit(&v);
-    const char *str = env->GetStringUTFChars(s, NULL);
-    CComBSTR bs(str);
+    // SF 2847577 support unicode move from GetStringUTFChars() to GetStringChars()
+    const jchar *str = env->GetStringChars(s, NULL);
+    CComBSTR bs((LPCOLESTR)str);
     V_VT(&v) = VT_BSTR;
     V_BSTR(&v) = bs.Copy();
     SafeArrayPutElement(sa, jIndices,&v);
-    env->ReleaseStringUTFChars(s, str);
+    env->ReleaseStringChars(s, str);
     VariantClear(&v);
   } else if (vt == VT_BSTR) {
-    const char *str = env->GetStringUTFChars(s, NULL);
-    CComBSTR bs(str);
+    // SF 2847577 support unicode move from GetStringUTFChars() to GetStringChars()
+    const jchar *str = env->GetStringChars(s, NULL);
+    CComBSTR bs((LPCOLESTR)str);
     SafeArrayPutElement(sa, jIndices,bs.Detach());
-    env->ReleaseStringUTFChars(s, str);
+    env->ReleaseStringChars(s, str);
   } else {
     ThrowComFail(env, "safearray cannot set string", 0);
   }
