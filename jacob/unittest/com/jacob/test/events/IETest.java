@@ -25,7 +25,7 @@ public class IETest extends BaseTestCase {
 	/**
 	 * well known address we can navigate to
 	 */
-	private String testUrls[] = {
+	private final String testUrls[] = {
 			"http://sourceforge.net/projects/jacob-project",
 			"http://www.google.com" };
 
@@ -70,6 +70,7 @@ public class IETest extends BaseTestCase {
 				+ Thread.currentThread().getName());
 
 		if (aThread.threadFailedWithException != null) {
+			aThread.threadFailedWithException.printStackTrace();
 			fail("caught an unexpected exception "
 					+ aThread.threadFailedWithException);
 		}
@@ -113,6 +114,7 @@ class IETestThread extends Thread {
 	/**
 	 * Run through the addresses passed in via the constructor
 	 */
+	@Override
 	public void run() {
 		// pick a time that lets sourceforge respond (in msec)
 		int delay = 3000;

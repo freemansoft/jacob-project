@@ -120,6 +120,10 @@ Sympton: Can't find jni.h or can't find C++ compiler<p>
 Problem: compilation_tools.properties configured incorrectly.  Either
 paths are wrong or the separator is wrong.  It requires two backslashes for a separator.<p>
 </li>
+<li>
+Symptom: Ant fails with the message <CODE> Could not create task or type of type: junit.</CODE>.<p>
+Problem: junit.jar must be copied from this project to the $ANT_HOME/lib directory.<p>
+</li>
 </ul>
 
 <h1> Running Samples and Tests </h1>

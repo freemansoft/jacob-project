@@ -32,14 +32,9 @@ public class LibraryLoaderTest extends TestCase {
 	 * verify LibraryLoader.JACOB_DLL_NAME is read by LibraryLoader
 	 */
 	public void testJacobDllNameSystemProperty() {
-		// fill with bad dll name
-		System.setProperty(LibraryLoader.JACOB_DLL_NAME, "xxx");
-		try {
-			LibraryLoader.loadJacobLibrary();
-			fail("Should have been unable to load dll with name xxx");
-		} catch (UnsatisfiedLinkError ule) {
-			// yes, this is what we want to see when using a bad name
-		}
+		// this test used to run in the reverse order but that caused
+		// ClassDefNotFound on DEBUG
+
 		// no way to clear a system property once set so lets try setting to
 		// default
 		System.setProperty(LibraryLoader.JACOB_DLL_NAME, LibraryLoader
@@ -51,6 +46,16 @@ public class LibraryLoaderTest extends TestCase {
 					+ LibraryLoader.JACOB_DLL_NAME + " to "
 					+ LibraryLoader.getPreferredDLLName() + " "
 					+ ule.getMessage());
+		}
+
+		// fill with bad dll name and try again
+		System.setProperty(LibraryLoader.JACOB_DLL_NAME, "xxx");
+		try {
+			LibraryLoader.loadJacobLibrary();
+			fail("Should have been unable to load dll with name xxx");
+		} catch (UnsatisfiedLinkError ule) {
+			System.out.println("correctly caught UnsatisfiedLinkError");
+			// yes, this is what we want to see when using a bad name
 		}
 	}
 

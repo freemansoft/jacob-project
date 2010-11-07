@@ -12,6 +12,35 @@ import com.jacob.test.BaseTestCase;
 public class VariantUtilitiesTest extends BaseTestCase {
 
 	/**
+	 * verifies our unpacking stuff
+	 */
+	public void testObjectsToVariants() {
+		Object testArray[] = new Object[] { Integer.valueOf(1),
+				Integer.valueOf(2) };
+		Variant resultArray[] = VariantUtilities.objectsToVariants(testArray);
+		assertEquals(2, resultArray.length);
+
+		Variant resultArray2[] = VariantUtilities
+				.objectsToVariants(resultArray);
+		assertEquals(2, resultArray2.length);
+		assertSame(resultArray[0], resultArray2[0]);
+		assertSame(resultArray[1], resultArray2[1]);
+	}
+
+	/**
+	 * test nested arrays
+	 */
+	public void testObjectsToVariantNestedArray() {
+		Object testArray[] = new Object[] { Integer.valueOf(1),
+				Integer.valueOf(2) };
+		Object testArrayOuter[] = new Object[] { testArray };
+		Variant resultArray[] = VariantUtilities
+				.objectsToVariants(testArrayOuter);
+		// should be a SafeArray
+		assertEquals(1, resultArray.length);
+	}
+
+	/**
 	 * verify that dispatch can convert from object to variant and that the
 	 * variant holds the right value
 	 */

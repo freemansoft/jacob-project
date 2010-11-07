@@ -57,7 +57,7 @@
 	<property name="generated.filename.zip" 	value="jacob-${version}" />
 	<property name="generated.filename.version"	value="JacobVersion.properties" />
 	
-	<property name="junit.jar"         value="${basedir}\lib\junit3.8.1\junit.jar" />
+	<property name="junit.jar"         value="${basedir}/lib/junit3.8.1/junit.jar" />
 		
 	<property name="src.java.mainroot"    value="${basedir}/src" />
 	<property name="src.java.samples"  value="${basedir}/samples" />

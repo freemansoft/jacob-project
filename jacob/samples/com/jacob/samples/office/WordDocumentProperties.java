@@ -1,5 +1,7 @@
 package com.jacob.samples.office;
 
+import java.io.File;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComException;
 import com.jacob.com.Dispatch;
@@ -7,6 +9,8 @@ import com.jacob.com.Variant;
 
 /**
  * Submitted to the Jacob SourceForge web site as a sample 3/2005
+ * <p>
+ * This sample is BROKEN because it doesn't call quit!
  * 
  * @author Date Created Description Jason Twist 04 Mar 2005 Code opens a locally
  *         stored Word document and extracts the Built In properties and Custom
@@ -137,7 +141,9 @@ public class WordDocumentProperties {
 			WordDocumentProperties jacTest = new WordDocumentProperties();
 
 			// Open the word doc
-			jacTest.open("\\\\Saturn\\documentstorage\\s.doc");
+			File doc = new File(
+					"samples/com/jacob/samples/office/TestDocument.doc");
+			jacTest.open(doc.getAbsolutePath());
 
 			// Set Custom Properties
 			jacTest.selectCustomDocumentProperitiesMode();

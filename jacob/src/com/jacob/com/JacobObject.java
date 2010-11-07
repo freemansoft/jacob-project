@@ -63,7 +63,6 @@ public class JacobObject {
 	"true".equalsIgnoreCase(System.getProperty("com.jacob.debug"));
 
 	protected static boolean isDebugEnabled() {
-		// return true;
 		return DEBUG;
 	}
 

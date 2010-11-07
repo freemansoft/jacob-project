@@ -117,9 +117,9 @@ public class ActiveXComponent extends Dispatch {
 	}
 
 	/**
-	 * Most code should use the standard ActiveXComponent(String) constructor and
-	 * not this factory method. This method exists for applications that need
-	 * special behavior. <B>Experimental in release 1.9.2.</B>
+	 * Most code should use the standard ActiveXComponent(String) constructor
+	 * and not this factory method. This method exists for applications that
+	 * need special behavior. <B>Experimental in release 1.9.2.</B>
 	 * <p>
 	 * Factory that returns a Dispatch wrapped around the result of a
 	 * getActiveObject() call. This differs from the standard constructor in
@@ -150,6 +150,7 @@ public class ActiveXComponent extends Dispatch {
 	/**
 	 * @see com.jacob.com.Dispatch#finalize()
 	 */
+	@Override
 	protected void finalize() {
 		super.finalize();
 	}
@@ -382,58 +383,12 @@ public class ActiveXComponent extends Dispatch {
 	 * makes a dispatch call for the passed in action and single parameter
 	 * 
 	 * @param callAction
-	 * @param parameter
+	 * @param parameters
 	 * @return ActiveXComponent representing the results of the call
 	 */
 	public ActiveXComponent invokeGetComponent(String callAction,
-			Variant parameter) {
-		return new ActiveXComponent(invoke(callAction, parameter).toDispatch());
-	}
-
-	/**
-	 * makes a dispatch call for the passed in action and single parameter
-	 * 
-	 * @param callAction
-	 * @param parameter1
-	 * @param parameter2
-	 * @return ActiveXComponent representing the results of the call
-	 */
-	public ActiveXComponent invokeGetComponent(String callAction,
-			Variant parameter1, Variant parameter2) {
-		return new ActiveXComponent(invoke(callAction, parameter1, parameter2)
-				.toDispatch());
-	}
-
-	/**
-	 * makes a dispatch call for the passed in action and single parameter
-	 * 
-	 * @param callAction
-	 * @param parameter1
-	 * @param parameter2
-	 * @param parameter3
-	 * @return ActiveXComponent representing the results of the call
-	 */
-	public ActiveXComponent invokeGetComponent(String callAction,
-			Variant parameter1, Variant parameter2, Variant parameter3) {
-		return new ActiveXComponent(invoke(callAction, parameter1, parameter2,
-				parameter3).toDispatch());
-	}
-
-	/**
-	 * makes a dispatch call for the passed in action and single parameter
-	 * 
-	 * @param callAction
-	 * @param parameter1
-	 * @param parameter2
-	 * @param parameter3
-	 * @param parameter4
-	 * @return ActiveXComponent representing the results of the call
-	 */
-	public ActiveXComponent invokeGetComponent(String callAction,
-			Variant parameter1, Variant parameter2, Variant parameter3,
-			Variant parameter4) {
-		return new ActiveXComponent(invoke(callAction, parameter1, parameter2,
-				parameter3, parameter4).toDispatch());
+			Variant... parameters) {
+		return new ActiveXComponent(invoke(callAction, parameters).toDispatch());
 	}
 
 	/**
@@ -500,61 +455,6 @@ public class ActiveXComponent extends Dispatch {
 	}
 
 	/**
-	 * makes a dispatch call for the passed in action and single parameter
-	 * 
-	 * @param callAction
-	 * @param parameter
-	 * @return a Variant but that may be null for some calls
-	 */
-	public Variant invoke(String callAction, Variant parameter) {
-		return Dispatch.call(this, callAction, parameter);
-	}
-
-	/**
-	 * makes a dispatch call for the passed in action and two parameter
-	 * 
-	 * @param callAction
-	 * @param parameter1
-	 * @param parameter2
-	 * @return a Variant but that may be null for some calls
-	 */
-	public Variant invoke(String callAction, Variant parameter1,
-			Variant parameter2) {
-		return Dispatch.call(this, callAction, parameter1, parameter2);
-	}
-
-	/**
-	 * makes a dispatch call for the passed in action and two parameter
-	 * 
-	 * @param callAction
-	 * @param parameter1
-	 * @param parameter2
-	 * @param parameter3
-	 * @return Variant result data
-	 */
-	public Variant invoke(String callAction, Variant parameter1,
-			Variant parameter2, Variant parameter3) {
-		return Dispatch.call(this, callAction, parameter1, parameter2,
-				parameter3);
-	}
-
-	/**
-	 * calls call() with 4 variant parameters
-	 * 
-	 * @param callAction
-	 * @param parameter1
-	 * @param parameter2
-	 * @param parameter3
-	 * @param parameter4
-	 * @return Variant result data
-	 */
-	public Variant invoke(String callAction, Variant parameter1,
-			Variant parameter2, Variant parameter3, Variant parameter4) {
-		return Dispatch.call(this, callAction, parameter1, parameter2,
-				parameter3, parameter4);
-	}
-
-	/**
 	 * makes a dispatch call for the passed in action and no parameter
 	 * 
 	 * @param callAction
@@ -572,7 +472,7 @@ public class ActiveXComponent extends Dispatch {
 	 * @param args
 	 * @return Variant returned by the invoke (Dispatch.callN)
 	 */
-	public Variant invoke(String name, Variant[] args) {
+	public Variant invoke(String name, Variant... args) {
 		return Dispatch.callN(this, name, args);
 	}
 
