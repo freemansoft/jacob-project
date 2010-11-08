@@ -648,6 +648,7 @@ public class VariantTest extends BaseTestCase {
 		 * 
 		 * @see java.lang.Runnable#run()
 		 */
+		@Override
 		public void run() {
 			for (int variantIndex = 0; variantIndex < initialRunSize; variantIndex++) {
 				try {
@@ -662,6 +663,42 @@ public class VariantTest extends BaseTestCase {
 				testSubject.getInt();
 			}
 			isComplete = true;
+		}
+	}
+
+	/**
+	 * there was a bitwise masking error that let booleans be seen as dispatch
+	 * objects Bug Report SF3065265
+	 */
+	public void testGetDispatch() {
+		Variant testVariant = new Variant();
+		testVariant.putBooleanRef(true);
+		try {
+			// throws IllegalStateException if Jacob detects the type
+			// throws some other bad exception if COM blows up failing the
+			// conversion
+			testVariant.getDispatchRef();
+			fail("Should not have converted boolean to dispatch");
+		} catch (IllegalStateException e) {
+			// yeah! can't get dispatch from boolean
+		}
+	}
+
+	/**
+	 * there was a bitwise masking error that let booleans be seen as dispatch
+	 * objects Bug Report SF3065265
+	 */
+	public void testGetError() {
+		Variant testVariant = new Variant();
+		testVariant.putErrorRef(3);
+		try {
+			// throws IllegalStateException if Jacob detects the type
+			// throws some other bad exception if COM blows up failing the
+			// conversion
+			testVariant.getStringRef();
+			fail("Should not have converted error to string");
+		} catch (IllegalStateException e) {
+			// yeah! can't get dispatch from boolean
 		}
 	}
 }

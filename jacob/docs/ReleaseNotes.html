@@ -16,6 +16,17 @@
   <tr>
     <td colspan="2"><b>Bugs</b></td>
   </tr> 
+  <tr> 
+    <td width="13%" valign="top">3065265</td>
+    <td width="87%" valign="top">Bit masking in Variant.getXXXRef() uses wrong mask allowing more than
+    one type to be seen as the requested type.  Code that passed in the correct type always worked 
+    but invalid types were not always detected.(M4)</td>
+  </tr>
+  <tr> 
+    <td width="13%" valign="top">2935662</td>
+    <td width="87%" valign="top">Error handling code crashes because of uninitialized data in Dispatch.cpp
+        Check for NULL fails. pfnDeferredFillIn pointer is not initialized, but it's not NULL.(M4)</td>
+  </tr>
   <tr>
     <td width="13%" valign="top">2819445</td>
     <td width="87%" valign="top">SafeArray.fromLongArray fails when using VariantLongInt (M3)</td>
@@ -31,11 +42,6 @@
     	This change also has the side benefit that the PutInROT property is not 
     	checked on every object creation for users who run in the standard
     	<i>all classes in ROT</i> mode. (M2)</td>
-  </tr>
-  <tr> 
-    <td width="13%" valign="top">2935662</td>
-    <td width="87%" valign="top">Error handling code crashes because of uninitialized data in Dispatch.cpp
-        Check for NULL fails. pfnDeferredFillIn pointer is not initialized, but it's not NULL.</td>
   </tr>
   <tr> 
     <td width="13%" valign="top">&nbsp;</td>

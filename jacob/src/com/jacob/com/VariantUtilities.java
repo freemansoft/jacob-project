@@ -356,7 +356,7 @@ public final class VariantUtilities {
 				break;
 			case Variant.VariantTypeMask: // 4095
 				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantTypeMask");
+						"toJavaObject() Not implemented for VariantBstrBlob/VariantTypeMask");
 				break;
 			case Variant.VariantArray: // 8192
 				result = new NotImplementedException(
