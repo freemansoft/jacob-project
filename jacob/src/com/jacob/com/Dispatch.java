@@ -845,4 +845,28 @@ public class Dispatch extends JacobObject {
 		throw new NotImplementedException("not implemented yet");
 	}
 
+	/**
+	 * Cover for native method
+	 * 
+	 * @param disp
+	 * @param dispid
+	 * @param lcid
+	 * @return 0 if the dispatch is still active and 1 if it has exited
+	 */
+	public static native int hasExited(Dispatch disp, int dispid, int lcid);
+
+	/**
+	 * The method is used to poll until it returns 1, indicating that the COM
+	 * server in gone.
+	 * <p>
+	 * Sourceforge feature request 2927058
+	 * 
+	 * @param dispatchTarget
+	 * @return 0 if the dispatch is still active and 1 if it has exited
+	 */
+	public static int hasExited(Dispatch dispatchTarget) {
+		throwIfUnattachedDispatch(dispatchTarget);
+		return hasExited(dispatchTarget, 0, LOCALE_SYSTEM_DEFAULT);
+	}
+
 }

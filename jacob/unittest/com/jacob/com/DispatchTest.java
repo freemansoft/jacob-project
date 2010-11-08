@@ -1,5 +1,6 @@
 package com.jacob.com;
 
+import com.jacob.activeX.ActiveXComponent;
 import com.jacob.test.BaseTestCase;
 
 /**
@@ -12,9 +13,21 @@ import com.jacob.test.BaseTestCase;
 public class DispatchTest extends BaseTestCase {
 
 	/**
-	 * Dummy test until someone gets their act together
+	 * Verify this detects word's exit
 	 */
-	public void testDispatch() {
-		// what should we test
+	public void testDispatchHasExited() {
+		String pid = "Word.Application";
+		ActiveXComponent axc = new ActiveXComponent(pid);
+		assertEquals(0, Dispatch.hasExited(axc));
+		axc.invoke("Quit", new Variant[] {});
+		// should take some amount of time for Word to Quit so should = !exited
+		assertEquals(0, Dispatch.hasExited(axc));
+		try {
+			// sleep some reasonable amount of time waiting for it to quit
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			fail("should not have been interrupted");
+		}
+		assertEquals(1, Dispatch.hasExited(axc));
 	}
 }

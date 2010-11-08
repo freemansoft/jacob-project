@@ -555,6 +555,26 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
   return newVariant;
 }
 
+/*
+ * Wait method added so folks could wait until a com server terminated
+ */
+JNIEXPORT jint JNICALL Java_com_jacob_com_Dispatch_hasExited
+		(JNIEnv *env,jclass clazz, jobject disp, jint dispid, jint lcid) {
+	IDispatch *pIDispatch = extractDispatch(env, disp);
+	if (!pIDispatch) {
+		// should we return 0?
+		return NULL;
+	}
+	ITypeInfo *v;
+	HRESULT hr = pIDispatch->GetTypeInfo(dispid, lcid, &v);
+	if (hr == RPC_E_SERVERCALL_RETRYLATER || hr == RPC_E_CALL_REJECTED || hr
+			== 0) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
 }
 
 
