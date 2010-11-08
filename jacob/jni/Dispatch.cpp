@@ -418,6 +418,8 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
 {
   DISPPARAMS  dispparams;
   EXCEPINFO   excepInfo;
+  // Sourceforge Bug Tracker 2935662 uninitialized data can be not NULL with bad results
+  excepInfo.pfnDeferredFillIn = NULL;
 
   IDispatch *pIDispatch = extractDispatch(env, disp);
   if (!pIDispatch) return NULL;
