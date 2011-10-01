@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <jnlp href="Applet.jnlp" spec="1.0+" version="1.1">
+ 		
+ 	<information>
+       		<title>Jacob Test Applet</title>
+		<vendor>ttreeck, nepatec GmbH &amp; Co. KG</vendor>
+		<offline-allowed />
+     	</information>
+     	
+	<security> 
+		<all-permissions/> 
+	</security> 
+
+	<resources>
+       		<j2se href="http://java.sun.com/products/autodl/j2se" version="1.6.0_20+" />
+			<jar href="lib/JacobTestApplet.jar-selfSigned.jar" main="true" version="1.0.0" />
+			<jar href="lib/jacob-signed.jar" version="1.0.0" />
+			<nativelib href="lib/jacob-dll-1.15-M3-signed.jar"/>
+	</resources>
+		
+	<applet-desc 
+         	name="JacobTestApplet"
+         	main-class="com.jacob.samples.applet.JacobTestApplet"
+         	width="400"
+         	height="50">
+	</applet-desc>
+ </jnlp>
