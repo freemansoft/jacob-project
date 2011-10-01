@@ -31,8 +31,10 @@
 #ifndef STRICT
 #define STRICT
 #endif
+// SF 3377279 Changed _WIN32_WINNT to 0x0500 to fix build with VS2010
+// 0x400 is NT or later 0x500 is windows 2000 or later. we could go higher
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
+#define _WIN32_WINNT 0x0500
 #endif
 //#define _ATL_APARTMENT_THREADED
 #include <windows.h>

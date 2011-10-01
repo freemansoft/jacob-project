@@ -126,7 +126,8 @@ class IETestThread extends Thread {
 			Dispatch.put(ie, "Visible", new Variant(true));
 			Dispatch.put(ie, "AddressBar", new Variant(true));
 			System.out.println("IETestThread: " + Dispatch.get(ie, "Path"));
-			Dispatch.put(ie, "StatusText", new Variant("My Status Text"));
+			// Some version of IE broke this. Not sure which one
+			// Dispatch.put(ie, "StatusText", new Variant("My Status Text"));
 
 			System.out.println("IETestThread: About to hookup event listener");
 			IEEvents ieE = new IEEvents();

@@ -111,9 +111,10 @@
 
 	<!-- ======================================================================
 		      Writes out a version file to be included in the jar        
+		      build iteration is only the iteration since lat time releases directory cleaned
 		 ================================================================== -->
 	<property name="version" value="version not set in compilation_tools properties file"/>
-	<propertyfile file="${generated.filename.version}">
+	<propertyfile file="${release.dir.java.meta.inf}/${generated.filename.version}">
 		<entry key="version" type="string" value="${version}" />
 		<entry key="build.iteration" type="int" operation="+" value="1" pattern="00" />
 		<entry key="build.date" type="date" value="now" operation="=" pattern="dd-MMMM-yyyy HH:mm:ss" />
@@ -222,8 +223,14 @@
 		<javac srcdir="${src.java.unittest}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}:${junit.jar}"
-			listfiles="true" debug="on" source="1.5" />
-		<copy file="${generated.filename.version}" todir="${release.dir.java.meta.inf}"/>
+			listfiles="true" debug="on" source="1.5"
+			excludes="com/jacob/test/safearray/SafeArrayBasicTest.java"/>
+		<javac srcdir="${src.java.unittest}" 
+			destdir="${release.dir.java}" 
+			classpath="${release.dir.java}:${junit.jar}"
+			listfiles="true" debug="on" source="1.5"
+			includes="com/jacob/test/safearray/SafeArrayBasicTest.java"
+			encoding="UTF-16"/>
 	</target>
 	<!-- ======================================================================
 	      Package the classes into a JAR.    
@@ -422,7 +429,7 @@
 			<exclude name="**/CVS" />
 			<exclude name="**/*.obj" />
 			<exclude name="**/*.class" />
-			<zipfileset dir="${basedir}"     	 	prefix="${generated.filename.zip}"	includes="LICENSE.* ${generated.filename.version} README.txt" />
+			<zipfileset dir="${basedir}"     	 	prefix="${generated.filename.zip}"	includes="LICENSE.* README.txt" />
 			<zipfileset dir="${basedir}"     	 	prefix="${generated.filename.zip}"  includes="docs/**" />
 			<zipfileset dir="${release.dir.x86}" 	prefix="${generated.filename.zip}"  includes="${generated.filename.dll.x86}" />
 			<zipfileset dir="${release.dir.x64}" 	prefix="${generated.filename.zip}" 	includes="${generated.filename.dll.x64}" />
@@ -437,15 +444,14 @@
 			<exclude name="**/*.dll" />
 			<exclude name="**/*.exp" />
 			<exclude name="**/*.jar" />
+            <zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="build.xml LICENSE.* README.txt" />
+            <zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="docs/**" />
+            <zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="lib/**" />
 			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="src/**" />
-			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="docs/**" />
 			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="jni/**" />
 			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="samples/**" />
 			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="unittest/**" />
 			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="vstudio/jacob.vcproj" />
-			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="lib/**" />
-			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="build.xml, README.txt" />
-			<zipfileset dir="${basedir}"     prefix="${generated.filename.zip}" includes="LICENSE.* ${generated.filename.version}" />
 		</zip>
 	</target>
 	

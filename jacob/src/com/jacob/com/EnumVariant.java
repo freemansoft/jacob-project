@@ -40,12 +40,13 @@ public class EnumVariant extends JacobObject implements
 	 */
 	public EnumVariant(Dispatch disp) {
 		int[] hres = new int[1];
+		// SF 3377279
+		// Added Dispatch.Method to the invoke flags to call _NewEnum. There are some
+		// non-conforming legacy implementations that expose _NewEnum as a method.
 		Variant evv = Dispatch.invokev(disp, DispatchIdentifier.DISPID_NEWENUM,
-				Dispatch.Get, new Variant[0], hres);
+ 				Dispatch.Get | Dispatch.Method, new Variant[0], hres);
 		if (evv.getvt() != Variant.VariantObject)
-			//
 			// The DISPID_NEWENUM did not result in a valid object
-			//
 			throw new ComFailException("Can't obtain EnumVARIANT");
 
 		EnumVariant tmp = evv.toEnumVariant();

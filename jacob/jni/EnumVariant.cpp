@@ -57,6 +57,14 @@ Java_com_jacob_com_EnumVariant_Next(JNIEnv* env, jobject _this, jobjectArray var
     return 0;
 
   VARIANT* sink = (VARIANT*)CoTaskMemAlloc(count * sizeof(VARIANT));
+  // SF 3377279
+  // Added initializing Variant used to retrieve the next value from IEnum
+  // because some implemenations call VariantClear on it before setting a new value
+  for (ULONG i = 0; i < count; ++i)
+  {
+    VariantInit(sink + i);
+  }
+
   ULONG fetchCount = 0;
 
   HRESULT hr = self->Next(count, sink, &fetchCount);

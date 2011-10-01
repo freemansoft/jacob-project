@@ -967,6 +967,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantNoParam
 {
   VARIANT *v = extractVariant(env, _this);
   if (v) {
+  	// SF 3377279 clear variable to fix leak
+    VariantClear(v);
     V_VT(v) = VT_ERROR;
     V_ERROR(v) = DISP_E_PARAMNOTFOUND;
   }

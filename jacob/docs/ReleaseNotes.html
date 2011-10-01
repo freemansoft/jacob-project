@@ -1,6 +1,67 @@
 <HTML>
 <BODY>
+
 <!--  ---------  -->
+
+<h2>JACOB 1.16</h2>
+<h3>What's New</h3>
+<ul>
+<li>
+    No new features
+</li>
+</ul>
+<h3>Tracked Changes</h3>
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" >
+  <tr>
+    <td colspan="2"><b>Bugs</b></td>
+  </tr> 
+  <tr> 
+    <td width="13%" valign="top">&nbsp;</td>
+    <td width="87%" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Patches</b></td>
+  </tr> 
+  <tr> 
+    <td width="13%" valign="top">3377279</td>
+    <td width="87%" valign="top">(M1)Fix possible exception. Added initializing Variant used to retrieve 
+        the next value from IEnum
+        because some implementations call VariantClear on it before setting a new value</td>
+  </tr> 
+  <tr> 
+    <td width="13%" valign="top">&nbsp;</td>
+    <td width="87%" valign="top">(M1)Isolate compilation of SafeArrayTest.java because it is UTF-16 and not UTF-8</td>
+  </tr> 
+  <tr> 
+    <td width="13%" valign="top">&nbsp;</td>
+    <td width="87%" valign="top">(M1)Changed windows version _WIN32_WINNT to 0x0500 to fix build with VS2010. (now 2000 or later)</td>
+  </tr> 
+  <tr> 
+    <td width="13%" valign="top">&nbsp;</td>
+    <td width="87%" valign="top">(M1)Fixed the leak in Java_com_jacob_com_Variant_putVariantNoParam</td>
+  </tr> 
+  <tr> 
+    <td width="13%" valign="top">&nbsp;</td>
+    <td width="87%" valign="top">(M1)Added Dispatch.Method to the invoke flags to call _NewEnum. 
+        There are some non-conforming legacy implementations that expose _NewEnum as a method.</td>
+  </tr>
+  <tr> 
+    <td width="13%" valign="top">&nbsp;</td>
+    <td width="87%" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Feature Requests</b></td>
+  </tr> 
+  <tr>
+  <tr>
+    <td width="13%" valign="top"></td>
+    <td width="87%" valign="top"></td>
+  </tr>
+  
+</table>
+
+<!--  ---------  -->
+
 <h2>JACOB 1.15</h2>
 <h3>What's New</h3>
 <ul>
@@ -18,30 +79,30 @@
   </tr> 
   <tr> 
     <td width="13%" valign="top">3065265</td>
-    <td width="87%" valign="top">Bit masking in Variant.getXXXRef() uses wrong mask allowing more than
+    <td width="87%" valign="top">(M4)Bit masking in Variant.getXXXRef() uses wrong mask allowing more than
     one type to be seen as the requested type.  Code that passed in the correct type always worked 
-    but invalid types were not always detected.(M4)</td>
+    but invalid types were not always detected.</td>
   </tr>
   <tr> 
     <td width="13%" valign="top">2935662</td>
-    <td width="87%" valign="top">Error handling code crashes because of uninitialized data in Dispatch.cpp
-        Check for NULL fails. pfnDeferredFillIn pointer is not initialized, but it's not NULL.(M4)</td>
+    <td width="87%" valign="top">(M4)Error handling code crashes because of uninitialized data in Dispatch.cpp
+        Check for NULL fails. pfnDeferredFillIn pointer is not initialized, but it's not NULL.</td>
   </tr>
   <tr>
     <td width="13%" valign="top">2819445</td>
-    <td width="87%" valign="top">SafeArray.fromLongArray fails when using VariantLongInt (M3)</td>
+    <td width="87%" valign="top">(M3)SafeArray.fromLongArray fails when using VariantLongInt</td>
   </tr>
   <tr>
     <td width="13%" valign="top">2847577</td>
-    <td width="87%" valign="top">SafeArray#setString(*) incorrectly handles unicode strings (M3)</td>
+    <td width="87%" valign="top">(M3) SafeArray#setString(*) incorrectly handles unicode strings</td>
   </tr>
   <tr> 
     <td width="13%" valign="top">2721937</td>
-    <td width="87%" valign="top">System.getProperties call caused security exception in applet. 
+    <td width="87%" valign="top">(M2)System.getProperties call caused security exception in applet. 
     	<i>com.jacob.includeAllClassesInROT</i> now acts as master switch for class/ROT control.
     	This change also has the side benefit that the PutInROT property is not 
     	checked on every object creation for users who run in the standard
-    	<i>all classes in ROT</i> mode. (M2)</td>
+    	<i>all classes in ROT</i> mode.</td>
   </tr>
   <tr> 
     <td width="13%" valign="top">&nbsp;</td>
@@ -52,11 +113,11 @@
   </tr> 
   <tr> 
     <td width="13%" valign="top">2762275 </td>
-    <td width="87%" valign="top">Support conversion of primitive arrays to Variant arrays. (M1)</td>
+    <td width="87%" valign="top">(M1)Support conversion of primitive arrays to Variant arrays.</td>
   </tr>
   <tr> 
     <td width="13%" valign="top">2171967 </td>
-    <td width="87%" valign="top">VariantUtils.populateVariant can cause VM crash with unrecognized type.(M1)</td>
+    <td width="87%" valign="top">(M1)VariantUtils.populateVariant can cause VM crash with unrecognized type.</td>
   </tr>
   <tr> 
     <td width="13%" valign="top">&nbsp;</td>
@@ -72,13 +133,13 @@
         file signing and file placement is required</td>
   <tr>
     <td width="13%" valign="top">2963102</td>
-    <td width="87%" valign="top">Convert API to use var args and remove the many overloaded Dispatch 
-        methods that each added one more parameter.(M4)</td>
+    <td width="87%" valign="top">(M4)Convert API to use var args and remove the many overloaded Dispatch 
+        methods that each added one more parameter.</td>
   </tr>
   <tr>
     <td width="13%" valign="top">2927058</td>
-    <td width="87%" valign="top">a hasExited() method that allows polling until a COM server is 
-        terminated and implemented this method in JACOB(M4)</td>
+    <td width="87%" valign="top">(M4)a hasExited() method that allows polling until a COM server is 
+        terminated and implemented this method in JACOB</td>
   </tr>
   <tr>
     <td width="13%" valign="top">&nbsp;</td>
