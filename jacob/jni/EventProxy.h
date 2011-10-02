@@ -50,7 +50,6 @@ private:
   JavaVM   *jvm;        // The java vm we are running
   void convertJavaVariant(VARIANT *java, VARIANT *com);
   void Connect(JNIEnv *env);
-  void Disconnect();
 public:
   // constuct with a global JNI ref to a sink object
   // to which we will delegate event callbacks
@@ -98,4 +97,7 @@ public:
   // These are the actual supported methods
   STDMETHODIMP GetIDsOfNames(REFIID, OLECHAR **, UINT, LCID , DISPID *);
   STDMETHODIMP Invoke(DISPID, REFIID, LCID, WORD , DISPPARAMS *, VARIANT *, EXCEPINFO *, UINT *);
+  // SF 3412922 make public to support cleanup from DispatchEvents
+  void Disconnect();
+
 };

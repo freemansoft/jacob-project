@@ -100,6 +100,8 @@ EventProxy::~EventProxy()
 
 void EventProxy::Disconnect() {
     if (connected) {
+        // insure we don't call Unadvise twice
+        connected = 0;
         pCP->Unadvise(dwEventCookie);
     }
 }

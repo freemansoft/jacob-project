@@ -153,6 +153,9 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchEvents_release
 {
   EventProxy *ep = extractProxy(env, _this);
   if (ep) {
+	// Disconnect must be called to reduce the ref count to the EventProxy otherwise
+	// the destructor will never be called (to actually do the disconnect)
+	ep->Disconnect(); // SF 3412922
   	// this is the line that blows up in IETest
     ep->Release();
     putProxy(env, _this, NULL);
