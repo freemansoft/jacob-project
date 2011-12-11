@@ -701,4 +701,17 @@ public class VariantTest extends BaseTestCase {
 			// yeah! can't get dispatch from boolean
 		}
 	}
+
+	/**
+	 * Verify SF 3435567 null and empty behavior change
+	 */
+	public void testGetNullString() {
+		Variant testVariant = new Variant();
+		testVariant.putNull();
+		assertNull(testVariant.getString());
+		testVariant.putEmpty();
+		assertNull(testVariant.getString());
+		testVariant.putString("dog");
+		assertEquals("dog", testVariant.getString());
+	}
 }

@@ -342,8 +342,15 @@ static wchar_t* CreateErrorMsgFromResult(HRESULT inResult)
     msg = (wchar_t*) ::LocalAlloc(LPTR, bufferLength);
     wcscpy_s(msg, bufferLength, message_text);
   }
+  // SF 3435567 add HRESULT to error message
+  size_t bufferLength = (wcslen(msg) + 100) * sizeof(wchar_t);
+  wchar_t* plus = (wchar_t*) ::LocalAlloc(LPTR, bufferLength);
+  // Had to force this to wide/unicode. We must be missing a macro or setting somewhere
+  wsprintfW(plus, L"%x / %s", inResult, msg);
 
-  return msg;
+  ::LocalFree(msg);
+
+  return plus;
 }
 
 static wchar_t* CreateErrorMsgFromInfo(HRESULT inResult, EXCEPINFO* ioInfo,

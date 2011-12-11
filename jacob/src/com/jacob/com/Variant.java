@@ -795,13 +795,17 @@ public class Variant extends JacobObject {
 
 	/**
 	 * 
-	 * @return string contents of the variant.
+	 * @return string contents of the variant, null if is of type null or empty
 	 * @throws IllegalStateException
 	 *             if this variant is not of type String
 	 */
 	public String getString() {
 		if (getvt() == Variant.VariantString) {
 			return getVariantString();
+		} else if (getvt() == Variant.VariantEmpty) {
+			return null;
+		} else if (getvt() == Variant.VariantNull) {
+			return null;
 		} else {
 			throw new IllegalStateException(
 					"getString() only legal on Variants of type VariantString, not "

@@ -95,6 +95,12 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_init
  */
 void zeroVariant(JNIEnv *env, jobject _this)
 {
+  // sf 3435567 Fix a memory leak (detected with Glowcode) in Variant.cpp/zeroVariant function
+  // does this code conflict with the function/method documentation now?
+  // note that a related fix was proposed in SF 1689061 in EventProxy.cpp but never accepted
+  VARIANT *v = extractVariant(env, _this);
+  delete v;
+
   jclass clazz = env->GetObjectClass(_this);
   jfieldID jf = env->GetFieldID(clazz, VARIANT_FLD, "I");
   env->SetIntField(_this, jf, (unsigned int)0);
@@ -632,12 +638,14 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantDispatch
 {
   VARIANT *v = extractVariant(env, _this);
   IDispatch *disp = extractDispatch(env, _that);
-  if (disp && v) {
+  if (v) {
     VariantClear(v); // whatever was there before
     V_VT(v) = VT_DISPATCH;
     V_DISPATCH(v) = disp;
     // I am handing the pointer to COM
-    disp->AddRef();
+    // SF 3435567 support null dispatch pointer
+    if( disp )
+      disp->AddRef();
   } else ThrowComFail(env, "putObject failed", -1);
 }
 

@@ -50,7 +50,10 @@ void EventProxy::Connect(JNIEnv *env) {
         connected = 1;
   } else {
         connected = 0;
-    ThrowComFail(env, "Advise failed", hr);
+        // SF 3435567 added debug info to advise failed message
+        char tmp[256];
+        sprintf_s( tmp, 256, "Advise failed with %x (CONNECT_E_ADVISELIMIT is %x)", (int)hr, (int)(CONNECT_E_ADVISELIMIT) );
+        ThrowComFail(env, tmp, hr);
   }
 }
 
@@ -240,6 +243,7 @@ STDMETHODIMP EventProxy::Invoke(DISPID dispID, REFIID riid,
 		VARIANT *com = &pDispParams->rgvarg[i];
 		convertJavaVariant(java, com);
 		// SF 1689061 change not accepted but put in as comment for later reminder
+		// note that a related fix has been submitted in SF 3435567 to do this in zeroVariant() method
 		//Java_com_jacob_com_Variant_release(env, arg);
 		zeroVariant(env, arg);
 		env->DeleteLocalRef(arg);
