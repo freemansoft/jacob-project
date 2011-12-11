@@ -50,7 +50,6 @@
 	<property name="application.title" 			value="JACOB : Java COM Bridge" />
 	<property name="application.vendor" 		value="http://jacob-project.sourceforge.net" />
 	<property name="src.java.mainpackage" 		value="com.jacob" />
-	<property name="java.class.main" 			value="com.jacob.com.Jacob" />
 	<property name="generated.filename.dll.x86" value="jacob-${version}-x86.dll" />
 	<property name="generated.filename.dll.x64" value="jacob-${version}-x64.dll" />
 	<property name="generated.filename.jar" 	value="jacob.jar" />
@@ -254,7 +253,6 @@
 			<include name="META-INF/${generated.filename.version}" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
-                <attribute name="Main-Class" value="${java.class.main}"/>
 				<section name="${src.java.mainpackage}">
 					<attribute name="Specification-Title" value="${application.title}" />
 					<attribute name="Specification-Vendor" value="${application.vendor}" />
