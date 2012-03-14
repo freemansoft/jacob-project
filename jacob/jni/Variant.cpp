@@ -67,7 +67,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_release
     }
     VariantClear(v);
     delete v;
-    env->SetIntField(_this, jf, (unsigned int)0);
+    env->SetLongField(_this, jf, 0ll);
   }
 }
 

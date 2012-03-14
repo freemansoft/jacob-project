@@ -190,7 +190,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_destroy
     jfieldID jf = env->GetFieldID(saClass, V_FLD, "J");
     VariantClear(v);
     delete v;
-    env->SetIntField(_this, jf, 0ll);
+    env->SetLongField(_this, jf, 0ll);
   }
 }
 
