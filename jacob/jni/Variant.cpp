@@ -37,8 +37,8 @@ extern "C"
 VARIANT *extractVariant(JNIEnv *env, jobject arg)
 {
   jclass argClass = env->GetObjectClass(arg);
-  jfieldID ajf = env->GetFieldID( argClass, VARIANT_FLD, "I");
-  jint anum = env->GetIntField(arg, ajf);
+  jfieldID ajf = env->GetFieldID( argClass, VARIANT_FLD, "J");
+  jlong anum = env->GetLongField(arg, ajf);
   VARIANT *v = (VARIANT *)anum;
   return v;
 }
@@ -47,7 +47,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_release
   (JNIEnv *env, jobject _this)
 {
   jclass clazz = env->GetObjectClass(_this);
-  jfieldID jf = env->GetFieldID(clazz, VARIANT_FLD, "I");
+  jfieldID jf = env->GetFieldID(clazz, VARIANT_FLD, "J");
   VARIANT *v = extractVariant(env, _this);
   if (v) {
     // fix byref leak 
@@ -75,10 +75,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_init
   (JNIEnv *env, jobject _this)
 {
   jclass clazz = env->GetObjectClass(_this);
-  jfieldID jf = env->GetFieldID( clazz, VARIANT_FLD, "I");
+  jfieldID jf = env->GetFieldID( clazz, VARIANT_FLD, "J");
   VARIANT *v = new VARIANT();
   VariantInit(v);
-  env->SetIntField(_this, jf, (unsigned int)v);
+  env->SetLongField(_this, jf, (jlong)v);
 }
 
 
@@ -102,8 +102,8 @@ void zeroVariant(JNIEnv *env, jobject _this)
   delete v;
 
   jclass clazz = env->GetObjectClass(_this);
-  jfieldID jf = env->GetFieldID(clazz, VARIANT_FLD, "I");
-  env->SetIntField(_this, jf, (unsigned int)0);
+  jfieldID jf = env->GetFieldID(clazz, VARIANT_FLD, "J");
+  env->SetLongField(_this, jf, 0ll);
 }
 
 
@@ -177,7 +177,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toEnumVariant
     }
     jclass autoClass = env->FindClass("com/jacob/com/EnumVariant");
     jmethodID autoCons =
-    env->GetMethodID(autoClass, "<init>", "(I)V");
+    env->GetMethodID(autoClass, "<init>", "(J)V");
     // construct an Unknown object to return
     IUnknown *unk = V_UNKNOWN(v);
     IEnumVARIANT *ie;
@@ -406,7 +406,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Variant_toVariantDispatch
     }
     jclass autoClass = env->FindClass("com/jacob/com/Dispatch");
     jmethodID autoCons =
-    env->GetMethodID(autoClass, "<init>", "(I)V");
+    env->GetMethodID(autoClass, "<init>", "(J)V");
     // construct a Dispatch object to return
     IDispatch *disp = V_DISPATCH(v);
     // I am copying the pointer to java
@@ -1099,7 +1099,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Variant_putVariantVariant
  * Added 1.12 pre 6
  * 
  * */
-JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
+JNIEXPORT jlong JNICALL Java_com_jacob_com_Variant_getVariantVariant
 (JNIEnv *env, jobject _this) 
 {
 
@@ -1117,7 +1117,7 @@ JNIEXPORT jint JNICALL Java_com_jacob_com_Variant_getVariantVariant
 	// enclosed.  This relies on the java layer to zero out its ref to this
 	// enclosed variant before the gc can come along and free the memory out from
 	// under this enclosing variant.
-	return (unsigned int)refVar;
+	return (jlong)refVar;
   }
 
   return NULL;

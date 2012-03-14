@@ -35,8 +35,8 @@ extern "C"
 IStream *extractStream(JNIEnv *env, jobject arg)
 {
   jclass argClass = env->GetObjectClass(arg);
-  jfieldID ajf = env->GetFieldID( argClass, "m_pStream", "I");
-  jint anum = env->GetIntField(arg, ajf);
+  jfieldID ajf = env->GetFieldID( argClass, "m_pStream", "J");
+  jlong anum = env->GetLongField(arg, ajf);
   IStream *v = (IStream *)anum;
   return v;
 }
@@ -56,8 +56,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchProxy_MarshalIntoStream
   }
   // store the stream pointer on the object
   jclass argClass = env->GetObjectClass(_this);
-  jfieldID ajf = env->GetFieldID( argClass, "m_pStream", "I");
-  env->SetIntField(_this, ajf, (jint)ps);
+  jfieldID ajf = env->GetFieldID( argClass, "m_pStream", "J");
+  env->SetLongField(_this, ajf, (jlong)ps);
 }
 
 JNIEXPORT jobject JNICALL Java_com_jacob_com_DispatchProxy_MarshalFromStream
@@ -74,8 +74,8 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_DispatchProxy_MarshalFromStream
   // zero out the stream pointer on the object
   // since the stream can only be read once
   jclass argClass = env->GetObjectClass(_this);
-  jfieldID ajf = env->GetFieldID( argClass, "m_pStream", "I");
-  env->SetIntField(_this, ajf, (unsigned int)0);
+  jfieldID ajf = env->GetFieldID( argClass, "m_pStream", "J");
+  env->SetLongField(_this, ajf, 0ll);
 
   if (!SUCCEEDED(hr))
   {
@@ -83,7 +83,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_DispatchProxy_MarshalFromStream
     return NULL;
   }
   jclass autoClass = env->FindClass("com/jacob/com/Dispatch");
-  jmethodID autoCons = env->GetMethodID(autoClass, "<init>", "(I)V");
+  jmethodID autoCons = env->GetMethodID(autoClass, "<init>", "(J)V");
   // construct a Dispatch object to return
   // I am copying the pointer to java
   if (pD) pD->AddRef();
@@ -98,8 +98,8 @@ JNIEXPORT void JNICALL Java_com_jacob_com_DispatchProxy_release
   if (ps) {
     ps->Release();
 		jclass argClass = env->GetObjectClass(_this);
-    jfieldID ajf = env->GetFieldID( argClass, "m_pStream", "I");
-    env->SetIntField(_this, ajf, (unsigned int)0);
+    jfieldID ajf = env->GetFieldID( argClass, "m_pStream", "J");
+    env->SetLongField(_this, ajf, 0ll);
   }
 }
 

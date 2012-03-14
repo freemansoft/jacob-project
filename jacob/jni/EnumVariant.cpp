@@ -40,8 +40,8 @@ IEnumVARIANT* extractEnumVariant(JNIEnv* env, jobject arg)
 {
   jfieldID FID_pIEnumVARIANT = 0;
   jclass clazz = env->GetObjectClass(arg);
-  FID_pIEnumVARIANT = env->GetFieldID(clazz, "m_pIEnumVARIANT", "I");
-  return (IEnumVARIANT*)env->GetIntField(arg, FID_pIEnumVARIANT);
+  FID_pIEnumVARIANT = env->GetFieldID(clazz, "m_pIEnumVARIANT", "J");
+  return (IEnumVARIANT*)env->GetLongField(arg, FID_pIEnumVARIANT);
 }
 
 JNIEXPORT jint JNICALL
@@ -107,8 +107,8 @@ Java_com_jacob_com_EnumVariant_release(JNIEnv* env, jobject _this)
     self->Release();
     jfieldID FID_pIEnumVARIANT = 0;
     jclass clazz = env->GetObjectClass(_this);
-    FID_pIEnumVARIANT = env->GetFieldID(clazz, "m_pIEnumVARIANT", "I");
-    env->SetIntField(_this, FID_pIEnumVARIANT, (unsigned int)0);
+    FID_pIEnumVARIANT = env->GetFieldID(clazz, "m_pIEnumVARIANT", "J");
+    env->SetLongField(_this, FID_pIEnumVARIANT, 0ll);
   }
 }
 

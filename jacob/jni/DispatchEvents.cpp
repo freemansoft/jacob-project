@@ -44,8 +44,8 @@ BOOL MapEventIIDs(IID*, CComBSTR **, DISPID **, int *, LPOLESTR , LPTYPEINFO );
 EventProxy *extractProxy(JNIEnv *env, jobject arg)
 {
   jclass argClass = env->GetObjectClass(arg);
-  jfieldID ajf = env->GetFieldID( argClass, PROXY_FLD, "I");
-  jint anum = env->GetIntField(arg, ajf);
+  jfieldID ajf = env->GetFieldID( argClass, PROXY_FLD, "J");
+  jlong anum = env->GetLongField(arg, ajf);
   EventProxy *v = (EventProxy *)anum;
   return v;
 }
@@ -56,9 +56,9 @@ EventProxy *extractProxy(JNIEnv *env, jobject arg)
 void putProxy(JNIEnv *env, jobject arg, EventProxy *ep)
 {
   jclass argClass = env->GetObjectClass(arg);
-  jfieldID ajf = env->GetFieldID( argClass, PROXY_FLD, "I");
-  jint anum = env->GetIntField(arg, ajf);
-  env->SetIntField(arg, ajf, (jint)ep);
+  jfieldID ajf = env->GetFieldID( argClass, PROXY_FLD, "J");
+  jlong anum = env->GetLongField(arg, ajf);
+  env->SetLongField(arg, ajf, (jlong)ep);
 }
 
 

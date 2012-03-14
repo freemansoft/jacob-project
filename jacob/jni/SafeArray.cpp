@@ -60,8 +60,8 @@ static SAFEARRAY *makeArray(int vt, int nDims, long *lb, long *cel)
 VARIANT *extractWrapper(JNIEnv *env, jobject arg)
 {
   jclass argClass = env->GetObjectClass(arg);
-  jfieldID vf = env->GetFieldID( argClass, V_FLD, "I");
-  jint vnum = env->GetIntField(arg, vf);
+  jfieldID vf = env->GetFieldID( argClass, V_FLD, "J");
+  jlong vnum = env->GetLongField(arg, vf);
   if (vnum != NULL)
   {
       // if vnum is not NULL, then there is a Variant wrapper present
@@ -111,8 +111,8 @@ void setSA(JNIEnv *env, jobject arg, SAFEARRAY *sa, int copy)
     // construct a variant to hold the result
     // the variant then owns the array
     jclass argClass = env->GetObjectClass(arg);
-    jfieldID ajf = env->GetFieldID( argClass, V_FLD, "I");
-    jint vnum = env->GetIntField(arg, ajf);
+    jfieldID ajf = env->GetFieldID( argClass, V_FLD, "J");
+    jlong vnum = env->GetLongField(arg, ajf);
     VARIANT *v = (VARIANT *)vnum;
     if (v == NULL)
     {
@@ -123,7 +123,7 @@ void setSA(JNIEnv *env, jobject arg, SAFEARRAY *sa, int copy)
     SafeArrayGetVartype(sa, &vt);
     V_VT(v) = VT_ARRAY | vt;
     V_ARRAY(v) = copy ? copySA(sa) : sa;
-    env->SetIntField(arg, ajf, (unsigned int)v);
+    env->SetLongField(arg, ajf, (jlong)v);
 }
 
 /*
@@ -187,10 +187,10 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_destroy
     // case free the variant, but if there is just a raw SA, then
     // the owning variant will free it
     jclass saClass = env->GetObjectClass(_this);
-    jfieldID jf = env->GetFieldID(saClass, V_FLD, "I");
+    jfieldID jf = env->GetFieldID(saClass, V_FLD, "J");
     VariantClear(v);
     delete v;
-    env->SetIntField(_this, jf, (unsigned int)0);
+    env->SetIntField(_this, jf, 0ll);
   }
 }
 

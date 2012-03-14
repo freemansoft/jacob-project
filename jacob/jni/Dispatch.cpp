@@ -37,8 +37,8 @@ extern "C"
 IDispatch *extractDispatch(JNIEnv *env, jobject arg)
 {
   jclass argClass = env->GetObjectClass(arg);
-  jfieldID ajf = env->GetFieldID( argClass, DISP_FLD, "I");
-  jint anum = env->GetIntField(arg, ajf);
+  jfieldID ajf = env->GetFieldID( argClass, DISP_FLD, "J");
+  jlong anum = env->GetLongField(arg, ajf);
   IDispatch *v = (IDispatch *)anum;
   return v;
 }
@@ -76,7 +76,7 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
   }
 
   jclass autoClass = env->FindClass("com/jacob/com/Dispatch");
-  jmethodID autoCons = env->GetMethodID(autoClass, "<init>", "(I)V");
+  jmethodID autoCons = env->GetMethodID(autoClass, "<init>", "(J)V");
   // construct a Dispatch object to return
   // I am copying the pointer to java
   // jacob-msg 1817 - SF 1053871 :  QueryInterface already called AddRef!!
@@ -94,7 +94,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_createInstanceNative
   (JNIEnv *env, jobject _this, jstring _progid)
 {
   jclass clazz = env->GetObjectClass(_this);
-  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "I");
+  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "J");
 
   // if we used env->GetStringChars() would that let us drop the conversion?
   const char *progid = env->GetStringUTFChars(_progid, NULL);
@@ -150,7 +150,7 @@ doDisp:
   }
   // CoCreateInstance called AddRef
   punk->Release();
-  env->SetIntField(_this, jf, (unsigned int)pIDispatch);
+  env->SetLongField(_this, jf, (jlong)pIDispatch);
 }
 
 /**
@@ -161,7 +161,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstanceNative
   (JNIEnv *env, jobject _this, jstring _progid)
 {
   jclass clazz = env->GetObjectClass(_this);
-  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "I");
+  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "J");
 
   // if we used env->GetStringChars() would that let us drop the conversion?
   const char *progid = env->GetStringUTFChars(_progid, NULL);
@@ -193,7 +193,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_getActiveInstanceNative
   }
   // GetActiveObject called AddRef
   punk->Release();
-  env->SetIntField(_this, jf, (unsigned int)pIDispatch);
+  env->SetLongField(_this, jf, (jlong)pIDispatch);
 }
 
 /**
@@ -204,7 +204,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_coCreateInstanceNative
   (JNIEnv *env, jobject _this, jstring _progid)
 {
   jclass clazz = env->GetObjectClass(_this);
-  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "I");
+  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "J");
 
   // if we used env->GetStringChars() would that let us drop the conversion?
   const char *progid = env->GetStringUTFChars(_progid, NULL);
@@ -235,7 +235,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_coCreateInstanceNative
   }
   // CoCreateInstance called AddRef
   punk->Release();
-  env->SetIntField(_this, jf, (unsigned int)pIDispatch);
+  env->SetLongField(_this, jf, (jlong)pIDispatch);
 }
 
 /**
@@ -245,13 +245,13 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_release
   (JNIEnv *env, jobject _this)
 {
   jclass clazz = env->GetObjectClass(_this);
-  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "I");
-  jint num = env->GetIntField(_this, jf);
+  jfieldID jf = env->GetFieldID( clazz, DISP_FLD, "J");
+  jlong num = env->GetLongField(_this, jf);
 
   IDispatch *disp = (IDispatch *)num;
   if (disp) {
     disp->Release();
-    env->SetIntField(_this, jf, (unsigned int)0);
+    env->SetIntField(_this, jf, 0ll);
   }
 }
 

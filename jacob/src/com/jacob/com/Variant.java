@@ -161,7 +161,7 @@ public class Variant extends JacobObject {
 	/**
 	 * Pointer to MS struct.
 	 */
-	int m_pVariant = 0;
+	long m_pVariant = 0;
 
 	/**
 	 * public constructor, initializes and sets type to VariantEmpty
@@ -846,7 +846,7 @@ public class Variant extends JacobObject {
 				JacobObject.debug("About to call getVariantVariant()");
 			}
 			Variant enclosedVariant = new Variant();
-			int enclosedVariantMemory = getVariantVariant();
+			long enclosedVariantMemory = getVariantVariant();
 			enclosedVariant.m_pVariant = enclosedVariantMemory;
 			Object enclosedVariantAsJava = enclosedVariant.toJavaObject();
 			// zero out the reference to the underlying windows memory so that
@@ -1020,7 +1020,7 @@ public class Variant extends JacobObject {
 	 * 
 	 * @return Variant one of the VT_Variant types
 	 */
-	private native int getVariantVariant();
+	private native long getVariantVariant();
 
 	/**
 	 * Reports the type of the underlying Variant object

@@ -25,13 +25,14 @@ package com.jacob.com;
  */
 public class EnumVariant extends JacobObject implements
 		java.util.Enumeration<Variant> {
-	private int m_pIEnumVARIANT;
+	/** pointer to windows memory */
+	private long m_pIEnumVARIANT;
 
 	private final Variant[] m_recBuf = new Variant[1];
 
 	// this only gets called from JNI
 	//
-	protected EnumVariant(int pIEnumVARIANT) {
+	protected EnumVariant(long pIEnumVARIANT) {
 		m_pIEnumVARIANT = pIEnumVARIANT;
 	}
 
@@ -41,10 +42,12 @@ public class EnumVariant extends JacobObject implements
 	public EnumVariant(Dispatch disp) {
 		int[] hres = new int[1];
 		// SF 3377279
-		// Added Dispatch.Method to the invoke flags to call _NewEnum. There are some
-		// non-conforming legacy implementations that expose _NewEnum as a method.
+		// Added Dispatch.Method to the invoke flags to call _NewEnum. There are
+		// some
+		// non-conforming legacy implementations that expose _NewEnum as a
+		// method.
 		Variant evv = Dispatch.invokev(disp, DispatchIdentifier.DISPID_NEWENUM,
- 				Dispatch.Get | Dispatch.Method, new Variant[0], hres);
+				Dispatch.Get | Dispatch.Method, new Variant[0], hres);
 		if (evv.getvt() != Variant.VariantObject)
 			// The DISPID_NEWENUM did not result in a valid object
 			throw new ComFailException("Can't obtain EnumVARIANT");
@@ -132,6 +135,7 @@ public class EnumVariant extends JacobObject implements
 	 * 
 	 * @see java.lang.Object#finalize()
 	 */
+	@Override
 	protected void finalize() {
 		safeRelease();
 	}
@@ -141,6 +145,7 @@ public class EnumVariant extends JacobObject implements
 	 * 
 	 * @see com.jacob.com.JacobObject#safeRelease()
 	 */
+	@Override
 	public void safeRelease() {
 		super.safeRelease();
 		if (m_pIEnumVARIANT != 0) {

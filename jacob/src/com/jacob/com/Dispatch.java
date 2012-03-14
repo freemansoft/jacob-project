@@ -50,7 +50,7 @@ public class Dispatch extends JacobObject {
 	 * directly to get the dispatch id. You really can't rename it or make it
 	 * private
 	 */
-	public int m_pDispatch;
+	public long m_pDispatch;
 
 	/** program Id passed in by ActiveX components in their constructor */
 	private String programId = null;
@@ -198,7 +198,7 @@ public class Dispatch extends JacobObject {
 	 * 
 	 * @param pDisp
 	 */
-	protected Dispatch(int pDisp) {
+	protected Dispatch(long pDisp) {
 		m_pDispatch = pDisp;
 	}
 
