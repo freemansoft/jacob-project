@@ -44,7 +44,7 @@ public class DispatchEvents extends JacobObject {
 	 * pointer to an MS data struct. The COM layer knows the name of this
 	 * variable and puts the windows memory pointer here.
 	 */
-	int m_pConnPtProxy = 0;
+	long m_pConnPtProxy = 0;
 
 	/**
 	 * the wrapper for the event sink. This object is the one that will be sent
@@ -118,8 +118,8 @@ public class DispatchEvents extends JacobObject {
 	 *            Dispatch object who's MS app will generate callbacks
 	 * @param eventSink
 	 *            Java object that wants to receive the events
-	 * @param progId ,
-	 *            mandatory if the typelib is specified
+	 * @param progId
+	 *            , mandatory if the typelib is specified
 	 * @param typeLib
 	 *            The location of the typelib to use
 	 */
@@ -190,6 +190,7 @@ public class DispatchEvents extends JacobObject {
 	 * 
 	 * @see java.lang.Object#finalize()
 	 */
+	@Override
 	protected void finalize() {
 		safeRelease();
 	}
@@ -199,6 +200,7 @@ public class DispatchEvents extends JacobObject {
 	 * 
 	 * @see com.jacob.com.JacobObject#safeRelease()
 	 */
+	@Override
 	public void safeRelease() {
 		if (mInvocationProxy != null) {
 			mInvocationProxy.setTarget(null);
