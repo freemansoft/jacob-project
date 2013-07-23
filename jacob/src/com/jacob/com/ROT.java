@@ -75,11 +75,9 @@ public abstract class ROT {
 	protected static String PUT_IN_ROT_SUFFIX = ".PutInROT";
 
 	/**
-	 * A hash table where each element is another HashMap that represents a
-	 * thread. Each thread HashMap contains the com objects created in that
-	 * thread
+	 * ThreadLocal with the com objects created in that thread
 	 */
-	private static HashMap<String, Map<JacobObject, String>> rot = new HashMap<String, Map<JacobObject, String>>();
+	private static ThreadLocal<Map<JacobObject, String>> rot = new ThreadLocal<Map<JacobObject, String>>();
 
 	/**
 	 * adds a new thread storage area to rot
@@ -87,13 +85,8 @@ public abstract class ROT {
 	 * @return Map corresponding to the thread that this call was made in
 	 */
 	protected synchronized static Map<JacobObject, String> addThread() {
-		// should use the id here instead of the name because the name can be
-		// changed
-		String t_name = Thread.currentThread().getName();
-		if (rot.containsKey(t_name)) {
-			// nothing to do
-		} else {
-			Map<JacobObject, String> tab = null;
+		Map<JacobObject, String> tab = rot.get();
+		if (tab == null) {
 			if (JacobObject.isDebugEnabled()) {
 				JacobObject.debug("ROT: Automatic GC flag == "
 						+ USE_AUTOMATIC_GARBAGE_COLLECTION);
@@ -103,9 +96,9 @@ public abstract class ROT {
 			} else {
 				tab = new WeakHashMap<JacobObject, String>();
 			}
-			rot.put(t_name, tab);
+			rot.set(tab);
 		}
-		return getThreadObjects(false);
+		return tab;
 	}
 
 	/**
@@ -118,11 +111,11 @@ public abstract class ROT {
 	 */
 	protected synchronized static Map<JacobObject, String> getThreadObjects(
 			boolean createIfDoesNotExist) {
-		String t_name = Thread.currentThread().getName();
-		if (!rot.containsKey(t_name) && createIfDoesNotExist) {
-			addThread();
+		Map<JacobObject, String> tab = rot.get();
+		if (tab == null && createIfDoesNotExist) {
+			tab = addThread();
 		}
-		return rot.get(t_name);
+		return tab;
 	}
 
 	/**
@@ -133,11 +126,6 @@ public abstract class ROT {
 	 * tear down and provides a synchronous way of releasing memory
 	 */
 	protected static void clearObjects() {
-		if (JacobObject.isDebugEnabled()) {
-			JacobObject.debug("ROT: " + rot.keySet().size()
-					+ " thread tables exist");
-		}
-
 		Map<JacobObject, String> tab = getThreadObjects(false);
 		if (tab != null) {
 			if (JacobObject.isDebugEnabled()) {
@@ -189,8 +177,7 @@ public abstract class ROT {
 	 * Removes the map from the rot that is associated with the current thread.
 	 */
 	private synchronized static void removeThread() {
-		// should this see if it exists first?
-		rot.remove(Thread.currentThread().getName());
+		rot.remove();
 	}
 
 	/**

@@ -41,7 +41,7 @@ using the example build.xml as a template.
 <li>	Microsoft Visual C++ 8.0 and it's included library. (to C:\ProgramFiles in my case)
 <li>	Eclipse 3.4 or later from www.eclipse.org as the Java IDE.  
 <li>	Eclipse 3.4 or later with the C/C++ plugin can be used for C coding in place of VC++ IDE.
-<li>	Java JDK 1.5 (1.15 was built using 1.5.0.16)
+<li>	Java JDK 1.5 (1.17 was built using 1.5.0.22)
 </ul>
 <p>
 <p>
@@ -57,6 +57,8 @@ using the example build.xml as a template.
 <TR><TD>1.13</TD><TD>VC 2005</TD><TD>1.4.2</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
 <TR><TD>1.14</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
 <TR><TD>1.15</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.7.0</TD><TD>3.4</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.17</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.8.4 Eclipse Embedded</TD><TD>4.3</TD><TD>32 and 64 bit</TD></TR>
+
 </table>
 Microsoft Visual C++ 8.0 supports 64 bit builds. so no additional tools are required.
 
@@ -111,6 +113,10 @@ Open up the project properties and go to the "Java Build Path" properties panel.
 
 <h2> Troubleshooting Build Problems </h2>
 <ul>
+<li>
+Symptom: Build Failed can't find javac compiler.  JAVA_HOME does not point to the JDK
+Problem: The java library is pointed at a jre insted of the jdk.  Update Project..Properties..Java Build Path to point at the JDK
+</li>
 <li>
 Symptom: The jar is built but no dlls were compiled.<p>
 Problem: compilation_tools.properties does not have the correct location for the Microsoft tools.<p>
