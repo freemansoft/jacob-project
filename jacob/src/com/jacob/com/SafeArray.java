@@ -90,19 +90,25 @@ public class SafeArray extends JacobObject {
 	}
 
 	/**
-	 * convert a string to a VT_UI1 array
+	 * Convert a string to a VT_UI1 array.
 	 * 
 	 * @param s
 	 *            source string
 	 */
 	public SafeArray(String s) {
-		char[] ca = s.toCharArray();
-		init(Variant.VariantByte, new int[] { 0 }, new int[] { ca.length });
-		fromCharArray(ca);
+		// https://sourceforge.net/p/jacob-project/patches/41/
+		/*
+		 * char[] ca = s.toCharArray(); init(Variant.VariantByte, new int[] { 0
+		 * }, new int[] { ca.length }); fromCharArray(ca);
+		 */
+		byte[] ba = s.getBytes();
+		init(Variant.VariantByte, new int[] { 0 }, new int[] { ba.length });
+		fromByteArray(ba);
+
 	}
 
 	/**
-	 * convert a VT_UI1 array to string
+	 * Convert a VT_UI1 array to string. Is this broken for unicode?
 	 * 
 	 * @return variant byte as a string
 	 */
@@ -110,8 +116,12 @@ public class SafeArray extends JacobObject {
 		if (getvt() != Variant.VariantByte) {
 			return null;
 		}
-		char ja[] = toCharArray();
-		return new String(ja);
+		// https://sourceforge.net/p/jacob-project/patches/41/
+		/*
+		 * char ja[] = toCharArray(); return new String(ja);
+		 */
+		byte ba[] = toByteArray();
+		return new String(ba);
 	}
 
 	@Override

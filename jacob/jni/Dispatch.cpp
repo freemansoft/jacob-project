@@ -251,7 +251,7 @@ JNIEXPORT void JNICALL Java_com_jacob_com_Dispatch_release
   IDispatch *disp = (IDispatch *)num;
   if (disp) {
     disp->Release();
-    env->SetIntField(_this, jf, 0ll);
+    env->SetLongField(_this, jf, 0ll);
   }
 }
 

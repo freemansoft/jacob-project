@@ -109,7 +109,7 @@ public class Variant extends JacobObject {
 
 	// VT_I1 = 16
 
-	/** variant's type is byte VT_UI1 */
+	/** variant's type is byte VT_UI1 This is an UNSIGNED byte */
 	public static final short VariantByte = 17;
 
 	// VT_UI2 = 18
