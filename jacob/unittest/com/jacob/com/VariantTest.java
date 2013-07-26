@@ -254,6 +254,32 @@ public class VariantTest extends BaseTestCase {
 	}
 
 	/**
+	 * Exercise ToString special cases
+	 */
+	public void testToStringEmptyValues() {
+		Variant v;
+		// create an empty variant
+		v = new Variant();
+		// check date per
+		v.changeType(Variant.VariantDate);
+		assertEquals("null", v.toString());
+		v.putDate(new Date());
+		assertNotNull(v.toString());
+		assertFalse("null".equals(v.toString()));
+
+		v.changeType(Variant.VariantInt);
+		v.putInt(1);
+
+		assertEquals("1", v.toString());
+		v.changeType(Variant.VariantEmpty);
+		assertEquals("null", v.toString());
+		v.changeType(Variant.VariantNull);
+		assertEquals("null", v.toString());
+		v.changeType(Variant.VariantError);
+		assertEquals("null", v.toString());
+	}
+
+	/**
 	 * Verify that booleans can be released. Part of the suite that checks all
 	 * types.
 	 */
@@ -465,12 +491,12 @@ public class VariantTest extends BaseTestCase {
 					new BigDecimal(i), v.getDecimal());
 			v.changeType(Variant.VariantFloat);
 			// now see if a float conversion would work
-			assertEquals("conversion to float failed " + i, new Float(i), v
-					.getFloat());
+			assertEquals("conversion to float failed " + i, new Float(i),
+					v.getFloat());
 			// now convert it back to decimal for reassignment
 			v.changeType(Variant.VariantDecimal);
-			assertTrue("Failed conversion of type back to Decimal " + i, v
-					.getvt() == Variant.VariantDecimal);
+			assertTrue("Failed conversion of type back to Decimal " + i,
+					v.getvt() == Variant.VariantDecimal);
 		}
 
 	}
@@ -545,9 +571,10 @@ public class VariantTest extends BaseTestCase {
 						.unscaledValue().toString(16) + " scale=: "
 				+ modifiedDecimal.scale());
 		System.out.println("integer piece after rounding with scale 30 is "
-				+ VariantUtilities.roundToMSDecimal(
-						modifiedDecimal.setScale(30)).unscaledValue().toString(
-						16) + " scale=: " + modifiedDecimal.scale());
+				+ VariantUtilities
+						.roundToMSDecimal(modifiedDecimal.setScale(30))
+						.unscaledValue().toString(16) + " scale=: "
+				+ modifiedDecimal.scale());
 		try {
 			testVariant.putDecimal(VariantUtilities
 					.roundToMSDecimal(modifiedDecimal.setScale(30)));
@@ -568,9 +595,10 @@ public class VariantTest extends BaseTestCase {
 						.unscaledValue().toString(16) + " scale=: "
 				+ modifiedDecimal.scale());
 		System.out.println("integer piece after rounding with scale 30 is "
-				+ VariantUtilities.roundToMSDecimal(
-						modifiedDecimal.setScale(30)).unscaledValue().toString(
-						16) + " scale=: " + modifiedDecimal.scale());
+				+ VariantUtilities
+						.roundToMSDecimal(modifiedDecimal.setScale(30))
+						.unscaledValue().toString(16) + " scale=: "
+				+ modifiedDecimal.scale());
 		testVariant.putDecimal(VariantUtilities
 				.roundToMSDecimal(modifiedDecimal.setScale(30)));
 		System.out.println("");

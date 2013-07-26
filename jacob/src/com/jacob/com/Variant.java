@@ -2161,6 +2161,8 @@ public class Variant extends JacobObject {
 	 * <li>"null" if VariantEmpty,
 	 * <li>"null" if VariantError
 	 * <li>"null" if VariantNull
+	 * <li>"null" if Variant type didn't convert. This can happen for date
+	 * conversions where the returned value was 0.
 	 * <li>the value if we know how to describe one of that type
 	 * <li>three question marks if can't convert
 	 * 
@@ -2186,7 +2188,11 @@ public class Variant extends JacobObject {
 		try {
 			Object foo = toJavaObject();
 			// rely on java objects to do the right thing
-			return foo.toString();
+			if (foo == null) {
+				return "null";
+			} else {
+				return foo.toString();
+			}
 		} catch (NotImplementedException nie) {
 			// some types do not generate a good description yet
 			return "Description not available for type: " + getvt();
