@@ -37,7 +37,6 @@
 #define _WIN32_WINNT 0x0500
 #endif
 //#define _ATL_APARTMENT_THREADED
-#include <windows.h>
 #include <comdef.h>
 #include <comutil.h>
 #include <atlbase.h>

@@ -14,7 +14,7 @@ The main steps for getting a working Jacob build are:
 <h1> Repository Organization </h1>
 <p>
 Unpack the source archive zip file or check the files out of CVS into d:\jacob 
-or some other familiar place.  Source Java and JNI files are located in seperate
+or some other familiar place.  Source Java and JNI files are located in separate
 packages from the unit tests and the samples.
 <p>
 <ul>
@@ -33,34 +33,36 @@ The Servlet examples that required j2ee libraries to compile have temporarily
 been removed.
 <p>
 <H1>Development Environment</h1>
-The simplest build environment includes MS Visual C++ 8.0 (Studio 2005), 
-Eclipse 3.3 with the C/C++ module and JDK 1.5.
+The simplest build environment includes MS Visual Studio 10.0 (Studio 2010), 
+Eclipse 3.3 with the C/C++ module and JDK 1.6.
 In that situation, you would just create the <i>compilation_tools.properties</i>
-using the example build.xml as a template.  
+using the example at the top of build.xml as a template.  
 <UL>
-<li>	Microsoft Visual C++ 8.0 and it's included library. (to C:\ProgramFiles in my case)
+<li>	Microsoft Visual Studio 10.0 and it's included library. (to C:\ProgramFiles (X86) in my case)
 <li>	Eclipse 3.4 or later from www.eclipse.org as the Java IDE.  
 <li>	Eclipse 3.4 or later with the C/C++ plugin can be used for C coding in place of VC++ IDE.
-<li>	Java JDK 1.5 (1.17 was built using 1.5.0.22)
+<li>	Java JDK 1.6 (1.18 was built using 1.7.0_31)
 </ul>
 <p>
 <p>
 <table>
 <TR><TD>Release</TD><TD>C Version</TD><TD>Java Version</TD><TD>ANT Version</TD><TD>Eclipse Version Used</TD><TD>generated DLLs</TD></TR>
 <TR><TD>up to 1.6</TD><TD>VC 98 (6.0)</TD><TD>?</TD><td>MAKE</td><TD>?</TD><TD>32 bit</TD></TR>
-<TR><TD>1.7</TD><TD>VC 98 (6.0)</TD><TD>1.4</TD><td>1.?</td><TD>?</TD><TD>32 bit</TD></TR>
-<TR><TD>1.8</TD><TD>VC 98 (6.0)</TD><TD>1.4</TD><td>1.?</td><TD>?</TD><TD>32 bit</TD></TR>
-<TR><TD>1.9</TD><TD>VC 98 (6.0)</TD><TD>1.4</TD><td>1.?</td><TD>?</TD><TD>32 bit</TD></TR>
-<TR><TD>1.10</TD><TD>VC 98 (6.0)</TD><TD>1.4</TD><td>1.?</td><TD>3.??</TD><TD>32 bit</TD></TR>
-<TR><TD>1.11</TD><TD>VC 98 (6.0) & 2003 64bit libs</TD><TD>1.4.?</TD><td>1.6.?</td><TD>3.2.1</TD><TD>32 and 64 bit</TD></TR>
-<TR><TD>1.12</TD><TD>VC 98 (6.0) & 2003 64bit libs</TD><TD>1.4.2</TD><td>1.6.5</td><TD>3.2.2</TD><TD>32 and 64 bit</TD></TR>
-<TR><TD>1.13</TD><TD>VC 2005</TD><TD>1.4.2</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
-<TR><TD>1.14</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
-<TR><TD>1.15</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.7.0</TD><TD>3.4</TD><TD>32 and 64 bit</TD></TR>
-<TR><TD>1.17</TD><TD>VC 2005</TD><TD>1.5.0</TD><TD>1.8.4 Eclipse Embedded</TD><TD>4.3</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.7</TD><TD>VC 98 (6.0)</TD><TD>1.4 (48)</TD><td>1.?</td><TD>?</TD><TD>32 bit</TD></TR>
+<TR><TD>1.8</TD><TD>VC 98 (6.0)</TD><TD>1.4 (48)</TD><td>1.?</td><TD>?</TD><TD>32 bit</TD></TR>
+<TR><TD>1.9</TD><TD>VC 98 (6.0)</TD><TD>1.4 (48)</TD><td>1.?</td><TD>?</TD><TD>32 bit</TD></TR>
+<TR><TD>1.10</TD><TD>VC 98 (6.0)</TD><TD>1.4 (48)</TD><td>1.?</td><TD>3.??</TD><TD>32 bit</TD></TR>
+<TR><TD>1.11</TD><TD>VC 98 (6.0) & 2003 64bit libs</TD><TD>1.4.? (48)</TD><td>1.6.?</td><TD>3.2.1</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.12</TD><TD>VC 98 (6.0) & 2003 64bit libs</TD><TD>1.4.2 (48)</TD><td>1.6.5</td><TD>3.2.2</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.13</TD><TD>VC 2005 (8)</TD><TD>1.4.2 (48)</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.14</TD><TD>VC 2005 (8)</TD><TD>1.5.0 (49)</TD><TD>1.7.0</TD><TD>3.3</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.15</TD><TD>VC 2005 (8)</TD><TD>1.5.0 (49)</TD><TD>1.7.0</TD><TD>3.4</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.17</TD><TD>VC 2005 (8)</TD><TD>1.5.0 (49)</TD><TD>1.8.4 Eclipse Embedded</TD><TD>4.3</TD><TD>32 and 64 bit</TD></TR>
+<TR><TD>1.18</TD><TD>VS 2010 (10) Windows SDK VS2010 (7.0A)</TD><TD>1.6.0 (50)</TD><TD>1.8.4 Eclipse Embedded</TD><TD>4.3</TD><TD>32 and 64 bit</TD></TR>
 
 </table>
-Microsoft Visual C++ 8.0 supports 64 bit builds. so no additional tools are required.
+Microsoft Visual Studio 10 supports 64 bit builds. so no additional tools are required.<BR>
+Microsoft changed the location of the windows sdk (formerly known as platform sdk) after VC 8.0. https://en.wikipedia.org/wiki/Microsoft_Windows_SDK
 
 <p>
 
@@ -84,7 +86,7 @@ There are two main ant targets.
 	<li>	create the dll
 	<li>	create jar file
 	</UL>
-<li>"package" runs the above listed steps and then
+<li>"packageRelease" runs the above listed steps and then
  
 	<UL>
 	<LI>builds the javadoc 

@@ -37,6 +37,8 @@ public class ExcelEventTest extends BaseTestCase {
 		typeLibLocation = "C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE";
 		// office 2007
 		typeLibLocation = "C:\\Program Files\\Microsoft Office\\OFFICE12\\EXCEL.EXE";
+		// office 2013 322 bit
+		typeLibLocation = "C:\\Program Files (x86)\\Microsoft Office\\Office14\\EXCEL.EXE";
 
 		// Grab The Component.
 		ActiveXComponent axc = new ActiveXComponent(excelApplicationProgramId);
@@ -50,9 +52,9 @@ public class ExcelEventTest extends BaseTestCase {
 			Dispatch workbooks = axc.getPropertyAsComponent("Workbooks");
 			Dispatch workbook = Dispatch.get(workbooks, "Add").toDispatch();
 			Dispatch sheet = Dispatch.get(workbook, "ActiveSheet").toDispatch();
-			System.out.println("Workbook: "+workbook);
-			System.out.println("Sheet: "+sheet);
-			if (typeLibLocation.contains("OFFICE11")){
+			System.out.println("Workbook: " + workbook);
+			System.out.println("Sheet: " + sheet);
+			if (typeLibLocation.contains("OFFICE11")) {
 				// office 2007 throws crashes the VM
 				System.out.println("Hooking up sheet listener");
 				hookupListener(sheet, excelSheetProgramId, typeLibLocation);
@@ -112,7 +114,8 @@ public class ExcelEventTest extends BaseTestCase {
 					.println("No exception thrown but no dispatch returned for Excel events");
 		} else {
 			// Yea!
-			System.out.println("Successfully attached listener to " + programId);
+			System.out
+					.println("Successfully attached listener to " + programId);
 
 		}
 	}
@@ -138,6 +141,7 @@ public class ExcelEventTest extends BaseTestCase {
 		 * Override the invoke method to log all the events so that we don't
 		 * have to implement all of the specific events.
 		 */
+		@Override
 		public Variant invoke(String methodName, Variant targetParameter[]) {
 			System.out.println("Received event from " + listenerPrefix + ": "
 					+ methodName);

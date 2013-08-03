@@ -3,23 +3,24 @@
     Ant build file for JACOB. 
 
     Created Feb 4, 2005 1:23:05 PM as part of migration from ANT
-    Last Modified March 24, 2007                                                  
+    Last Modified September 2 2013                                                  
      
-    Tested on Eclipse 3.3 with the Europa C++ plugins, Ant 1.7 and MS Visual C++ 8 (2005)
+    Tested on Eclipse 3.3 with the Europa C++ plugins, Ant 1.8 and MS Visual C++ 10 (2010)
     Eclipse users are pretty lucky because the whole project 
     can be built inside eclipse due to their built in ANT support.
      
-    The COM portion of this build requires MS Visual C++ 8.0. (2005)
+    The COM portion of this build requires MS Visual C++ 1.0. (2010)
     The build proces defined in this build.xml file does not support
                                                                                  
 	YOU MUST define a file named compilation_tools.properties!
-	The file for MS Visual C++ 8.0 building 32 and 64 bit (installed on windows 7 64 bit)
+	The file for MS Visual C++ 10 building 32 and 64 bit (installed on windows 7 64 bit)
 	(releases up to 1.11 only supported 32 bit builds) looks something like:
 	  
-        JDK=c\:\\Program Files (x86)\\java\\jdk1.5.0_22
-        MSDEV_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 8\\VC
-        MSDEV_IDE_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 8\\Common7\\IDE
-        version=1.17-M2
+    JDK=c\:\\Program Files (x86)\\java\\jdk1.6.0_31
+    MSDEV_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\VC
+    MSDEV_IDE_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Common7\\IDE
+    MSDEV_PLATFORM_DIR=c\:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.0A
+    version=1.18-M1
             
 	DO NOT check compilation_tools.properties into source control as the 
 	values are specific to YOUR environment.
@@ -40,6 +41,7 @@
 	<property name="JDK" value="JDK not set in compilation_tools properties file"/>
 	<!-- MSDEV_DIR is a required parameter so set to a message if its not set -->
 	<property name="MSDEV_DIR" value="MSDEV_DIR not set in compilation_tools properties file"/>
+    <property name="MSDEV_PLATFORM_DIR" value="MSDEV_PLATFORM_DIR not set in compilation_tools properties file"/>
 	<echo message="executing with MSDEV_DIR=${MSDEV_DIR}" />
 
 	
@@ -79,22 +81,22 @@
 	
 	<property name="compiler.x86"            value="${MSDEV_DIR}\bin\cl.exe" />
 	<property name="linker.x86"              value="${MSDEV_DIR}\bin\link.exe" />
-	<property name="manifestool.x86"         value="${MSDEV_DIR}\bin\mt.exe" />
+	<property name="manifestool.x86"         value="${MSDEV_PLATFORM_DIR}\bin\mt.exe" />
 	<property name="include.x86"             value="${MSDEV_DIR}\include" />
-	<property name="include.x86.platformSDK" value="${MSDEV_DIR}\PlatformSDK\Include" />
+	<property name="include.x86.platformSDK" value="${MSDEV_PLATFORM_DIR}\Include" />
 	<property name="include.x86.atl"         value="${MSDEV_DIR}\atlmfc\include" />
 	<property name="library.x86"             value="${MSDEV_DIR}\lib" />
-	<property name="library.x86.platformSDK" value="${MSDEV_DIR}\PlatformSDK\lib" />
+	<property name="library.x86.platformSDK" value="${MSDEV_PLATFORM_DIR}\lib" />
 	<property name="library.x86.atl"         value="${MSDEV_DIR}\atlmfc\lib" />
 	
 	<!-- You have to love the beautiful asymetry of the MS world -->
 	<!-- The platform SDK comes with 64 bit tools but not 32 bit tools -->
 	<property name="compiler.x64" 			 value="${MSDEV_DIR}\bin\x86_amd64\cl.exe" />
 	<property name="linker.x64"   			 value="${MSDEV_DIR}\bin\x86_amd64\link.exe" />
-	<property name="manifesttool.x64"		 value="${MSDEV_DIR}\bin\x86_amd64\mt.exe" />
+	<property name="manifesttool.x64"		 value="${MSDEV_PLATFORM_DIR}\bin\x64\mt.exe" />
 	<property name="include.x64"  			 value="${MSDEV_DIR}\include" />
 	<property name="library.x64"  		     value="${MSDEV_DIR}\lib\amd64" />
-	<property name="library.x64.platformSDK" value="${MSDEV_DIR}\PlatformSDK\lib\amd64" />
+	<property name="library.x64.platformSDK" value="${MSDEV_PLATFORM_DIR}\lib\x64" />
 	<property name="library.x64.atl"  		 value="${MSDEV_DIR}\atlmfc\lib\amd64" />
 
 
