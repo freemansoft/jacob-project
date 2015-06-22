@@ -6,7 +6,13 @@
 <h3>What's New</h3>
 <ul>
 <li>
-    Built with Java 1.6 and Visual Studio 2010
+    (M2) Built with Java 1.6 and Visual Studio 2013 Microsoft Platform SDK V7.1A (introduced with VS2012)instead of v7.0A (vs2010)
+    Targeting SDK V7.1 with USING_V110_SDK71"  http://en.wikipedia.org/wiki/Microsoft_Windows_SDK
+</li><li> 
+    (M2) Temporarily using AMD64 compiler instead of x86_amd64 because of installation issues on dev machine.  
+    Should generate same output even though dll files are different sizes between M1 and M2. http://msdn.microsoft.com/en-us/library/x4d2c09s.aspx
+</li><li>    
+    (M2) Dropped support for XP
 </li>
 </ul>
 <h3>Tracked Changes</h3>
@@ -15,12 +21,20 @@
     <td colspan="2"><b>Bugs</b></td>
   </tr> 
   <tr> 
+    <td width="13%" valign="top">119 (new numbers)</td>
+    <td width="87%" valign="top"> Attribute lacking in MANIFEST.MF required since Java 1.7u45</td>
+  </tr>
+  <tr> 
     <td width="13%" valign="top">&nbsp;</td>
     <td width="87%" valign="top">&nbsp;</td>
   </tr>
   <tr>
     <td colspan="2"><b>Patches</b></td>
   </tr> 
+  <tr> 
+    <td width="13%" valign="top">42 (new numbers)</td>
+    <td width="87%" valign="top"> Mapping of names to dispIDs implemented</td>
+  </tr>
   <tr> 
     <td width="13%" valign="top">&nbsp;</td>
     <td width="87%" valign="top">&nbsp;</td>

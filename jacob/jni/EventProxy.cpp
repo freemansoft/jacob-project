@@ -125,10 +125,30 @@ STDMETHODIMP EventProxy::QueryInterface(REFIID rid, void **ppv)
 
 // This should never get called - the event source fires events
 // by dispid's, not by name
+// But however sometimes it is called, so do the mapping as defined
+// by the API Patch #42 provided by abp-futura
 STDMETHODIMP EventProxy::GetIDsOfNames(REFIID riid,
     OLECHAR **rgszNames, UINT cNames, LCID lcid, DISPID *rgDispID)
 {
-  return E_UNEXPECTED;
+  HRESULT result = S_OK;
+  for (UINT n = 0; n < cNames; n++) {
+    rgDispID[n] = DISPID_UNKNOWN;
+    USES_CONVERSION;
+    const char *current = W2A((OLECHAR *) rgszNames[n]);
+    // map name to dispID
+    for(int i=0; i<MethNum; i++)
+    {
+      const char *found = W2A((OLECHAR *) MethName[i]);
+      if (strcmp(current, found) == 0) {
+        rgDispID[n] = MethID[i];
+      }
+    }
+    if (rgDispID[n] == DISPID_UNKNOWN) {
+      result = DISP_E_UNKNOWNNAME;
+    }
+  }
+
+  return result;
 }
 
 // The actual callback from the connection point arrives here
