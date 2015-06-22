@@ -3,24 +3,26 @@
     Ant build file for JACOB. 
 
     Created Feb 4, 2005 1:23:05 PM as part of migration from ANT
-    Last Modified September 2 2013                                                  
+    Last Modified June 21, 2015                                                  
      
-    Tested on Eclipse 3.3 with the Europa C++ plugins, Ant 1.8 and MS Visual C++ 10 (2010)
+    Tested on Eclipse 4.3 with the C++ plugins, Ant 1.8 and MS Visual C++ 12 (2013)
     Eclipse users are pretty lucky because the whole project 
     can be built inside eclipse due to their built in ANT support.
      
-    The COM portion of this build requires MS Visual C++ 1.0. (2010)
+    The COM portion of this build requires MS Visual C++ Widnows SDK 7.1A
     The build proces defined in this build.xml file does not support
                                                                                  
 	YOU MUST define a file named compilation_tools.properties!
 	The file for MS Visual C++ 10 building 32 and 64 bit (installed on windows 7 64 bit)
 	(releases up to 1.11 only supported 32 bit builds) looks something like:
+	
+	MSDEV_PLATFORM_DIR must have an include directory in it.  With VS2013
 	  
-    JDK=c\:\\Program Files (x86)\\java\\jdk1.6.0_31
-    MSDEV_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\VC
-    MSDEV_IDE_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Common7\\IDE
-    MSDEV_PLATFORM_DIR=c\:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.0A
-    version=1.18-M1
+    JDK=c\:\\Program Files (x86)\\java\\jdk1.6.0_37
+    MSDEV_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC
+    MSDEV_IDE_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\Common7\\IDE
+    MSDEV_PLATFORM_DIR=c\:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A
+    version=1.18-M3
             
 	DO NOT check compilation_tools.properties into source control as the 
 	values are specific to YOUR environment.
@@ -91,8 +93,12 @@
 	
 	<!-- You have to love the beautiful asymetry of the MS world -->
 	<!-- The platform SDK comes with 64 bit tools but not 32 bit tools -->
+	<!-- when compiling on windows 8 on 64 bit machine with VS2013, these paths no longer worked
 	<property name="compiler.x64" 			 value="${MSDEV_DIR}\bin\x86_amd64\cl.exe" />
 	<property name="linker.x64"   			 value="${MSDEV_DIR}\bin\x86_amd64\link.exe" />
+	-->
+    <property name="compiler.x64"            value="${MSDEV_DIR}\bin\amd64\cl.exe" />
+    <property name="linker.x64"              value="${MSDEV_DIR}\bin\amd64\link.exe" />
 	<property name="manifesttool.x64"		 value="${MSDEV_PLATFORM_DIR}\bin\x64\mt.exe" />
 	<property name="include.x64"  			 value="${MSDEV_DIR}\include" />
 	<property name="library.x64"  		     value="${MSDEV_DIR}\lib\amd64" />
@@ -120,7 +126,7 @@
 		<entry key="build.iteration" type="int" operation="+" value="1" pattern="00" />
 		<entry key="build.date" type="date" value="now" operation="=" pattern="dd-MMMM-yyyy HH:mm:ss" />
 	</propertyfile>
-	<property file="${generated.filename.version}" />
+	<property file="${release.dir.java.meta.inf}/${generated.filename.version}" />
 
 	<!-- ======================================================================
 			32 bit X86 can only be built on 32 bit because of a JDK library issue.
@@ -214,23 +220,27 @@
 		<echo>Building Jacob classes in ${release.dir.java}</echo>
 		<javac srcdir="${src.java.mainroot}" 
 			destdir="${release.dir.java}" 
-			listfiles="true" debug="on" source="1.5" />
+			listfiles="true" debug="on" source="1.5" 
+			includeantruntime="false" />
 		<echo>Building sample classes in ${release.dir.java}</echo>
 		<javac srcdir="${src.java.samples}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}"
-			listfiles="true" debug="on" source="1.5" />
+			listfiles="true" debug="on" source="1.5" 
+			includeantruntime="false" />
 		<echo>Building Jacob test classes in ${release.dir.java} using junit jar ${junit.jar}</echo>
 		<javac srcdir="${src.java.unittest}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}:${junit.jar}"
+			excludes="com/jacob/test/safearray/SafeArrayBasicTest.java"
 			listfiles="true" debug="on" source="1.5"
-			excludes="com/jacob/test/safearray/SafeArrayBasicTest.java"/>
+			includeantruntime="false" />
 		<javac srcdir="${src.java.unittest}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}:${junit.jar}"
-			listfiles="true" debug="on" source="1.5"
 			includes="com/jacob/test/safearray/SafeArrayBasicTest.java"
+			listfiles="true" debug="on" source="1.5"
+			includeantruntime="false"
 			encoding="UTF-16"/>
 	</target>
 	<!-- ======================================================================
@@ -260,6 +270,10 @@
 					<attribute name="Specification-Vendor" value="${application.vendor}" />
 					<attribute name="Implementation-Title" value="${application.title} Java libraries" />
 					<attribute name="Implementation-Version" value="${version} build ${build.iteration} on ${build.date}" />
+					<attribute name="Trusted-Library" value="true" />
+					<attribute name="Application-Name" value="Java-Windows Bridge" />
+					<attribute name="Permissions" value="all-permissions" />
+					<attribute name="Codebase" value="*" />
 				</section>
 			</manifest>
 		</jar>
@@ -281,6 +295,7 @@
 			<arg value="/D _WINDOWS"/>
 			<arg value="/D _USRDLL"/>
 			<arg value="/D _WINDLL" />
+            <arg value="/D_USING_V110_SDK71_" /> <!-- evil hack added when no VS2010 installed 5/2014 -->
 			<!-- create a multi threaded dll -->
 			<arg value="/MT"/>
 			<!-- raise the warning level from the default -->
@@ -313,6 +328,7 @@
 			<arg value="/D _WINDOWS"/>
 			<arg value="/D _USRDLL"/>
 			<arg value="/D _WINDLL" />
+            <arg value="/D_USING_V110_SDK71_" /> <!-- evil hack added when no VS2010 installed 5/2014 -->
 			<!-- create a multi threaded dll -->
 			<arg value="/MT"/>
 			<!-- raise the warning level from the default -->
@@ -340,17 +356,17 @@
 		64 bit target	Yes				Yes
 		 ================================================================== -->
 	<target name="makeDll.x86" depends="compile.x86" if="shouldBuild.x86">
-		<echo>Clean up the target folders and file, for safety</echo>
+		<echo>Clean up the (x86) target folders and file, for safety</echo>
 		<echo>Using ${library.x86}</echo>
 		<delete file="${release.file.x86.dll}" />
-		<echo>Creating ${release.file.x86.dll}</echo>
+		<echo>Linking to create ${release.file.x86.dll}</echo>
 		<exec executable="${linker.x86}" dir="${release.dir.x86.cpp}" failonerror="true">
 			<env key="Path" value="${MSDEV_IDE_DIR}"/>
 			<arg value="/nologo" />
 			<arg value="/MANIFEST" />
 			<arg value="/MANIFESTFILE:${release.dir.x86.cpp}/jacob.dll.manifest" />
 			<arg value="/dll" />
-			<arg value="/version:${version}" />
+            <!-- <arg value="/version:${version}" /> --><!-- VS2013 linker no longer accepts milestone suffixes -->
 			<arg value="/out:${release.file.x86.dll}" />
 			<arg value="/libpath:${library.x86}" />
 			<arg value="/libpath:${library.x86.platformSDK}" />
@@ -367,16 +383,16 @@
 	</target>
 	
 	<target name="makeDll.x64" depends="compile.x64" if="shouldBuild.x64">
-		<echo>Clean up the target folders and file, for safety</echo>
+		<echo>Clean up the (x64) target folders and file, for safety</echo>
 		<delete file="${release.file.x64.dll}" />
-		<echo>Creating {$release.file.x64.dll}</echo>
+		<echo>Linking to create {$release.file.x64.dll}</echo>
 		<exec executable="${linker.x64}" dir="${release.dir.x64.cpp}" failonerror="true">
 			<env key="Path" value="${MSDEV_IDE_DIR}"/>
 			<arg value="/nologo" />
 			<arg value="/MANIFEST" />
 			<arg value="/MANIFESTFILE:${release.dir.x64.cpp}/jacob.dll.manifest" />
 			<arg value="/dll" />
-			<arg value="/version:${version}" />
+            <!-- <arg value="/version:${version}" /> --><!-- VS2013 linker no longer accepts milestone suffixes -->
 			<arg value="/out:${release.file.x64.dll}" />
 			<arg value="/libpath:${library.x64}" />
 			<arg value="/libpath:${library.x64.platformSDK}" />
