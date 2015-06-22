@@ -56,7 +56,10 @@ public class JacobObject {
 	}
 
 	/**
-	 * When things go wrong, it is useful to be able to debug the ROT.
+	 * When things go wrong, it is useful to be able to debug the ROT. We stash
+	 * this in a static so the getProperty() call only happens once. This can
+	 * blow up with java.security.AccessControlException in a signed applet
+	 * https://sourceforge.net/p/jacob-project/bugs/116/
 	 */
 	private static final boolean DEBUG =
 	// true;
