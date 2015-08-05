@@ -535,6 +535,8 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_invokev
 	    buf = CreateErrorMsgFromInfo(hr, &excepInfo, nm);
 	    env->ReleaseStringUTFChars(name, nm);
     } else {
+    	//the dispid was passed in not the name.
+    	//make space for the id string
 		dispIdAsName = new char[256];
 		// get the id string
 		_itoa_s (dispID, dispIdAsName, 256,10);
