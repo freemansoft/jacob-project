@@ -331,21 +331,20 @@ create that many DispatchProxy objects. For more details please refer to the Don
     In most cases, if you need to make method calls from multiple threads, you can simply use MTA threads, and allow COM to create
     the components in the Main STA. You should only create your own STA's and DispatchProxy if you understand COM well enough
     to know when the MTA solution will fail or have other shortcomings.</li>
-    </ul>
-    There are 3 examples in the samples/test directory that demonstrate these cases:
-    <ul>
-      <li>ScriptTest.java - creates an STA for the ScriptControl component and runs all its method calls from that STA.</li>
-      <li>ScriptTest2.java - creates a separate STA thread, and makes method calls into the component from another thread using
-        DispatchProxy.
-      </li>
-      <li>ScriptTest3.java - creates a separate MTA thread, and makes method calls into the component from another MTA thread.
-        This is simpler than ScriptTest2 for most applications.</li>
-    </ul>
-    <h3>Default Threading Model</h3>
-    If you create a new thread, and don't call
-    <code>ComThread.InitSTA()</code> or
-    <code>ComThread.InitMTA()</code> on it, then the first time your java code creates a JacobObject, it will try to register itself with the ROT, and when
-    it sees that the current thread is not initialized, it will initialize it as MTA. This means that the code to do this
-    is no longer inside the native jni code - it is now in the
-    <code>com.jacob.com.ROT</code> class. For more details on the ROT, see the
-    <a href="JacobComLifetime.html">Object Lifetime</a> document.
+</ul>
+There are 3 examples in the samples/test directory that demonstrate these cases:
+<ul>
+  <li>ScriptTest.java - creates an STA for the ScriptControl component and runs all its method calls from that STA.</li>
+  <li>ScriptTest2.java - creates a separate STA thread, and makes method calls into the component from another thread using DispatchProxy.
+  </li>
+  <li>ScriptTest3.java - creates a separate MTA thread, and makes method calls into the component from another MTA thread. This
+    is simpler than ScriptTest2 for most applications.</li>
+</ul>
+<h3>Default Threading Model</h3>
+If you create a new thread, and don't call
+<code>ComThread.InitSTA()</code> or
+<code>ComThread.InitMTA()</code> on it, then the first time your java code creates a JacobObject, it will try to register itself with the ROT, and when it
+sees that the current thread is not initialized, it will initialize it as MTA. This means that the code to do this is no
+longer inside the native jni code - it is now in the
+<code>com.jacob.com.ROT</code> class. For more details on the ROT, see the
+<a href="JacobComLifetime.html">Object Lifetime</a> document.

@@ -6,6 +6,7 @@ This sample runs in Weblogic 5.1 as a servlet.
 2. Make sure the weblogic policy file allows native access. The easiest
    way is to replace the contents with this:
 
+```
 grant codeBase "file:d:/weblogic/-" {
   permission java.security.AllPermission;
 };
@@ -22,10 +23,13 @@ grant codeBase "file:${java.home}/lib/ext/-" {
 grant { 
   permission java.security.AllPermission;
 };
+```
 
 3. Add the servlet to the weblogic.properties file:
 
+```
 weblogic.httpd.register.JacobScript=JacobScript
+```
 
 4. Either add your CLASSPATH to weblogic.classpath in startWebLogic.cmd
    or copy the com directory into weblogic/myserver/servletclasses

@@ -22,16 +22,16 @@ the performace. You can run the test.java demo in the MS VM as well.
 
 The constructor of the wrapper is used to create an instance.
 For example, the user can write:
-
+```java
   Connection c = new Connection();
-
+```
 The code for the Connection constructor is shown here:
-
+```java
   public Connection()
   {
     super("ADODB.Connection");
   }
-
+```
 it simply delegates to the com.jacob.com.Dispatch constructor which
 takes a ProgID.
 
@@ -47,28 +47,32 @@ and copies over the IDispatch pointer. This is because I can't cast a
 java Dispatch object to a super class object.
 
 For example, the Command class has a method like this:
-
+```java
   public Connection getActiveConnection();
+```
 
 Ideally, I would like the wrapper code to say:
-
+```java
   public Connection getActiveConnection()
   {
     // this doesn't work
     return (Connection)Dispatch.get(this, "ActiveConnection").toDispatch());
   }
+```
 
 Thereby wrapping the returned Dispatch pointer in a Connection object.
 But, since I can't cast in this way, I use the following construct:
-
+```java
   public Connection getActiveConnection()
   {
     // this works
     return new Connection(Dispatch.get(this, "ActiveConnection").toDispatch());
   }
+```
 
 Which uses a special constructor inserted into the Connection class:
 
+```java
   /**
    * This constructor is used instead of a case operation to
    * turn a Dispatch object into a wider object - it must exist
@@ -82,6 +86,7 @@ Which uses a special constructor inserted into the Connection class:
     // null out the input's pointer
     d.m_pDispatch = 0;
   }
+```
 
 I have to add this constructor to any class whose instances I want
 to return from wrapped calls.
