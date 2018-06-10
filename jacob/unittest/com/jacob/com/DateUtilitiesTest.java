@@ -4,7 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
+
 
 /**
  * test cases that should exercise the new date conversion code
@@ -13,18 +15,19 @@ import junit.framework.TestCase;
  * utility test
  */
 
-public class DateUtilitiesTest extends TestCase {
+public class DateUtilitiesTest {
 
 	/**
 	 * verify date conversion to and from java
 	 */
+	@Test
 	public void testDateUtilities() {
 		Date now = new Date();
 		double comTimeForNow = DateUtilities.convertDateToWindowsTime(now);
 		Date retrievedNow = DateUtilities
 				.convertWindowsTimeToDate(comTimeForNow);
 		if (!now.equals(retrievedNow)) {
-			fail("DateUtilities Date Test failed " + now + " != "
+			Assert.fail("DateUtilities Date Test failed " + now + " != "
 					+ retrievedNow);
 		} else {
 			System.out.println("DateUtilities Date Test passed");
@@ -35,6 +38,7 @@ public class DateUtilitiesTest extends TestCase {
 	/**
 	 * Verify that the start of time is when we think it is.
 	 */
+	@Test
 	public void testBeginningOfWindowsTime() {
 		// this is a magic time in the windows world
 		Date beginningOfWindowsTime = new GregorianCalendar(1899,
@@ -42,7 +46,7 @@ public class DateUtilitiesTest extends TestCase {
 		double comTimeForBeginningOfWindowsTime = DateUtilities
 				.convertDateToWindowsTime(beginningOfWindowsTime);
 		if (comTimeForBeginningOfWindowsTime > 0) {
-			fail("Beginning of windows time test failed "
+			Assert.fail("Beginning of windows time test failed "
 					+ comTimeForBeginningOfWindowsTime);
 		} else {
 			System.out.println("Beginning of windows time test passed");

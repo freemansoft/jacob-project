@@ -36,14 +36,14 @@ public class IETestActiveXProxy extends BaseTestCase {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// doen with the sleep
+				// done with the sleep
 				// e.printStackTrace();
 			}
 		}
 		System.out
 				.println("Main: Thread quit, about to quit main sta in thread "
 						+ Thread.currentThread().getName());
-		// this line only does someting if startMainSTA() was called
+		// this line only does something if startMainSTA() was called
 		ComThread.quitMainSTA();
 		System.out.println("Main: did quit main sta in thread "
 				+ Thread.currentThread().getName());

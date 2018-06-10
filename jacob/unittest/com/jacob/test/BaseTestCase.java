@@ -23,10 +23,12 @@ import com.jacob.com.JacobObject;
  */
 public class BaseTestCase extends TestCase {
 
+	@SuppressWarnings("unused")
 	protected void setUp() {
 		// verify we have run with the dll in the lib path
 		try {
 			JacobObject foo = new JacobObject();
+			// this is impossible in theory
 			if (foo == null) {
 				fail("Failed basic sanity test: Can't create JacobObject (-D<java.library.path=xxx>)");
 			}

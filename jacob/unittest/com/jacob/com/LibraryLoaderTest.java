@@ -1,6 +1,7 @@
 package com.jacob.com;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests Library loader architecture methods This test requires that jacob.jar
@@ -16,7 +17,7 @@ import junit.framework.TestCase;
  * @author clay_shooter
  * 
  */
-public class LibraryLoaderTest extends TestCase {
+public class LibraryLoaderTest {
 
 	/**
 	 * verify the architecture switches work
@@ -31,6 +32,7 @@ public class LibraryLoaderTest extends TestCase {
 	/**
 	 * verify LibraryLoader.JACOB_DLL_NAME is read by LibraryLoader
 	 */
+	@Test
 	public void testJacobDllNameSystemProperty() {
 		// this test used to run in the reverse order but that caused
 		// ClassDefNotFound on DEBUG
@@ -42,7 +44,7 @@ public class LibraryLoaderTest extends TestCase {
 		try {
 			LibraryLoader.loadJacobLibrary();
 		} catch (UnsatisfiedLinkError ule) {
-			fail("Should have been able to load dll after setting "
+			Assert.fail("Should have been able to load dll after setting "
 					+ LibraryLoader.JACOB_DLL_NAME + " to "
 					+ LibraryLoader.getPreferredDLLName() + " "
 					+ ule.getMessage());
@@ -52,7 +54,7 @@ public class LibraryLoaderTest extends TestCase {
 		System.setProperty(LibraryLoader.JACOB_DLL_NAME, "xxx");
 		try {
 			LibraryLoader.loadJacobLibrary();
-			fail("Should have been unable to load dll with name xxx");
+			Assert.fail("Should have been unable to load dll with name xxx");
 		} catch (UnsatisfiedLinkError ule) {
 			System.out.println("correctly caught UnsatisfiedLinkError");
 			// yes, this is what we want to see when using a bad name
@@ -63,18 +65,19 @@ public class LibraryLoaderTest extends TestCase {
 	 * Verifies that we get a preferred DLL name with X86 since we really only
 	 * run the unit tests on 32 bit platforms.
 	 */
+	@Test
 	public void testDLLNameContainsProcessorAndVersion() {
 		System.out.println(LibraryLoader.getPreferredDLLName());
 		if (LibraryLoader.shouldLoad32Bit()) {
 			// we build the package and run the unit tests on X86
-			assertTrue(LibraryLoader.getPreferredDLLName()
+			Assert.assertTrue(LibraryLoader.getPreferredDLLName()
 					+ "should have contained "
 					+ LibraryLoader.DLL_NAME_MODIFIER_32_BIT, LibraryLoader
 					.getPreferredDLLName().contains(
 							LibraryLoader.DLL_NAME_MODIFIER_32_BIT));
 		} else {
 			// we build the package and run the unit tests on X86
-			assertTrue(LibraryLoader.getPreferredDLLName()
+			Assert.assertTrue(LibraryLoader.getPreferredDLLName()
 					+ "should have contained "
 					+ LibraryLoader.DLL_NAME_MODIFIER_64_BIT, LibraryLoader
 					.getPreferredDLLName().contains(
