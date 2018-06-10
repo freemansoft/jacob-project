@@ -51,14 +51,15 @@
 			Now build up all the derived properties
 		 ================================================================== -->
 
-	<property name="application.title" 			value="JACOB : Java COM Bridge" />
-	<property name="application.vendor" 		value="http://jacob-project.sourceforge.net" />
-	<property name="src.java.mainpackage" 		value="com.jacob" />
-	<property name="generated.filename.dll.x86" value="jacob-${version}-x86.dll" />
-	<property name="generated.filename.dll.x64" value="jacob-${version}-x64.dll" />
-	<property name="generated.filename.jar" 	value="jacob.jar" />
-	<property name="generated.filename.zip" 	value="jacob-${version}" />
-	<property name="generated.filename.version"	value="JacobVersion.properties" />
+	<property name="application.title"              value="JACOB : Java COM Bridge" />
+	<property name="application.vendor"             value="http://jacob-project.sourceforge.net" />
+	<property name="src.java.mainpackage"           value="com.jacob" />
+	<property name="src.java.mainpackage.manifest" 	value="com/jacob/" />
+	<property name="generated.filename.dll.x86"     value="jacob-${version}-x86.dll" />
+	<property name="generated.filename.dll.x64"     value="jacob-${version}-x64.dll" />
+	<property name="generated.filename.jar"         value="jacob.jar" />
+	<property name="generated.filename.zip"         value="jacob-${version}" />
+	<property name="generated.filename.version"     value="JacobVersion.properties" />
 	
 	<property name="junit.jar"         value="${basedir}/lib/junit-4.12.jar" />
 	<property name="hamcrest-core.jar" value="${basedir}/lib/hamcrest-core-1.3.jar" />
@@ -254,8 +255,8 @@
 				unless="jarUpToDate">
 		<echo>Removing old jars</echo>
 		<delete file="${release.file.jar}" />
-		<echo>Packaging java classes...</echo>		
-		<echo>Version File is ${release.dir.java.meta.inf}/${generated.filename.version}</echo>		
+		<echo>Packaging java classes from ${release.dir.java} ...</echo>		
+		<echo>Generated Version File is ${release.dir.java.meta.inf}/${generated.filename.version}</echo>		
 		<jar destfile="${release.file.jar}" basedir="${release.dir.java}" update="false">
 			<exclude name="**/CVS" />
 			<!-- exclude all unit tests (ending in Test) 
@@ -267,7 +268,7 @@
 			<include name="META-INF/${generated.filename.version}" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
-				<section name="${src.java.mainpackage}">
+				<section name="${src.java.mainpackage.manifest}">
 					<attribute name="Specification-Title" value="${application.title}" />
 					<attribute name="Specification-Vendor" value="${application.vendor}" />
 					<attribute name="Implementation-Title" value="${application.title} Java libraries" />
@@ -456,7 +457,6 @@
 		</zip>
 		<zip
 			destfile="${release.dir}/${generated.filename.zip}_src.zip">
-			<exclude name="**/CVS" />
 			<exclude name="**/*.obj" />
 			<exclude name="**/*.class" />
 			<exclude name="**/*.dll" />
