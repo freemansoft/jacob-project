@@ -18,11 +18,11 @@
 	
 	MSDEV_PLATFORM_DIR must have an include directory in it.  With VS2013
 	  
-    JDK=c\:\\Program Files (x86)\\java\\jdk1.6.0_37
+    JDK=c\:\\Program Files (x86)\\java\\jdk1.8.0_161
     MSDEV_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC
     MSDEV_IDE_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\Common7\\IDE
     MSDEV_PLATFORM_DIR=c\:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A
-    version=1.18-M3
+    version=1.19
             
 	DO NOT check compilation_tools.properties into source control as the 
 	values are specific to YOUR environment.
@@ -60,7 +60,7 @@
 	<property name="generated.filename.zip" 	value="jacob-${version}" />
 	<property name="generated.filename.version"	value="JacobVersion.properties" />
 	
-	<property name="junit.jar"         value="${basedir}/lib/junit3.8.1/junit.jar" />
+	<property name="junit.jar"         value="${basedir}/lib/junit-4.12.jar" />
 		
 	<property name="src.java.mainroot"    value="${basedir}/src" />
 	<property name="src.java.samples"  value="${basedir}/samples" />
@@ -220,26 +220,26 @@
 		<echo>Building Jacob classes in ${release.dir.java}</echo>
 		<javac srcdir="${src.java.mainroot}" 
 			destdir="${release.dir.java}" 
-			listfiles="true" debug="on" source="1.5" 
+			listfiles="true" debug="on"
 			includeantruntime="false" />
 		<echo>Building sample classes in ${release.dir.java}</echo>
 		<javac srcdir="${src.java.samples}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}"
-			listfiles="true" debug="on" source="1.5" 
+			listfiles="true" debug="on"
 			includeantruntime="false" />
 		<echo>Building Jacob test classes in ${release.dir.java} using junit jar ${junit.jar}</echo>
 		<javac srcdir="${src.java.unittest}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}:${junit.jar}"
 			excludes="com/jacob/test/safearray/SafeArrayBasicTest.java"
-			listfiles="true" debug="on" source="1.5"
+			listfiles="true" debug="on"
 			includeantruntime="false" />
 		<javac srcdir="${src.java.unittest}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}:${junit.jar}"
 			includes="com/jacob/test/safearray/SafeArrayBasicTest.java"
-			listfiles="true" debug="on" source="1.5"
+			listfiles="true" debug="on"
 			includeantruntime="false"
 			encoding="UTF-16"/>
 	</target>
@@ -479,7 +479,7 @@
 		 ================================================================== -->
 	<target name='test' depends='javaCompile' >
 		<junit 	printsummary="yes" 
-				haltonfailure="yes"  
+				haltonfailure="false"  
 				fork="true" 
 				dir="${release.dir.java}"
 			>

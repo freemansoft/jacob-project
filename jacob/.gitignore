@@ -16,3 +16,5 @@ foo.ser
 JacobVersion.properties
 .settings
 setenv.sh
+junit*properties
+~$*
