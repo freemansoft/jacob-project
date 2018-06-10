@@ -87,7 +87,8 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_DispatchProxy_MarshalFromStream
   // construct a Dispatch object to return
   // I am copying the pointer to java
   if (pD) pD->AddRef();
-  jobject newAuto = env->NewObject(autoClass, autoCons, pD);
+  // jacobproject/bug/132
+  jobject newAuto = env->NewObject(autoClass, autoCons, (jlong)(uintptr_t)pD);
   return newAuto;
 }
 

@@ -81,7 +81,8 @@ JNIEXPORT jobject JNICALL Java_com_jacob_com_Dispatch_QueryInterface
   // I am copying the pointer to java
   // jacob-msg 1817 - SF 1053871 :  QueryInterface already called AddRef!!
   //if (disp) disp->AddRef();
-  jobject newAuto = env->NewObject(autoClass, autoCons, disp);
+  // jacobproject/bug/132
+  jobject newAuto = env->NewObject(autoClass, autoCons, (jlong)(uintptr_t)disp);
   return newAuto;
 }
 
