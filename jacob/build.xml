@@ -61,8 +61,9 @@
 	<property name="generated.filename.version"	value="JacobVersion.properties" />
 	
 	<property name="junit.jar"         value="${basedir}/lib/junit-4.12.jar" />
+	<property name="hamcrest-core.jar" value="${basedir}/lib/hamcrest-core-1.3.jar" />
 		
-	<property name="src.java.mainroot"    value="${basedir}/src" />
+	<property name="src.java.mainroot" value="${basedir}/src" />
 	<property name="src.java.samples"  value="${basedir}/samples" />
 	<property name="src.java.unittest" value="${basedir}/unittest" />
 	<property name="src.cpp"           value="${basedir}/jni" />
@@ -235,6 +236,7 @@
 			excludes="com/jacob/test/safearray/SafeArrayBasicTest.java"
 			listfiles="true" debug="on"
 			includeantruntime="false" />
+		<!-- one test has different character encoding -->
 		<javac srcdir="${src.java.unittest}" 
 			destdir="${release.dir.java}" 
 			classpath="${release.dir.java}:${junit.jar}"
@@ -486,6 +488,7 @@
 			<sysproperty key="java.library.path" value="${release.dir.x86}" />
 			<classpath>
 				<pathelement location="${junit.jar}"/>
+				<pathelement location="${hamcrest-core.jar}"/>
 				<pathelement location="${release.dir.java}"/>
 				<pathelement path="${src.java.unittest}"/>
 			</classpath>
