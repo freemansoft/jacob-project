@@ -1,5 +1,22 @@
 JACOB (Java-COM bridge) is hosted on Sourceforge http://sourceforge.net/project/jacob-project
 
+## Latest Release ##
+
+See docs/ReleaseNotes.html for a full history
+
+JACOB 1.19
+### What's New
+* Upgraded from Java 6 to Java 8 compilation
+* Upgraded from junit 3.8.1 to 4.12
+* Migrated from CVS to GIT using sourceforge migration instructions https://sourceforge.net/p/forge/documentation/CVS/
+### Tracked Changes
+### Bugs
+* 132	32 bit ponters not convertd to 64 bit
+* 130	Name value incorrect in Mainfest.MF affecting tamper check
+### Patches
+* n/a	none
+### Feature Requests
+* n/a	none
 
 ## Documentation ##
 You can find additional information in the [docs](docs) folder
