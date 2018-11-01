@@ -1063,6 +1063,15 @@ public class SafeArray extends JacobObject {
 	public native void setVariant(int indices[], Variant v);
 
 	/**
+	 * get date from an single dimensional array
+	 *
+	 * @param sa_idx
+	 *            array index
+	 * @return date stored in array
+	 */
+	public native double getDate(int sa_idx);
+
+	/**
 	 * variant access
 	 * 
 	 * @param sa_idx
