@@ -2,7 +2,7 @@ JACOB (Java-COM bridge) is hosted on Sourceforge http://sourceforge.net/project/
 
 ## Latest Release ##
 
-See docs/ReleaseNotes.html for a full history
+See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 
 JACOB 1.19
 ### What's New
@@ -20,8 +20,8 @@ JACOB 1.19
 
 ## Documentation ##
 You can find additional information in the [docs](docs) folder
-* Information about what's new in this release can be found in [ReleaseNotes](docs/ReleaseNotes.html)
-* Instructions on building this project can be found in [BuildingJacobFromSource](docs/BuildingJacobFromSource.html)
+* Information about what's new in this release can be found in [ReleaseNotes](docs/ReleaseNotes.md)
+* Instructions on building this project can be found in [BuildingJacobFromSource](docs/BuildingJacobFromSource.md)
 Detailed instructions on creating a build configuration file are in build.xml
 
 ## Usage ## 

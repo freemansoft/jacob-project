@@ -1,0 +1,13 @@
+# COM Object Lifetime in JACOB
+
+## introduction
+
+JACOB Version 1.7 implements a new [Threading Model](JacobThreading.html) that is more compatible with COM apartments. There is also an incompatibility between the Java object lifetime model and that of COM objects. COM Objects live and die by their reference count, whereas Java objects are collected by the Garbage Collector (GC) based on algortihms that are hidden from the user.
+
+## COM Object Lifetime in JACOB Prior to Version 1.7
+
+In version 1.6 and earlier, JACOB objects which wrapped COM objects had `finalize()` methods that would call a native `release` method which would call a COM `Release`.This has many problems. For one thing, the GC may take a long time to kick in and resource consumption may grow. However, the more problematic issue is that finalizers are called from a separate thread, and, as was discussed in the [Threading Model](JacobThreading.html) document, this can result in COM errors if the object is running in an STA. Even if the object is running in an MTA, the finalizer may decide to run after we have terminated the thread that holds the component, in which case we would get fatal errors and crashes.
+
+## COM Object Lifetime in JACOB in Version 1.7
+
+In Version 1.7, all JACOB objects which wrap COM objects extend `com.jacob.com.JacobObject`. This object has some special code to register itself with a `com.jacob.com.ROT` object which represents a Running Object Table (ROT). This table maps a Thread to the set of JacobObjects created in that thread. Therefore, when you call `ComThread.Release()`, the ROT checks whether that thread has created any objects, and these objects are released by calling their native `release` method (which is public).This lifetime management method ties the lifecycle to the thread's lifecycle rather than the GC. The JacobObject's still have finalizers, but they will typically not perform the native `release` since that has already been called. The native `release` methods were written such that you can call them multiple times without worrying - since they zero out the native pointer when called the first time.If you choose to call `release` methods on your objects yourself, that is allowed. In that case, when the thread is released the release calls will be no-ops.It becomes important for you to call `ComThread.Release()` on any thread before you allow it to exit, otherwise you may get some random crashes later on in your code.
