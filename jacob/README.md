@@ -1,7 +1,19 @@
 JACOB (Java-COM bridge) is hosted on Sourceforge http://sourceforge.net/project/jacob-project
 
-## Latest Release ##
+## JACOB 1.20 (tentative)
+### What's New
+*   Upgraded from VS2015 to VS 2019
+### Tracked Changes
+| | |
+|-|-|
+|Bugs              | |
+|n/a               | none |
+|Patches           | |
+| n/a              |	none |
+| Feature Requests | |
+| 48               |Update to VS2019 Community and Windows 10 libs |
 
+## Latest Release ##
 See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 
 JACOB 1.19
@@ -10,13 +22,15 @@ JACOB 1.19
 * Upgraded from junit 3.8.1 to 4.12
 * Migrated from CVS to GIT using sourceforge migration instructions https://sourceforge.net/p/forge/documentation/CVS/
 ### Tracked Changes
-### Bugs
-* 132	32 bit ponters not convertd to 64 bit
-* 130	Name value incorrect in Mainfest.MF affecting tamper check
-### Patches
-* n/a	none
-### Feature Requests
-* n/a	none
+| | |
+|-|-|
+|Bugs              | |
+| 132	           | 32 bit ponters not convertd to 64 bit |
+| 130              | Name value incorrect in Mainfest.MF affecting tamper check|
+|Patches           | |
+| n/a              |	none |
+| Feature Requests | |
+| n/a              |	none |
 
 ## Documentation ##
 You can find additional information in the [docs](docs) folder

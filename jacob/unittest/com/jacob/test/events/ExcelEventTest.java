@@ -41,7 +41,9 @@ public class ExcelEventTest extends BaseTestCase {
 		typeLibLocation = "C:\\Program Files (x86)\\Microsoft Office\\Office14\\EXCEL.EXE";
 		// Office 2013 32
 		typeLibLocation = "C:\\Program Files (x86)\\Microsoft Office\\Office15\\EXCEL.EXE";
-
+		// Office 2019 32
+		typeLibLocation = "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\EXCEL.EXE";
+		
 		// Grab The Component.
 		ActiveXComponent axc = new ActiveXComponent(excelApplicationProgramId);
 		hookupListener(axc, excelApplicationProgramId, typeLibLocation);

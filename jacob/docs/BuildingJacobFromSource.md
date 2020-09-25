@@ -12,27 +12,31 @@ JACOB is built on windows machines using ANT, most commonly from inside of Eclip
 
 Unpack the source archive zip file or check the files out of CVS into d:\jacob or some other familiar place. Source Java and JNI files are located in separate packages from the unit tests and the samples.
 
-*   docs: documentation
-*   jni: c++ code
-*   lib: libraries needed to compile unit tests
-*   release: a directory built by the ant script where jacob is constructed
-*   samples: sample programs
-*   src: Jacob Java source files
-*   unittest: JUnit 4.12 unit test programs. Run from the test target in build.xml
-*   vstudio: some out of date VC++ project files
-*   bulid.xml: the ant build script. It can be run from inside Eclipse
+|||
+|-|-|
+|   docs      | documentation
+|   jni       | c++ code
+|   lib       | libraries needed to compile unit tests
+|   release   | a directory built by the ant script where jacob is constructed
+|   samples   | sample programs
+|   src       | Jacob Java source files
+|   unittest  | JUnit 4.12 unit test programs. Run from the test target in build.xml
+|   vstudio   | some out of date VC++ project files
+|   bulid.xml | the ant build script. It can be run from inside Eclipse
 
 The Servlet examples that required j2ee libraries to compile have temporarily been removed.
 
 # Development Environment
 
-The simplest build environment includes MS Visual Studio 13.0 (Studio 2013), Eclipse 4.7 with the C/C++ module and JDK 1.8. In that situation, you would just create the _compilation_tools.properties_ using the example at the top of build.xml as a template.
+The simplest build environment includes MS Visual Studio 16.0 (Studio 2019), Eclipse 2020.09 with the C/C++ module and JDK 1.8. In that situation, you would just create the _compilation_tools.properties_ using the example at the top of build.xml as a template.
 
-*   Microsoft Visual Studio 2013 and it's included library. (to C:\ProgramFiles (X86) in my case)
+*   Microsoft Visual Studio 2019 Community Edition. Installs to C:\ProgramFiles (X86) 
+    * MSVC 
+    * Windows 10 SDK
+    * C++ MFC CLI Modules - don't know which o fthese are needed
 *   Eclipse from www.eclipse.org as the Java IDE.
 *   Eclipse C/C++ plugin can be used for C coding in place of VC++ IDE.
 *   Java JDK 1.8 , latest available
-*   Install the V7.1A libraries available from https://www.microsoft.com/net/download/windows
 
 |||||||
 |--- |--- |--- |--- |--- |--- |
@@ -47,26 +51,28 @@ The simplest build environment includes MS Visual Studio 13.0 (Studio 2013), Ecl
 |1.13     |VC 2005 (8)                  |1.4.2 (48)  |1.7.0                  |3.3                 |32 and 64 bit|
 |1.14     |VC 2005 (8)                  |1.5.0 (49)  |1.7.0                  |3.3                 |32 and 64 bit|
 |1.15     |VC 2005 (8)                  |1.5.0 (49)  |1.7.0                  |3.4                 |32 and 64 bit|
-|1.17     |VC 2005 (8)                  |1.5.0 (49)  |1.8.4 Eclipse Embedded |4.3                 |32 and 64 bit|
-|1.18     |VS 2013 (12) Windows SDK 7.1A|1.6.0 (50)  |1.8.4 Eclipse Embedded |4.3                 |32 and 64 bit|
-|1.19     |VS 2013 (12) Windows SDK 7.1A|1.8.0 (52)  |1.10.1 Eclipse Embedded|4.7                 |32 and 64 bit|
+|1.17     |VC 2005 (8)                  |1.5.0 (49)  |1.8.4  Eclipse Embedded|4.3                 |32 and 64 bit|
+|1.18     |VS 2013 (12) Windows SDK 7.1A|1.6.0 (50)  |1.8.4  Eclipse Embedded|4.3                 |32 and 64 bit|
+|1.19     |VS 2013 (12) Windows SDK 7.1A|1.8.0 (52)  |1.10.1 Eclipse Provided|4.7                 |32 and 64 bit|
+|1.20     |VS 2019 (16) Windows SDK 10  |1.8.0 (52)  |1.10.8 Eclipse Provided|2020 09             |32 and 64 bit|
 
-Microsoft Visual Studio 13 supports 64 bit builds. so no additional tools are required.  
-Microsoft changed the location of the windows sdk (formerly known as platform sdk) after VC 8.0\. https://en.wikipedia.org/wiki/Microsoft_Windows_SDK
+Microsoft Visual Studio 2019 supports 64 bit builds. so no additional tools are required.  
 
 # Build Process
 
 The build process is based on ANT. You can run ANT from inside of eclipse or from the command line. Running from inside eclipse means you don't have any installation, pathing or configuration to do. You can just open the xml, select the target in the "Outline" pane, right mouse and then "run as ant" on the selected target.The ant process is driven off of a configuration file named `compilation_tools.properties` that describes the locations of the JDK and Microsoft C++ tools. The `build.xml` file in the root directory contains examples of the contents of this file. There are two main ant targets.
 
-*   "default" executes the following steps when using the default target.
+*   **ant default** executes the following steps when using the default target.
     *   Build the Java code
     *   Build the jni code
     *   create the dll
     *   create jar file
-*   "packageRelease" runs the above listed steps and then
+*   **ant packageRelease** runs the above listed steps and then
     *   builds the javadoc
     *   builds a source zip
     *   builds a binary zip with the javadoc
+*   **test** runs all the tests
+    *   One of the Excel unit tests is hard coded against Office 2019 32 bit. 
 
 # Eclipse Java IDE
 
@@ -100,9 +106,11 @@ Eclipse users have to do some minor tweaks to their project if they want to use 
 *   Symptom: Ant fails with the message `Could not create task or type of type: junit.`.  
     Problem: junit.jar must be copied from this project to the $ANT_HOME/lib directory.
 
+# Compilation_tools.properties
+See build.xml for a sample
 # Running Samples and Tests
 
-Samples and JUnit test programs can be found in the source jar or in CVS. The programs can be run from a bat file or from inside the Eclipse IDE. The java library path variable must be set to include the directory the jacob.dll is in. The simplest way to do that is to add it as a command line option. The following assume that your jacob development area is located in c:\dev\jacob:
+Samples and JUnit test programs can be found in the source jar or in sourceforge/git. The programs can be run from a bat file or from inside the Eclipse IDE. The java library path variable must be set to include the directory the jacob.dll is in. The simplest way to do that is to add it as a command line option. The following assume that your jacob development area is located in c:\dev\jacob:
 
 ```							
     -Djava.library.path=c:/dev/jacob/release/x86 
@@ -115,19 +123,18 @@ JUnit test programs can be individually run from inside eclipse or en-masse via 
 
 # Git Bash environment configuration
 
-Example environment configuration for windows machine as of 2018/05
+Example `setenv.sh` environment configuration for windows machine for a gitbash terminal as of 2020/09
 
 ```
-    JAVA_HOME="/c/Program Files (x86)/Java/jdk1.8.0_161"
-    #JAVA_HOME="/c/Program Files/Java/jdk1.8.0_161"
-    ANT_HOME=/c/dev/springsource-3.9.4-x64/sts-3.9.4.RELEASE/plugins/org.apache.ant_1.10.1.v20170504-0840
-    PATH=$ANT_HOME/bin:$JAVA_HOME/bin:$PATH
-    export PATH
-    export ANT_HOME
-    export JAVA_HOME
+JAVA_HOME="/c/Program Files/Amazon Corretto/jdk1.8.0_265"
+ANT_HOME="/c/Users/joe/.p2/pool/plugins/org.apache.ant_1.10.8.v20200515-1239"
+PATH=$ANT_HOME/bin:$JAVA_HOME/bin:$PATH
+export PATH
+export ANT_HOME
+export JAVA_HOME
 ```
 
-* * *
+***
 
-Last Modified 05/2017 1.19
+Last Modified 09/2020 1.19
 Converted from HTML to md 9/2020

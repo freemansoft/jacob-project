@@ -18,6 +18,8 @@ import com.jacob.test.BaseTestCase;
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
+ * 
+ * @TODO: THIS TEST HANGS under windows 10 on whatever version it is for 2020/09
  */
 
 public class IETestActiveXProxy extends BaseTestCase {
@@ -72,7 +74,9 @@ class IETestActiveProxyThread extends Thread {
 		// this used to be 5 seconds but sourceforge is slow
 		int delay = 5000; // msec
 		// paired with statement below that blows up
+		System.out.println("IETestActiveProxyThread: InitMTA()");
 		ComThread.InitMTA();
+		System.out.println("IETestActiveProxyThread: Creating ActiveXComponent for IE");
 		ActiveXComponent ie = new ActiveXComponent(
 				"InternetExplorer.Application");
 		try {

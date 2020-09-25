@@ -10,19 +10,18 @@
     can be built inside eclipse due to their built in ANT support.
      
     The COM portion of this build requires MS Visual C++ Widnows SDK 7.1A
-    The build proces defined in this build.xml file does not support
+    The build proces defined in this build.xml file does not support other versions
                                                                                  
 	YOU MUST define a file named compilation_tools.properties!
-	The file for MS Visual C++ 10 building 32 and 64 bit (installed on windows 7 64 bit)
-	(releases up to 1.11 only supported 32 bit builds) looks something like:
+	This works for Visual Studio 2019 with the Win 10 tookits installed and Amazon Java 8
 	
-	MSDEV_PLATFORM_DIR must have an include directory in it.  With VS2013
-	  
-    JDK=c\:\\Program Files (x86)\\java\\jdk1.8.0_161
-    MSDEV_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC
-    MSDEV_IDE_DIR=c\:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\Common7\\IDE
-    MSDEV_PLATFORM_DIR=c\:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A
-    version=1.19
+    JDK=C\:\\Program Files\\Amazon Corretto\\jdk1.8.0_265
+    MSDEV_DIR=C\:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110
+    MSDEV_IDE_DIR=C\:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE
+    MSDEV_PLATFORM_DIR=C\:\\Program Files (x86)\\Windows Kits\\10
+    MSDEV_PLATFORM_DIR_BIN=C\:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0
+    MSDEV_PLATFORM_DIR_INC=C\:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.18362.0
+    MSDEV_PLATFORM_DIR_LIB=C\:\\Program Files (x86)\\Windows Kits\\10\\Lib\\10.0.18362.0
             
 	DO NOT check compilation_tools.properties into source control as the 
 	values are specific to YOUR environment.
@@ -83,29 +82,25 @@
 	<property name="release.dir.java.meta.inf"	value="${release.dir.java}\META-INF" />
 	<property name="release.file.jar"     	value="${release.dir.java}\${generated.filename.jar}" />
 	
-	<property name="compiler.x86"            value="${MSDEV_DIR}\bin\cl.exe" />
-	<property name="linker.x86"              value="${MSDEV_DIR}\bin\link.exe" />
-	<property name="manifestool.x86"         value="${MSDEV_PLATFORM_DIR}\bin\mt.exe" />
-	<property name="include.x86"             value="${MSDEV_DIR}\include" />
-	<property name="include.x86.platformSDK" value="${MSDEV_PLATFORM_DIR}\Include" />
-	<property name="include.x86.atl"         value="${MSDEV_DIR}\atlmfc\include" />
-	<property name="library.x86"             value="${MSDEV_DIR}\lib" />
-	<property name="library.x86.platformSDK" value="${MSDEV_PLATFORM_DIR}\lib" />
-	<property name="library.x86.atl"         value="${MSDEV_DIR}\atlmfc\lib" />
+	<property name="include.x86_64"             value="${MSDEV_DIR}\include" />
+	<property name="include.x86_64.atl"         value="${MSDEV_DIR}\atlmfc\include" />
+    <property name="include.x86_64.platformSDK" value="${MSDEV_PLATFORM_DIR_INC}\um;${MSDEV_PLATFORM_DIR_INC}\ucrt;${MSDEV_PLATFORM_DIR_INC}\shared" />
 	
-	<!-- You have to love the beautiful asymetry of the MS world -->
-	<!-- The platform SDK comes with 64 bit tools but not 32 bit tools -->
-	<!-- when compiling on windows 8 on 64 bit machine with VS2013, these paths no longer worked
-	<property name="compiler.x64" 			 value="${MSDEV_DIR}\bin\x86_amd64\cl.exe" />
-	<property name="linker.x64"   			 value="${MSDEV_DIR}\bin\x86_amd64\link.exe" />
-	-->
-    <property name="compiler.x64"            value="${MSDEV_DIR}\bin\amd64\cl.exe" />
-    <property name="linker.x64"              value="${MSDEV_DIR}\bin\amd64\link.exe" />
-	<property name="manifesttool.x64"		 value="${MSDEV_PLATFORM_DIR}\bin\x64\mt.exe" />
-	<property name="include.x64"  			 value="${MSDEV_DIR}\include" />
-	<property name="library.x64"  		     value="${MSDEV_DIR}\lib\amd64" />
-	<property name="library.x64.platformSDK" value="${MSDEV_PLATFORM_DIR}\lib\x64" />
-	<property name="library.x64.atl"  		 value="${MSDEV_DIR}\atlmfc\lib\amd64" />
+	<property name="compiler.x86"            value="${MSDEV_DIR}\bin\Hostx64\x86\cl.exe" />
+	<property name="linker.x86"              value="${MSDEV_DIR}\bin\Hostx64\x86\link.exe" />
+	<property name="manifestool.x86"         value="${MSDEV_PLATFORM_DIR_BIN}\x86\mt.exe" />
+
+	<property name="library.x86"             value="${MSDEV_DIR}\lib\x86" />
+	<property name="library.x86.atl"         value="${MSDEV_DIR}\atlmfc\lib\x86" />
+	<property name="library.x86.platformSDK" value="${MSDEV_PLATFORM_DIR_LIB}" />
+	
+    <property name="compiler.x64"            value="${MSDEV_DIR}\bin\Hostx64\x64\cl.exe" />
+    <property name="linker.x64"              value="${MSDEV_DIR}\bin\Hostx64\x64\link.exe" />
+	<property name="manifesttool.x64"		 value="${MSDEV_PLATFORM_DIR_BIN}\x64\mt.exe" />
+
+	<property name="library.x64"  		     value="${MSDEV_DIR}\lib\x64" />
+	<property name="library.x64.atl"  		 value="${MSDEV_DIR}\atlmfc\lib\x64" />
+	<property name="library.x64.platformSDK" value="${MSDEV_PLATFORM_DIR_LIB}" />
 
 
 	<!-- ======================================================================
@@ -137,9 +132,9 @@
 			the right compilers.
 	 ================================================================== -->
 	<available file="${compiler.x86}" property="compilerAvailable.x86"/>
-	<echo message="compilerAvailable.x86=${compilerAvailable.x86}" />
+	<echo message="compilerAvailable.x86=${compilerAvailable.x86} compiler.x86=${compiler.x86}" />
 	<available file="${compiler.x64}" property="compilerAvailable.x64"/>
-	<echo message="compilerAvailable.x64=${compilerAvailable.x64}" />
+	<echo message="compilerAvailable.x64=${compilerAvailable.x64} compiler.x64=${compiler.x64}" />
 		
 	<!-- ======================================================================
 		      Compare the date/time of the DLL against that of the cpp source.
@@ -286,11 +281,12 @@
 		 ================================================================== -->
 	<target name="compile.x86" if="shouldBuild.x86">
 		<echo>Clean up the (X86) target folders and file, for safety</echo>
-		<delete file="${release.dir.x86.cpp}/**/*.*" />
+		<delete dir="${release.dir.x86.cpp}" />
+		<mkdir  dir="${release.dir.x86.cpp}" />
 		<echo>Compiling (X86) C++ classes with JDK JNI library ${JDK}</echo>
 		<exec executable="${compiler.x86}" dir="${release.dir.x86.cpp}" failonerror="true">
 			<env key="Path" value="${MSDEV_IDE_DIR}"/>
-			<env key="include" value="${JDK}\include;${JDK}\include\win32;${include.x86.platformSDK};${include.x86};${include.x86.atl}"/>
+			<env key="include" value="${JDK}\include;${JDK}\include\win32;${include.x86_64.platformSDK};${include.x86_64};${include.x86_64.atl}"/>
 			<arg value="/nologo"/>
 			<arg value="/c"/>
 			<arg value="/D WIN32"/>
@@ -319,10 +315,11 @@
 
 	<target name="compile.x64" if="shouldBuild.x64">
 		<echo>Clean up the (x64) target folders and file, for safety</echo>
-		<delete file="${release.dir.x64.cpp}/**/*.*" />
+		<delete dir="${release.dir.x64.cpp}" />
+		<mkdir  dir="${release.dir.x64.cpp}" />
 		<echo>Compiling C++ (x64) classes with JDK JNI library ${JDK}</echo>
 		<exec executable="${compiler.x64}" dir="${release.dir.x64.cpp}" failonerror="true">
-			<env key="include" value="${JDK}\include;${JDK}\include\win32;${include.x86.platformSDK};${include.x86};${include.x86.atl}"/>
+			<env key="include" value="${JDK}\include;${JDK}\include\win32;${include.x86_64.platformSDK};${include.x86_64};${include.x86_64.atl}"/>
 			<env key="Path" value="${MSDEV_IDE_DIR}"/>
 			<arg value="/nologo"/>
 			<arg value="/c"/>
@@ -360,7 +357,8 @@
 		 ================================================================== -->
 	<target name="makeDll.x86" depends="compile.x86" if="shouldBuild.x86">
 		<echo>Clean up the (x86) target folders and file, for safety</echo>
-		<echo>Using ${library.x86}</echo>
+		<echo>Using libs in ${library.x86}</echo>
+		<echo>Using libs in ${library.x86.platformSDK}</echo>
 		<delete file="${release.file.x86.dll}" />
 		<echo>Linking to create ${release.file.x86.dll}</echo>
 		<exec executable="${linker.x86}" dir="${release.dir.x86.cpp}" failonerror="true">
@@ -369,11 +367,11 @@
 			<arg value="/MANIFEST" />
 			<arg value="/MANIFESTFILE:${release.dir.x86.cpp}/jacob.dll.manifest" />
 			<arg value="/dll" />
-            <!-- <arg value="/version:${version}" /> --><!-- VS2013 linker no longer accepts milestone suffixes -->
 			<arg value="/out:${release.file.x86.dll}" />
 			<arg value="/libpath:${library.x86}" />
-			<arg value="/libpath:${library.x86.platformSDK}" />
 			<arg value="/libpath:${library.x86.atl}" />
+			<arg value="/libpath:${library.x86.platformSDK}\um\x86" />
+			<arg value="/libpath:${library.x86.platformSDK}\ucrt\x86" />
 			<arg value="${JDK}\lib\jvm.lib" />
 			<arg value="${release.dir.x86.cpp}/*obj"/>
 		</exec>
@@ -387,6 +385,8 @@
 	
 	<target name="makeDll.x64" depends="compile.x64" if="shouldBuild.x64">
 		<echo>Clean up the (x64) target folders and file, for safety</echo>
+		<echo>Using libs in ${library.x64}</echo>
+		<echo>Using libs in ${library.x64.platformSDK}</echo>
 		<delete file="${release.file.x64.dll}" />
 		<echo>Linking to create {$release.file.x64.dll}</echo>
 		<exec executable="${linker.x64}" dir="${release.dir.x64.cpp}" failonerror="true">
@@ -395,11 +395,11 @@
 			<arg value="/MANIFEST" />
 			<arg value="/MANIFESTFILE:${release.dir.x64.cpp}/jacob.dll.manifest" />
 			<arg value="/dll" />
-            <!-- <arg value="/version:${version}" /> --><!-- VS2013 linker no longer accepts milestone suffixes -->
 			<arg value="/out:${release.file.x64.dll}" />
 			<arg value="/libpath:${library.x64}" />
-			<arg value="/libpath:${library.x64.platformSDK}" />
 			<arg value="/libpath:${library.x64.atl}" />
+			<arg value="/libpath:${library.x64.platformSDK}\um\x64" />
+			<arg value="/libpath:${library.x64.platformSDK}\ucrt\x64" />
 			<arg value="${JDK}\lib\jvm.lib" />
 			<arg value="${release.dir.x64.cpp}/*.obj" />
 		</exec>
@@ -485,7 +485,8 @@
 				fork="true" 
 				dir="${release.dir.java}"
 			>
-			<sysproperty key="java.library.path" value="${release.dir.x86}" />
+			<!-- This is a bit of a hack because we hard code the test to build on a 64 bit system -->
+			<sysproperty key="java.library.path" value="${release.dir.x64}" />
 			<classpath>
 				<pathelement location="${junit.jar}"/>
 				<pathelement location="${hamcrest-core.jar}"/>
