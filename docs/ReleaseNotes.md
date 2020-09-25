@@ -1,143 +1,71 @@
-## JACOB 1.20 (tentative)
+## JACOB 1.20
 ### What's New
 *   Upgraded from VS2015 to VS 2019
+*   Move from Sourceforge to GitHub
+*   VT_DATE and SafeArray
 ### Tracked Changes
-| | |
+| Item | Description |
 |-|-|
-| Bugs             | |
-| n/a              | none |
-| Patches          | |
-| n/a              |	none |
-| n/a              |	none |
-| Feature Requests | |
-| 48               |Update to VS2019 Community and Windows 10 libs |
-| Merge Request    | |
-| 1                | Support VT_DATE getting from SafeArray |
+| **Bugs**              | |
+|                   | none |
+| **Patches**           | |
+| 48                | Update to VS2019 Community and Windows 10 libs |
+| 1                 | Support VT_DATE getting from SafeArray |
+| **Feature Requests**  | |
+|                   | none |
 
 ## JACOB 1.19
-
-JACOB 1.19
 ### What's New
 * Upgraded from Java 6 to Java 8 compilation
 * Upgraded from junit 3.8.1 to 4.12
 * Migrated from CVS to GIT using sourceforge migration instructions https://sourceforge.net/p/forge/documentation/CVS/
 ### Tracked Changes
-| | |
+| Item | Description |
 |-|-|
-|Bugs              | |
+| **Bugs**              | |
 | 132	           | 32 bit ponters not convertd to 64 bit |
 | 130              | Name value incorrect in Mainfest.MF affecting tamper check|
-|Patches           | |
-| n/a              |	none |
-| Feature Requests | |
-| n/a              |	none |
+| **Patches**           | |
+|                   | none |
+| **Feature Requests**  | |
+|                   | none |
 
 ## JACOB 1.18
-
 ### What's New
-
 *   (M2) Built with Java 1.6 and Visual Studio 2013 Microsoft Platform SDK V7.1A (introduced with VS2012)instead of v7.0A (vs2010) Targeting SDK V7.1 with USING_V110_SDK71" http://en.wikipedia.org/wiki/Microsoft_Windows_SDK
 *   (M2) Temporarily using AMD64 compiler instead of x86_amd64 because of installation issues on dev machine. Should generate same output even though dll files are different sizes between M1 and M2\. http://msdn.microsoft.com/en-us/library/x4d2c09s.aspx
 *   (M2) Dropped support for XP
-
 ### Tracked Changes
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
-<tbody>
-<tr>
-<td colspan="2">**Bugs**</td>
-</tr>
-<tr>
-<td width="13%" valign="top">119 (new numbers)</td>
-<td width="87%" valign="top">(M?)Attribute lacking in MANIFEST.MF required since Java 1.7u45</td>
-</tr>
-<tr>
-<td width="13%" valign="top"> </td>
-<td width="87%" valign="top"> </td>
-</tr>
-<tr>
-<td colspan="2">**Patches**</td>
-</tr>
-<tr>
-<td width="13%" valign="top">42 (new numbers)</td>
-<td width="87%" valign="top">(M3)Mapping of names to dispIDs implemented</td>
-</tr>
-<tr>
-<td width="13%" valign="top"> </td>
-<td width="87%" valign="top"> </td>
-</tr>
-<tr>
-<td colspan="2">**Feature Requests**</td>
-</tr>
-<tr>
-<td width="13%" valign="top"></td>
-<td width="87%" valign="top"></td>
-</tr>
-</tbody>
-</table>
+| Item | Description |
+|-|-|
+| **Bugs**              | |
+| 119 (new numbers) | (M?)Attribute lacking in MANIFEST.MF required since Java 1.7u45 |
+| **Patches**           | |
+| 42 (new numbers)  | (M3)Mapping of names to dispIDs implemented|
+| **Feature Requests**  | |
+|                   | none |
+
 
 ## JACOB 1.17
-
 ### What's New
-
 *   No new features
-
 ### Tracked Changes
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
-<tbody>
-<tr>
-<td colspan="2">**Bugs**</td>
-</tr>
-<tr>
-<td width="13%" valign="top">3505940</td>
-<td width="87%" valign="top">(M2)JacobVersion.properties accidently omitted from JAR. Must build from command line to get it included.</td>
-</tr>
-<tr>
-<td width="13%" valign="top">3436102</td>
-<td width="87%" valign="top">(M1)Fix memory pointer that was 32 bit. Causes defects in 64 bit systems above 2GB</td>
-</tr>
-<tr>
-<td width="13%" valign="top">115 (new numbers)</td>
-<td width="87%" valign="top">(M3)Release problem if you've got two threads with the same name</td>
-</tr>
-<tr>
-<td width="13%" valign="top">111 (new numbers)</td>
-<td width="87%" valign="top">(M3)m_pDispatch is not 0 if not attached</td>
-</tr>
-<tr>
-<td width="13%" valign="top">117 (new numbers)</td>
-<td width="87%" valign="top">(M4) NullPointerException injacob-1.17-M2</td>
-</tr>
-<tr>
-<td width="13%" valign="top"> </td>
-<td width="87%" valign="top"> </td>
-</tr>
-<tr>
-<td colspan="2">**Patches**</td>
-</tr>
-<tr>
-<td width="13%" valign="top">41 (new numbers)</td>
-<td width="87%" valign="top">(M3)Fix for SafeArray(String) constructor</td>
-</tr>
-<tr>
-<td width="13%" valign="top"> </td>
-<td width="87%" valign="top"> </td>
-</tr>
-<tr>
-<td colspan="2">**Feature Requests**</td>
-</tr>
-<tr>
-<td width="13%" valign="top"></td>
-<td width="87%" valign="top"></td>
-</tr>
-</tbody>
-</table>
+| Item | Description |
+|-|-|
+| **Bugs**              | |
+| 3505940           | (M2)JacobVersion.properties accidently omitted from JAR. Must build from command line to get it included. |
+| 3436102           | (M1)Fix memory pointer that was 32 bit. Causes defects in 64 bit systems above 2GB |
+| 115 (new numbers) | (M3)Release problem if you've got two threads with the same name |
+| 111 (new numbers) | (M3)m_pDispatch is not 0 if not attached |
+| 117 (new numbers) | (M4) NullPointerException injacob-1.17-M2 |
+| **Patches**           | |
+| 41 (new numbers)  | (M3)Fix for SafeArray(String) constructor|
+| **Feature Requests**  | |
+|                   | none |
 
 ## JACOB 1.16
-
 ### What's New
-
 *   No new features
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -214,11 +142,8 @@ JACOB 1.19
 </table>
 
 ## JACOB 1.15
-
 ### What's New
-
 *   MS Libraries are now statically linked using /MT instead of /MD to reduce issues library compatibility issues, especially on older platforms. The VC++ redistributable library no longer needs to be installed as a stand alone product.
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -294,7 +219,6 @@ JACOB 1.19
 </table>
 
 ## JACOB 1.14.3
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -338,7 +262,6 @@ JACOB 1.19
 </table>
 
 ## JACOB 1.14.1
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -378,12 +301,9 @@ JACOB 1.19
 </table>
 
 ## JACOB 1.14
-
 ### What's New
-
 *   Binaries are now compiled with Java 5\. JDK 1.4 support dropped.
 *   Jacob now loads dlls based on platform (32 bit /64 bit) and version number.
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -467,13 +387,10 @@ JACOB 1.19
 </table>
 
 ## JACOB 1.13
-
 ### What's New
-
 *   Binaries compiled with with Visual Studio 2005 in place of VC98\.
 *   Changed milestone release naming convention from "pre..." to "M..."
 *   The unittest directory now a JUnit 3.8.1 test repository
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -541,11 +458,8 @@ JACOB 1.19
 </table>
 
 ## JACOB 1.12
-
 ### What's New
-
 *   Now compiles with with Visual versions later than VC 98
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -645,11 +559,8 @@ JACOB 1.19
 </table>
 
 ## JACOB 1.11.1
-
 ### What's New
-
 Bug fix release
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -694,9 +605,7 @@ Bug fix release
 </table>
 
 ## JACOB 1.11
-
 ### What's New
-
 *   **Build**
     *   Build process now notifies developer if version property missing
     *   Build process now compiles 32 bit and/or 64 bit DLLs as appropriate for the build environment.
@@ -762,13 +671,10 @@ Bug fix release
 </table>
 
 ## JACOB 1.10.1
-
 ### What's New
-
 *   **Variants**
     *   Static constnats are no longer released
     *   obj2variant on Dispatch now supports passing a java.util.Date
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -801,9 +707,7 @@ Bug fix release
 </table>
 
 ## JACOB 1.10
-
 ### What's New
-
 *   **Windows Processes**
     *   New proposed API to support ActiveXComponent connections to already running applications. Factory methods have been added to the ActiveXComponent to support this. (Feedback wanted)
 *   **Variants**
@@ -815,7 +719,6 @@ Bug fix release
 *   **Event Callbacks**
     *   Jacob normally uses information in the registry to find the connection information needed to set up event callbacks. Excel and other programs don't put that information in the registry. A new optional parameter has been added to the DispatchEvents constructors that lets a user provide the location of the OLB or EXE that contains the information required to retrieve the events.
     *   Event handlers can now return a Variant to calling MS Windows program. Event handlers that do not return an object should still be defined as being of type "void". This means that support for event handler's returning values should be backwards compatible with previous releases.
-
 ### Tracked Changes
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
 <tbody>
@@ -892,9 +795,7 @@ Bug fix release
 </table>
 
 ## JACOB 1.9.1
-
 ### What's New
-
 *   **License**
     *   License standardized on LGPL. See LICENSE.TXT for more information
 *   **Event Callbacks**
@@ -948,9 +849,7 @@ Bug fix release
 </table>
 
 ## JACOB 1.9
-
 ### What's New
-
 *   **Event Callbacks**
     *   Variant parameters can now be modified by the receiver to be passed back to the COM caller
     *   Callbacks now create objects of class VariantViaEvent rather than Variant. This was aided to add debugging and tracing
@@ -984,189 +883,97 @@ Bug fix release
     ### Tracked Changes
 
     <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
-
     <tbody>
-
     <tr>
-
     <td colspan="2">**Bugs**</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1116101</td>
-
     <td width="87%" valign="top">jacob-msg 0284 : Access Violation while garbage collecting</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1114159</td>
-
     <td width="87%" valign="top">Problem with COM Error Trapping in JACOB DLL</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1113610</td>
-
     <td width="87%" valign="top">Bad error check in SafeArray.cpp</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1066698</td>
-
     <td width="87%" valign="top">Minor Memory leak in Dispatch.cpp</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1065533</td>
-
     <td width="87%" valign="top">Problem with unicode conversion</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1053871</td>
-
     <td width="87%" valign="top">solution for memory leak in 1.7</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1053870</td>
-
     <td width="87%" valign="top">JACOB0msg 2019 - Safe Array</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1053866</td>
-
     <td width="87%" valign="top">getHResult only returns 80020009</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">960646</td>
-
     <td width="87%" valign="top">But in SafeArray:: getBoolean for 2D arrays</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top"> </td>
-
     <td width="87%" valign="top"> </td>
-
     </tr>
-
     <tr>
-
     <td colspan="2">**Patches**</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1115187</td>
-
     <td width="87%" valign="top">EventCallbacks fail w/Variant ClassNotFoundException in JWS</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1105915</td>
-
     <td width="87%" valign="top">Fix for event handling memory corruption</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1090104</td>
-
     <td width="87%" valign="top">Weak Reference in teh ROT</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1068544</td>
-
     <td width="87%" valign="top">in/out parameter support for event handlers</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">981540</td>
-
     <td width="87%" valign="top">jre 1.4.2 fix as patch</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top"> </td>
-
     <td width="87%" valign="top"> </td>
-
     </tr>
-
     <tr>
-
     <td colspan="2">**Feature Requests**</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1049390</td>
-
     <td width="87%" valign="top">static Version information</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1049224</td>
-
     <td width="87%" valign="top">Javadocs or at least script to generate it</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top">1049158</td>
-
     <td width="87%" valign="top">API to get ProgId of ActiveXComponent</td>
-
     </tr>
-
     <tr>
-
     <td width="13%" valign="top"> </td>
-
     <td width="87%" valign="top"> </td>
-
     </tr>
-
     </tbody>
-
     </table>
 
 ## JACOB 1.8
