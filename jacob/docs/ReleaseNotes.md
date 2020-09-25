@@ -8,8 +8,11 @@
 | n/a              | none |
 | Patches          | |
 | n/a              |	none |
+| n/a              |	none |
 | Feature Requests | |
 | 48               |Update to VS2019 Community and Windows 10 libs |
+| Merge Request    | |
+| 1                | Support VT_DATE getting from SafeArray |
 
 ## JACOB 1.19
 

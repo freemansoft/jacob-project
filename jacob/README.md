@@ -12,6 +12,8 @@ JACOB (Java-COM bridge) is hosted on Sourceforge http://sourceforge.net/project/
 | n/a              |	none |
 | Feature Requests | |
 | 48               |Update to VS2019 Community and Windows 10 libs |
+| Merge Request    | |
+| 1                | Support VT_DATE getting from SafeArray |
 
 ## Latest Release ##
 See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
