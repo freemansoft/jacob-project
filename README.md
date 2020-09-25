@@ -1,6 +1,7 @@
 JACOB (Java-COM bridge) 
-* Source was hosted on Sourceforge for for over a decade http://sourceforge.net/project/jacob-project
-* Source moved to https://github.com/freemansoft/jacob-project
+* Source was hosted on Sourceforge for for over a decade on the [jacob-project Sourceforge Repository](http://sourceforge.net/project/jacob-project)
+* The Discussion forums are still up on [Sourceforge jacob-project Discussions](https://sourceforge.net/p/jacob-project/discussion)
+* The root repository for source is no located [On GitHub](https://github.com/freemansoft/jacob-project)
 
 ## JACOB 1.20 (tentative)
 ### What's New
