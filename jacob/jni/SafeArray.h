@@ -934,6 +934,14 @@ JNIEXPORT jboolean JNICALL Java_com_jacob_com_SafeArray_getBoolean___3I
 JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBoolean___3IZ
   (JNIEnv *, jobject, jintArray, jboolean);
 
+/*
+ * Class:     com_jacob_com_SafeArray
+ * Method:    getDate
+ * Signature: (I)D
+ */
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_SafeArray_getDate__I
+  (JNIEnv *, jobject, jint);
+
 #ifdef __cplusplus
 }
 #endif

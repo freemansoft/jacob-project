@@ -19,6 +19,8 @@
  */
 package com.jacob.com;
 
+import java.util.Date;
+
 /**
  * This creates an array wrapper around Variant objects(?). This supports 1, 2
  * and n-dimensional arrays. It exists in this form because n-dimensional arrays
@@ -1061,6 +1063,37 @@ public class SafeArray extends JacobObject {
 	 * @param v
 	 */
 	public native void setVariant(int indices[], Variant v);
+
+	/**
+	 * get windows time from an single dimensional array
+	 *
+	 * @param sa_idx
+	 *            array index
+	 * @return date stored in array
+	 */
+	public native double getDate(int sa_idx);
+
+	/**
+	 * returns the Java Date contained in this array
+	 *
+	 * @param sa_idx1
+	 *          array index
+	 * @return Java date stored in array
+	 * @throws IllegalStateException
+	 *             if array is not of the requested type
+	 */
+	public Date getJavaDate(int sa_idx1) {
+		Date returnDate = null;
+		if (this.getvt() == Variant.VariantDate) {
+			double windowsDate = this.getDate(sa_idx1);
+			if (windowsDate != 0.0D) {
+				returnDate = DateUtilities.convertWindowsTimeToDate(windowsDate);
+			}
+			return returnDate;
+		} else {
+			throw new IllegalStateException("getJavaDate() only legal on SafeArray of type VariantDate, not " + this.getvt());
+		}
+	}
 
 	/**
 	 * variant access

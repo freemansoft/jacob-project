@@ -3173,5 +3173,16 @@ JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_setBoolean___3IZ
   env->ReleaseIntArrayElements(indices, jIndices, NULL);
 }
 
+/*
+ * Class:     SafeArray
+ * Method:    getDate
+ * Signature: (I)D
+ */
+JNIEXPORT jdouble JNICALL Java_com_jacob_com_SafeArray_getDate__I
+  (JNIEnv *env, jobject _this, jint idx)
+{
+  GET1DCODE(VT_DATE, V_DATE, jdouble)
+}
+
 
 }
