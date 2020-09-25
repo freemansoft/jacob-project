@@ -2,6 +2,7 @@
 ### What's New
 *   Upgraded from VS2015 to VS 2019
 *   Move from Sourceforge to GitHub
+*   Updated Junit jars
 *   VT_DATE and SafeArray
 ### Tracked Changes
 | Item | Description |
