@@ -1,1 +1,0 @@
-This file exists to make sure this directory hangs around until there are actual sample files to put in the samples directory
