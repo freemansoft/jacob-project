@@ -67,7 +67,7 @@ The build process is based on ANT. You can run ANT from inside of eclipse or fro
     *   Build the jni code
     *   create the dll
     *   create jar file
-*   **ant packageRelease** runs the above listed steps and then
+*   **ant PackageRelease** runs the above listed steps and then
     *   builds the javadoc
     *   builds a source zip
     *   builds a binary zip with the javadoc
