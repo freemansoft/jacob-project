@@ -1,14 +1,21 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 plugins {
-    id "java"
+	id "java"
 }
 
-compileJava {
-    options.encoding = 'UTF-8'
+//project.properties.put("buildDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm:ss")))
+project.ext.set("buildDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm:ss")))
+
+processResources {
+	outputs.upToDateWhen { false }
+	filesMatching('**/JacobVersion.properties') {
+		expand(project.properties)
+	}
 }
 
-compileTestJava {
-    options.encoding = 'UTF-8'
-}
+
 
 //
 //sourceSets {
@@ -35,6 +42,15 @@ compileTestJava {
 //    }
 //}
 
+
 dependencies {
-    implementation fileTree("${projectDir}/lib")
+	implementation fileTree("${projectDir}/lib")
+}
+
+compileJava {
+	options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+	options.encoding = 'UTF-8'
 }
