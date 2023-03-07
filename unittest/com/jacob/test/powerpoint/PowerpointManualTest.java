@@ -30,7 +30,7 @@ import com.jacob.test.BaseTestCase;
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
  */
-public class PowerpointTest extends BaseTestCase {
+public class PowerpointManualTest extends BaseTestCase {
 	private static final int NUM_THREADS = 5;
 	protected static final int NUM_ITERATIONS = 50;
 

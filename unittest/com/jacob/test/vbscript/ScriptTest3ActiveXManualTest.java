@@ -16,8 +16,9 @@ import com.jacob.test.BaseTestCase;
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
+ * fixme disabled see com.jacob.test.safearray.SafeArrayDispatchManualTest
  */
-public class ScriptTest3ActiveX extends BaseTestCase {
+public class ScriptTest3ActiveXManualTest extends BaseTestCase {
 	public static ActiveXComponent sC;
 
 	public static DispatchEvents de = null;
@@ -39,7 +40,7 @@ public class ScriptTest3ActiveX extends BaseTestCase {
 			System.out.println("eval(" + getSampleVPScriptForEval() + ") = "
 					+ result);
 			System.out.println("setting quit");
-			ScriptTest3ActiveX.quit = true;
+			ScriptTest3ActiveXManualTest.quit = true;
 		} catch (ComException e) {
 			e.printStackTrace();
 			fail("Caught ComException " + e);

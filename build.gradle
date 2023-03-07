@@ -1,0 +1,39 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+plugins {
+	id "java"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+project.ext.set("buildDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm:ss")))
+
+processResources {
+	outputs.upToDateWhen { false }
+	filesMatching('**/JacobVersion.properties') {
+		expand(project.properties)
+	}
+}
+
+dependencies {
+	testImplementation fileTree("${projectDir}/lib")
+}
+
+compileJava {
+	options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+	options.encoding = 'UTF-8'
+}
+
+test {
+	exclude "**/*ManualTest.class"
+	failFast = true
+}
+
+task manualTest(type: Test) {
+	include "**/*ManualTest.class"
+	failFast = true
+}

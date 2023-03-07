@@ -13,8 +13,12 @@ release
 .cdtproject
 foo.foo
 foo.ser
-JacobVersion.properties
 .settings
 setenv.sh
 junit*properties
 ~$*
+.idea
+.gradle
+build
+*.iml
+*.log

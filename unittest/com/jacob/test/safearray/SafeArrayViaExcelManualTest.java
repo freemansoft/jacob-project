@@ -15,7 +15,7 @@ import com.jacob.test.BaseTestCase;
  * <p>
  * This relies on BaseTestCase to provide the root path to the file under test
  */
-public class SafeArrayViaExcel extends BaseTestCase {
+public class SafeArrayViaExcelManualTest extends BaseTestCase {
 
 	/**
 	 * verify safe arrays work with standard applications, Excel in this case

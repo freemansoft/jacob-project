@@ -19,7 +19,7 @@ import com.jacob.test.BaseTestCase;
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
  */
-public class ExcelEventTest extends BaseTestCase {
+public class ExcelEventManualTest extends BaseTestCase {
 
 	/**
 	 * load up excel, register for events and make stuff happen

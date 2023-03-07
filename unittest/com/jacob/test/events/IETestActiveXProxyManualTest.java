@@ -22,7 +22,7 @@ import com.jacob.test.BaseTestCase;
  * @TODO: THIS TEST HANGS under windows 10 on whatever version it is for 2020/09
  */
 
-public class IETestActiveXProxy extends BaseTestCase {
+public class IETestActiveXProxyManualTest extends BaseTestCase {
 
 	/**
 	 * the main test method that builds up the connection and runs the test
