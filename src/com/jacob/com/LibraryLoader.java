@@ -72,6 +72,9 @@ import java.util.Set;
  * @author Jason Smith
  */
 public final class LibraryLoader {
+
+	private static volatile String name;
+
 	/**
 	 * Name of system property (currently <tt>jacob.dll.path</tt>) that may
 	 * contain an absolute path to the JNI library.
@@ -117,6 +120,10 @@ public final class LibraryLoader {
 	 *             if the library does not exist.
 	 */
 	public static void loadJacobLibrary() {
+		if(name != null){
+			JacobObject.debug("Library already loaded: " + name);
+			return;
+		}
 		// In some cases, a library that uses Jacob won't be able to set system
 		// properties
 		// prior to Jacob being loaded. The resource bundle provides an
@@ -154,7 +161,6 @@ public final class LibraryLoader {
 			// libraries.
 			// Check for a defined NAME. System property overrides resource
 			// bundle.
-			String name = null;
 
 			if (System.getProperty(JACOB_DLL_NAME) != null) {
 				name = System.getProperty(JACOB_DLL_NAME);
@@ -255,4 +261,7 @@ public final class LibraryLoader {
 		return "/com.jacob.com/jacob-x64.dll";
 	}
 
+	static String getName() {
+		return name;
+	}
 } // LibraryLoader
