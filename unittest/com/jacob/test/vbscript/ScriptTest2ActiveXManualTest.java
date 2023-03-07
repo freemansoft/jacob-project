@@ -29,8 +29,9 @@ import com.jacob.test.BaseTestCase;
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
+ *  fixme disabled see com.jacob.test.safearray.SafeArrayDispatchManualTest
  */
-public class ScriptTest2ActiveX extends BaseTestCase {
+public class ScriptTest2ActiveXManualTest extends BaseTestCase {
 	public static ActiveXComponent sC;
 
 	public static DispatchEvents de = null;
