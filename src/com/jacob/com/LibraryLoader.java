@@ -29,22 +29,22 @@ import java.util.Set;
 /**
  * Utility class to centralize the way in which the jacob JNI library is loaded.
  * <p>
- * 
+ *
  * This supports defining the path or library name using system properties or a
  * custom resource file. If desired, jacob can auto-detect the correct version
  * of the DLL for 32 or 64 bit windows, as long as you have named them
  * differently.
- * 
+ *
  * <ol>
  * <li> If system property {@link #JACOB_DLL_PATH} is defined, the file located
  * there will be loaded as the jacob dll using System.load(). </li>
- * 
+ *
  * <li> If system property {@link #JACOB_DLL_NAME} is defined, the file located
  * there will be loaded as the jacob dll. </li>
  * <li> If system property {@link #JACOB_DLL_NAME_X86} and
  * {@link #JACOB_DLL_NAME_X64} are defined, the file located there will be
  * loaded as the jacob dll, depending on the version of Windows. </li>
- * 
+ *
  * <li> If {@link #JACOB_DLL_NAME} is defined in the
  * {@code com.jacob.com.JacobLibraryLoader} resource file, the specified dll
  * will be loaded from the {@code java.library.path}. </li>
@@ -52,13 +52,13 @@ import java.util.Set;
  * defined in the {@code com.jacob.com.JacobLibraryLoader} resource file, the
  * specified dll will be loaded from the {@code java.library.path}, depending
  * on the version of Windows. </li>
- * 
+ *
  * <li> If none of the above are true, the default is to load the library named
  * "jacob-&lt;version&gt;-&lt;arch&gt" (or
  * "jacob-&lt;version&gt;-&lt;arch&rt;.dll") from the {@code java.library.path}.
  * </li>
  * </ol>
- * 
+ *
  * The standard behavior for most applications is that {@code LoadLibrary()}
  * will be called to load the dll. {@code LoadLibary()} searches directories
  * specified in the variable {@code java.library.path}. This is why most test
@@ -67,7 +67,7 @@ import java.util.Set;
  * JACOB_DLL_PATH submitted sourceforge ticket 1493647 Added 1.11 <br>
  * JACOB_DLL_NAME, JACOB_DLL_NAME_32, JACOB_DLL_NAME_64 submitted sourceforge
  * ticket 1845039 Added 1.14M7
- * 
+ *
  * @author Scott Dickerson (sjd78)
  * @author Jason Smith
  */
@@ -112,7 +112,7 @@ public final class LibraryLoader {
 	/**
 	 * Load the jacob dll either from an absolute path or by a library name,
 	 * both of which may be defined in various ways.
-	 * 
+	 *
 	 * @throws UnsatisfiedLinkError
 	 *             if the library does not exist.
 	 */
@@ -173,15 +173,22 @@ public final class LibraryLoader {
 					&& !shouldLoad32Bit()) {
 				name = resources.getString(JACOB_DLL_NAME_X64);
 			} else {
-				// No alternate NAME or PATH was defined, so use the default.
-				// We will almost always end up here.
-				name = getPreferredDLLName();
+				name = loadFromResources();
+				if(name == null){
+					// No alternate NAME or PATH was defined, so use the default.
+					// We will almost always end up here.
+					name = getPreferredDLLName();
+				}
 			}
 
 			JacobObject.debug("Loading library " + name
 					+ " using System.loadLibrary ");
 			// System.out.println("Loading " + name);
-			System.loadLibrary(name);
+			if(name.contains(":")){
+				System.load(name);
+			} else {
+				System.loadLibrary(name);
+			}
 		}
 	}
 
@@ -190,7 +197,7 @@ public final class LibraryLoader {
 	 * created as part of the build process in build.xml
 	 * <p>
 	 * The DLL name is "jacob\<PLATFORM\>.release"
-	 * 
+	 *
 	 * @return the preferred name of the DLL adjusted for this platform and
 	 *         version without the ".dll" extension
 	 */
@@ -206,7 +213,7 @@ public final class LibraryLoader {
 
 	/**
 	 * Detects whether this is a 32-bit JVM.
-	 * 
+	 *
 	 * @return {@code true} if this is a 32-bit JVM.
 	 */
 	protected static boolean shouldLoad32Bit() {
@@ -227,4 +234,25 @@ public final class LibraryLoader {
 
 		return true;
 	}
+
+	private static String loadFromResources() {
+		final var dllPath = getDllResourcePath();
+		try {
+			return IoUtils.copyFromResourcesToTempPath(dllPath)
+				.toAbsolutePath()
+				.toString()
+				;
+		} catch (Throwable e){
+			JacobObject.debug(String.format("dll %s wasnt found from resources: %s", e.getMessage(), dllPath));
+			return null;
+		}
+	}
+
+	private static String getDllResourcePath() {
+		if (shouldLoad32Bit()) {
+			return "/com.jacob.com/jacob-x86.dll";
+		}
+		return "/com.jacob.com/jacob-x64.dll";
+	}
+
 } // LibraryLoader

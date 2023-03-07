@@ -5,7 +5,6 @@ plugins {
 	id "java"
 }
 
-//project.properties.put("buildDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm:ss")))
 project.ext.set("buildDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm:ss")))
 
 processResources {
@@ -14,34 +13,6 @@ processResources {
 		expand(project.properties)
 	}
 }
-
-
-
-//
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ["$projectDir/src/"]
-//            include '**/*.java'
-//            exclude '**/main/**'
-//        }
-//
-//        resources {
-//            srcDirs = ["$projectDir/src/main/resources"]
-//        }
-//    }
-//
-//    test {
-////        java { srcDir "$projectDir/unittest" } // tambem funciona mas vai adicionar o dir ao inves de subsituir pelo default
-//        java {
-//            srcDirs = ["$projectDir/unittest"]
-//        }
-//        resources {
-//            srcDir 'src/test/resources'
-//        }
-//    }
-//}
-
 
 dependencies {
 	implementation fileTree("${projectDir}/lib")
