@@ -25,3 +25,13 @@ compileJava {
 compileTestJava {
 	options.encoding = 'UTF-8'
 }
+
+test {
+	exclude "**/*ManualTest.class"
+}
+
+task manualTest(type: Test) {
+	include "**/*ManualTest.class"
+	failFast = true
+	jvmArgs += []
+}
