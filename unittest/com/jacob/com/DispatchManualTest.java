@@ -10,7 +10,7 @@ import com.jacob.test.BaseTestCase;
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
  */
-public class DispatchTest extends BaseTestCase {
+public class DispatchManualTest extends BaseTestCase {
 
 	/**
 	 * Verify this detects word's exit

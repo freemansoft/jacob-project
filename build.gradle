@@ -28,10 +28,10 @@ compileTestJava {
 
 test {
 	exclude "**/*ManualTest.class"
+	failFast = true
 }
 
 task manualTest(type: Test) {
 	include "**/*ManualTest.class"
 	failFast = true
-	jvmArgs += []
 }
