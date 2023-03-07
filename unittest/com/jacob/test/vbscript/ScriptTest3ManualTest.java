@@ -19,7 +19,7 @@ import com.jacob.test.BaseTestCase;
  * options.
  *  fixme disabled see com.jacob.test.safearray.SafeArrayDispatchManualTest
  */
-public class ScriptTest3 extends BaseTestCase {
+public class ScriptTest3ManualTest extends BaseTestCase {
 
 	public static ActiveXComponent sC;
 
@@ -45,7 +45,7 @@ public class ScriptTest3 extends BaseTestCase {
 			System.out.println("eval(" + getSampleVPScriptForEval() + ") = "
 					+ result);
 			System.out.println("setting quit");
-			ScriptTest3.quit = true;
+			ScriptTest3ManualTest.quit = true;
 		} catch (ComException e) {
 			e.printStackTrace();
 			fail("Caught excpetion running script with MTA");
