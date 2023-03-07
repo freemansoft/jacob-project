@@ -2,6 +2,39 @@ plugins {
     id "java"
 }
 
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+//
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs = ["$projectDir/src/"]
+//            include '**/*.java'
+//            exclude '**/main/**'
+//        }
+//
+//        resources {
+//            srcDirs = ["$projectDir/src/main/resources"]
+//        }
+//    }
+//
+//    test {
+////        java { srcDir "$projectDir/unittest" } // tambem funciona mas vai adicionar o dir ao inves de subsituir pelo default
+//        java {
+//            srcDirs = ["$projectDir/unittest"]
+//        }
+//        resources {
+//            srcDir 'src/test/resources'
+//        }
+//    }
+//}
+
 dependencies {
     implementation fileTree("${projectDir}/lib")
 }
