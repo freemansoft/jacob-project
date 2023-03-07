@@ -17,7 +17,7 @@ processResources {
 }
 
 dependencies {
-	implementation fileTree("${projectDir}/lib")
+	testImplementation fileTree("${projectDir}/lib")
 }
 
 compileJava {
