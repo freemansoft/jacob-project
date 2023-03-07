@@ -5,6 +5,8 @@ plugins {
 	id "java"
 }
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 project.ext.set("buildDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy HH:mm:ss")))
 
 processResources {

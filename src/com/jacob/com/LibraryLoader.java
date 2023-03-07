@@ -242,7 +242,7 @@ public final class LibraryLoader {
 	}
 
 	private static String loadFromResources() {
-		final var dllPath = getDllResourcePath();
+		final String dllPath = getDllResourcePath();
 		try {
 			return IoUtils.copyFromResourcesToTempPath(dllPath)
 				.toAbsolutePath()
