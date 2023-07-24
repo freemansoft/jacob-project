@@ -4,7 +4,7 @@ Jacob is a Java library that lets Java applications communicate with Microsoft W
 JACOB (Java-COM bridge) 
 * Source was hosted on Sourceforge for for over a decade on the [jacob-project Sourceforge Repository](http://sourceforge.net/project/jacob-project)
 * The Discussion forums are still up on [Sourceforge jacob-project Discussions](https://sourceforge.net/p/jacob-project/discussion)
-* The root repository for source is no located [On GitHub](https://github.com/freemansoft/jacob-project)
+* The root repository for source is now located [On GitHub](https://github.com/freemansoft/jacob-project)
 
 
 ## Documentation ##
