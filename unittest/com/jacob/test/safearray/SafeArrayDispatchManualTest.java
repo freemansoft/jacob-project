@@ -9,8 +9,10 @@ import com.jacob.test.BaseTestCase;
 
 /**
  * Test class to verify dispatch with SafeArray
+ * fixme looks like this test will only run on 32bit jdk?! so I'm turning it on a manual test for now ...
+ * https://sourceforge.net/p/jacob-project/discussion/375946/thread/eccc4369/
  */
-public class SafeArrayDispatchTest extends BaseTestCase {
+public class SafeArrayDispatchManualTest extends BaseTestCase {
 	public void testDispatchWithSafeArray() {
 		try {
 			String scriptCommand = "1+(2*4)-3";

@@ -15,8 +15,9 @@ import com.jacob.test.BaseTestCase;
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
+ * fixme disabled see com.jacob.test.safearray.SafeArrayDispatchManualTest
  */
-public class ScriptTest extends BaseTestCase {
+public class ScriptManualTest extends BaseTestCase {
 
 	public void testStupidSpeedTest() {
 		String lang = "VBScript";

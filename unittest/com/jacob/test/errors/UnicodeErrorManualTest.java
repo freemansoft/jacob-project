@@ -11,7 +11,7 @@ import com.jacob.com.ComException;
  * @author justme84
  * 
  */
-public class UnicodeErrorTest extends BaseTestCase {
+public class UnicodeErrorManualTest extends BaseTestCase {
 
 	/**
 	 * verifies that messages can now have unicode in them like when the file

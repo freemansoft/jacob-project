@@ -18,7 +18,7 @@ import com.jacob.test.BaseTestCase;
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
  */
-public class WordEventTest extends BaseTestCase {
+public class WordEventManualTest extends BaseTestCase {
 
 	/**
 	 * load up word, register for events and make stuff happen
@@ -35,9 +35,9 @@ public class WordEventTest extends BaseTestCase {
 			// Add a listener (doesn't matter what it is).
 			DispatchEvents de;
 			if (typeLibLocation == null) {
-				de = new DispatchEvents(axc, new WordEventTest());
+				de = new DispatchEvents(axc, new WordEventManualTest());
 			} else {
-				de = new DispatchEvents(axc, new WordEventTest(), pid,
+				de = new DispatchEvents(axc, new WordEventManualTest(), pid,
 						typeLibLocation);
 			}
 			if (de == null) {

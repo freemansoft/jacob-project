@@ -11,7 +11,7 @@ import com.jacob.test.BaseTestCase;
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
  */
-public class ActiveXComponentFactoryTest extends BaseTestCase {
+public class ActiveXComponentFactoryManualTest extends BaseTestCase {
 
 	/**
 	 * This test is supposed to verify we get multiple instances when we mean

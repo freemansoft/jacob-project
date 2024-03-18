@@ -16,7 +16,7 @@ import com.jacob.test.BaseTestCase;
  * Excel that contains a 2 dimensional array of doubles. 1.14M5 and earlier blew
  * up on this because two objects pointed at the same windows memory space SF 1840487
  */
-public class ControllerTest extends BaseTestCase {
+public class ControllerManualTest extends BaseTestCase {
 
 	private Controller controller;
 
@@ -116,7 +116,7 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Constante para configurar a planilha em modo "Calculation" automático
+		 * Constante para configurar a planilha em modo "Calculation" automÃ¡tico
 		 */
 		public static final int CALC_AUTOMATICO = -4105;
 
@@ -126,13 +126,13 @@ public class ControllerTest extends BaseTestCase {
 		public static final int CALC_MANUAL = -4135;
 
 		/**
-		 * Escreve um determinado valor em uma célula da pasta em questão. O
-		 * valor é escrito configurando a propriedade Value da célula
+		 * Escreve um determinado valor em uma cÃ©lula da pasta em questÃ£o. O
+		 * valor Ã© escrito configurando a propriedade Value da cÃ©lula
 		 * 
 		 * @param celula -
-		 *            célula para escrever novo valor
+		 *            cÃ©lula para escrever novo valor
 		 * @param sheet -
-		 *            pasta da planilha em questão
+		 *            pasta da planilha em questÃ£o
 		 * @param valor -
 		 *            valor a ser escrito na celula
 		 */
@@ -145,14 +145,14 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Obtem o valor de contido em uma célula. O valor representa o conteúdo
-		 * da propriedade Value da célula
+		 * Obtem o valor de contido em uma cÃ©lula. O valor representa o conteÃºdo
+		 * da propriedade Value da cÃ©lula
 		 * 
 		 * @param celula -
-		 *            célula a ser lida
+		 *            cÃ©lula a ser lida
 		 * @param sheet -
-		 *            pasta da planilha que contém a célula
-		 * @return - conteúdo da propriedade Value
+		 *            pasta da planilha que contÃ©m a cÃ©lula
+		 * @return - conteÃºdo da propriedade Value
 		 */
 		public Variant obterValorCelula(String celula, Dispatch sheet) {
 			System.out.println("Entered obterValorCelula");
@@ -163,18 +163,18 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Obtem referência para a célua ou conjunto de células especificado no
+		 * Obtem referÃªncia para a cÃ©lua ou conjunto de cÃ©lulas especificado no
 		 * parametro
 		 * 
 		 * @param celula -
-		 *            Referência para célula ou conjunto de células. A String
+		 *            ReferÃªncia para cÃ©lula ou conjunto de cÃ©lulas. A String
 		 *            "A1" referencia a coluna A e linha 1. A Sting "A1:A10"
-		 *            referencia as células compreendidas no intervalo entre a
-		 *            célua A1 e a célula A10
+		 *            referencia as cÃ©lulas compreendidas no intervalo entre a
+		 *            cÃ©lua A1 e a cÃ©lula A10
 		 * @param sheet -
-		 *            pasta da planilha qye contém as células
-		 * @return - referencia para um célula ou conjunto de células,
-		 *         dependendo do parâmetro passado
+		 *            pasta da planilha qye contÃ©m as cÃ©lulas
+		 * @return - referencia para um cÃ©lula ou conjunto de cÃ©lulas,
+		 *         dependendo do parÃ¢metro passado
 		 */
 		public Dispatch obterCelula(String celula, Dispatch sheet) {
 			System.out.println("Entered obterCelula");
@@ -185,13 +185,13 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Obtem os valores de um conjunto de células
+		 * Obtem os valores de um conjunto de cÃ©lulas
 		 * 
 		 * @param celulas -
-		 *            Referência para conjunto de células
+		 *            ReferÃªncia para conjunto de cÃ©lulas
 		 * @param sheet -
-		 *            Pasta que contém as cálulas referenciadas
-		 * @return - Lista onde cada elemento é o valor de uma célula
+		 *            Pasta que contÃ©m as cÃ¡lulas referenciadas
+		 * @return - Lista onde cada elemento Ã© o valor de uma cÃ©lula
 		 *         referenciada na conjunto
 		 */
 		public List<String> obterValoresRange(String celulas, Dispatch sheet) {
@@ -200,7 +200,7 @@ public class ControllerTest extends BaseTestCase {
 			// obtem valor das celulas como um Variant
 			Variant var = obterValorCelula(celulas, sheet);
 
-			// toString da Variant é interpretado por um StringTokenizer e os
+			// toString da Variant Ã© interpretado por um StringTokenizer e os
 			// tokens
 			// inseridos na lista de retorno
 			String arrayAsString = null;
@@ -216,10 +216,10 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Método para execução de ação a ser executada em planilha excel.
+		 * MÃ©todo para execuÃ§Ã£o de aÃ§Ã£o a ser executada em planilha excel.
 		 * 
 		 * @param xl -
-		 *            Referencia para aplicação excel
+		 *            Referencia para aplicaÃ§Ã£o excel
 		 * @param sheets -
 		 *            Referencia para conjunto de pastas da planilha
 		 */
