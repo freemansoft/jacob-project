@@ -33,8 +33,8 @@
 <project name="jacob" default="default" basedir=".">
 
 	<!-- ======================================================================
-			First handle the properties that come from property files
-			Sets a default for properties that were not in the file.
+			First handle the properties that come from property files.
+			Then try and set properties.  Will only set those not in the properties file.
 			Relies on the fact that properties cannot be reset once set.
 	 	================================================================== -->
 	<property file="compilation_tools.properties" />
