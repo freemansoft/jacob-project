@@ -6,6 +6,9 @@ JACOB is built on windows machines using ANT, most commonly from inside of Eclip
 
 1. Check out the source code or unpack the source zip file from sourceforge
 1. Install the Development Environment
+   1. ANT
+   1. Java
+   1. Windows VCC library
 1. Configure the build by creating a _compilation_tools.properties_ file.
 1. Run Eclipse and load the project into eclipse
 1. Open the build.xml file in Eclipse and run the default ant target
@@ -34,29 +37,35 @@ The simplest build environment includes MS Visual Studio 16.0 (Studio 2019), Ecl
 
 * Microsoft Visual Studio 2019 Community Edition. Installs to C:\ProgramFiles (X86)
   * MSVC
-  * Windows 10 SDK
+  * Windows 11 SDK version 10.0.22621.0 installed as part of Windows 11
   * C++ MFC CLI Modules - don't know which of these are needed
+* VSCode
+* Java JDK 17
+* IntelliJ Community
+  * Let it detect teh JDK
+  * ANT plugin
+  *
 * Eclipse from <www.eclipse.org> as the Java IDE.
 * Eclipse C/C++ plugin can be used for C coding in place of VC++ IDE.
-* Java JDK 1.8 , latest available
 
-|           |                               |              |                         |                      |                |
-| --------- | ----------------------------- | ------------ | ----------------------- | -------------------- | -------------- |
-| Release   | C Version                     | Java Version | ANT Version             | Eclipse Version Used | generated DLLs |
-| up to 1.6 | VC 98 (6.0)                   | ?            | MAKE                    | ?                    | 32 bit         |
-| 1.7       | VC 98 (6.0)                   | 1.4 (48)     | 1.?                     | ?                    | 32 bit         |
-| 1.8       | VC 98 (6.0)                   | 1.4 (48)     | 1.?                     | ?                    | 32 bit         |
-| 1.9       | VC 98 (6.0)                   | 1.4 (48)     | 1.?                     | ?                    | 32 bit         |
-| 1.10      | VC 98 (6.0)                   | 1.4 (48)     | 1.?                     | 3.??                 | 32 bit         |
-| 1.11      | VC 98 (6.0) & 2003 64bit libs | 1.4.? (48)   | 1.6.?                   | 3.2.1                | 32 and 64 bit  |
-| 1.12      | VC 98 (6.0) & 2003 64bit libs | 1.4.2 (48)   | 1.6.5                   | 3.2.2                | 32 and 64 bit  |
-| 1.13      | VC 2005 (8)                   | 1.4.2 (48)   | 1.7.0                   | 3.3                  | 32 and 64 bit  |
-| 1.14      | VC 2005 (8)                   | 1.5.0 (49)   | 1.7.0                   | 3.3                  | 32 and 64 bit  |
-| 1.15      | VC 2005 (8)                   | 1.5.0 (49)   | 1.7.0                   | 3.4                  | 32 and 64 bit  |
-| 1.17      | VC 2005 (8)                   | 1.5.0 (49)   | 1.8.4  Eclipse Embedded | 4.3                  | 32 and 64 bit  |
-| 1.18      | VS 2013 (12) Windows SDK 7.1A | 1.6.0 (50)   | 1.8.4  Eclipse Embedded | 4.3                  | 32 and 64 bit  |
-| 1.19      | VS 2013 (12) Windows SDK 7.1A | 1.8.0 (52)   | 1.10.1 Eclipse Provided | 4.7                  | 32 and 64 bit  |
-| 1.20      | VS 2019 (16) Windows SDK 10   | 1.8.0 (52)   | 1.10.8 Eclipse Provided | 2020 09              | 32 and 64 bit  |
+|           |                                          |              |                         |                             |                |
+| --------- | ---------------------------------------- | ------------ | ----------------------- | --------------------------- | -------------- |
+| Release   | C Version                                | Java Version | ANT Version             | Java IDE                    | generated DLLs |
+| up to 1.6 | VC 98 (6.0)                              | ?            | MAKE                    | Eclipse ?                   | 32 bit         |
+| 1.7       | VC 98 (6.0)                              | 1.4 (48)     | 1.?                     | Eclipse ?                   | 32 bit         |
+| 1.8       | VC 98 (6.0)                              | 1.4 (48)     | 1.?                     | Eclipse ?                   | 32 bit         |
+| 1.9       | VC 98 (6.0)                              | 1.4 (48)     | 1.?                     | Eclipse ?                   | 32 bit         |
+| 1.10      | VC 98 (6.0)                              | 1.4 (48)     | 1.?                     | Eclipse 3.??                | 32 bit         |
+| 1.11      | VC 98 (6.0) & 2003 64bit libs            | 1.4.? (48)   | 1.6.?                   | Eclipse 3.2.1               | 32 and 64 bit  |
+| 1.12      | VC 98 (6.0) & 2003 64bit libs            | 1.4.2 (48)   | 1.6.5                   | Eclipse 3.2.2               | 32 and 64 bit  |
+| 1.13      | VC 2005 (8)                              | 1.4.2 (48)   | 1.7.0                   | Eclipse 3.3                 | 32 and 64 bit  |
+| 1.14      | VC 2005 (8)                              | 1.5.0 (49)   | 1.7.0                   | Eclipse 3.3                 | 32 and 64 bit  |
+| 1.15      | VC 2005 (8)                              | 1.5.0 (49)   | 1.7.0                   | Eclipse 3.4                 | 32 and 64 bit  |
+| 1.17      | VC 2005 (8)                              | 1.5.0 (49)   | 1.8.4  Eclipse Embedded | Eclipse 4.3                 | 32 and 64 bit  |
+| 1.18      | VS 2013 (12) Windows SDK 7.1A            | 1.6.0 (50)   | 1.8.4  Eclipse Embedded | Eclipse 4.3                 | 32 and 64 bit  |
+| 1.19      | VS 2013 (12) Windows SDK 7.1A            | 1.8.0 (52)   | 1.10.1 Eclipse Provided | Eclipse 4.7                 | 32 and 64 bit  |
+| 1.20      | VS 2019 (16) Windows SDK 10              | 1.8.0 (52)   | 1.10.8 Eclipse Provided | Eclipse 2020 09             | 32 and 64 bit  |
+| 1.21      | VS 2022 (17) Windows SDK 11 10.0.22621.0 | 17           | ??                      | IntelliJ Community 2023.3.5 | 64 bit only    |
 
 Microsoft Visual Studio 2019 supports 64 bit builds. so no additional tools are required.
 

@@ -18,3 +18,7 @@ JacobVersion.properties
 setenv.sh
 junit*properties
 ~$*
+
+/out
+/.idea
+*.iml
