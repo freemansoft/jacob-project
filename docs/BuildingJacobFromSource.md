@@ -1,6 +1,6 @@
 # Building Jacob from source
 
-This document reflects the _next_ release _1.21_ which is moving from Java 8 to Java 17 and dropping 32 bit support.
+This document reflects the _next_ release _2.0_ which is moving from Java 8 to Java 17 and dropping 32 bit support.
 
 ## Overview
 
@@ -65,7 +65,7 @@ The simplest build environment includes MS Visual Studio 16.0 (Studio 2019), Ecl
 | 1.18      | VS 2013 (12) Windows SDK 7.1A            | 1.6.0 (50)   | 1.8.4  Eclipse Embedded | Eclipse 4.3                 | 32 and 64 bit  |
 | 1.19      | VS 2013 (12) Windows SDK 7.1A            | 1.8.0 (52)   | 1.10.1 Eclipse Provided | Eclipse 4.7                 | 32 and 64 bit  |
 | 1.20      | VS 2019 (16) Windows SDK 10              | 1.8.0 (52)   | 1.10.8 Eclipse Provided | Eclipse 2020 09             | 32 and 64 bit  |
-| 1.21      | VS 2022 (17) Windows SDK 11 10.0.22621.0 | 17           | ??                      | IntelliJ Community 2023.3.5 | 64 bit only    |
+| 2.0       | VS 2022 (17) Windows SDK 11 10.0.22621.0 | 17           | ??                      | IntelliJ Community 2023.3.5 | 64 bit only    |
 
 Microsoft Visual Studio 2019 supports 64 bit builds. so no additional tools are required.
 

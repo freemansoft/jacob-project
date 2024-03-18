@@ -15,7 +15,7 @@
 	YOU MUST define a file named compilation_tools.properties!
 	This works for Visual Studio 2019 with the Win 10 toolkits installed and Amazon Java 8
 
-	version=1.21
+	version=2.0
     JDK=C\:\\Program Files\\Amazon Corretto\\jdk1.8.0_265
     MSDEV_DIR=C\:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110
     MSDEV_IDE_DIR=C\:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE
