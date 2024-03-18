@@ -1,8 +1,10 @@
 # Building Jacob from source
 
+This document reflects the _next_ release _1.21_ which is moving from Java 8 to Java 17 and dropping 32 bit support.
+
 ## Overview
 
-JACOB is built on windows machines using ANT, most commonly from inside of Eclipse. The main steps for getting a working Jacob build are:
+JACOB is built on windows machines using ANT, now moving to VSCode. The main steps for getting a working Jacob build are:
 
 1. Check out the source code or unpack the source zip file from sourceforge
 1. Install the Development Environment
@@ -42,11 +44,9 @@ The simplest build environment includes MS Visual Studio 16.0 (Studio 2019), Ecl
 * VSCode
 * Java JDK 17
 * IntelliJ Community
-  * Let it detect teh JDK
+  * Let it detect the JDK
   * ANT plugin
-  *
-* Eclipse from <www.eclipse.org> as the Java IDE.
-* Eclipse C/C++ plugin can be used for C coding in place of VC++ IDE.
+
 
 |           |                                          |              |                         |                             |                |
 | --------- | ---------------------------------------- | ------------ | ----------------------- | --------------------------- | -------------- |
