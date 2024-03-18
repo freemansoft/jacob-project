@@ -358,7 +358,9 @@ extern "C"
       long lb, ub;
       SafeArrayGetLBound(psa, i, &lb);
       SafeArrayGetUBound(psa, i, &ub);
-      elems += ub - lb + 1;
+      if (elems == 0)
+        elems = 1;
+      elems *= ub - lb + 1;
     }
     return elems;
   }
