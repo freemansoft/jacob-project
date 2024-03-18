@@ -47,7 +47,7 @@ import com.jacob.com.Variant;
  * return void or a Variant that will be returned to the calling layer. All
  * Event methods that will be recognized by InvocationProxyAllEvents have the
  * signature
- * 
+ *
  * <code> void eventMethodName(Object,Object...)</code> or
  * <code> Object eventMethodName(Object,Object...)</code>
  */
@@ -55,9 +55,9 @@ public class ActiveXInvocationProxy extends InvocationProxy {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.jacob.com.InvocationProxy#invoke(java.lang.String,
-	 *      com.jacob.com.Variant[])
+	 * com.jacob.com.Variant[])
 	 */
 	@SuppressWarnings("unchecked")
 	public Variant invoke(String methodName, Variant targetParameters[]) {
@@ -124,11 +124,10 @@ public class ActiveXInvocationProxy extends InvocationProxy {
 	/**
 	 * creates a method signature compatible array of classes from an array of
 	 * parameters
-	 * 
+	 *
 	 * @param parametersAsJavaObjects
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private Class[] getParametersAsJavaClasses(Object[] parametersAsJavaObjects) {
 		if (parametersAsJavaObjects == null) {
 			throw new IllegalArgumentException(
@@ -150,7 +149,7 @@ public class ActiveXInvocationProxy extends InvocationProxy {
 
 	/**
 	 * converts an array of Variants to their associated Java types
-	 * 
+	 *
 	 * @param targetParameters
 	 * @return
 	 */

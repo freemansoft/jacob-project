@@ -9,15 +9,15 @@ import com.jacob.com.JacobObject;
 /**
  * This base test class may require that the unittest package be
  * 'jacob-project/unittest' be on the classpath to find some resources.
- * 
+ *
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options. Or try these:
- * 
+ *
  * <pre>
- *      -Djava.library.path=d:/jacob/release/x86 
- *      -Dcom.jacob.autogc=false 
- *      -Dcom.jacob.debug=false 
+ *      -Djava.library.path=d:/jacob/release/x86
+ *      -Dcom.jacob.autogc=false
+ *      -Dcom.jacob.debug=false
  *      -Xcheck:jni
  * </pre>
  */
@@ -46,7 +46,7 @@ public class BaseTestCase extends TestCase {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return a simple VB script that generates the result "3"
 	 */
 	public String getSampleVPScriptForEval() {
@@ -58,13 +58,12 @@ public class BaseTestCase extends TestCase {
 	 * Converts the class name into a path and appends the resource name. Used
 	 * to derive the path to a resource in the file system where the resource is
 	 * co-located with the referenced class.
-	 * 
+	 *
 	 * @param resourceName
 	 * @param classInSamePackageAsResource
 	 * @return a class loader compatible fully qualified file system path to a
 	 *         resource
 	 */
-	@SuppressWarnings("unchecked")
 	private String getJavaFilePathToPackageResource(String resourceName,
 			Class classInSamePackageAsResource) {
 
@@ -108,13 +107,12 @@ public class BaseTestCase extends TestCase {
 	 * Converts the class name into a path and appends the resource name. Used
 	 * to derive the path to a resource in the file system where the resource is
 	 * co-located with the referenced class.
-	 * 
+	 *
 	 * @param resourceName
 	 * @param classInSamePackageAsResource
 	 * @return returns the path in the file system of the requested resource in
 	 *         windows c compatible format
 	 */
-	@SuppressWarnings("unchecked")
 	public String getWindowsFilePathToPackageResource(String resourceName,
 			Class classInSamePackageAsResource) {
 		String javaFilePath = getJavaFilePathToPackageResource(resourceName,
@@ -124,12 +122,12 @@ public class BaseTestCase extends TestCase {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param resourceName
 	 * @param classInSamePackageAsResource
 	 * @return a resource located in the same package as the passed in class
 	 */
-	@SuppressWarnings( { "unused", "unchecked" })
+	@SuppressWarnings("unused")
 	private Object getPackageResource(String resourceName,
 			Class classInSamePackageAsResource) {
 		String fullPathToResource = getJavaFilePathToPackageResource(
@@ -148,11 +146,11 @@ public class BaseTestCase extends TestCase {
 	 * loaded from.
 	 * <p>
 	 * This is an attempt to let unit tests run without having to run regsvr32.
-	 * 
+	 *
 	 * @param libraryName
 	 * @param classInSamePackageAsResource
 	 */
-	@SuppressWarnings( { "unchecked", "unused" })
+	@SuppressWarnings("unused")
 	private void loadLibraryFromClassPackage(String libraryName,
 			Class classInSamePackageAsResource) {
 		String libraryNameWithSuffix = "";

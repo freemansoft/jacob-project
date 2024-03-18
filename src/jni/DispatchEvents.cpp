@@ -99,7 +99,7 @@ extern "C"
       // why is this UTF instead of unicode?  Then we could probably drop the A2W
       const char *progid = env->GetStringUTFChars(_progid, NULL);
       bsProgId = A2W(progid);
-      env->ReleaseStringUTFChars(_progid, progid)
+      env->ReleaseStringUTFChars(_progid, progid);
       // printf("we have an applicaton %ls\n",bsProgId);
     }
 

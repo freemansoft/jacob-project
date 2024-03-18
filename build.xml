@@ -67,7 +67,7 @@
 	<property name="src.java.mainroot" value="${basedir}/src/main" />
 	<property name="src.java.samples"  value="${basedir}/samples" />
 	<property name="src.java.unittest" value="${basedir}/src/test" />
-	<property name="src.cpp"           value="${basedir}/jni" />
+	<property name="src.cpp"           value="${basedir}/src/jni" />
 
 	<property name="release.dir"          	value="${basedir}\release" />
 
