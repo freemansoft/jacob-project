@@ -447,15 +447,15 @@ extern "C"
     if (name != NULL)
     {
       const char *nm = env->GetStringUTFChars(name, NULL);
-      HRESULT hr;
-      if (FAILED(hr = name2ID(pIDispatch, nm, (long *)&dispID, lcid)))
+      HRESULT hr = name2ID(pIDispatch, nm, (long *)&dispID, lcid);
+      env->ReleaseStringUTFChars(name, nm);
+      if (FAILED(hr))
       {
         char buf[1024];
         sprintf_s(buf, 1024, "Can't map name to dispid: %s", nm);
         ThrowComFail(env, buf, -1);
         return NULL;
       }
-      env->ReleaseStringUTFChars(name, nm);
     }
 
     int num_args = env->GetArrayLength(vArg);
