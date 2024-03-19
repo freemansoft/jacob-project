@@ -1,6 +1,6 @@
 # Java COM Bridge
 
-This document reflects the _next_ release _2.0_ which is moving from Java 8 to Java 17 and dropping 32 bit support.
+This document reflects the _next_ release _1.21_ which is moving from Java 8 to Java 17.
 
 Jacob is a Java library that lets Java applications communicate with Microsoft Windows DLLs or COM libraries. It does this through the use of a custom DLL that the Jacob Java classes communicate with via JNI. The Java library and dll isolate the Java developer from the underlying windows libraries so that the Java developer does not have to write custom JNI code.Jacob is not used for creating ActiveX plugins or other modules that live inside of Microsoft Windows applications.
 
@@ -38,9 +38,9 @@ There is no good usage guide at this time.
 
 See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 
-### Jacob 2.0
+### Jacob 1.21
 
-#### What's New in 2.0
+#### What's New in 1.21
 
 * Move from Java 8 to Java 17
 * Drop 32 bit dell and Java support
@@ -50,6 +50,7 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 | ------------------------------------------------------ | ----------------------------------------------- |
 | **Bugs**                                               |                                                 |
 | https://github.com/freemansoft/jacob-project/issues/36 | Memory Leak                                     |
+| https://github.com/freemansoft/jacob-project/issues/38 | Implement Comparable on Currency                |
 | https://github.com/freemansoft/jacob-project/issues/40 | Incorrect delete in Dispatch JNI Invoke()       |
 | https://github.com/freemansoft/jacob-project/issues/42 | ArrayIndexOutOfBounds SafeArray                 |
 | https://github.com/freemansoft/jacob-project/issues/43 | Memory Leaks in DispatchEvents.cpp              |
