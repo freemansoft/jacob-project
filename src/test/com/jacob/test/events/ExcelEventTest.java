@@ -23,7 +23,7 @@ public class ExcelEventTest extends BaseTestCase {
 
 	/**
 	 * load up excel, register for events and make stuff happen
-	 * 
+	 *
 	 * @param args
 	 */
 	public void testExcelWithInvocationProxy() {
@@ -43,7 +43,7 @@ public class ExcelEventTest extends BaseTestCase {
 		typeLibLocation = "C:\\Program Files (x86)\\Microsoft Office\\Office15\\EXCEL.EXE";
 		// Office 2019 32
 		typeLibLocation = "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\EXCEL.EXE";
-		
+
 		// Grab The Component.
 		ActiveXComponent axc = new ActiveXComponent(excelApplicationProgramId);
 		hookupListener(axc, excelApplicationProgramId, typeLibLocation);
@@ -89,7 +89,6 @@ public class ExcelEventTest extends BaseTestCase {
 			// the sleep is required to let everything clear out after the quit
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		ComThread.Release();
@@ -97,7 +96,7 @@ public class ExcelEventTest extends BaseTestCase {
 
 	/**
 	 * extracted the listener hookup so we could try multiple listeners.
-	 * 
+	 *
 	 * @param axc
 	 * @param programId
 	 * @param typeLibLocation
@@ -133,9 +132,10 @@ public class ExcelEventTest extends BaseTestCase {
 
 		/**
 		 * Constructor so we can create an instance that implements invoke()
-		 * 
+		 *
 		 * @param interfaceIdentifier
-		 *            a string that identifies which listener is speaking
+		 *                            a string that identifies which listener is
+		 *                            speaking
 		 */
 		public ExcelEvents(String interfaceIdentifier) {
 			listenerPrefix = interfaceIdentifier;
