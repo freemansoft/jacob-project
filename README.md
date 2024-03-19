@@ -54,6 +54,7 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 | https://github.com/freemansoft/jacob-project/issues/40 | Incorrect delete in Dispatch JNI Invoke()       |
 | https://github.com/freemansoft/jacob-project/issues/42 | ArrayIndexOutOfBounds SafeArray                 |
 | https://github.com/freemansoft/jacob-project/issues/43 | Memory Leaks in DispatchEvents.cpp              |
+| https://github.com/freemansoft/jacob-project/issues/45 | SaveArray init0                                 |
 | https://github.com/freemansoft/jacob-project/issues/48 | Incorrect multi dimensional array element count |
 |                                                        | none                                            |
 | **Patches**                                            |                                                 |

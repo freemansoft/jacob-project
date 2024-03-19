@@ -225,6 +225,48 @@ extern "C"
 
   /*
    * Class:     SafeArray
+   * Method:    reinit0
+   * Signature: (LSafeArray;)V
+   */
+  JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_reinit0(JNIEnv *env, jobject _this, jobject sa)
+  {
+    //	EJP 1/12/2023 implemented this.
+    /*
+     * The MS documentation is clear that it is the SafeArray supplied as a parameter
+     * that is reinitialized.
+     * It is assumed here that this means destroying all its data
+     * but leaving its type and dimensions alone.
+     * Otherwise there would be no further way to use that SafeArray.
+     *
+     * This method is implemented by calling SafeArrayDestroyData() and then SafeArrayAllocData().
+     *
+     * Note on locking.
+     *
+     * 1. SafeArrayDestroyData() gives an error if the array is locked.
+     * 2. SafeArrayAllocData() gives an error if the array could not be locked.
+     *
+     * This implies that both methods lock the array internally.
+     * This in turn that it can't be locked out here, which would otherwise be desirable for atomicity.
+     */
+    SAFEARRAY *psa = extractSA(env, sa);
+    if (!psa)
+    {
+      ThrowComFail(env, "safearray not initialized or corrupted", -1);
+      return;
+    }
+    HRESULT hr = SafeArrayDestroyData(psa);
+    if (SUCCEEDED(hr))
+    {
+      hr = SafeArrayAllocData(psa);
+    }
+    if (!SUCCEEDED(hr))
+    {
+      ThrowComFail(env, "safearray destroy or alloc failed", hr);
+    }
+  }
+
+  /*
+   * Class:     SafeArray
    * Method:    reinterpretType
    * Signature: (I)V
    */
