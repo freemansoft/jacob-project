@@ -38,13 +38,13 @@ There is no good usage guide at this time.
 
 See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 
-### Jacob 1.21
+### Jacob 1.21 (tentative)
 
 #### What's New in 1.21
 
-* Move from Java 8 to Java 17
-* Drop 32 bit dell and Java support
-
+* Upgraded from VS 2019 to VS 2022 - can use Community
+* Formatting done using VS Code - developed using VSCode ANT and Java Extensions
+* Built with Java 8
 
 | Item                                                   | Description                                     |
 | ------------------------------------------------------ | ----------------------------------------------- |
@@ -67,10 +67,11 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 
 #### What's New in 1.20
 
-* Upgraded from VS2015 to VS 2019
+* Upgraded from VS2015 to VS 2019 for compil
 * Move from Sourceforge to GitHub
 * Updated Junit jars
 * VT_DATE and SafeArray
+* Built with Java 8
 
 #### Tracked Changes
 
