@@ -44,7 +44,8 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 
 * Upgraded from VS 2019 to VS 2022 - can use Community
 * Formatting done using VS Code - developed using VSCode ANT and Java Extensions
-* Built with Java 8
+
+#### Tracked Changes 1.20
 
 | Item                                                   | Description                                     |
 | ------------------------------------------------------ | ----------------------------------------------- |
@@ -57,11 +58,12 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 | https://github.com/freemansoft/jacob-project/issues/43 | Memory Leaks in DispatchEvents.cpp              |
 | https://github.com/freemansoft/jacob-project/issues/45 | SaveArray init0                                 |
 | https://github.com/freemansoft/jacob-project/issues/48 | Incorrect multi dimensional array element count |
-|                                                        | none                                            |
+|                                                        |                                                 |
 | **Patches**                                            |                                                 |
+| none                                                   | none                                            |
 |                                                        |                                                 |
 | **Feature Requests**                                   |                                                 |
-|                                                        | none                                            |
+| none                                                   | none                                            |
 
 ### JACOB 1.20
 
@@ -73,7 +75,7 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 * VT_DATE and SafeArray
 * Built with Java 8
 
-#### Tracked Changes
+#### Tracked Changes 1.20
 
 | Item                 | Description                                    |
 | -------------------- | ---------------------------------------------- |
@@ -93,7 +95,7 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 * Upgraded from junit 3.8.1 to 4.12
 * Migrated from CVS to GIT using sourceforge migration instructions https://sourceforge.net/p/forge/documentation/CVS/
 
-#### Tracked Changes
+#### Tracked Changes 1.19
 
 | Item                 | Description                                                |
 | -------------------- | ---------------------------------------------------------- |
