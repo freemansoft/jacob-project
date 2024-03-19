@@ -49,6 +49,7 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 | Item                                                   | Description                                     |
 | ------------------------------------------------------ | ----------------------------------------------- |
 | **Bugs**                                               |                                                 |
+| https://github.com/freemansoft/jacob-project/issues/35 | Add Iterable to EnumVariant                     |
 | https://github.com/freemansoft/jacob-project/issues/36 | Memory Leak                                     |
 | https://github.com/freemansoft/jacob-project/issues/38 | Implement Comparable on Currency                |
 | https://github.com/freemansoft/jacob-project/issues/40 | Incorrect delete in Dispatch JNI Invoke()       |
