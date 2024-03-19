@@ -30,22 +30,22 @@ Put the appropriate DLL for your platform into your runtime library path.
 * jacob for 32 bit windows is located in /x86.
 * jacob for 64 bit windows is located in /64.
 
-## TODO
+### TODO
 
 There is no good usage guide at this time.
 
 ## Release Notes
 
-See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
+See [ReleaseNotes](docs/ReleaseNotes.md) for a full history.
 
-### Jacob 1.21 (tentative)
+### Jacob 1.21 (latest)
 
 #### What's New in 1.21
 
 * Upgraded from VS 2019 to VS 2022 - can use Community
 * Formatting done using VS Code - developed using VSCode ANT and Java Extensions
 
-#### Tracked Changes 1.20
+#### Tracked Changes 1.21
 
 | Item                                                   | Description                                     |
 | ------------------------------------------------------ | ----------------------------------------------- |
@@ -65,44 +65,3 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history
 | **Feature Requests**                                   |                                                 |
 | none                                                   | none                                            |
 
-### JACOB 1.20
-
-#### What's New in 1.20
-
-* Upgraded from VS2015 to VS 2019 for compil
-* Move from Sourceforge to GitHub
-* Updated Junit jars
-* VT_DATE and SafeArray
-* Built with Java 8
-
-#### Tracked Changes 1.20
-
-| Item                 | Description                                    |
-| -------------------- | ---------------------------------------------- |
-| **Bugs**             |                                                |
-|                      | none                                           |
-| **Patches**          |                                                |
-| 48                   | Update to VS2019 Community and Windows 10 libs |
-| 1                    | Support VT_DATE getting from SafeArray         |
-| **Feature Requests** |                                                |
-|                      | none                                           |
-
-### JACOB 1.19
-
-#### What's New in 1.19
-
-* Upgraded from Java 6 to Java 8 compilation
-* Upgraded from junit 3.8.1 to 4.12
-* Migrated from CVS to GIT using sourceforge migration instructions https://sourceforge.net/p/forge/documentation/CVS/
-
-#### Tracked Changes 1.19
-
-| Item                 | Description                                                |
-| -------------------- | ---------------------------------------------------------- |
-| **Bugs**             |                                                            |
-| 132                  | 32 bit ponters not convertd to 64 bit                      |
-| 130                  | Name value incorrect in Mainfest.MF affecting tamper check |
-| **Patches**          |                                                            |
-|                      | none                                                       |
-| **Feature Requests** |                                                            |
-|                      | none                                                       |
