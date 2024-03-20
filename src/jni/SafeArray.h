@@ -60,13 +60,6 @@ extern "C"
 
   /*
    * Class:     com_jacob_com_SafeArray
-   * Method:    reinit
-   * Signature: (Lcom/jacob/com/SafeArray;)V
-   */
-  JNIEXPORT void JNICALL Java_com_jacob_com_SafeArray_reinit(JNIEnv *, jobject, jobject);
-
-  /*
-   * Class:     com_jacob_com_SafeArray
    * Method:    init
    * Signature: (I[I[I)V
    */
