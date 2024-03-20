@@ -1,5 +1,7 @@
 package com.jacob.test.events;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.activeX.ActiveXDispatchEvents;
 import com.jacob.com.ComThread;
@@ -9,7 +11,7 @@ import com.jacob.test.BaseTestCase;
 
 /**
  * This test runs fine against jdk 1.4 and 1.5
- * 
+ *
  * This demonstrates the new event handling code in jacob 1.7 This example will
  * open up IE and print out some of the events it listens to as it havigates to
  * web sites. contributed by Niels Olof Bouvin mailto:n.o.bouvin@daimi.au.dk and
@@ -18,7 +20,7 @@ import com.jacob.test.BaseTestCase;
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
- * 
+ *
  * @TODO: THIS TEST HANGS under windows 10 on whatever version it is for 2020/09
  */
 
@@ -27,6 +29,7 @@ public class IETestActiveXProxy extends BaseTestCase {
 	/**
 	 * the main test method that builds up the connection and runs the test
 	 */
+	@Test
 	public void testIEActiveProxyCallback() {
 		// this line starts the pump but it runs fine without it
 		ComThread.startMainSTA();

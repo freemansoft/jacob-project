@@ -1,11 +1,13 @@
 package com.jacob.test.powerpoint;
 
-/** 
- * $Id$ 
- * 
- * This is really more of a multi threaded tester 
+import org.junit.Test;
+
+/**
+ * $Id$
+ *
+ * This is really more of a multi threaded tester
  * <p>
- * May need to run with some command line options (including from inside Eclipse).  
+ * May need to run with some command line options (including from inside Eclipse).
  * Look in the docs area at the Jacob usage document for command line options.
  */
 import com.jacob.activeX.ActiveXComponent;
@@ -15,13 +17,14 @@ import com.jacob.com.Dispatch;
 import com.jacob.test.BaseTestCase;
 
 /**
- * 
+ *
  * power point test program posted to sourceforge to demonstrate memory problem.
  * The submitter stated they had the problem on windows 2000 with office 2000 I
  * have been unable to duplicate on windows XP with office 2003. I am adding
  * this to the tree just in case we need to come back to it.
  * <P>
- * This test was modified for office 2007 to synchronize communication with Excel.
+ * This test was modified for office 2007 to synchronize communication with
+ * Excel.
  * Office 2003 didn't require this.
  * <p>
  * This relies on BaseTestCase to provide the root path to the file under test
@@ -36,9 +39,10 @@ public class PowerpointTest extends BaseTestCase {
 
 	/**
 	 * main program that lets us run this as a test
-	 * 
+	 *
 	 * @param args
 	 */
+	@Test
 	public void testPowerpoint() {
 		ComThread.InitMTA();
 
@@ -98,7 +102,7 @@ public class PowerpointTest extends BaseTestCase {
 
 		/**
 		 * thread constructor
-		 * 
+		 *
 		 * @param threadID
 		 * @param comPowerpoint
 		 */
@@ -124,17 +128,17 @@ public class PowerpointTest extends BaseTestCase {
 					// multi-threaded requests than office 2007
 					// office 2003 could handle 5 threads @ 50 iterations
 					// office 2007 can only handle 1 thread at a time
-					synchronized(comPowerpoint){
-					Dispatch comPresentations = Dispatch.get(comPowerpoint,
-					"Presentations").toDispatch();
-					Dispatch comPresentation = Dispatch.call(
-							comPresentations,
-							"Open",
-							getWindowsFilePathToPackageResource("test"
-									+ threadID + ".ppt", this.getClass()),
-							new Integer(0), new Integer(0), new Integer(0))
-							.toDispatch();
-					Dispatch.call(comPresentation, "Close");
+					synchronized (comPowerpoint) {
+						Dispatch comPresentations = Dispatch.get(comPowerpoint,
+								"Presentations").toDispatch();
+						Dispatch comPresentation = Dispatch.call(
+								comPresentations,
+								"Open",
+								getWindowsFilePathToPackageResource("test"
+										+ threadID + ".ppt", this.getClass()),
+								new Integer(0), new Integer(0), new Integer(0))
+								.toDispatch();
+						Dispatch.call(comPresentation, "Close");
 					}
 				}
 			} catch (ComFailException cfe) {

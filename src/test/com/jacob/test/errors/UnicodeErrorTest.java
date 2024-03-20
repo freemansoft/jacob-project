@@ -1,15 +1,18 @@
 package com.jacob.test.errors;
 
 import com.jacob.test.BaseTestCase;
+
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComException;
 
 /**
  * This test verifies patch SF 1794811 . It shows how unicode filenames throw
  * exceptions in 1.13M4 and earlier.
- * 
+ *
  * @author justme84
- * 
+ *
  */
 public class UnicodeErrorTest extends BaseTestCase {
 
@@ -17,6 +20,7 @@ public class UnicodeErrorTest extends BaseTestCase {
 	 * verifies that messages can now have unicode in them like when the file
 	 * names have unicode characters
 	 */
+	@Test
 	public void testUnicodeCharactersInErrorMessage() {
 		ActiveXComponent application = new ActiveXComponent("Word.Application");
 		ActiveXComponent documents = application
@@ -27,8 +31,9 @@ public class UnicodeErrorTest extends BaseTestCase {
 			fail("Should have thrown an exception");
 		} catch (ComException e) {
 			assertTrue("Error message should contain file name with unicode "
-					+ "characters in it. " + e.getMessage(), e.getMessage()
-					.indexOf(fileName) > 0);
+					+ "characters in it. " + e.getMessage(),
+					e.getMessage()
+							.indexOf(fileName) > 0);
 		}
 	}
 }

@@ -1,10 +1,12 @@
 package com.jacob.com;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
  * This tries to exercise ROT's garbage collection
- * 
+ *
  * This will eventually be changed to a unit test.
  * <p>
  * May need to run with some command line options (including from inside
@@ -18,6 +20,7 @@ public class ROTTest extends BaseTestCase {
 	 * value of false means instances of the class are not put in the ROT Any o
 	 * ther value means they are
 	 */
+	@Test
 	public void testDontFillROTSystemProperty() {
 		debug("testDontFillROTSystemProperty: started");
 		// Make sure the class is loaded before running any of the tests
@@ -53,8 +56,9 @@ public class ROTTest extends BaseTestCase {
 
 	/**
 	 * Needs documentation. This test looks broken
-	 * 
+	 *
 	 */
+	@Test
 	public void testGCBehavior() {
 		int sizeBeforeBuild = 0;
 		int sizeAfterBuild = 0;

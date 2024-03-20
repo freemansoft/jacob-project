@@ -2,6 +2,9 @@ package com.jacob.test;
 
 import java.net.URL;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 import com.jacob.com.JacobObject;
@@ -23,7 +26,7 @@ import com.jacob.com.JacobObject;
  */
 public class BaseTestCase extends TestCase {
 
-	@SuppressWarnings("unused")
+	@Before
 	protected void setUp() {
 		// verify we have run with the dll in the lib path
 		try {
@@ -40,6 +43,7 @@ public class BaseTestCase extends TestCase {
 	/**
 	 * this test exists just to test the setup.
 	 */
+	@Test
 	public void testSetup() {
 		JacobObject foo = new JacobObject();
 		assertNotNull(foo);

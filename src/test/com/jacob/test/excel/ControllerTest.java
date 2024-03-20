@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
@@ -14,27 +17,28 @@ import com.jacob.test.BaseTestCase;
 /**
  * this test verifies that you can call toString() on a Variant extracted from
  * Excel that contains a 2 dimensional array of doubles. 1.14M5 and earlier blew
- * up on this because two objects pointed at the same windows memory space SF 1840487
+ * up on this because two objects pointed at the same windows memory space SF
+ * 1840487
  */
 public class ControllerTest extends BaseTestCase {
 
 	private Controller controller;
 
+	@Before
 	protected void setUp() {
 		controller = new Controller();
 	}
 
+	@Test
 	public void testGetColumnA() {
-		List<String> list = controller.getColumnA(super
-				.getWindowsFilePathToPackageResource("teste.xls", this
-						.getClass()));
+		List<String> list = controller.getColumnA(super.getWindowsFilePathToPackageResource("teste.xls", this
+				.getClass()));
 		assertEquals(50, list.size());
 	}
 
 	public void testGetColumnB() {
-		List<String> list = controller.getColumnB(super
-				.getWindowsFilePathToPackageResource("teste.xls", this
-						.getClass()));
+		List<String> list = controller.getColumnB(super.getWindowsFilePathToPackageResource("teste.xls", this
+				.getClass()));
 		assertEquals(40, list.size());
 	}
 
@@ -83,7 +87,7 @@ public class ControllerTest extends BaseTestCase {
 						false, // Readonly
 						5, // Format
 						password // Password
-						).toDispatch();
+				).toDispatch();
 
 				Dispatch sheets = Dispatch.call(workbook, "Worksheets")
 						.toDispatch();
@@ -116,7 +120,7 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Constante para configurar a planilha em modo "Calculation" automático
+		 * Constante para configurar a planilha em modo "Calculation" automï¿½tico
 		 */
 		public static final int CALC_AUTOMATICO = -4105;
 
@@ -126,15 +130,15 @@ public class ControllerTest extends BaseTestCase {
 		public static final int CALC_MANUAL = -4135;
 
 		/**
-		 * Escreve um determinado valor em uma célula da pasta em questão. O
-		 * valor é escrito configurando a propriedade Value da célula
-		 * 
+		 * Escreve um determinado valor em uma cï¿½lula da pasta em questï¿½o. O
+		 * valor ï¿½ escrito configurando a propriedade Value da cï¿½lula
+		 *
 		 * @param celula -
-		 *            célula para escrever novo valor
-		 * @param sheet -
-		 *            pasta da planilha em questão
-		 * @param valor -
-		 *            valor a ser escrito na celula
+		 *               cï¿½lula para escrever novo valor
+		 * @param sheet  -
+		 *               pasta da planilha em questï¿½o
+		 * @param valor  -
+		 *               valor a ser escrito na celula
 		 */
 		public void informarValorCelula(String celula, Dispatch sheet,
 				String valor) {
@@ -145,14 +149,14 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Obtem o valor de contido em uma célula. O valor representa o conteúdo
-		 * da propriedade Value da célula
-		 * 
+		 * Obtem o valor de contido em uma cï¿½lula. O valor representa o conteï¿½do
+		 * da propriedade Value da cï¿½lula
+		 *
 		 * @param celula -
-		 *            célula a ser lida
-		 * @param sheet -
-		 *            pasta da planilha que contém a célula
-		 * @return - conteúdo da propriedade Value
+		 *               cï¿½lula a ser lida
+		 * @param sheet  -
+		 *               pasta da planilha que contï¿½m a cï¿½lula
+		 * @return - conteï¿½do da propriedade Value
 		 */
 		public Variant obterValorCelula(String celula, Dispatch sheet) {
 			System.out.println("Entered obterValorCelula");
@@ -163,18 +167,18 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Obtem referência para a célua ou conjunto de células especificado no
+		 * Obtem referï¿½ncia para a cï¿½lua ou conjunto de cï¿½lulas especificado no
 		 * parametro
-		 * 
+		 *
 		 * @param celula -
-		 *            Referência para célula ou conjunto de células. A String
-		 *            "A1" referencia a coluna A e linha 1. A Sting "A1:A10"
-		 *            referencia as células compreendidas no intervalo entre a
-		 *            célua A1 e a célula A10
-		 * @param sheet -
-		 *            pasta da planilha qye contém as células
-		 * @return - referencia para um célula ou conjunto de células,
-		 *         dependendo do parâmetro passado
+		 *               Referï¿½ncia para cï¿½lula ou conjunto de cï¿½lulas. A String
+		 *               "A1" referencia a coluna A e linha 1. A Sting "A1:A10"
+		 *               referencia as cï¿½lulas compreendidas no intervalo entre a
+		 *               cï¿½lua A1 e a cï¿½lula A10
+		 * @param sheet  -
+		 *               pasta da planilha qye contï¿½m as cï¿½lulas
+		 * @return - referencia para um cï¿½lula ou conjunto de cï¿½lulas,
+		 *         dependendo do parï¿½metro passado
 		 */
 		public Dispatch obterCelula(String celula, Dispatch sheet) {
 			System.out.println("Entered obterCelula");
@@ -185,13 +189,13 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Obtem os valores de um conjunto de células
-		 * 
+		 * Obtem os valores de um conjunto de cï¿½lulas
+		 *
 		 * @param celulas -
-		 *            Referência para conjunto de células
-		 * @param sheet -
-		 *            Pasta que contém as cálulas referenciadas
-		 * @return - Lista onde cada elemento é o valor de uma célula
+		 *                Referï¿½ncia para conjunto de cï¿½lulas
+		 * @param sheet   -
+		 *                Pasta que contï¿½m as cï¿½lulas referenciadas
+		 * @return - Lista onde cada elemento ï¿½ o valor de uma cï¿½lula
 		 *         referenciada na conjunto
 		 */
 		public List<String> obterValoresRange(String celulas, Dispatch sheet) {
@@ -200,7 +204,7 @@ public class ControllerTest extends BaseTestCase {
 			// obtem valor das celulas como um Variant
 			Variant var = obterValorCelula(celulas, sheet);
 
-			// toString da Variant é interpretado por um StringTokenizer e os
+			// toString da Variant ï¿½ interpretado por um StringTokenizer e os
 			// tokens
 			// inseridos na lista de retorno
 			String arrayAsString = null;
@@ -216,12 +220,12 @@ public class ControllerTest extends BaseTestCase {
 		}
 
 		/**
-		 * Método para execução de ação a ser executada em planilha excel.
-		 * 
-		 * @param xl -
-		 *            Referencia para aplicação excel
+		 * Mï¿½todo para execuï¿½ï¿½o de aï¿½ï¿½o a ser executada em planilha excel.
+		 *
+		 * @param xl     -
+		 *               Referencia para aplicaï¿½ï¿½o excel
 		 * @param sheets -
-		 *            Referencia para conjunto de pastas da planilha
+		 *               Referencia para conjunto de pastas da planilha
 		 */
 		public void executa(ActiveXComponent xl, Dispatch sheets) {
 

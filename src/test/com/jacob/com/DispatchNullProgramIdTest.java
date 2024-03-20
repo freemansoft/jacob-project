@@ -1,5 +1,7 @@
 package com.jacob.com;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
@@ -11,11 +13,12 @@ import com.jacob.test.BaseTestCase;
  * Eclipse). Look in the docs area at the Jacob usage document for command line
  * options.
  */
-public class DispatchNullProgramId extends BaseTestCase {
+public class DispatchNullProgramIdTest extends BaseTestCase {
 
 	/**
 	 * Verify that dispatch constructors are protected from null program ids.
 	 */
+	@Test
 	public void testNullProgramId() {
 		try {
 			String nullParam = null;

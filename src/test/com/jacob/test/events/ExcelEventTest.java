@@ -1,5 +1,7 @@
 package com.jacob.test.events;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComException;
 import com.jacob.com.ComThread;
@@ -26,6 +28,7 @@ public class ExcelEventTest extends BaseTestCase {
 	 *
 	 * @param args
 	 */
+	@Test
 	public void testExcelWithInvocationProxy() {
 		ComThread.InitSTA();
 		// we are going to listen to events on Application.

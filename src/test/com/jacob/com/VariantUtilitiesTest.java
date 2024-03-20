@@ -3,17 +3,20 @@ package com.jacob.com;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
  * This class should test some of the converter capabilities
- * 
+ *
  */
 public class VariantUtilitiesTest extends BaseTestCase {
 
 	/**
 	 * verifies our unpacking stuff
 	 */
+	@Test
 	public void testObjectsToVariants() {
 		Object testArray[] = new Object[] { Integer.valueOf(1),
 				Integer.valueOf(2) };
@@ -30,6 +33,7 @@ public class VariantUtilitiesTest extends BaseTestCase {
 	/**
 	 * test nested arrays
 	 */
+	@Test
 	public void testObjectsToVariantNestedArray() {
 		Object testArray[] = new Object[] { Integer.valueOf(1),
 				Integer.valueOf(2) };
@@ -44,6 +48,7 @@ public class VariantUtilitiesTest extends BaseTestCase {
 	 * verify that dispatch can convert from object to variant and that the
 	 * variant holds the right value
 	 */
+	@Test
 	public void testConverters() {
 		Date testDate = new Date();
 		Variant fromDate = VariantUtilities.objectToVariant(testDate);
@@ -61,6 +66,7 @@ public class VariantUtilitiesTest extends BaseTestCase {
 
 	}
 
+	@Test
 	public void testPrimitiveByteArray() {
 		byte[] arr = new byte[] { 1, 2, 3 };
 
@@ -78,6 +84,7 @@ public class VariantUtilitiesTest extends BaseTestCase {
 		assertTrue(Arrays.equals(bytes, arr));
 	}
 
+	@Test
 	public void testPrimitiveIntArray() {
 		int[] arr = new int[] { 1000, 2000, 3 };
 
@@ -95,6 +102,7 @@ public class VariantUtilitiesTest extends BaseTestCase {
 		assertTrue(Arrays.equals(ints, arr));
 	}
 
+	@Test
 	public void testPrimitiveDoubleArray() {
 		double[] arr = new double[] { 1000, 2000, 3 };
 
@@ -112,6 +120,7 @@ public class VariantUtilitiesTest extends BaseTestCase {
 		assertTrue(Arrays.equals(doubles, arr));
 	}
 
+	@Test
 	public void testPrimitiveLongArray() {
 		long[] arr = new long[] { 0xcafebabecafebabeL, 42, 0xbabecafebabeL };
 

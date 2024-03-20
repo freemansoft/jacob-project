@@ -1,5 +1,7 @@
 package com.jacob.test.safearray;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComException;
 import com.jacob.com.Dispatch;
@@ -11,6 +13,7 @@ import com.jacob.test.BaseTestCase;
  * Test class to verify dispatch with SafeArray
  */
 public class SafeArrayDispatchTest extends BaseTestCase {
+	@Test
 	public void testDispatchWithSafeArray() {
 		try {
 			String scriptCommand = "1+(2*4)-3";

@@ -1,5 +1,7 @@
 package com.jacob.test.vbscript;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComException;
 import com.jacob.com.ComThread;
@@ -28,6 +30,7 @@ public class ScriptTest3 extends BaseTestCase {
 
 	public static boolean quit = false;
 
+	@Test
 	public void testScript() {
 		try {
 			ComThread.InitMTA();

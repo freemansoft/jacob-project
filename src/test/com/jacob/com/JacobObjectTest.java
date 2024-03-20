@@ -1,5 +1,7 @@
 package com.jacob.com;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
@@ -14,6 +16,7 @@ public class JacobObjectTest extends BaseTestCase {
 	/**
 	 * verify the build version and date functions work correctly
 	 */
+	@Test
 	public void testBuildVersion() {
 		System.out.println("build version is " + JacobReleaseInfo.getBuildVersion());
 		System.out.println("build date is " + JacobReleaseInfo.getBuildDate());

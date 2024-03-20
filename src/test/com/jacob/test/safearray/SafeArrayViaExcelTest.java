@@ -1,5 +1,7 @@
 package com.jacob.test.safearray;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import com.jacob.com.SafeArray;
@@ -15,11 +17,12 @@ import com.jacob.test.BaseTestCase;
  * <p>
  * This relies on BaseTestCase to provide the root path to the file under test
  */
-public class SafeArrayViaExcel extends BaseTestCase {
+public class SafeArrayViaExcelTest extends BaseTestCase {
 
 	/**
 	 * verify safe arrays work with standard applications, Excel in this case
 	 */
+	@Test
 	public void testSafeArrayViaExcel() {
 
 		ActiveXComponent xl = new ActiveXComponent("Excel.Application");

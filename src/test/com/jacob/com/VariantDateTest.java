@@ -2,6 +2,8 @@ package com.jacob.com;
 
 import java.util.Date;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
@@ -16,6 +18,7 @@ public class VariantDateTest extends BaseTestCase {
 	/**
 	 * verify the conversion of Variants into java dates
 	 */
+	@Test
 	public void testVariantDate() {
 		Date now = new Date();
 		Variant holder = new Variant();
@@ -33,6 +36,7 @@ public class VariantDateTest extends BaseTestCase {
 	 * verify that the Variant constructor accepts Java dates and converts them
 	 * correctly
 	 */
+	@Test
 	public void testVariantDateToJavaObject() {
 		Date now = new Date();
 		Variant holder = new Variant(now);

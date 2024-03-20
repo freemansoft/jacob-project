@@ -1,14 +1,16 @@
 package com.jacob.com;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
  * This tries to exercise ROT's garbage collection This is named this way
  * because the build.xml ignores files ending in Test when building the binary
  * zip file
- * 
+ *
  * This will eventually be changed to a unit test.
- * 
+ *
  * <p>
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
@@ -19,6 +21,7 @@ public class ROT3Test extends BaseTestCase {
 	/**
 	 * runs a multi-threaded test
 	 */
+	@Test
 	public void testROTVersion3() {
 		ROT3TestThread threads[] = new ROT3TestThread[4];
 		for (int i = 0; i < threads.length; i++) {
@@ -41,7 +44,7 @@ public class ROT3Test extends BaseTestCase {
 		/**
 		 * @param arg0
 		 * @param iStartCount
-		 *            the number of initial threads
+		 *                    the number of initial threads
 		 */
 		public ROT3TestThread(String arg0, int iStartCount) {
 			super(arg0);
@@ -53,7 +56,7 @@ public class ROT3Test extends BaseTestCase {
 		 * A semi-complex series of steps to put the ROT under stress. 1)
 		 * discard half the objects we've created 2) if size is greater than 1
 		 * but not a even number, add 1 new object 3) stop when size is 1.
-		 * 
+		 *
 		 * @see java.lang.Runnable#run()
 		 */
 		@SuppressWarnings("deprecation")
@@ -131,7 +134,7 @@ public class ROT3Test extends BaseTestCase {
 		/**
 		 * Another test would be to overide this to always return the same name.
 		 * That would really screw the ROT!
-		 * 
+		 *
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {

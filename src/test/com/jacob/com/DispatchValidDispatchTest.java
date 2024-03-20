@@ -1,5 +1,7 @@
 package com.jacob.com;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
@@ -15,6 +17,7 @@ public class DispatchValidDispatchTest extends BaseTestCase {
 	 * force an IllegalArgumentException to verify the utility method throws
 	 * correctly.
 	 */
+	@Test
 	public void testThrowIllegalArgumentException() {
 		try {
 			Dispatch.call(null, 0);
@@ -29,6 +32,7 @@ public class DispatchValidDispatchTest extends BaseTestCase {
 	 * force an IllegalStateException to verify the utility method throws
 	 * correctly.
 	 */
+	@Test
 	public void testThrowIllegalStateException() {
 		try {
 			Dispatch foo = new Dispatch();

@@ -1,5 +1,7 @@
 package com.jacob.test.safearray;
 
+import org.junit.Test;
+
 import com.jacob.com.ComFailException;
 import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
@@ -7,7 +9,7 @@ import com.jacob.test.BaseTestCase;
 
 /**
  * A safe array contents test (old test)
- * 
+ *
  * <p>
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
@@ -87,6 +89,7 @@ public class SafeArrayContents extends BaseTestCase {
 		System.out.println("]");
 	}
 
+	@Test
 	public void testSafeArrayContents() {
 		// int
 		System.out.println("Int");

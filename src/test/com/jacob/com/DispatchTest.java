@@ -1,5 +1,7 @@
 package com.jacob.com;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.test.BaseTestCase;
 
@@ -15,6 +17,7 @@ public class DispatchTest extends BaseTestCase {
 	/**
 	 * Verify this detects word's exit
 	 */
+	@Test
 	public void testDispatchHasExited() {
 		String pid = "Word.Application";
 		ActiveXComponent axc = new ActiveXComponent(pid);

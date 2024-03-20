@@ -1,5 +1,7 @@
 package com.jacob.test.vbscript;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComException;
 import com.jacob.com.ComThread;
@@ -16,6 +18,8 @@ import com.jacob.test.BaseTestCase;
  * options.
  */
 public class ScriptTestActiveX extends BaseTestCase {
+
+	@Test
 	public void testActiveXScript() {
 		ComThread.InitSTA(true);
 		DispatchEvents de = null;

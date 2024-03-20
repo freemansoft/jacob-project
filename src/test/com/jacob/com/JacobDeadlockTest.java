@@ -1,5 +1,7 @@
 package com.jacob.com;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
@@ -17,9 +19,9 @@ import com.jacob.test.BaseTestCase;
  * <p>
  * This test will fail with debug logging turned on because of the amount of
  * time it takes to write the debug output.
- * 
+ *
  * @author jsamarziya
- * 
+ *
  */
 public class JacobDeadlockTest extends BaseTestCase {
 	private static final long TIMEOUT = 5000l;
@@ -32,11 +34,11 @@ public class JacobDeadlockTest extends BaseTestCase {
 
 		/**
 		 * constructor for ThestThread
-		 * 
+		 *
 		 * @param id
 		 * @param initCOM
 		 * @param writeOutput
-		 * 
+		 *
 		 */
 		public TestThread(int id, boolean initCOM, boolean writeOutput) {
 			this.id = id;
@@ -71,9 +73,10 @@ public class JacobDeadlockTest extends BaseTestCase {
 	/**
 	 * This test shows that if ComThread.Init() is called explicitly, no problem
 	 * occurs.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
+	@Test
 	public void testShowNoProblemIfCOMIsInitialized()
 			throws InterruptedException {
 		runTest(2, true, false);
@@ -83,9 +86,10 @@ public class JacobDeadlockTest extends BaseTestCase {
 	/**
 	 * This test shows that if only one thread is creating COM objects, no
 	 * problem occurs.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
+	@Test
 	public void testShowNoProblemIfSingleThreaded() throws InterruptedException {
 		runTest(1, false, false);
 		runTest(1, true, false);
@@ -93,11 +97,12 @@ public class JacobDeadlockTest extends BaseTestCase {
 
 	/**
 	 * Runs the test with two threads, which don't initialize the COM thread.
-	 * 
+	 *
 	 * This test will always fail.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
+	@Test
 	public void testShowDeadlockProblem() throws InterruptedException {
 		runTest(2, false, true);
 	}

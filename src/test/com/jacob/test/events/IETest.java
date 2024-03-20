@@ -1,5 +1,7 @@
 package com.jacob.test.events;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
@@ -9,7 +11,7 @@ import com.jacob.test.BaseTestCase;
 
 /**
  * This test runs fine against jdk 1.4 and 1.5
- * 
+ *
  * This demonstrates the new event handling code in jacob 1.7 This example will
  * open up IE and print out some of the events it listens to as it navigates to
  * web sites. contributed by Niels Olof Bouvin mailto:n.o.bouvin@daimi.au.dk and
@@ -32,6 +34,7 @@ public class IETest extends BaseTestCase {
 	/**
 	 * runs the IE test and feeds it commands
 	 */
+	@Test
 	public void testRunIECleanly() {
 		runTheTest(true, testUrls);
 	}
@@ -39,13 +42,14 @@ public class IETest extends BaseTestCase {
 	/**
 	 * runs the IE test and feeds it commands
 	 */
+	@Test
 	public void testRunIETerminateWithoutWait() {
 		runTheTest(false, testUrls);
 	}
 
 	/**
 	 * The actual work of running the test.
-	 * 
+	 *
 	 * @param waitForQuit
 	 * @param urls
 	 */
@@ -99,11 +103,11 @@ class IETestThread extends Thread {
 
 	/**
 	 * constructor for the test thread
-	 * 
+	 *
 	 * @param beNeat
-	 *            should we wait until quit received
+	 *               should we wait until quit received
 	 * @param urls
-	 *            the web pages we will navigate to
+	 *               the web pages we will navigate to
 	 */
 	public IETestThread(boolean beNeat, String urls[]) {
 		super();
@@ -184,9 +188,9 @@ class IETestThread extends Thread {
 	public class IEEvents {
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void BeforeNavigate2(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -196,9 +200,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void CommandStateChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -208,9 +212,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void DocumentComplete(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -220,9 +224,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void DownloadBegin(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -232,9 +236,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void DownloadComplete(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -244,9 +248,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void NavigateError(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -256,9 +260,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void NavigateComplete2(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -268,9 +272,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void NewWindow2(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -280,9 +284,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void OnFullScreen(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -292,9 +296,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void OnMenuBar(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -304,9 +308,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void OnQuit(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -317,9 +321,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void OnStatusBar(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -329,9 +333,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void OnTheaterMode(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -341,9 +345,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void OnToolBar(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -353,9 +357,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void OnVisible(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -365,9 +369,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void ProgressChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -377,9 +381,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void PropertyChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -389,9 +393,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void SetSecureLockIcon(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -401,9 +405,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void StatusTextChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -413,9 +417,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void TitleChange(Variant[] args) {
 			System.out.println("IEEvents Received ("
@@ -425,9 +429,9 @@ class IETestThread extends Thread {
 
 		/**
 		 * Internet explorer event this proxy can receive
-		 * 
+		 *
 		 * @param args
-		 *            the COM Variant objects that this event passes in.
+		 *             the COM Variant objects that this event passes in.
 		 */
 		public void WindowClosing(Variant[] args) {
 			System.out.println("IEEvents Received ("

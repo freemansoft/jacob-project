@@ -1,5 +1,7 @@
 package com.jacob.test.safearray;
 
+import org.junit.Test;
+
 import com.jacob.com.ComThread;
 import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
@@ -14,38 +16,38 @@ import com.jacob.test.BaseTestCase;
  * SF 1085370 In my understatnding, an instance of SafeArray java class has a
  * value of a pointer to VARIANT structure that contains a pointer to a
  * SAFEARRAY strucuture.
- * 
+ *
  * On the other hand, we can create a Variant object from the SafeArray object
  * like this: SafeArray sa = ...; Variant val = new Variant(sa); the val object
  * has a pointer to another VARIANT structure that contains a pointer to the
  * same SAFEARRAY structure.
- * 
+ *
  * In this case, the val object has a pointer to another VARIANT that contains a
  * pointer to the same SAFEARRAY like this:
- * 
+ *
  * +-----------+ |SafeArray | +------------+ | m_pV--->VARIANT(a) |
  * +-----------+ | VT_ARRAY| +---------+ | parray---->SAFEARRAY| +------------+
  * +^--------+ | +-----------+ | |Variant | +------------+ | |
  * m_pVariant--->VARIANT(b) | | +-----------+ | VT_ARRAY| | | parray-----+
  * +------------+
- * 
+ *
  * When previous objects are rereased by ComThread.Release(), first the
  * VARIANT(a) is released by VariantClear() function, and second the VARIANT(b)
  * is released by VariantClear() function too. But the SAFEARRAY was already
  * released by the VARIANT(a).
- * 
+ *
  * So, in my enviroment (WinXP + J2SDK 1.4.1) the following java program is
  * sometimes crash with EXCEPTION_ACCESS_VIOLATION.
- * 
- * 
+ *
+ *
  * To solve this problem, it is nessesary to copy the SAFEARRAY like this:
- * 
+ *
  * +-----------+ |Variant | +------------+ | m_pVariant--->VARIANT(a) |
  * +-----------+ | VT_ARRAY| +---------+ | parray---->SAFEARRAY| +------------+
  * +|--------+ | +-----------+ | copySA() |SafeArray | +------------+ | |
  * m_pV--->VARIANT(b) | V +-----------+ | VT_ARRAY| +---------+ |
  * parray---->SAFEARRAY| +------------+ +---------+
- * 
+ *
  * <p>
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
@@ -58,6 +60,7 @@ public class SafeArrayReleaseTest extends BaseTestCase {
 	/**
 	 * verifies the release works on SafeArray
 	 */
+	@Test
 	public void testSaveArrayRelease() {
 		int count;
 		System.out.println("Starting test for max = " + MAX);

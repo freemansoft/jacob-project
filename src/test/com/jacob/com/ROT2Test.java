@@ -1,12 +1,14 @@
 package com.jacob.com;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
  * This test class exists to test the WeakRefernce implementation .
- * 
+ *
  * It is not useful if there isn't one at this time
- * 
+ *
  * <p>
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
@@ -17,6 +19,7 @@ public class ROT2Test extends BaseTestCase {
 	/**
 	 * runs a multi-threaded test
 	 */
+	@Test
 	public void testDoesNotBlowUp() {
 		ROT2TestThread threads[] = new ROT2TestThread[4];
 		for (int i = 0; i < threads.length; i++) {
@@ -39,7 +42,7 @@ public class ROT2Test extends BaseTestCase {
 		/**
 		 * @param arg0
 		 * @param iStartCount
-		 *            the initial number of threads
+		 *                    the initial number of threads
 		 */
 		public ROT2TestThread(String arg0, int iStartCount) {
 			super(arg0);
@@ -51,7 +54,7 @@ public class ROT2Test extends BaseTestCase {
 		 * A semi-complex series of steps to put the ROT under stress. 1)
 		 * discard half the objects we've created 2) if size is greater than 1
 		 * but not a even number, add 1 new object 3) stop when size is 1.
-		 * 
+		 *
 		 * @see java.lang.Runnable#run()
 		 */
 		public void run() {
@@ -112,7 +115,7 @@ public class ROT2Test extends BaseTestCase {
 		/**
 		 * Another test would be to override this to always return the same
 		 * name. That would really screw the ROT!
-		 * 
+		 *
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {

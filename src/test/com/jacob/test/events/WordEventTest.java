@@ -1,5 +1,7 @@
 package com.jacob.test.events;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComException;
 import com.jacob.com.DispatchEvents;
@@ -22,9 +24,10 @@ public class WordEventTest extends BaseTestCase {
 
 	/**
 	 * load up word, register for events and make stuff happen
-	 * 
+	 *
 	 * @param args
 	 */
+	@Test
 	public void testCaptureWordEvents() {
 		String pid = "Word.Application";
 		String typeLibLocation = null;

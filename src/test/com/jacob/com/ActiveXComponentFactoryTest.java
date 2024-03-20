@@ -1,5 +1,7 @@
 package com.jacob.com;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.test.BaseTestCase;
 
@@ -18,6 +20,7 @@ public class ActiveXComponentFactoryTest extends BaseTestCase {
 	 * too. Unfortunately, it requires that the runner of the test verify via
 	 * the "Windows Task Manager"
 	 */
+	@Test
 	public void testMultipleInstances() {
 		ComThread.InitMTA();
 		String mApplicationId = "Word.Application";
@@ -40,6 +43,7 @@ public class ActiveXComponentFactoryTest extends BaseTestCase {
 	 * single running instance. It requires that a user physically watch the
 	 * "Windows Task Manager" to verify only one copy of MS Word is executing
 	 */
+	@Test
 	public void testOnlyOneInstance() {
 		ComThread.InitMTA();
 		String mApplicationId = "Word.Application";
@@ -59,6 +63,7 @@ public class ActiveXComponentFactoryTest extends BaseTestCase {
 	/**
 	 * Test that verifies function of the ActiveXComponentFactory
 	 */
+	@Test
 	public void testActiveXComponentFactory() {
 		ComThread.InitSTA(true);
 		try {

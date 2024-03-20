@@ -7,11 +7,13 @@ package com.jacob.test.windowsmedia;
  * <p>
  * this doesn't actually play for some reason.  It always says the length is 0.
  * <p>
- * May need to run with some command line options (including from inside Eclipse).  
+ * May need to run with some command line options (including from inside Eclipse).
  * Look in the docs area at the Jacob usage document for command line options.
  * <p>
  */
 import java.io.File;
+
+import org.junit.Test;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
@@ -23,6 +25,7 @@ public class WMPlayer extends BaseTestCase {
 	/**
 	 * This should demo the media player but it doesn't
 	 */
+	@Test
 	public void testOpenWMPlayer() {
 		// this file exists in windows 7 installations
 		File file = new File(

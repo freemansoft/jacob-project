@@ -1,5 +1,7 @@
 package com.jacob.test.safearray;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
@@ -19,13 +21,14 @@ import com.jacob.test.BaseTestCase;
  * cycle. Running the same program with setString(r,c,String) does not show the
  * same symptoms
  */
-public class SafeArrayLeak extends BaseTestCase {
+public class SafeArrayLeakTest extends BaseTestCase {
 
 	/**
 	 * ----------------------------------------------------------------------------------------------------------------------------
-	 * 
+	 *
 	 * ----------------------------------------------------------------------------------------------------------------------------
 	 */
+	@Test
 	public void testLeakWithSetString() {
 
 		ActiveXComponent xl = null;

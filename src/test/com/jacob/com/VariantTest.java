@@ -4,11 +4,13 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+import org.junit.Test;
+
 import com.jacob.test.BaseTestCase;
 
 /**
  * runs through some of the get and set methods on Variant
- * 
+ *
  * <p>
  * May need to run with some command line options (including from inside
  * Eclipse). Look in the docs area at the Jacob usage document for command line
@@ -22,8 +24,9 @@ public class VariantTest extends BaseTestCase {
 	 * <p>
 	 * It compares the toJavaObject() for a byref against the toJavaObject() for
 	 * the regular.
-	 * 
+	 *
 	 */
+	@Test
 	public void testByRefToJavaObject() {
 		Variant v = null;
 		Variant vByRef = null;
@@ -91,6 +94,7 @@ public class VariantTest extends BaseTestCase {
 	/**
 	 * try and test VT_I8. This should only work on 64 bit machines
 	 */
+	@Test
 	public void testLong() {
 		Variant v = null;
 		Variant vByRef = null;
@@ -112,6 +116,7 @@ public class VariantTest extends BaseTestCase {
 	/**
 	 * do some testing around currencies
 	 */
+	@Test
 	public void testCurrencyHandling() {
 		Variant v = null;
 		Variant vByRef = null;
@@ -145,8 +150,9 @@ public class VariantTest extends BaseTestCase {
 	/**
 	 * 4/2007 bug report toObject on dispatch tries to call getDispatchRef
 	 * instead of getDispatch so toString() on dispatch blows up.
-	 * 
+	 *
 	 */
+	@Test
 	public void testDispatchToJavaObject() {
 		Variant v2 = new Variant();
 		v2.putNothing();
@@ -156,8 +162,9 @@ public class VariantTest extends BaseTestCase {
 
 	/**
 	 * see what happens when we conver to by ref
-	 * 
+	 *
 	 */
+	@Test
 	public void testSomeChangeVT() {
 		Variant v;
 		// the code shows e shouldn't need to use a returned Variant but the
@@ -193,8 +200,9 @@ public class VariantTest extends BaseTestCase {
 
 	/**
 	 * make sure variant with no backing store works.
-	 * 
+	 *
 	 */
+	@Test
 	public void testUninitializedVariant() {
 		Variant v;
 		// Variants created without parameters are auto set to VariantEmpty
@@ -224,9 +232,10 @@ public class VariantTest extends BaseTestCase {
 	}
 
 	/**
-	 * 
+	 *
 	 * verify the toString() method does not do type conversion
 	 */
+	@Test
 	public void testToStringDoesNotConvert() {
 		Variant v;
 		v = new Variant(true);
@@ -256,6 +265,7 @@ public class VariantTest extends BaseTestCase {
 	/**
 	 * Exercise ToString special cases
 	 */
+	@Test
 	public void testToStringEmptyValues() {
 		Variant v;
 		// create an empty variant
@@ -283,6 +293,7 @@ public class VariantTest extends BaseTestCase {
 	 * Verify that booleans can be released. Part of the suite that checks all
 	 * types.
 	 */
+	@Test
 	public void testSafeReleaseBoolean() {
 		Variant v;
 		v = new Variant(true);
@@ -316,8 +327,9 @@ public class VariantTest extends BaseTestCase {
 
 	/**
 	 * verify the constant values aren't released with safeRelease
-	 * 
+	 *
 	 */
+	@Test
 	public void testSafeReleaseConstant() {
 		// System.out.println("Using Static constant Variant - should never
 		// throw access violation");
@@ -349,8 +361,9 @@ public class VariantTest extends BaseTestCase {
 	 * this used to try and and create an access violation but that didn't work
 	 * and now the methods on the Variant are smarter about working after a
 	 * release
-	 * 
+	 *
 	 */
+	@Test
 	public void testSafeReleaseString() {
 		String mTestString = "Guitar Hero";
 		Variant v = new Variant(mTestString);
@@ -369,8 +382,9 @@ public class VariantTest extends BaseTestCase {
 
 	/**
 	 * verifies objectIsAConstant works as expected
-	 * 
+	 *
 	 */
+	@Test
 	public void testObjectIsAConstant() {
 		Variant v = new Variant("d");
 		if (!v.objectIsAConstant(Variant.VT_FALSE)) {
@@ -396,8 +410,9 @@ public class VariantTest extends BaseTestCase {
 
 	/**
 	 * tests put and get methods looking for obvious defects
-	 * 
+	 *
 	 */
+	@Test
 	public void testPutsAndGets() {
 		Variant v = new Variant();
 
@@ -481,6 +496,7 @@ public class VariantTest extends BaseTestCase {
 	/**
 	 * verify decimal works right
 	 */
+	@Test
 	public void testDecimalConversion() {
 		Variant v = new Variant();
 		v.changeType(Variant.VariantDecimal);
@@ -505,8 +521,9 @@ public class VariantTest extends BaseTestCase {
 	 * for(BigDecimal i in 79228162514264337593543950330.0 ..
 	 * 79228162514264337593543950341.0) { com.jacob.com.Variant dv = new
 	 * com.jacob.com.Variant(i, false) println i + " : " + dv.getDecimal() }
-	 * 
+	 *
 	 */
+	@Test
 	public void testLargeDecimals() {
 		// the largest decimal number, not in hex is
 		// 7922816251426433759354395033.0
@@ -568,12 +585,14 @@ public class VariantTest extends BaseTestCase {
 				+ modifiedDecimal.scale());
 		System.out.println("integer piece after rounding without scale is "
 				+ VariantUtilities.roundToMSDecimal(modifiedDecimal)
-						.unscaledValue().toString(16) + " scale=: "
+						.unscaledValue().toString(16)
+				+ " scale=: "
 				+ modifiedDecimal.scale());
 		System.out.println("integer piece after rounding with scale 30 is "
 				+ VariantUtilities
 						.roundToMSDecimal(modifiedDecimal.setScale(30))
-						.unscaledValue().toString(16) + " scale=: "
+						.unscaledValue().toString(16)
+				+ " scale=: "
 				+ modifiedDecimal.scale());
 		try {
 			testVariant.putDecimal(VariantUtilities
@@ -592,12 +611,14 @@ public class VariantTest extends BaseTestCase {
 				+ modifiedDecimal.scale());
 		System.out.println("integer piece after rounding without scale is "
 				+ VariantUtilities.roundToMSDecimal(modifiedDecimal)
-						.unscaledValue().toString(16) + " scale=: "
+						.unscaledValue().toString(16)
+				+ " scale=: "
 				+ modifiedDecimal.scale());
 		System.out.println("integer piece after rounding with scale 30 is "
 				+ VariantUtilities
 						.roundToMSDecimal(modifiedDecimal.setScale(30))
-						.unscaledValue().toString(16) + " scale=: "
+						.unscaledValue().toString(16)
+				+ " scale=: "
 				+ modifiedDecimal.scale());
 		testVariant.putDecimal(VariantUtilities
 				.roundToMSDecimal(modifiedDecimal.setScale(30)));
@@ -608,8 +629,9 @@ public class VariantTest extends BaseTestCase {
 	 * Spin up a lot of threads and have them all create variants 3/2007 there
 	 * have been several reports in multi-threaded servers that show init()
 	 * failing
-	 * 
+	 *
 	 */
+	@Test
 	public void testManyThreadedInit() {
 		VariantInitTestThread threads[] = new VariantInitTestThread[75];
 
@@ -643,7 +665,7 @@ public class VariantTest extends BaseTestCase {
 
 	/**
 	 * a class to create variants in separate threads
-	 * 
+	 *
 	 */
 	class VariantInitTestThread extends Thread {
 		private boolean isComplete = false;
@@ -652,9 +674,9 @@ public class VariantTest extends BaseTestCase {
 
 		/**
 		 * @param newThreadName
-		 *            the name for the thread
+		 *                      the name for the thread
 		 * @param iStartCount
-		 *            number of threads to start with
+		 *                      number of threads to start with
 		 */
 		public VariantInitTestThread(String newThreadName, int iStartCount) {
 			super(newThreadName);
@@ -664,7 +686,7 @@ public class VariantTest extends BaseTestCase {
 
 		/**
 		 * getter so master can see if thread is done
-		 * 
+		 *
 		 * @return state of complete flag
 		 */
 		public boolean isComplete() {
@@ -673,7 +695,7 @@ public class VariantTest extends BaseTestCase {
 
 		/**
 		 * Blow out a bunch of Variants
-		 * 
+		 *
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override

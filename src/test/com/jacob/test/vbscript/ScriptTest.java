@@ -1,5 +1,7 @@
 package com.jacob.test.vbscript;
 
+import org.junit.Test;
+
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComException;
 import com.jacob.com.ComThread;
@@ -18,6 +20,7 @@ import com.jacob.test.BaseTestCase;
  */
 public class ScriptTest extends BaseTestCase {
 
+	@Test
 	public void testStupidSpeedTest() {
 		String lang = "VBScript";
 		ActiveXComponent sC = new ActiveXComponent("ScriptControl");
@@ -28,6 +31,7 @@ public class ScriptTest extends BaseTestCase {
 		}
 	}
 
+	@Test
 	public void testCreatingDispatchEvents() {
 		ComThread.InitSTA(true);
 		DispatchEvents de = null;
