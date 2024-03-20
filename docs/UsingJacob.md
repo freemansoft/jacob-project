@@ -22,7 +22,7 @@ Section not yet written.
 
 ## The Jacob DLL
 
-Jacob.jar relies on a DLL file that it loads off of the library path or classpath. This means that you must either copy the appropriate jacob dll into your path or use VM options to add directory holding jacob dll to the path. Prior to 1.14M6, the jacob DLL name was always "jacob.dll". This made it hard to verify jacob was loading the correct dll when multiple copies of jacob were installed on a single system. It also was confusing on 64 bit systems where the 32 bit and 64 bit dlls have the same tames. Starting in 1.14M6, Jacob's library loader selects a dll with the appropriate name based on the jacob release and platform. The dll naming convention is:  
+Jacob.jar relies on a DLL file that it loads off of the library path or classpath. This means that you must either copy the appropriate jacob dll into your path or use VM options to add directory holding jacob dll to the path. Prior to 1.14M6, the jacob DLL name was always "jacob.dll". This made it hard to verify jacob was loading the correct dll when multiple copies of jacob were installed on a single system. It also was confusing on 64 bit systems where the 32 bit and 64 bit dlls have the same tames. Starting in 1.14M6, Jacob's library loader selects a dll with the appropriate name based on the jacob release and platform. The dll naming convention is:
 `jacob<platform>.<version.>.dll`
 
  Classloader issues
@@ -39,9 +39,10 @@ Jacob 1.13 is built with VC++ 2005 that creates a dependency on msvcr80.dll. Win
 
 If you see the following message then you probably don't have the right C++ libraries.
 
-<pre>	Exception in thread "main" java.lang.UnsatisfiedLinkError: C:\apps\...\jacob.dll: This application has 
-	failed to start because the application configuration is incorrect. Reinstalling the application may fix this problem 
-</pre>
+```txt
+Exception in thread "main" java.lang.UnsatisfiedLinkError: C:\apps\...\jacob.dll: This application has
+    failed to start because the application configuration is incorrect. Reinstalling the application may fix this problem
+```
 
 [Visual C redistributable installer SP1](http://www.microsoft.com/downloads/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en)
 
@@ -108,7 +109,7 @@ Setting this flag to false causes Jacob to check the and <class_name>.PutInROT p
 <td valign="top">
  <class_name>.PutInROT
 </td>
-<td>Lets a program specify that instances of certain classes are to not be inserted into the ROT. This experimental (1.13) feature provides a mechanism for freeing VariantViaEvent objects that are created in Event threads. There is normally no way to free those objects because the thread terminates outside of any normally MTA/STA Startup/Teardown code. Each event occurs in a new thread and creates a new ROT entry so they grow without bounds.This option may cause VM crashes in certain situations where windows memory is freed outside of the thread it was created in but empirical evidence shows there are situations where this great reduces the long running memory footprint of applications that process a lot of events. _This function is still experimental_. The functionality was added 1.13\. Some of this overlaps the experimental `com.jacob.autogc` introduced in 1.9\. See the ROT.java test program for an example of the effects of this option.This value is checked every time and can be changed on-the-fly via `System.setProperty();`Example: `System.setProperty("com.jacob.com.VariantViaVariant.PutInROT","false");`  
+<td>Lets a program specify that instances of certain classes are to not be inserted into the ROT. This experimental (1.13) feature provides a mechanism for freeing VariantViaEvent objects that are created in Event threads. There is normally no way to free those objects because the thread terminates outside of any normally MTA/STA Startup/Teardown code. Each event occurs in a new thread and creates a new ROT entry so they grow without bounds.This option may cause VM crashes in certain situations where windows memory is freed outside of the thread it was created in but empirical evidence shows there are situations where this great reduces the long running memory footprint of applications that process a lot of events. _This function is still experimental_. The functionality was added 1.13\. Some of this overlaps the experimental `com.jacob.autogc` introduced in 1.9\. See the ROT.java test program for an example of the effects of this option.This value is checked every time and can be changed on-the-fly via `System.setProperty();`Example: `System.setProperty("com.jacob.com.VariantViaVariant.PutInROT","false");`
 Example: `-Dcom.jacob.com.VariantViaVariant.PutInROT=false`</td>
 </tr>
 <tr>
@@ -132,15 +133,47 @@ Example: `-Dcom.jacob.com.VariantViaVariant.PutInROT=false`</td>
 </tr>
 </tbody>
 </table>
-***
 
 ## Finding the DLL version using windows command line
 
 The jacob.dll file includes the jacob release number in the version field. Run the following from the command prompt `dumpbin /version jacob.dll` . The dll version number is stored in the "image version" field of the "OPTIONAL HEADER VALUES" section. This information from [The Microsoft msdn web site](http://msdn2.microsoft.com/en-gb/library/h88b7dc8(VS.71).aspx)
 
-***
 
 ## Unit Tests
 
-Jacob must know the location of the DLL when running the unit tests in Eclipse. The simplest way to do this is to add the dll path to the unit as a VM argument. The argument should be specified based on where you installed the jacob source package. If you have jacob unpacked in c:/dev/jacob and built using build.xml, then the vm arguments would be:  
-`-Djava.library.path=c:/dev/jacob/release/x86` .Last Modified 4/2008 1.15
+Jacob must know the location of the DLL when running the unit tests from the command line or inside an IDE.
+The simplest way to do this is to add the dll path to the unit as a VM argument.
+The argument should be specified based on where you installed the jacob source package.
+If you have jacob unpacked in c:/dev/jacob and built using build.xml, then the vm arguments would be:
+`-Djava.library.path=c:/dev/jacob/release/x86` .
+
+If you are running it from inside a test runner in an IDE like VSCode.  Then you need to set up the runner to pass the DLL library location to all the tests
+using `-Djava.library.path`
+
+This is a sample workspace settings.json fragment that configures the dll and jars for the tests.
+
+```json
+{
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-1.8",
+      "path": "C:\\Program Files\\Amazon Corretto\\jdk1.8.0_372"
+    }
+  ],
+  "java.test.defaultConfig": "64bitDll",
+  "java.test.config": [
+    {
+      "name": "64bitDll",
+      "workingDirectory": "${workspaceFolder}",
+      "classPaths": [
+        "${workspaceFolder}/release/java",
+        "${workspaceFolder}/lib/hamcrest-2.2.jar",
+        "${workspaceFolder}/lib/junit-4.13.jar"
+      ],
+
+      "vmargs": ["-Djava.library.path=${workspaceFolder}\\release\\x64"]
+    }
+  ]
+}
+
+```

@@ -18,6 +18,7 @@ JacobVersion.properties
 setenv.sh
 junit*properties
 ~$*
+settings.json
 
 /out
 /.idea

@@ -47,21 +47,21 @@ See [ReleaseNotes](docs/ReleaseNotes.md) for a full history.
 
 #### Tracked Changes 1.21
 
-| Item                                                   | Description                                     |
-| ------------------------------------------------------ | ----------------------------------------------- |
-| **Bugs**                                               |                                                 |
-| https://github.com/freemansoft/jacob-project/issues/35 | Add Iterable to EnumVariant                     |
-| https://github.com/freemansoft/jacob-project/issues/36 | Memory Leak                                     |
-| https://github.com/freemansoft/jacob-project/issues/38 | Implement Comparable on Currency                |
-| https://github.com/freemansoft/jacob-project/issues/40 | Incorrect delete in Dispatch JNI Invoke()       |
-| https://github.com/freemansoft/jacob-project/issues/42 | ArrayIndexOutOfBounds SafeArray                 |
-| https://github.com/freemansoft/jacob-project/issues/43 | Memory Leaks in DispatchEvents.cpp              |
-| https://github.com/freemansoft/jacob-project/issues/45 | SaveArray init0                                 |
-| https://github.com/freemansoft/jacob-project/issues/48 | Incorrect multi dimensional array element count |
-|                                                        |                                                 |
-| **Patches**                                            |                                                 |
-| none                                                   | none                                            |
-|                                                        |                                                 |
-| **Feature Requests**                                   |                                                 |
-| none                                                   | none                                            |
+| Item                                                     | Description                                     |
+| -------------------------------------------------------- | ----------------------------------------------- |
+| **Bugs**                                                 |                                                 |
+| <https://github.com/freemansoft/jacob-project/issues/35> | Add Iterable to EnumVariant                     |
+| <https://github.com/freemansoft/jacob-project/issues/36> | Memory Leak                                     |
+| <https://github.com/freemansoft/jacob-project/issues/38> | Implement Comparable on Currency                |
+| <https://github.com/freemansoft/jacob-project/issues/40> | Incorrect delete in Dispatch JNI Invoke()       |
+| <https://github.com/freemansoft/jacob-project/issues/42> | ArrayIndexOutOfBounds SafeArray                 |
+| <https://github.com/freemansoft/jacob-project/issues/43> | Memory Leaks in DispatchEvents.cpp              |
+| <https://github.com/freemansoft/jacob-project/issues/45> | SaveArray init0                                 |
+| <https://github.com/freemansoft/jacob-project/issues/48> | Incorrect multi dimensional array element count |
+|                                                          |                                                 |
+| **Patches**                                              |                                                 |
+| none                                                     | none                                            |
+|                                                          |                                                 |
+| **Feature Requests**                                     |                                                 |
+| none                                                     | none                                            |
 
