@@ -36,16 +36,18 @@ public class ExcelEventTest extends BaseTestCase {
 		String excelApplicationProgramId = "Excel.Application";
 		String excelSheetProgramId = "Excel.Sheet";
 		String typeLibLocation;
-		// office 2003
+		// office 2003 32 bit
 		typeLibLocation = "C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE";
-		// office 2007
+		// office 2007 32 bit
 		typeLibLocation = "C:\\Program Files\\Microsoft Office\\OFFICE12\\EXCEL.EXE";
 		// office 2013 32 bit
 		typeLibLocation = "C:\\Program Files (x86)\\Microsoft Office\\Office14\\EXCEL.EXE";
-		// Office 2013 32
+		// Office 2013 32 bit
 		typeLibLocation = "C:\\Program Files (x86)\\Microsoft Office\\Office15\\EXCEL.EXE";
-		// Office 2019 32
+		// Office 2019 32 bit
 		typeLibLocation = "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\EXCEL.EXE";
+		// Office 2019 64 bit
+		typeLibLocation = "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE";
 
 		// Grab The Component.
 		ActiveXComponent axc = new ActiveXComponent(excelApplicationProgramId);
