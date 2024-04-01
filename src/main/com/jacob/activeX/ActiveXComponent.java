@@ -47,12 +47,12 @@ public class ActiveXComponent extends Dispatch {
 	 * This constructor causes a new Windows object of the requested type to be
 	 * created. The windows CoCreate() function gets called to create the
 	 * underlying windows object.
-	 * 
+	 *
 	 * <pre>
 	 * new ActiveXComponent(&quot;ScriptControl&quot;);
 	 * </pre>
-	 * 
-	 * @param programId
+	 *
+	 * @param programId the registry identifer for the target
 	 */
 	public ActiveXComponent(String programId) {
 		super(programId);
@@ -62,8 +62,8 @@ public class ActiveXComponent extends Dispatch {
 	 * Creates an active X component that is built on top of the COM pointers
 	 * held in the passed in dispatch. This widens the Dispatch object to pick
 	 * up the ActiveXComponent API
-	 * 
-	 * @param dispatchToBeWrapped
+	 *
+	 * @param dispatchToBeWrapped - can wrap an ActiveXComponent around a dispatch
 	 */
 	public ActiveXComponent(Dispatch dispatchToBeWrapped) {
 		super(dispatchToBeWrapped);
@@ -71,7 +71,7 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * only used by the factories
-	 * 
+	 *
 	 */
 	private ActiveXComponent() {
 		super();
@@ -80,7 +80,7 @@ public class ActiveXComponent extends Dispatch {
 	/**
 	 * Probably was a cover for something else in the past. Should be
 	 * deprecated.
-	 * 
+	 *
 	 * @return Now it actually returns this exact same object.
 	 */
 	public Dispatch getObject() {
@@ -97,8 +97,8 @@ public class ActiveXComponent extends Dispatch {
 	 * throws no exceptions and returns null on failure.
 	 * <p>
 	 * This will fail for any prog id with a ":" in it.
-	 * 
-	 * @param pRequestedProgramId
+	 *
+	 * @param pRequestedProgramId the program id from the registry
 	 * @return Dispatch pointer to the COM object or null if couldn't create
 	 */
 	public static ActiveXComponent createNewInstance(String pRequestedProgramId) {
@@ -126,8 +126,8 @@ public class ActiveXComponent extends Dispatch {
 	 * that it throws no exceptions and returns null on failure.
 	 * <p>
 	 * This will fail for any prog id with a ":" in it
-	 * 
-	 * @param pRequestedProgramId
+	 *
+	 * @param pRequestedProgramId the regsistry program id
 	 * @return Dispatch pointer to a COM object or null if wasn't already
 	 *         running
 	 */
@@ -157,15 +157,15 @@ public class ActiveXComponent extends Dispatch {
 
 	/*
 	 * ============================================================
-	 * 
+	 *
 	 * start of instance based calls to the COM layer
 	 * ===========================================================
 	 */
 
 	/**
 	 * retrieves a property and returns it as a Variant
-	 * 
-	 * @param propertyName
+	 *
+	 * @param propertyName the property name
 	 * @return variant value of property
 	 */
 	public Variant getProperty(String propertyName) {
@@ -174,8 +174,8 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * retrieves a property and returns it as an ActiveX component
-	 * 
-	 * @param propertyName
+	 *
+	 * @param propertyName the property name
 	 * @return Dispatch representing the object under the property name
 	 */
 	public ActiveXComponent getPropertyAsComponent(String propertyName) {
@@ -186,9 +186,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * retrieves a property and returns it as a Boolean
-	 * 
-	 * @param propertyName
-	 *            property we are looking up
+	 *
+	 * @param propertyName the property name
+	 *                     property we are looking up
 	 * @return boolean value of property
 	 */
 	public boolean getPropertyAsBoolean(String propertyName) {
@@ -197,9 +197,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * retrieves a property and returns it as a byte
-	 * 
-	 * @param propertyName
-	 *            property we are looking up
+	 *
+	 * @param propertyName the property name
+	 *                     property we are looking up
 	 * @return byte value of property
 	 */
 	public byte getPropertyAsByte(String propertyName) {
@@ -208,8 +208,8 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * retrieves a property and returns it as a String
-	 * 
-	 * @param propertyName
+	 *
+	 * @param propertyName the property name
 	 * @return String value of property
 	 */
 	public String getPropertyAsString(String propertyName) {
@@ -219,8 +219,8 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * retrieves a property and returns it as a int
-	 * 
-	 * @param propertyName
+	 *
+	 * @param propertyName the property name
 	 * @return the property value as an int
 	 */
 	public int getPropertyAsInt(String propertyName) {
@@ -229,11 +229,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * sets a property on this object
-	 * 
-	 * @param propertyName
-	 *            property name
-	 * @param arg
-	 *            variant value to be set
+	 *
+	 * @param propertyName property name
+	 * @param arg          variant value to be set
 	 */
 	public void setProperty(String propertyName, Variant arg) {
 		Dispatch.put(this, propertyName, arg);
@@ -241,11 +239,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * sets a property on this object
-	 * 
-	 * @param propertyName
-	 *            property name
-	 * @param arg
-	 *            variant value to be set
+	 *
+	 * @param propertyName property name
+	 * @param arg          variant value to be set
 	 */
 	public void setProperty(String propertyName, Dispatch arg) {
 		Dispatch.put(this, propertyName, arg);
@@ -253,9 +249,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * sets a property to be the value of the string
-	 * 
-	 * @param propertyName
-	 * @param propertyValue
+	 *
+	 * @param propertyName  the property name
+	 * @param propertyValue the new value
 	 */
 	public void setProperty(String propertyName, String propertyValue) {
 		this.setProperty(propertyName, new Variant(propertyValue));
@@ -263,10 +259,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * sets a property as a boolean value
-	 * 
-	 * @param propertyName
-	 * @param propValue
-	 *            the boolean value we want the prop set to
+	 *
+	 * @param propertyName the property name
+	 * @param propValue    the boolean value we want the prop set to
 	 */
 	public void setProperty(String propertyName, boolean propValue) {
 		this.setProperty(propertyName, new Variant(propValue));
@@ -274,10 +269,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * sets a property as a boolean value
-	 * 
-	 * @param propertyName
-	 * @param propValue
-	 *            the boolean value we want the prop set to
+	 *
+	 * @param propertyName the property value
+	 * @param propValue    the boolean value we want the prop set to
 	 */
 	public void setProperty(String propertyName, byte propValue) {
 		this.setProperty(propertyName, new Variant(propValue));
@@ -285,10 +279,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * sets the property as an int value
-	 * 
-	 * @param propertyName
-	 * @param propValue
-	 *            the int value we want the prop to be set to.
+	 *
+	 * @param propertyName the property name
+	 * @param propValue    the int value we want the prop to be set to.
 	 */
 	public void setProperty(String propertyName, int propValue) {
 		this.setProperty(propertyName, new Variant(propValue));
@@ -306,12 +299,10 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * used by the doc and application listeners to get intelligent logging
-	 * 
-	 * @param description
-	 *            event description
-	 * @param args
-	 *            args passed in (variants)
-	 * 
+	 *
+	 * @param description event description
+	 * @param args        args passed in (variants)
+	 *
 	 */
 	public void logCallbackEvent(String description, Variant[] args) {
 		String argString = "";
@@ -364,15 +355,15 @@ public class ActiveXComponent extends Dispatch {
 
 	/*
 	 * ==============================================================
-	 * 
+	 *
 	 * covers for dispatch call methods
 	 * =============================================================
 	 */
 
 	/**
 	 * makes a dispatch call for the passed in action and no parameter
-	 * 
-	 * @param callAction
+	 *
+	 * @param callAction the action to be called
 	 * @return ActiveXComponent representing the results of the call
 	 */
 	public ActiveXComponent invokeGetComponent(String callAction) {
@@ -381,9 +372,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * makes a dispatch call for the passed in action and single parameter
-	 * 
-	 * @param callAction
-	 * @param parameters
+	 *
+	 * @param callAction the action to be passed in
+	 * @param parameters this looks plural..
 	 * @return ActiveXComponent representing the results of the call
 	 */
 	public ActiveXComponent invokeGetComponent(String callAction,
@@ -393,9 +384,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * invokes a single parameter call on this dispatch that returns no value
-	 * 
-	 * @param actionCommand
-	 * @param parameter
+	 *
+	 * @param actionCommand the call name
+	 * @param parameter     the String parameter
 	 * @return a Variant but that may be null for some calls
 	 */
 	public Variant invoke(String actionCommand, String parameter) {
@@ -405,9 +396,9 @@ public class ActiveXComponent extends Dispatch {
 	/**
 	 * makes a dispatch call to the passed in action with a single boolean
 	 * parameter
-	 * 
-	 * @param actionCommand
-	 * @param parameter
+	 *
+	 * @param actionCommand the call name
+	 * @param parameter     the boolean parameter
 	 * @return Variant result
 	 */
 	public Variant invoke(String actionCommand, boolean parameter) {
@@ -416,9 +407,9 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * makes a dispatch call to the passed in action with a single int parameter
-	 * 
-	 * @param actionCommand
-	 * @param parameter
+	 *
+	 * @param actionCommand the command
+	 * @param parameter     the int parameter
 	 * @return Variant result of the invoke (Dispatch.call)
 	 */
 	public Variant invoke(String actionCommand, int parameter) {
@@ -428,10 +419,10 @@ public class ActiveXComponent extends Dispatch {
 	/**
 	 * makes a dispatch call to the passed in action with a string and integer
 	 * parameter (this was put in for some application)
-	 * 
-	 * @param actionCommand
-	 * @param parameter1
-	 * @param parameter2
+	 *
+	 * @param actionCommand command that requires a string and int vlaues
+	 * @param parameter1    the string parameter
+	 * @param parameter2    the int parameter
 	 * @return Variant result
 	 */
 	public Variant invoke(String actionCommand, String parameter1,
@@ -443,10 +434,10 @@ public class ActiveXComponent extends Dispatch {
 	/**
 	 * makes a dispatch call to the passed in action with two integer parameters
 	 * (this was put in for some application)
-	 * 
-	 * @param actionCommand
-	 * @param parameter1
-	 * @param parameter2
+	 *
+	 * @param actionCommand the action that accepts 2 int parmaeters
+	 * @param parameter1    first of two int parameters
+	 * @param parameter2    the second of two int parameters
 	 * @return a Variant but that may be null for some calls
 	 */
 	public Variant invoke(String actionCommand, int parameter1, int parameter2) {
@@ -456,8 +447,8 @@ public class ActiveXComponent extends Dispatch {
 
 	/**
 	 * makes a dispatch call for the passed in action and no parameter
-	 * 
-	 * @param callAction
+	 *
+	 * @param callAction action name that requires zero parameters
 	 * @return a Variant but that may be null for some calls
 	 */
 	public Variant invoke(String callAction) {
@@ -467,9 +458,9 @@ public class ActiveXComponent extends Dispatch {
 	/**
 	 * This is really a cover for call(String,Variant[]) that should be
 	 * eliminated call with a variable number of args mainly used for quit.
-	 * 
-	 * @param name
-	 * @param args
+	 *
+	 * @param name the name we are invoking
+	 * @param args a single arg
 	 * @return Variant returned by the invoke (Dispatch.callN)
 	 */
 	public Variant invoke(String name, Variant... args) {

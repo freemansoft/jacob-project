@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.jacob.com;
 
@@ -20,7 +20,7 @@ public final class VariantUtilities {
 	/**
 	 * Populates a variant object from a java object. This method attempts to
 	 * figure out the appropriate Variant type
-	 * 
+	 *
 	 * @param targetVariant
 	 * @param pValueObject
 	 * @param fByRef
@@ -125,7 +125,7 @@ public final class VariantUtilities {
 	/**
 	 * Map arguments based on msdn documentation. This method relies on the
 	 * variant constructor except for arrays.
-	 * 
+	 *
 	 * @param objectToBeMadeIntoVariant
 	 * @return Variant that represents the object
 	 */
@@ -207,7 +207,7 @@ public final class VariantUtilities {
 	/**
 	 * converts an array of objects into an array of Variants by repeatedly
 	 * calling obj2Variant(Object)
-	 * 
+	 *
 	 * @param arrayOfObjectsToBeConverted
 	 * @return Variant[]
 	 */
@@ -234,15 +234,12 @@ public final class VariantUtilities {
 	 * special data types (it shouldn't do any!)
 	 * <p>
 	 * Converts Variant.VariantArray types to SafeArrays
-	 * 
+	 *
 	 * @return Corresponding Java object of the type matching the Variant type.
-	 * @throws IllegalStateException
-	 *             if no underlying windows data structure
-	 * @throws NotImplementedException
-	 *             if unsupported conversion is requested
-	 * @throws JacobException
-	 *             if the calculated result was a JacobObject usually as a
-	 *             result of error
+	 * @throws IllegalStateException   if no underlying windows data structure
+	 * @throws NotImplementedException if unsupported conversion is requested
+	 * @throws JacobException          if the calculated result was a JacobObject
+	 *                                 usually as a result of error
 	 */
 	protected static Object variantToObject(Variant sourceData) {
 		Object result = null;
@@ -263,115 +260,115 @@ public final class VariantUtilities {
 			result = array;
 		} else { // non-array object returned
 			switch (type) {
-			case Variant.VariantEmpty: // 0
-			case Variant.VariantNull: // 1
-				break;
-			case Variant.VariantShort: // 2
-				result = new Short(sourceData.getShort());
-				break;
-			case Variant.VariantShort | Variant.VariantByref: // 2
-				result = new Short(sourceData.getShortRef());
-				break;
-			case Variant.VariantInt: // 3
-				result = new Integer(sourceData.getInt());
-				break;
-			case Variant.VariantInt | Variant.VariantByref: // 3
-				result = new Integer(sourceData.getIntRef());
-				break;
-			case Variant.VariantFloat: // 4
-				result = new Float(sourceData.getFloat());
-				break;
-			case Variant.VariantFloat | Variant.VariantByref: // 4
-				result = new Float(sourceData.getFloatRef());
-				break;
-			case Variant.VariantDouble: // 5
-				result = new Double(sourceData.getDouble());
-				break;
-			case Variant.VariantDouble | Variant.VariantByref: // 5
-				result = new Double(sourceData.getDoubleRef());
-				break;
-			case Variant.VariantCurrency: // 6
-				result = sourceData.getCurrency();
-				break;
-			case Variant.VariantCurrency | Variant.VariantByref: // 6
-				result = sourceData.getCurrencyRef();
-				break;
-			case Variant.VariantDate: // 7
-				result = sourceData.getJavaDate();
-				break;
-			case Variant.VariantDate | Variant.VariantByref: // 7
-				result = sourceData.getJavaDateRef();
-				break;
-			case Variant.VariantString: // 8
-				result = sourceData.getString();
-				break;
-			case Variant.VariantString | Variant.VariantByref: // 8
-				result = sourceData.getStringRef();
-				break;
-			case Variant.VariantDispatch: // 9
-				result = sourceData.getDispatch();
-				break;
-			case Variant.VariantDispatch | Variant.VariantByref: // 9
-				result = sourceData.getDispatchRef(); // Can dispatches even
-				// be byRef?
-				break;
-			case Variant.VariantError: // 10
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantError");
-				break;
-			case Variant.VariantBoolean: // 11
-				result = new Boolean(sourceData.getBoolean());
-				break;
-			case Variant.VariantBoolean | Variant.VariantByref: // 11
-				result = new Boolean(sourceData.getBooleanRef());
-				break;
-			case Variant.VariantVariant: // 12 they are always by ref
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantVariant without ByRef");
-				break;
-			case Variant.VariantVariant | Variant.VariantByref: // 12
-				result = sourceData.getVariant();
-				break;
-			case Variant.VariantObject: // 13
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantObject");
-				break;
-			case Variant.VariantDecimal: // 14
-				result = sourceData.getDecimal();
-				break;
-			case Variant.VariantDecimal | Variant.VariantByref: // 14
-				result = sourceData.getDecimalRef();
-				break;
-			case Variant.VariantByte: // 17
-				result = new Byte(sourceData.getByte());
-				break;
-			case Variant.VariantByte | Variant.VariantByref: // 17
-				result = new Byte(sourceData.getByteRef());
-				break;
-			case Variant.VariantLongInt: // 20
-				result = new Long(sourceData.getLong());
-				break;
-			case Variant.VariantLongInt | Variant.VariantByref: // 20
-				result = new Long(sourceData.getLongRef());
-				break;
-			case Variant.VariantTypeMask: // 4095
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantBstrBlob/VariantTypeMask");
-				break;
-			case Variant.VariantArray: // 8192
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantArray");
-				break;
-			case Variant.VariantByref: // 16384
-				result = new NotImplementedException(
-						"toJavaObject() Not implemented for VariantByref");
-				break;
-			default:
-				result = new NotImplementedException("Unknown return type: "
-						+ type);
-				// there was a "return result" here that caused defect 1602118
-				// so it was removed
-				break;
+				case Variant.VariantEmpty: // 0
+				case Variant.VariantNull: // 1
+					break;
+				case Variant.VariantShort: // 2
+					result = new Short(sourceData.getShort());
+					break;
+				case Variant.VariantShort | Variant.VariantByref: // 2
+					result = new Short(sourceData.getShortRef());
+					break;
+				case Variant.VariantInt: // 3
+					result = new Integer(sourceData.getInt());
+					break;
+				case Variant.VariantInt | Variant.VariantByref: // 3
+					result = new Integer(sourceData.getIntRef());
+					break;
+				case Variant.VariantFloat: // 4
+					result = new Float(sourceData.getFloat());
+					break;
+				case Variant.VariantFloat | Variant.VariantByref: // 4
+					result = new Float(sourceData.getFloatRef());
+					break;
+				case Variant.VariantDouble: // 5
+					result = new Double(sourceData.getDouble());
+					break;
+				case Variant.VariantDouble | Variant.VariantByref: // 5
+					result = new Double(sourceData.getDoubleRef());
+					break;
+				case Variant.VariantCurrency: // 6
+					result = sourceData.getCurrency();
+					break;
+				case Variant.VariantCurrency | Variant.VariantByref: // 6
+					result = sourceData.getCurrencyRef();
+					break;
+				case Variant.VariantDate: // 7
+					result = sourceData.getJavaDate();
+					break;
+				case Variant.VariantDate | Variant.VariantByref: // 7
+					result = sourceData.getJavaDateRef();
+					break;
+				case Variant.VariantString: // 8
+					result = sourceData.getString();
+					break;
+				case Variant.VariantString | Variant.VariantByref: // 8
+					result = sourceData.getStringRef();
+					break;
+				case Variant.VariantDispatch: // 9
+					result = sourceData.getDispatch();
+					break;
+				case Variant.VariantDispatch | Variant.VariantByref: // 9
+					result = sourceData.getDispatchRef(); // Can dispatches even
+					// be byRef?
+					break;
+				case Variant.VariantError: // 10
+					result = new NotImplementedException(
+							"toJavaObject() Not implemented for VariantError");
+					break;
+				case Variant.VariantBoolean: // 11
+					result = new Boolean(sourceData.getBoolean());
+					break;
+				case Variant.VariantBoolean | Variant.VariantByref: // 11
+					result = new Boolean(sourceData.getBooleanRef());
+					break;
+				case Variant.VariantVariant: // 12 they are always by ref
+					result = new NotImplementedException(
+							"toJavaObject() Not implemented for VariantVariant without ByRef");
+					break;
+				case Variant.VariantVariant | Variant.VariantByref: // 12
+					result = sourceData.getVariant();
+					break;
+				case Variant.VariantObject: // 13
+					result = new NotImplementedException(
+							"toJavaObject() Not implemented for VariantObject");
+					break;
+				case Variant.VariantDecimal: // 14
+					result = sourceData.getDecimal();
+					break;
+				case Variant.VariantDecimal | Variant.VariantByref: // 14
+					result = sourceData.getDecimalRef();
+					break;
+				case Variant.VariantByte: // 17
+					result = new Byte(sourceData.getByte());
+					break;
+				case Variant.VariantByte | Variant.VariantByref: // 17
+					result = new Byte(sourceData.getByteRef());
+					break;
+				case Variant.VariantLongInt: // 20
+					result = new Long(sourceData.getLong());
+					break;
+				case Variant.VariantLongInt | Variant.VariantByref: // 20
+					result = new Long(sourceData.getLongRef());
+					break;
+				case Variant.VariantTypeMask: // 4095
+					result = new NotImplementedException(
+							"toJavaObject() Not implemented for VariantBstrBlob/VariantTypeMask");
+					break;
+				case Variant.VariantArray: // 8192
+					result = new NotImplementedException(
+							"toJavaObject() Not implemented for VariantArray");
+					break;
+				case Variant.VariantByref: // 16384
+					result = new NotImplementedException(
+							"toJavaObject() Not implemented for VariantByref");
+					break;
+				default:
+					result = new NotImplementedException("Unknown return type: "
+							+ type);
+					// there was a "return result" here that caused defect 1602118
+					// so it was removed
+					break;
 			}// switch (type)
 
 			if (result instanceof JacobException) {
@@ -383,13 +380,12 @@ public final class VariantUtilities {
 	}// toJava()
 
 	/**
-	 * Verifies that we have a scale 0 <= x <= 28 and now more than 96 bits of
+	 * Verifies that we have a scale 0 &lt;= x &lt;= 28 and now more than 96 bits of
 	 * data. The roundToMSDecimal method will attempt to adjust a BigDecimal to
 	 * pass this set of tests
-	 * 
+	 *
 	 * @param in
-	 * @throws IllegalArgumentException
-	 *             if out of bounds
+	 * @throws IllegalArgumentException if out of bounds
 	 */
 	protected static void validateDecimalScaleAndBits(BigDecimal in) {
 		BigInteger allWordBigInt = in.unscaledValue();
@@ -407,7 +403,7 @@ public final class VariantUtilities {
 			throw new IllegalArgumentException(
 					"VT_DECIMAL supports a maximum of "
 							+ 12
-							* 8
+									* 8
 							+ " bits not counting scale and the number passed in has "
 							+ allWordBigInt.bitLength());
 
@@ -432,11 +428,10 @@ public final class VariantUtilities {
 	/**
 	 * Does any validation that couldn't have been fixed by rounding or scale
 	 * modification.
-	 * 
-	 * @param in
-	 *            The BigDecimal to be validated
-	 * @throws IllegalArgumentException
-	 *             if the number is too large or too small or null
+	 *
+	 * @param in The BigDecimal to be validated
+	 * @throws IllegalArgumentException if the number is too large or too small or
+	 *                                  null
 	 */
 	protected static void validateDecimalMinMax(BigDecimal in) {
 		if (in == null) {
@@ -464,7 +459,7 @@ public final class VariantUtilities {
 	 * Changing the scale on a number that can fit in an MS Decimal can change
 	 * the number's representation enough that it will round to a number too
 	 * large to be represented by an MS VT_DECIMAL
-	 * 
+	 *
 	 * @param sourceDecimal
 	 * @return BigDecimal a new big decimal that was rounded to fit in an MS
 	 *         VT_DECIMAL

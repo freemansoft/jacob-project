@@ -30,8 +30,8 @@ import com.jacob.com.InvocationProxy;
  * ActiveXInvocationProxy instead of an InvocationProxy. It is the
  * ActiveXInvocationProxy that implements the reflection calls and invoke the
  * found java event callbacks. See ActiveXInvocationProxy for details.
- * 
- * 
+ *
+ *
  */
 public class ActiveXDispatchEvents extends DispatchEvents {
 
@@ -41,11 +41,9 @@ public class ActiveXDispatchEvents extends DispatchEvents {
 	 * Creates the event callback linkage between the the MS program represented
 	 * by the Dispatch object and the Java object that will receive the
 	 * callback.
-	 * 
-	 * @param sourceOfEvent
-	 *            Dispatch object who's MS app will generate callbacks
-	 * @param eventSink
-	 *            Java object that wants to receive the events
+	 *
+	 * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
+	 * @param eventSink     Java object that wants to receive the events
 	 */
 	public ActiveXDispatchEvents(Dispatch sourceOfEvent, Object eventSink) {
 		super(sourceOfEvent, eventSink, null);
@@ -57,13 +55,13 @@ public class ActiveXDispatchEvents extends DispatchEvents {
 	 * Creates the event callback linkage between the the MS program represented
 	 * by the Dispatch object and the Java object that will receive the
 	 * callback.
-	 * 
+	 *
 	 * @param sourceOfEvent
-	 *            Dispatch object who's MS app will generate callbacks
+	 *                      Dispatch object who's MS app will generate callbacks
 	 * @param eventSink
-	 *            Java object that wants to receive the events
+	 *                      Java object that wants to receive the events
 	 * @param progId
-	 *            ???
+	 *                      ???
 	 */
 	public ActiveXDispatchEvents(Dispatch sourceOfEvent, Object eventSink,
 			String progId) {
@@ -74,18 +72,18 @@ public class ActiveXDispatchEvents extends DispatchEvents {
 	 * Creates the event callback linkage between the the MS program represented
 	 * by the Dispatch object and the Java object that will receive the
 	 * callback.
-	 * 
+	 *
 	 * <pre>
-	 * &gt;ActiveXDispatchEvents de = 
-	 * 			new ActiveXDispatchEvents(someDispatch,someEventHAndler,
-	 * 				&quot;Excel.Application&quot;,
-	 * 				&quot;C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE&quot;);
-	 * 
+	 * ActiveXDispatchEvents de = new ActiveXDispatchEvents(someDispatch, someEventHAndler,
+	 * 		&quot;Excel.Application&quot;,
+	 * 		&quot;C:\\Program Files\\Microsoft Office\\OFFICE11\\EXCEL.EXE&quot;);
+	 * </pre>
+	 *
 	 * @param sourceOfEvent Dispatch object who's MS app will generate callbacks
-	 * @param eventSink Java object that wants to receive the events
-	 * @param progId , mandatory if the typelib is specified
-	 * @param typeLib The location of the typelib to use
-	 * 
+	 * @param eventSink     Java object that wants to receive the events
+	 * @param progId        , mandatory if the typelib is specified
+	 * @param typeLib       The location of the typelib to use
+	 *
 	 */
 	public ActiveXDispatchEvents(Dispatch sourceOfEvent, Object eventSink,
 			String progId, String typeLib) {
@@ -94,7 +92,7 @@ public class ActiveXDispatchEvents extends DispatchEvents {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.jacob.com.DispatchEvents#getInvocationProxy(java.lang.Object)
 	 */
 	protected InvocationProxy getInvocationProxy(Object pTargetObject) {

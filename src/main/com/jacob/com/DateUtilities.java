@@ -24,16 +24,16 @@ import java.util.Date;
 
 /**
  * java / windows date conversion utilities
- * 
+ *
  * @author joe
- * 
+ *
  */
 public class DateUtilities {
 
 	/**
 	 * converts a windows time to a Java Date Object
-	 * 
-	 * @param comTime
+	 *
+	 * @param comTime time in windows format
 	 * @return Date object representing the windows time as specified in comTime
 	 */
 	static public Date convertWindowsTimeToDate(double comTime) {
@@ -45,13 +45,12 @@ public class DateUtilities {
 	 * (milliseconds). Visual Basic time values are based to 30.12.1899, Java
 	 * time values are based to 1.1.1970 (= 0 milliseconds). The difference is
 	 * added to the Visual Basic value to get the corresponding Java value. The
-	 * Visual Basic double value reads: <day count delta since 30.12.1899>.<1
-	 * day percentage fraction>, e.g. "38100.6453" means: 38100 days since
+	 * Visual Basic double value reads: &lt;day count delta since 30.12.1899&gt;.
+	 * &lt;1 day percentage fraction &gt;, e.g. "38100.6453" means: 38100 days since
 	 * 30.12.1899 plus (24 hours * 0.6453). Example usage:
 	 * <code>Date javaDate = new Date(toMilliseconds (vbDate));</code>.
-	 * 
-	 * @param comTime
-	 *            COM time.
+	 *
+	 * @param comTime COM time.
 	 * @return Java time.
 	 */
 	static public long convertWindowsTimeToMilliseconds(double comTime) {
@@ -70,9 +69,9 @@ public class DateUtilities {
 
 	/**
 	 * converts a java date to a windows time object (is this timezone safe?)
-	 * 
+	 *
 	 * @param javaDate
-	 *            the java date to be converted to windows time
+	 *                 the java date to be converted to windows time
 	 * @return the double representing the date in a form windows understands
 	 */
 	static public double convertDateToWindowsTime(Date javaDate) {
@@ -85,9 +84,8 @@ public class DateUtilities {
 
 	/**
 	 * Convert a Java time to a COM time.
-	 * 
-	 * @param milliseconds
-	 *            Java time.
+	 *
+	 * @param milliseconds Java time.
 	 * @return COM time.
 	 */
 	static public double convertMillisecondsToWindowsTime(long milliseconds) {
